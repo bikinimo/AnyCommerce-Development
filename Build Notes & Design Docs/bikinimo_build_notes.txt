@@ -1,0 +1,217 @@
+These notes are written by Michael Chance, should you have any questions
+please notify me in podio or on the anycommercedevelopment google group
+and I'll try to get back to you when I can.
+
+
+
+*******************************************************************************
+FONTS
+*******************************************************************************
+Ubuntu: http://www.google.com/fonts/specimen/Ubuntu
+include:
+	Normal 400
+	Normal 400 Italic
+	Medium 500 
+	Bold 700 
+
+Abel: http://www.google.com/fonts/specimen/Abel
+include:
+	Normal 400
+	
+Source Sans Pro: http://www.google.com/fonts/specimen/Source+Sans+Pro
+include:
+	Normal 400
+	Semi-Bold 600
+	Bold 700
+
+Electrolize: http://www.google.com/fonts/specimen/Electrolize
+include:
+	Normal 400
+
+*******************************************************************************
+TECHNICAL NOTES
+--page refers to the page of the pdf design document
+--# refers to the designer's number notation on the pdf page being discussed
+*******************************************************************************
+
+*******************************************************************************
+PAGE 2: Preloader/Membership Banner
+*******************************************************************************
+
+This will be contained within appPreView.  Here is an example commit log of how
+to use appPreView in a modal popup:
+https://github.com/GKWorld/GKWorldcom---AnyCommerce-Development/commit/ebac417097686e11365bf36f2024b77bbb2509ea
+Please note: 
+	this commit is from an older version of the framework, so some file-names have changed.
+	the class "displayNone" must be removed from the appView.
+	the 'dialogClass' option for the modal is used to hide the dialog's title bar and close button with CSS.
+	app-quickstart.js must be changed to affect the way appPreView is closed.
+
+In addition, unlike the commit above- the pre-loader page should only go away
+once the user has made a selection. This can be accomplished by removing the
+call to app.u.loadApp in initMVC (discussed below) and calling it when the 
+user has taken action.  However, avoid the pitfall of attaching app.u.loadApp
+to the buttons in an onClick event, as calling app.u.loadApp before the app
+has finished loading all its resources will cause it to break.
+
+The code that affects the default progress bar is in the "initMVC" function in
+app-quickstart-init.js.  The percentComplete var is calculated and then values
+are updated.  This var can be used to change the width of a div, or some other 
+visual effect.  An example is included in this commit:
+https://github.com/zephyrsports/zephyrsports.com/commit/1e2893bcd1a1a0f15e216c2e1e0942ca83c4fb3c
+
+#5- This can be accomplished by making a "showContent" call to navigate to the
+registration page in the "appInitComplete" function in app-quickstart-init.js.
+Obviously this should only occur if the user hits the button to continue.
+
+*******************************************************************************	
+PAGE 3
+*******************************************************************************	
+
+Top Anchor Bar #2 refers to providesupport.com code.  This will be integrated
+later in the app development process, but if you leave a placeholder now
+it will be easier to accomplish.
+
+Top Anchor Bar #3 you may use a background image for the search button in order
+to match the design
+
+Top Anchor Bar #4 Contact, FAQ, My Account, and Login are all default links
+in the app, however Gift Cards and Sizing Guide are separate.  
+	Gift Cards can be a placeholder link until we decide how to implement.
+	Sizing Guide will be a modal popup of the sizing guide.  It can be done similar to the "showSizeChart" function in the following commit:
+		https://github.com/sportsworldchicago/app.sportsworldchicago.com---AnyCommerce-Development/commit/8c2486847a831c876091798853c50431e1e88783
+
+#5 Utility classes "cartItemCount", "cartSubtotal" and "cartTotal" are typically
+used for this.  More detailed functionality can be used by modifying the "handleMinicartUpdate"
+function in app-quickstart.js
+
+Main Navigation Bar
+Hard Code these links.  As they are part of the appView, they should use the 'href' shortcut:
+<a href="#!category?navcat=.path.to.category" class="bindByAnchor">Go To Category</a>
+
+The shortcut works as follows: #!pagetype?key1=value1&key2=value2...
+
+where the href starts with '#!' -- The reason for this is to help with SEO and
+Google Rankings for single page app sites: https://developers.google.com/webmasters/ajax-crawling/docs/getting-started
+
+This is followed by the 'pagetype' for example "category" or "homepage".  The pagetype
+gets passed as the first argument to showContent
+
+This is then followed by a set of URL parameters as key value pairs.  These are parsed into JSON, for example
+{
+	"key1" : "value1",
+	"key2" : "value2"
+}
+and that object is passed as the second parameter to the showContent call.  
+
+Finally the class "bindByAnchor" is used to tell the app that it should convert the href into a click event,
+and it automatically creates the "showContent" call for you, from the href provided
+
+Main Navigation Bar #3 see sizing chart link notes above in Top Anchor Bar.
+
+*******************************************************************************
+PAGE 4
+*******************************************************************************
+#1 this can be hard-coded into the homepageTemplate.
+#2 Don't prioritize this feature, but if you'd like to try it contact MichaelC
+in podio.
+
+*******************************************************************************
+PAGE 5
+*******************************************************************************
+#1 this can be done using the jquery anytabs plugin.  Please read the comments
+in the plugin for usage, at /resources/jquery.ui.anyplugins.js  The content 
+areas will each contain a product list.  This can be populated with all the 
+same data as a placeholder until we identify the data sources for each.
+It is likely that they will be elastic-native data-binds.
+
+#2 the css style "overflow:hidden" is a good way to truncate a list without
+having to change the size of the product list populating it in code.
+
+#3 for truncating text inputs, see the truncText renderformat in controller.js
+
+#4 Use a carousel plugin for this- carouFredsel is the one we most commonly use
+with apps: http://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&ved=0CC8QFjAA&url=http%3A%2F%2Fcaroufredsel.dev7studios.com%2F&ei=_56SUejrHYmoiAKYq4D4BQ&usg=AFQjCNHgdj-p3D7vWV2J5nHTM_Z-Z3xX8w&bvm=bv.46471029,d.cGE
+
+#5 You can use setTimeout and clearTimeout to specify timers on when to pop the large image.
+For popping the image you may want to use the FancyBox jquery plugin, I have 
+created an extension for it here:
+https://github.com/sportsworldchicago/app.sportsworldchicago.com---AnyCommerce-Development/tree/201314/extensions/fancybox
+Though it will take some conversion to get it to work appropriately outside the
+product page.
+
+
+*******************************************************************************
+PAGE 6
+*******************************************************************************
+see above #5 for popup details
+
+#7 can be a link to a category or search
+
+*******************************************************************************
+PAGE 7
+*******************************************************************************
+Specials and Announcement Area:
+	Hard coded- but notice that it only appears on the homepage
+
+Bottom Bar Should be hard coded into appView.  Signup form example can be found by opening
+examples/snippets.html in a browser, it contains many useful code snippets for
+common features.
+
+Any Bottom Bar links that go to external pages, ie Facebook, Twitter, should
+all make use of target="_blank" as we do not want to leave the app unless
+the buyer definitely wants to (do to large load time to come back)
+
+*******************************************************************************
+PAGE 8
+*******************************************************************************
+Illustrates a category page, no technical notes except that it seems like you
+can use the same product list template from the lists on the homepage
+
+*******************************************************************************
+PAGE 9
+*******************************************************************************
+#2 Infinite Scroll extension is included- see extensions/prodlist_infinite.js
+#3 You can use the "quickview" functionality on the default productListTemplate
+to accomplish the modal view.
+
+*******************************************************************************
+PAGE 10
+*******************************************************************************
+#1 covered by "modal":"true" option in dialog jquery plugin.  Is affected by 
+jquery ui theme (css)
+
+#2 The 'x' and other styles can be changed via the jquery ui theme as well.
+
+#3 animation can be accomplished with the "show" option in the dialog plugin http://api.jqueryui.com/dialog/#option-show
+
+#4 this should be part of the product options, and should be handled automatically.
+*******************************************************************************
+PAGE 11
+*******************************************************************************
+#5-8 can be accomplished with the MagicZoomPlus Extension.  The merchant will
+need to purchase a license, but one of our developers created a tutorial for integrating
+in the google group:
+https://groups.google.com/forum/?fromgroups=&hl=en#!category-topic/anycommerce-app-development/tutorials/rENEIKhDo1I
+
+*******************************************************************************
+PAGE 12
+*******************************************************************************
+Animation of expansion can be handled in custom javascript functions
+
+The data-source of this list should be zoovy:related_products- there is a default 
+data-bind to this source in the app-quickstart.html productTemplate.
+
+Also note: The video at bottom left will be a custom render format, and should 
+be an embedded YouTube video.  The merchant will store the video ID in the product
+and we can post the variable when it is added.  The renderformat should then create
+a standard YouTube embedded object with the variable videoID and add it to the page
+
+If you need help with renderFormats please post in the google group and I will
+try to assist you.
+
+
+
+
+I hope this technical documentation helps!
+-MichaelC
