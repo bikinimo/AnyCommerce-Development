@@ -20,7 +20,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"20130516083920",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20130516175520",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "required",//can be passive, active or required
@@ -82,17 +82,29 @@ This file is intended to go along with the 10-step tutorial at:
 	<td><!-- put logo here --></td>
 	<td>
 
-	<div id="loader">
-		<h3>One moment please.</h3>
-
+	<div class="loderwrapper">
+	<div class="lodemid">
+    	<div class="loaderlogo"><a href="#" onClick="return showContent('category',{'navcat' : '.'});"><img src="images/loaderlogo.png" alt="Bikinimo Swimwear" title="Bikinimo Swimwear" /></a></div>
+        <div class="fashionclub">
+        	<h2>Join the</h2>
+            <h1>Fashion Club!</h1>
+			<p>Stay informed about specials, discounts and <br />special events in the BikiniMo universe.</p>
+ 			<p>It’s free and we’ll send you a special gift just for joining.</p>
+        </div>
+        <div class="remidbutt"><a href="#."><img src="images/remind_letter.png" alt="Remind Me Later" title="Remind Me Later" style="margin:0px;"/></a><a href="#" onClick="showContent('customer',{'show':'newsletter'});"><img src="images/sign_up.png" alt="Sign Me Up" title="Sign Me Up" /></a><a href="#."><img src="images/continu_guest.png" alt="Continue as Guest" title="Continue as Guest" /></a></div>
+    </div>
+    <div id="loader">
+		<!--<h3>One moment please.</h3>-->
 		<div class='alignCenter'>
 		<progress id="appPreViewProgressBar" max="100" value="0"></progress><br>
 		</div>
-		<div id='appPreViewProgressText'>0% Complete</div>
+		<!--<div id='appPreViewProgressText'>0% Complete</div>-->
+        
 	</div>
-	<div id="clickToLoad" class="displayNone pointer">
-		Click here to load your shopping experience!
+    <div id="clickToLoad">
+		PLEASE WAIT WHILE YOUR SHOPPING EXPERIENCE 	LOADS
 	</div>
+</div>
 	<div class='appMessaging'></div>
 	</td>
 </tr>
@@ -115,35 +127,37 @@ This file is intended to go along with the 10-step tutorial at:
       	<div class="headerright1">
         	<div class="topsecmenu">
             	<div class="contactsec">
-					<a href="#.">Contact</a><span>|</span><a href="#.">FAQ</a><span>|</span><a href="#.">My Account</a><span>|</span><a href="#.">Login</a><br />
-<a href="#.">Gift Cards</a><span>|</span><a href="#.">Sizing Guide</a>
+					<a href="#" onClick="return showContent('company',{'show':'contact'});">Contact</a><span>|</span><a href="#" onClick="return showContent('company',{'show':'faq'});">FAQ</a><span>|</span><a href="#" onClick="return showContent('customer',{'show':'myaccount'});">My Account</a><span>|</span><span class="loginShow username" onClick="return showContent('customer',{'show':'myaccount'});" ></span> <span class="loginShow"> <a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></span>
+<span class="loginHide"> <a href="#" onClick="return showContent('customer',{'show':'myaccount'});">Login  </a></span>
+<br />
+<a href="#" onClick="return showContent('category',{navcat: '.005'});">Gift Cards</a><span>|</span><a href="#.">Sizing Guide</a>
                 </div>
-                <div class="cartsec"><img src="images/cartimg.gif" align="top" alt="" />Your Cart is Empty</div>
+                <div class="cartsec"><img src="images/cartimg.gif" align="top" alt="" /><a href='#!cart?show=cart' class='bindByAnchor' style="text-decoration:none;"><span class="cartItemCount"></span><span style="text-decoration:none"> Items in your <b>shopping bag</b></span></a></div>
             </div>
             <div class="gryimgright"><img src="http://placehold.it/57x57"></div>
         </div>
         <div class="headerright2">
         	<label class="fl">Advanced Search</label>
-            <form action="" method="post">
-                <input type="text" class="inpbox" />
-                <input type="image" value="" name="" src="images/search.gif" class="searchbut" alt="Search" title="search" />
-            </form>
+             <form name='headerSearchFrm' action='#' class='productSearchForm' method="get" id="searchFunc">
+					<input type='search' name='KEYWORDS'  class="productSearchKeyword handleDefault" id="searchBar"/>
+					<input class="search pointer" type="image" src="images/search.gif" value="Search" id="searchButton" />
+   		    	</form>
         </div>
       </div>
       </div>
     
     <div class="navsection">
     	<ul>
-        	<li style="padding:4px 0 0 19px;"><a href="#.">Bikini Sets</a></li>
-            <li><a href="#.">Separates</a></li>
-            <li><a href="#.">Tankinis</a></li>
-            <li><a href="#.">Swim Dresses</a></li>
-            <li><a href="#.">One Pieces</a></li>
-            <li><a href="#.">Cover Ups</a></li>
-            <li><a href="#.">Dresses</a></li>
-            <li><a href="#.">Sleepwear</a></li>
-            <li><a href="#.">Accessories</a></li>
-            <li><a href="#.">Clearance</a></li>
+        	<li style="padding:4px 0 0 19px;"><a href="#" onClick="return showContent('category',{navcat: '.01-new-2012-bikinis'});">Bikini Sets</a></li>
+            <li><a href="#." onClick="return showContent('category',{navcat: '.96-sexy-pajamas'});">Separates</a></li>
+            <li><a href="#." onClick="return showContent('category',{navcat: '.02-tankinis'});">Tankinis</a></li>
+            <li><a href="#." onClick="return showContent('category',{navcat: '.015-swimdress'});">Swim Dresses</a></li>
+            <li><a href="#." onClick="return showContent('category',{navcat: '.85-one-piece-swimwear'});">One Pieces</a></li>
+            <li><a href="#." onClick="return showContent('category',{navcat: '.90-cover-up-swimwear'});">Cover Ups</a></li>
+            <li><a href="#." onClick="return showContent('category',{navcat: '.95-swim-dress-swimwear'});">Dresses</a></li>
+            <li><a href="#." onClick="return showContent('category',{navcat: '.98-womens-sportswear'});">Sleepwear</a></li>
+            <li><a href="#." onClick="return showContent('category',{navcat: '.99-fashion-accessories'});">Accessories</a></li>
+            <li><a href="#search?TAG=IS_CLEARANCE">Clearance</a></li>
         </ul>
     </div>  
       

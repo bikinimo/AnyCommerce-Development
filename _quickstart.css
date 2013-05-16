@@ -85,6 +85,17 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 .foticon img{margin:0px; padding:3px 0 0 3px;}
 .copright{margin:0px; padding:7px 0 0 0;}
 /*Footer Close*/
+/*Loader Page Start*/
+.loderwrapper{margin:10px auto; padding:0px; width:636px; height:410px; background:url(images/loaderbg.jpg) no-repeat;}
+.lodemid{margin:0 0 0 213px; padding:0px; float:left; width:397px;}
+.loaderlogo{margin:16px 0 0 18px; padding:0px;}
+.fashionclub{margin:38px 0 0 28px; padding:0px; width:338px; text-align:center; color:#2e5f80; font-family:'Source Sans Pro', serif; font-weight:bold;}
+.fashionclub h2{margin:0px; padding:0px; font-weight:normal; font-size:22px;}
+.fashionclub h1{margin:0px; padding:0px; font-weight:bold; font-size:54px; letter-spacing:-3px; line-height:40px;}
+.fashionclub p{margin:0px; padding:15px 0 0 0; font-weight:normal; font-size:14px; line-height:20px;}
+.remidbutt{margin:22px 0 0 0; padding:0px; width:397px; float:left;}
+.remidbutt img{margin:0 0 0 8px;}
+/*Loader Page Start*/
 /********** NEW CSS ADD**********/
 
 
@@ -153,6 +164,7 @@ and offMenu is toggle off, hiding the change button.
 .floatRight	{float:right;}
 
 .alignCenter	{text-align:center;}
+.alignCenter #appPreViewProgressBar{height:4px; width:400px; background:#0033FF; border-radius:5px;}
 .alignLeft	{text-align:left;}
 .alignRight	{text-align:right;}
 
@@ -627,3 +639,17 @@ CHECKOUT
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{background:#333; background:url("images/taboffbg.gif") repeat-x !important; color: #1C94C4; font-weight: bold}
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited{color:#FFFFFF !important; text-decoration:none;}
 .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited{color:#666666 !important; text-decoration:none;}
+/*login show start*/
+.loginShow {display:none;}
+.loginShow a {color:#ffffff;}
+.loginHide a{ font-size:12px; color:#000; font-weight:bold; text-transform:uppercase; }
+.buyerLoggedIn span.loginShow {display:inline-block;}
+.buyerLoggedIn .loginHide {display:none;}
+.hideIfLoggedIn{display:block;}
+.fl{float:left;font-size: 12px;padding: 8px 50px 0 0;}
+.buyerLoggedIn .hideIfLoggedIn	{display:none;}
+.hideIfLoggedOut	{display:none;}
+.buyerLoggedIn .hideIfLoggedOut	{display: block;} /* may be 'block' */
+.buyerLoggedIn span.hideIfLoggedOut, .buyerLoggedIn a.hideIfLoggedOut	{display: inline;} /* ensures inline on span elements */
+.productSearchKeyword { width:200px;}
+/*login end */
