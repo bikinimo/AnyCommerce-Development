@@ -43,7 +43,12 @@ document.getElementsByTagName('base')[0].href = app.vars.baseURL;
 all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
-<link rel="stylesheet" type="text/css" href="app-quickstart.css" />
+<link rel="stylesheet" type="text/css" href="_quickstart.css" />
+<!--Font Css-->
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu">
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Abel">
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Source+Sans+Pro">
+<!--Font Css-->
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" />
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
@@ -62,9 +67,9 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 
 <body>
 <!-- DELETE THIS WHEN YOU GET STARTED -->
-<h1>WELCOME TO QUICKSTART</h1>
+<!--<h1>WELCOME TO QUICKSTART</h1>
 This file is intended to go along with the 10-step tutorial at:
-<a href="https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart">https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart</a>
+<a href="https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart">https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart</a>-->
 <!-- /DELETE THIS WHEN YOU GET STARTED -->
 
 
@@ -101,6 +106,107 @@ This file is intended to go along with the 10-step tutorial at:
 <!-- VIEW CONTENT -->
 <!-- leave the appView div, put your your html here ...  -->
 
+<div class="wrapper">
+ <!--Header Start-->
+  <div class="header">
+  	<div class="headerone">
+   	  <div class="headerleft"><a href="#."><img src="images/logo.gif" alt="Bikinimo Swimwear" border="0" title="Bikinimo Swimwear" /></a></div>
+      <div class="headerright">
+      	<div class="headerright1">
+        	<div class="topsecmenu">
+            	<div class="contactsec">
+					<a href="#.">Contact</a><span>|</span><a href="#.">FAQ</a><span>|</span><a href="#.">My Account</a><span>|</span><a href="#.">Login</a><br />
+<a href="#.">Gift Cards</a><span>|</span><a href="#.">Sizing Guide</a>
+                </div>
+                <div class="cartsec"><img src="images/cartimg.gif" align="top" alt="" />Your Cart is Empty</div>
+            </div>
+            <div class="gryimgright"><img src="http://placehold.it/57x57"></div>
+        </div>
+        <div class="headerright2">
+        	<label class="fl">Advanced Search</label>
+            <form action="" method="post">
+                <input type="text" class="inpbox" />
+                <input type="image" value="" name="" src="images/search.gif" class="searchbut" alt="Search" title="search" />
+            </form>
+        </div>
+      </div>
+      </div>
+    
+    <div class="navsection">
+    	<ul>
+        	<li style="padding:4px 0 0 19px;"><a href="#.">Bikini Sets</a></li>
+            <li><a href="#.">Separates</a></li>
+            <li><a href="#.">Tankinis</a></li>
+            <li><a href="#.">Swim Dresses</a></li>
+            <li><a href="#.">One Pieces</a></li>
+            <li><a href="#.">Cover Ups</a></li>
+            <li><a href="#.">Dresses</a></li>
+            <li><a href="#.">Sleepwear</a></li>
+            <li><a href="#.">Accessories</a></li>
+            <li><a href="#.">Clearance</a></li>
+        </ul>
+    </div>  
+      
+  </div>
+ <!--Header Close-->  
+ 
+ <!--Middle Start-->
+	<div class="middle">
+    	<div id='mainContentArea'></div>
+     </div>
+ <!--Middle Close-->
+ 
+ <!--Middle Start-->
+    <div class="footer">
+        <div class="footertop">
+          <div class="custmser">
+            	<h1>Customer Service</h1>
+                <ul>
+                	<li><a href="#.">Contact Us</a></li> 
+                    <li><a href="#.">Policies</a></li>
+                    <li><a href="#.">FAQ</a></li>
+                    <li><a href="#.">Sizing Guide</a></li>
+                </ul>
+                <ul>
+                    <li><a href="#.">My Account</a></li>
+                    <li><a href="#.">Order Status</a></li>
+                    <li><a href="#.">Email Preferences</a></li>
+                    <li><a href="#.">Style Guide</a></li>
+                </ul>
+                <ul style="margin:0PX;">
+                    <li><a href="#.">View Cart</a></li>
+                    <li><a href="#.">Checkout</a></li>
+                    <li><a href="#.">Privacy Policy</a></li>
+                </ul>
+            </div>
+          <div class="socialmedia">
+            	<h1>Social Media</h1>
+              <div><a href="http://facebook.com/" target="_blank"><img src="images/facebook_fot.gif" alt="Facebook" border="0" title="Facebook" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://twitter.com" target="_blank"><img src="images/twitter_fot.gif" alt="Twitter" border="0" title="Twitter" /></a></div>
+          </div>            
+          <div class="coupons">
+            	<h1>Coupons & Dicsounts</h1>
+             	<p>
+                	Sign up for our newsletter to<br />receive details on special discounts.
+                </p>
+             <form action="" method="post">
+                <input type="text" class="fullinpbox" /><br />
+                 <input type="text" class="fullinpbox" />
+                <input type="image" value="" name="" src="images/sign_me_up.gif" class="searchbut" style="margin:12px 0 0 11px;" alt="Sign Me Up" title="Sign Me Up" />
+            </form>
+            </div>
+        </div>
+        <div class="footerbot">
+        	<div class="foticon"><img src="images/icon1.gif" alt="" /><img src="images/icon2.gif" alt="" /><img src="images/icon3.gif" alt="" /><img src="images/icon4.gif" alt="" /><img src="images/icon5.gif" alt="" /><img src="images/icon6.gif" alt="" /></div>
+            <p class="copright">Copyright &copy; 2013. All Rights Reserved.  E-Commerce solution provided by Zoovy.</p>
+        </div>
+    </div>
+ <!--Middle Close-->
+</div>
+
+
+
+
+ 
 	<!--
 	** REMINDER : DO NOT PUT ANY GRAPHICS/CONTENT THAT SHOULD NOT APPEAR ON EVERY PAGE IN THE VIEW (HERE)
 	**				  INSTEAD PUT THEM INTO <div id="homepageTemplate"></div>
@@ -114,7 +220,7 @@ This file is intended to go along with the 10-step tutorial at:
 	<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
 </div>
 
-<div id='mainContentArea'></div><!-- DO NOT REMOVE - this is where the specific page (ex: homepage, product, category) content is going to go -->
+<!-- DO NOT REMOVE - this is where the specific page (ex: homepage, product, category) content is going to go -->
 
 <!-- ... your html ends -->
 <!-- /VIEW CONTENT -->
@@ -161,18 +267,81 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 -->
 <div id='homepageTemplate' class='homeTemplate'>
 	
+<div class="sizebg"><a href="#.">SIZING GUIDE</a><span>|</span><a href="#.">STYLE GUIDE</a></div>
+        <div class="banner">
+            <div class="bannerleft"><img src="images/banner1.jpg" alt="" /></div>
+            <div class="bannerright">
+            	<div class="bannerright1"><img src="images/limit_topcarv.gif" alt="" align="top" /></div>
+                <div class="bannerright2">
+                	<h1>Limited Time Offers</h1>
+                    <div class="perbox">
+                    	<div class="perboxleft"><img src="images/limiitpic1.jpg" /></div>
+                        <div class="perboxright">
+                        	<h1>Perfect Fit Slimsuit Bikini in 3 Colors</h1>
+                            <h2>Only: $49.00</h2>
+                            <span>Regularly: $65.00 </span>
+                            <a href="#."><img src="images/add_cart.gif" alt="Add To Cart" border="0" class="addcart" title="Add To Cart" /></a><br clear="left" />
+                            <span>This deal has ended.<br />check back soon for another deal!</span>
+                            <img src="images/time_remaining.gif" alt="" class="timerem" />
+                        </div>
+                    </div>
+                </div>
+                <div class="bannerright3"><img src="images/limit_botcarv.gif" alt="" /></div>
+            </div>
+        </div>
+        <!--<div class="tabbing"><img src="images/tabingpic.jpg" alt="" /></div>-->
+<div id='homepageTabs' class="tabbing">
+<!-- This works because of some awesome code in app-quickstart-init.js-->
+<ul class="alignCenter">
+<li><a href='#springReady'>New Releases</a></li>
+<li><a href='#greatGifts'>What’s Hot</a></li>
+<li><a href='#topAccessories'>You May Also Like</a></li>
+<li><a href='#grillsSmokers'>Comparissons</a></li>
+<!--<li><a href='#professionalUse'>Professional Use</a></li>-->
+</ul>
+<div data-anytab-content='springReady'>
+<ul data-bind="var: list($tab_1.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25; hide_summary:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+</div>
+<div data-anytab-content='greatGifts'>
+<ul data-bind="var: list($tab2.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25; hide_summary:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+</div>
+<div data-anytab-content='topAccessories'>
+<ul data-bind="var: list($tab3.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25; hide_summary:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+</div>
+<div data-anytab-content='grillsSmokers'>
+<ul data-bind="var: list($tab4.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25; hide_summary:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+</div>
+<!--<div data-anytab-content='professionalUse'>
+<ul data-bind="var: list($tab5.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25; hide_summary:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+</div>-->
+</div>
 
+ <div class="madebox">
+        	<div class="madebox1">
+            	<h1>Made in the</h1>
+                <p>That's Right!! All UjENA products are<br />made right here in the USA. </p>
+           </div>
+            <div class="madebox1">
+            	<h1>Free Shipping!</h1>
+                <p>Orders over $200.00 are able to select<br />free domestic shipping at checkout.</p>
+            </div>
+        	<div class="madebox1">
+            	<h1>Gift Cards</h1>
+                <p>Not sure what to get her?<br />Let her decide with one of our gift cards.</p>
+                <a href="#.">Learn More.</a>
+            </div>
+         </div>
 
 	
-	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
+	<!--<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
 
-	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2>Featured Items</h2>; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2>Featured Items</h2>; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
 	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 
 <!-- a sample of how to format an elastic native search in a data-bind -->
-	<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+	<!--<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
 
-	<a href="#" onClick="return showContent('search',{'TAG':'IS_BESTSELLER'});">See all Best Sellers</a>
+<!--<a href="#" onClick="return showContent('search',{'TAG':'IS_BESTSELLER'});">See all Best Sellers</a>-->
 
 <!-- a sample of how to get a 'list' src onto the page. -->
 	<ul data-bind="var: list($models.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>

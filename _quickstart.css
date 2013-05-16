@@ -1,8 +1,91 @@
-body,html	{font-size:100%;}
+body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; color:#808080; font-weight:normal;}
 
 #appTemplates {display:none;} /* container for all templates. should be hidden */
 
 #appPreView	{width:550px; margin:0 auto;}
+
+/********** NEW CSS ADD**********/
+.fl{float:left;}
+.fr{float:right;}
+.cb{clear:both;}
+
+.wrapper{margin:0 auto; padding:0px; width:964px;}
+
+/*Header Start*/
+.header{margin:16px 0 0 0; padding:0px; width:964px; float:left;}
+.headerone{margin:0px; padding:0px; width:964px; float:left;}
+.headerleft{margin:0px; padding:0px; width:529px; float:left;}
+.headerleft img{margin:9px 0 0 14px;}
+.headerright{margin:0px; padding:0px; width:435px; float:left;}
+.headerright1{margin:0px; padding:0px; width:435px; float:left;}
+.topsecmenu{margin:0px; padding:0px; width:362px; float:left;}
+.contactsec{margin:0px; padding:0px; text-align:right; line-height:20px;}
+.contactsec a{color:#808080; text-decoration:none;}
+.contactsec a:hover{color:#000000; text-decoration:none;}
+.contactsec span{padding:0 10px;}
+.cartsec{margin:0px; padding:6px 0 0 0; text-align:right;}
+.cartsec img{margin:-3px 10px 0 0; padding:0;}
+.gryimgright{margin:0px; padding:0px; float:right;}
+.headerright2{margin:10px 0 0 0; padding:0px; width:435px; float:left;}
+.headerright2 .inpbox{margin:0 0 0 11px; padding:3px 5px 2px 5px; width:255px; border:1px solid #808080; float:left; font-size:11px;}
+.headerright2 .searchbut{margin:0 0 0 3px; padding:0px; float:left;}
+.navsection{margin:6px 0 0 0; padding:0px; width:964px; float:left; background:url(images/nav_bg.png) no-repeat; height:27px;}
+.navsection ul{margin:0px; padding:0px;}
+.navsection ul li{margin:0px; padding:4px 0 0 30px; list-style-type:none; float:left;}
+.navsection ul li a{color:#FFFFFF; font-size:14px; text-decoration:none;}
+.navsection ul li a:hover{color:#221f1f; text-decoration:none;}
+/*Header Close*/
+
+/*Middle Start*/
+.middle{margin:0px; padding:0px; width:964px; float:left;}
+.sizebg{margin:5px 0 0 0; padding:0px; width:964px; float:left; background:url(images/sizebg.png) no-repeat; height:15px; text-align:center; font-size:11.5px;}
+.sizebg a{color:#000000; text-decoration:none;}
+.sizebg a:hover{color:#FFFFFF; text-decoration:none;}
+.sizebg span{padding:0 5px; color:#000;}
+.banner{margin:5px 0 0 0; padding:0px; float:left; width:964px;}
+.bannerleft{margin:0px; padding:0px; float:left; width:609px;}
+.bannerright{margin:0 0 0 9px; padding:0px; float:left; width:346px;}
+.bannerright1{margin:0px; padding:0px; float:left; width:346px; height:10px;}
+.bannerright2{margin:0px; padding:0 14px; float:left; width:316px; border-left:1px solid #b1b1b1; border-right:1px solid #b1b1b1;}
+.bannerright2 h1{margin:0px; padding:0px; font-size:42px; font-family:'Abel', serif; color:#54a7e1; font-weight:normal;}
+.perbox{margin:2px 0 4px 0; padding:0px; width:318px; float:left;}
+.perboxleft{margin:0px; padding:0px; width:153px; float:left;}
+.perboxright{margin:0 0 0 11px; padding:0px; width:154px; float:left; display:inline-block;}
+.perboxright h1{margin:0px; padding:0px; font-size:17px; color:#000000; font-family:'Ubuntu', serif;}
+.perboxright h2{margin:0px; padding:12px 0 0 0; font-size:18px; color:#ec1c24; font-family:'Ubuntu', serif; font-weight:bold;}
+.perboxright span{ color:#000000; font-size:10px; }
+.perboxright .addcart{margin:16px 0 10px 0; padding:0px; }
+.timerem{margin:12px 0 0 0; padding:0px;}
+.bannerright3{margin:0px; padding:0px; float:left; width:346px;}
+.tabbing{margin:11px 0 0 0; padding:0px; float:left;}
+.madebox{margin:0px; padding:0px; width:964px; float:left; background:url(images/made_usa.gif) repeat-x; min-height:97px;}
+.madebox1{margin:12px 0 0 68px; padding:0px; width:226px; float:left;}
+.madebox1 h1{margin:0px; padding:0px; font-size:23px; font-family:'Abel', serif; color:#54a7e1; font-weight:normal; text-align:center;}
+.madebox1 p{text-align:center; margin:0px; padding:0px; color:#2e5f80; line-height:15px;}
+.madebox1 a{text-align:center; color:#ec1c24; display:block; text-decoration:underline;} 
+.madebox1 a:hover{text-decoration:none;}
+/*Middle Close*/
+
+/*Footer Start*/
+.footer{margin:0 0 50px 0; padding:0px; width:964px; float:left; background:url(images/footerbg.gif) repeat-x; min-height:215px;}
+.footertop{margin:50px 0 0 0; padding:0px; width:964px; float:left;}
+.custmser{margin:0 0 0 24px; padding:0px; float:left;}
+.custmser h1{margin:0px; padding:0 0 3px 0; font-size:19px; font-family:'Source Sans Pro', serif; color:#276b98; font-weight:bold; }
+.custmser ul{margin:0 45px 0 0; padding:0px; float:left;}
+.custmser ul li{margin:0px; padding:0 0 2px 0; list-style-type:none;}
+.custmser ul li a{color:#808080; text-decoration:none;}
+.custmser ul li a:hover{color:#000000; text-decoration:none;}
+.socialmedia{margin:0 0 0 70px; padding:0px; float:left;}
+.socialmedia h1{margin:0 0 0 0; padding:0 0 7px 0; font-size:19px; font-family:'Source Sans Pro', serif; color:#276b98; font-weight:bold;}
+.coupons{margin:0 0 0 170px; padding:0px; float:left;}
+.coupons h1{margin:0 0 0 0; padding:0 0 3px 0; font-size:19px; font-family:'Source Sans Pro', serif; color:#276b98; font-weight:bold; }
+.coupons p{margin:0px; padding:0 0 5px 0; color:#808080; line-height:15px;}
+.coupons .fullinpbox{margin:4px 0 0 0; padding:2px 5px 1px 5px; width:153px; border:1px solid #b1b1b1; float:left; font-size:11px;}
+.footerbot{margin:0px; padding:0px; width:964px; float:left; text-align:center;}
+.foticon img{margin:0px; padding:3px 0 0 3px;}
+.copright{margin:0px; padding:7px 0 0 0;}
+/*Footer Close*/
+/********** NEW CSS ADD**********/
 
 
 /*
@@ -536,4 +619,11 @@ CHECKOUT
 
 
 
-.debug	{position:fixed; bottom:0; left:0; right:0; background:#ffffff; color:#000000; border-top:1px solid #666666; padding:5px;}
+.debug{position:fixed; bottom:0; left:0; right:0; background:#ffffff; color:#000000; border-top:1px solid #666666; padding:5px;}
+
+.ui-tabs .ui-tabs-nav li a{float:left; padding:5px 74px 4px 74px !important; text-decoration:none;}
+
+.ui-tabs .ui-tabs-nav li.ui-tabs-active.ui-state-default{background:url("images/tabactivebg.gif") repeat-x  !important; border-left:1px solid #b1b1b1; border-right:1px solid #b1b1b1; border-top:1px solid #b1b1b1;}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{background:#333; background:url("images/taboffbg.gif") repeat-x !important; color: #1C94C4; font-weight: bold}
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited{color:#FFFFFF !important; text-decoration:none;}
+.ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited{color:#666666 !important; text-decoration:none;}
