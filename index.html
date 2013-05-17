@@ -20,7 +20,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"20130516175520",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20130517194735",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "required",//can be passive, active or required
@@ -44,16 +44,30 @@ all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
 <link rel="stylesheet" type="text/css" href="_quickstart.css" />
-<!--Font Css-->
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu">
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Abel">
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Source+Sans+Pro">
-<!--Font Css-->
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" />
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="resources/jquery.ui.widget.min.js"></script><!-- here so that plugins that may load before the jqueryui lib load without error -->
 <script type="text/javascript" src="loadscript.js"></script>
+
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	
+$("ul#topnav li").hover(function() { //Hover over event on list item
+	//$(this).css({ 'background' : '#eae8e5'}); //Add background color + image on hovered list item
+	$(this).find("span").show(); //Show the subnav
+} , function() { //on hover out...
+	$(this).css({ 'background' : 'none'}); //Ditch the background
+	$(this).find("span").hide(); //Hide the subnav
+});
+	
+});
+</script>
+
 
 
 
@@ -99,7 +113,7 @@ This file is intended to go along with the 10-step tutorial at:
 		</div>
 		<!--<div id='appPreViewProgressText'>0% Complete</div>-->
       </div>
-    <div id="clickToLoad">
+    <div id="clickToLoad" class="plswait">
 		PLEASE WAIT WHILE YOUR SHOPPING EXPERIENCE 	LOADS
 	</div>
 </div>
@@ -115,6 +129,7 @@ This file is intended to go along with the 10-step tutorial at:
 <!-- VIEW CONTENT -->
 <!-- leave the appView div, put your your html here ...  -->
 <div class="wrapper">
+ <div id='globalMessaging' class='appMessaging'></div>
   <div class="header">
   	<div class="headerone">
    	  <div class="headerleft"><a href="#." ><img src="images/logo.gif"  onClick="return showContent('category',{navcat: '.'});" alt="Bikinimo Swimwear" border="0" title="Bikinimo Swimwear" /></a></div>
@@ -123,26 +138,28 @@ This file is intended to go along with the 10-step tutorial at:
         	<div class="topsecmenu">
             	<div class="contactsec">
 					<a href="#" onClick="return showContent('company',{'show':'contact'});">Contact</a><span>|</span><a href="#" onClick="return showContent('company',{'show':'faq'});">FAQ</a><span>|</span><a href="#" onClick="return showContent('customer',{'show':'myaccount'});">My Account</a><span>|</span><span class="loginShow username" onClick="return showContent('customer',{'show':'myaccount'});" ></span> <span class="loginShow"> <a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></span>
-<span class="loginHide"> <a href="#" onClick="return showContent('customer',{'show':'myaccount'});">Login  </a></span>
+<a href="#" onClick="return showContent('customer',{'show':'myaccount'});" class="loginHide">Login</a>
 <br />
 <a href="#" onClick="return showContent('category',{navcat: '.005'});">Gift Cards</a><span>|</span><a href="#.">Sizing Guide</a>
                 </div>
-                <div class="cartsec"><img src="images/cartimg.gif" align="top" alt="" /><a href='#!cart?show=cart' class='bindByAnchor' style="text-decoration:none;"><span class="cartItemCount"></span><span style="text-decoration:none"> Items in your <b>shopping bag</b></span></a></div>
+                <div class="cartsec"><img src="images/cartimg.gif" align="top" alt="" /><a href='#!cart?show=cart' class='bindByAnchor' style="text-decoration:none;"><span class="cartItemCount"></span><span class="shopingbag">Items in Your Shopping Bag</span></a></div>
             </div>
             <div class="gryimgright"><img src="http://placehold.it/57x57"></div>
         </div>
         <div class="headerright2">
         	<label class="fl">Advanced Search</label>
              <form name='headerSearchFrm' action='#' class='productSearchForm' method="get" id="searchFunc">
-					<input type='search' name='KEYWORDS'  class="productSearchKeyword handleDefault" id="searchBar"/>
-					<input class="search pointer" type="image" src="images/search.gif" value="Search" id="searchButton" />
+					<input type='search' name='KEYWORDS'  class="inpbox productSearchKeyword handleDefault" id="searchBar"/>
+					<input class="searchbut" type="image" src="images/search.gif" value="Search" id="searchButton" />
    		    	</form>
         </div>
       </div>
       </div>
         <div class="navsection">
-    	<ul>
-        	<li style="padding:4px 0 0 19px;"><a href="#" onClick="return showContent('category',{navcat: '.01-new-2012-bikinis'});">Bikini Sets</a></li>
+    	<ul id="topnav">
+        	<li><a href="#" onClick="return showContent('category',{navcat: '.01-new-2012-bikinis'});">Bikini Sets</a>
+            	<span> <a href="">The Company</a> | <a href="">The Team</a> | <a href="">Careers</a> </span>
+            </li>
             <li><a href="#." onClick="return showContent('category',{navcat: '.96-sexy-pajamas'});">Separates</a></li>
             <li><a href="#." onClick="return showContent('category',{navcat: '.02-tankinis'});">Tankinis</a></li>
             <li><a href="#." onClick="return showContent('category',{navcat: '.015-swimdress'});">Swim Dresses</a></li>
@@ -228,9 +245,9 @@ This file is intended to go along with the 10-step tutorial at:
 	**				  INSTEAD PUT THEM INTO <div id="homepageTemplate"></div>
 	-->
 	
-<div id='globalMessaging' class='appMessaging'></div><!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
+<!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
 <!-- These add specific functionality for the app. In most cases, you want to leave them alone. -->
-<div id='appNav'>
+<div id='appNav' style="display:none;">
 	<button class='displayNone prodDetailNextItemButton' data-app-role='prodDetailNextItemButton'>Next</button>
 	<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
 </div>
@@ -295,7 +312,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 <!--<li><a href='#professionalUse'>Professional Use</a></li>-->
 </ul>
 <div data-anytab-content='springReady'>
-<ul data-bind="var: list($tab_1.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25; hide_summary:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 </div>
 <div data-anytab-content='greatGifts'>
 <ul data-bind="var: list($tab2.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25; hide_summary:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
@@ -306,9 +323,6 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 <div data-anytab-content='grillsSmokers'>
 <ul data-bind="var: list($tab4.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25; hide_summary:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 </div>
-<!--<div data-anytab-content='professionalUse'>
-<ul data-bind="var: list($tab5.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25; hide_summary:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-</div>-->
 </div>
  <div class="madebox">
         	<div class="madebox1">
@@ -888,10 +902,10 @@ So the cart template should contain these two elements and the extension should 
 	</div>
 	<!-- some buttons that are alternatives to checkout. fewer is better -->
 	<menu class='cartAltButtonsContainer noPadOrMargin'>
-	<button class='ui-button-text ui-button ui-state-default ui-corner-all continueShoppingButton' onClick="$('#modalCart').dialog('close');">Continue Shopping</button>
+	<button class='ui-button-text ui-button ui-state-default ui-corner-all continueShoppingButton' onClick="$('#modalCart').dialog('close');"><img src="images/continu_shopp.gif" /></button>
 	</menu>
 	<div class='checkoutButtonsContainer'>
-		<span title='proceed to secure checkout'><button class='ui-button ui-button-text ui-state-default ui-corner-all checkoutButton' onClick="showContent('checkout',{});">Store Checkout</button></span>
+		<span title='proceed to secure checkout'><button class='ui-button ui-button-text ui-state-default ui-corner-all checkoutButton' onClick="showContent('checkout',{});"><img src="images/store_checkout.gif" /></button></span>
 		<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
 		<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(sum/items_total); format:googleCheckoutButton;'></span>
 		<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:amazonCheckoutButton;'></span>
@@ -1133,7 +1147,7 @@ The 'data-action' attribute is used to assign an onclick.
 
 <div id='loginFormForModal' class='loginOption displayNone' title='Please log in'>
 <!-- the contents of this div/id are toggled on/off when login/logout occurs. don't change the ID -->
-<p id='loginMessaging' class='marginBottom appMessaging'></p>
+<p id='loginMessaging' class='marginBottom appMessaging'></p><br clear="left">
 <div id='loginFormContainer'>
 <form action='#' onSubmit='app.ext.myRIA.u.loginFrmSubmit($("#modalLoginlogin").val(),$("#modalLoginpassword").val()); return false;' id='modalLoginForm'>
 <input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
@@ -1152,7 +1166,7 @@ The 'data-action' attribute is used to assign an onclick.
 	</fieldset>
 </form>
 <div id='recoverPasswordContainer'>
-<hr />
+<hr class="logbor" />
 <h3 class='marginBottom'>Recover Password</h3>
 <div id='recoverPasswordMessaging'></div>
 <form action='#' onSubmit="app.calls.appBuyerPasswordRecover.init($('#passwordRecoveryLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'recoverPasswordMessaging'}); app.model.dispatchThis('immutable'); return false;">
@@ -1163,8 +1177,8 @@ The 'data-action' attribute is used to assign an onclick.
 </form>
 </div><!-- /recoverPasswordContainer -->
 <div>
-<hr />
-<button class='ui-button-text ui-button ui-state-default ui-corner-all ' onClick="showContent('customer',{'show':'newsletter'});">Create Account</button>
+<hr class="logbor" />
+<button class='ui-button-text ui-button ui-state-default ui-corner-all ' onClick="showContent('customer',{'show':'newsletter'});"><img src="images/create_account.gif" /></button>
 </div>
 </div>
 <!-- this div will appear after a successful login. if you bind a new action to the button, best to empty the div and re-add the button, so the actions don't statck. -->
