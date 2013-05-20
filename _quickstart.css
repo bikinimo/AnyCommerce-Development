@@ -33,8 +33,9 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 .navsection{margin:6px 0 0 0; padding:0px; width:964px; float:left; background:url(images/nav_bg.png) no-repeat; height:27px;}
 .navsection ul{margin:0px; padding:0px;}
 .navsection ul li{margin:0px; padding:4px 15px 5px 15px; list-style-type:none; float:left;}
-/*.navsection ul li:hover{margin:0px; padding:3px 15px 3px 15px; list-style-type:none; float:left; border-radius:5px 5px 0 0 ; border-top:1px solid #276b97; border-left:1px solid #276b97; border-right:1px solid #276b97; color:#221f1f !important; }
-*/.navsection ul li a{color:#FFFFFF; font-size:14px; text-decoration:none;}
+/*.navsection ul li:hover{margin:0px; padding:4px 15px 5px 15px; list-style-type:none; float:left; border-radius:5px 5px 0 0 ;  color:#221f1f !important; background:#EAE8E5 !important;}
+*/
+.navsection ul li a{color:#FFFFFF; font-size:14px; text-decoration:none;}
 .navsection ul li a:hover{color:#221f1f; text-decoration:none;}
 /*Header Close*/
 
@@ -265,8 +266,8 @@ and offMenu is toggle off, hiding the change button.
 
 /* pages like  company and/or customer are in a two column format. by default, a narrow right w/ nav and the main column w/ content. */
 
-.mainColumn	{width:75%;}
-.sideline	{float:right; width:20%; margin:0 0 24px 0px;}
+.mainColumn	{width:100%;}
+.sideline	{float:right; width:20%; margin:0 0 24px 0px; display:none;}
 .sideline a	{padding:5px 0; text-decoration:none; display:block;} /* recommend at least 5px vert padding for mobile/pad */
 
 
@@ -292,10 +293,10 @@ and override using classes or id's as needed.
 .noPadOrMargin	{padding:0; margin:0;}
 .fluidList li	{float:left; margin:12px; padding:0; display:inline-block;}
 
-.quickView	{position:absolute; top:5px; right:5px; z-index:1001;} /* jqui modal has zindex 1002 */
+.quickView	{position:absolute; top:228px; right:49px; z-index:1001;} /* jqui modal has zindex 1002 */
 
 /* over rides - height and width ensure each row is the same height. percentages could be used for width */
-.productList > li	{width:150px; height:250px; position:relative;}
+.productList > li	{width:156px; height:250px; position:relative; border:1px solid #CCC; padding:5px;}
 .lineItemProdlist > li	{position:relative; display:block; padding:12px 0; width:100% !important; height:auto !important; border-bottom:1px dotted #efefef;} /* single column product list - used in cart, checkout, etc. productList class is also defined in these cases. */
 
 .lineItemProdlist .prodThumb	{margin-right:12px;}
@@ -514,7 +515,9 @@ HELP PAGES
 #contactForm fieldset	{border:1px solid #cccccc; padding:10px;}
 #contactForm div	{margin-bottom:5px}
 #contactForm label	{width:105px; display:inline-block; margin-right:6px; vertical-align:top; text-align:right;}
-#contactForm input, #contactForm textarea	{width:145px;}
+#contactForm input, #contactForm textarea	{border: 1px solid #CCCCCC;
+    padding: 2px;
+    width: 205px;}
 #contactForm textarea	{height:125px;}
 
 
@@ -674,12 +677,19 @@ fieldset input.ui-button-text {background:#cccccc !important; color:#333 !import
 
 /*Drop Dwon Menu Css*/
 ul#topnav{margin:0px; padding:0; float:left; list-style:none; position:relative;}
-ul#topnav li span{padding:20px 0; position:absolute; left:0; top:28px;	display:none; min-width:600px; background:#eae8e5; color:#fff; float:left; border-radius:6px 6px 6px 6px; border-left:2px solid #276b97; border-right:2px solid #276b97; border-bottom:2px solid #276b97; border-top:2px solid #276b97; }
+ul#topnav li span{padding:0px 0 13px 0; position:absolute; left:0; top:27px;	display:none; background:#eae8e5; color:#fff; float:left; border-radius:6px 6px 6px 6px; border-left:1px solid #276b97; border-right:1px solid #276b97; border-bottom:1px solid #276b97; border-top:1px solid #276b97; z-index:9;}
 /*ul#topnav li span{padding:20px 0; position:absolute; left:0; top:27px;	display:none; min-width:600px; background:#eae8e5; color:#fff; float:left; border-radius:0 6px 6px 6px; border-left:2px solid #276b97; border-right:2px solid #276b97; border-bottom:2px solid #276b97; }*/
 ul#topnav li:hover span{display: block;}
 ul#topnav li span a{display: inline; color:#000000;}
-ul#topnav li span a:hover{text-decoration: underline; }
+ul#topnav li span a:hover{text-decoration: underline;}
+
+ul#topnav li span ul{margin:0 20px 0 15px; padding:0px; float:left;}
+ul#topnav li span ul li{float:none;}
+ul#topnav li span ul li a{padding:8px 0 0 0; font-size:11px; float:left; color:#9a999a;}
+ul#topnav li span ul li a:hover{color:#818281;}
+
 /*Drop Dwon Menu Css*/
+.sendmess{margin:0px; padding:0px; font-size:0px; border:0px; height:; width:; cursor:pointer;}
 
 
 

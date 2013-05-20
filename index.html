@@ -158,7 +158,30 @@ This file is intended to go along with the 10-step tutorial at:
         <div class="navsection">
     	<ul id="topnav">
         	<li><a href="#" onClick="return showContent('category',{navcat: '.01-new-2012-bikinis'});">Bikini Sets</a>
-            	<span> <a href="">The Company</a> | <a href="">The Team</a> | <a href="">Careers</a> </span>
+            	<span>
+                	<ul>
+                     	<li><a href="#.">Top Shelf</a></li>
+                        <li><a href="#.">Prints</a></li>
+                        <li><a href="#.">Solids</a></li>
+                    </ul> 
+                    
+                    <ul>
+                     	<li><a href="#.">Crochet</a></li>
+                        <li><a href="#.">Thongs & Strings</a></li>
+                        <li><a href="#.">Gauze</a></li>
+                    </ul> 
+                    
+                     <ul>
+                     	<li><a href="#.">Metallic</a></li>
+                        <li><a href="#.">Sheer</a></li>
+                        <li><a href="#.">Skirted</a></li>
+                    </ul> 
+                    
+                    <ul>
+                     	<li><a href="#.">Sport</a></li>
+                        <li><a href="#.">Underwire</a></li>
+                     </ul> 
+                  </span>
             </li>
             <li><a href="#." onClick="return showContent('category',{navcat: '.96-sexy-pajamas'});">Separates</a></li>
             <li><a href="#." onClick="return showContent('category',{navcat: '.02-tankinis'});">Tankinis</a></li>
@@ -292,7 +315,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
                         	<h1>Perfect Fit Slimsuit Bikini in 3 Colors</h1>
                             <h2>Only: $49.00</h2>
                             <span>Regularly: $65.00 </span>
-                            <a href="#."><img src="images/add_cart.gif" alt="Add To Cart" border="0" class="addcart" title="Add To Cart" /></a><br clear="left" />
+                                <a href="#."><img src="images/add_cart.gif" alt="Add To Cart" border="0" class="addcart" title="Add To Cart" /></a><br clear="left" />
                             <span>This deal has ended.<br />check back soon for another deal!</span>
                             <img src="images/time_remaining.gif" alt="" class="timerem" />
                         </div>
@@ -387,7 +410,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
 	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
 		<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
-		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
+		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='156' height='151' />
 		</div>
 		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
 		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
@@ -674,13 +697,13 @@ if you change these, you should move them above this comment so that when you (o
 			<h1>Contact Information</h1>
 			<form action='#' onSubmit="app.calls.appSendMessage.init($(this).serializeJSON(),{'callback':'showMessaging','parentID':'contactFormMessaging','message':'Thank you, your message has been sent'},'immutable'); app.model.dispatchThis('immutable');  return false;" id='contactForm' name='contactForm'>
 			<fieldset>
-				<legend>Contact Us</legend>
+				<legend style="font-size:14px; font-weight:bold;">Contact Us</legend>
 				<div id='contactFormMessaging'></div>
 				<div><label for='contactFormSender'>Email Address: </label><input type='email' name='sender' required='required' id='contactFormSender' /></div>
 				<div><label for='contactFormSubject'>Subject: </label><input type='text' name='subject' id='contactFormSubject' /></div>
 				<div><label for='contactFormOID'>Order ID: </label><input type='text' name='OID' id='contactFormOID' /></div>
 				<div><label for='contactFormBody'>Message: </label><textarea name='body' required='required' id='contactFormBody'></textarea></div>
-				<div class='alignRight'><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Send Message' />
+				<div class='alignRight'><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all sendmess' value='Send Message' />
 				</div>
 			</fieldset>
 			</form>
@@ -733,8 +756,8 @@ if you change these, you should move them above this comment so that when you (o
 </div><!-- /companyTemplate -->
 
 <!-- loadingBG needed on this for app init (content may take a moment to load) -->
-<div id='customerTemplate' class='clearfix'>
-	<div class='sideline' >
+<div id='customerTemplate' class='clearfix' >
+	<div class='sideline'>
 	<nav id='customerNav'>
 	<ul class='listStyleNone noPadOrMargin'>
 <!-- before restoring this, test cuz news form on left was causing some conflicts
