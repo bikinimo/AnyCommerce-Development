@@ -637,7 +637,7 @@ CHECKOUT
 	
 .debug{position:fixed; bottom:0; left:0; right:0; background:#ffffff; color:#000000; border-top:1px solid #666666; padding:5px;}
 
-.ui-tabs .ui-tabs-nav li a{float:left; padding:5px 74px 4px 74px !important; text-decoration:none;}
+.ui-tabs .ui-tabs-nav li a{float:left; padding:5px 73px 4px 74px !important; text-decoration:none;}
 /*.ui-tabs .ui-tabs-nav li.ui-tabs-active.ui-state-default{background:url("images/tabactivebg.gif") repeat-x  !important; border-left:1px solid #b1b1b1; border-right:1px solid #b1b1b1; border-top:1px solid #b1b1b1;}
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{background:#333; background:url("images/taboffbg.gif") repeat-x !important; color: #1C94C4; font-weight: bold}
 */
