@@ -293,11 +293,11 @@ and override using classes or id's as needed.
 .noPadOrMargin	{padding:0; margin:0;}
 .fluidList li	{float:left; margin:12px; padding:0; display:inline-block;}
 
-.quickView	{position:absolute; top:228px; right:49px; z-index:1001;} /* jqui modal has zindex 1002 */
+.quickView	{position:absolute; top:247px; right:48px; z-index:1001;} /* jqui modal has zindex 1002 */
 
 /* over rides - height and width ensure each row is the same height. percentages could be used for width */
-.productList > li	{width:156px; height:250px; position:relative; border:1px solid #CCC; padding:5px;}
-.lineItemProdlist > li	{position:relative; display:block; padding:12px 0; width:100% !important; height:auto !important; border-bottom:1px dotted #efefef;} /* single column product list - used in cart, checkout, etc. productList class is also defined in these cases. */
+.productList > li	{width:146px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
+.lineItemProdlist > li	{position:relative; display:block; padding:10px !important; width:99% !important; min-height:auto !important; /*border-bottom:1px dotted #efefef;*/} /* single column product list - used in cart, checkout, etc. productList class is also defined in these cases. */
 
 .lineItemProdlist .prodThumb	{margin-right:12px;}
 
@@ -305,11 +305,11 @@ and override using classes or id's as needed.
 
 .productList h4, .productList h5, .productList h6, .categoryList h4, .categoryList h5, .categoryList h6	{padding:0; margin:0;} /* h4 - h6 are used in default templates for name, price, etc */
 
-.productList li, .categoryList li	{font-size:.8em;}
+.productList li, .categoryList li	{font-size:12px;}
 
-.productList h4, .categoryList h4	{font-size:1em;}
-.productList h5, .categoryList h5	{font-size:.9em;}
-.productList h6, .categoryList h6	{font-size:.85em;}
+.productList h4, .categoryList h4	{font-size:12px;}
+.productList h5, .categoryList h5	{font-size:11px;}
+.productList h6, .categoryList h6	{font-size:11px;}
 
 
 /* multpage header for lists (product list) - most styling handled by jqueryUI */
@@ -352,7 +352,7 @@ PRODUCT DETAIL PAGE (productTemplate)
 .prodViewerContainer .prodThumbs div	{float:left; margin:12px 12px 0 0;}
 
 
-.prodSummaryContainer	{width:90%;}
+.prodSummaryContainer{width:90%; font-family:Arial, Helvetica, sans-serif;}
 
 
 .tabbedProductContent .prodReviewsTab	{display:block;} /* reviews tab always shows up */
@@ -541,7 +541,7 @@ CART
 
 ***************************************************/
 
-.cartSummaryTotalsContainer h2	{margin:0; border-top:0; border-left:0; border-right:0; padding:2px 12px; font-size:.8em;} /* header */
+.cartSummaryTotalsContainer h2	{margin:0; border-top:0; border-left:0; border-right:0; padding:2px 12px; font-size:12px;} /* header */
 .cartSummaryTotalsContainer .cartSummaryContainer	{padding:12px;}
 .cartZipCodeContainer, .cartAltButtonsContainer, .cartSummaryContainer	{margin-bottom:12px; padding-bottom:12px; border-bottom:1px dotted #efefef;}
 
@@ -642,9 +642,11 @@ CHECKOUT
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{background:#333; background:url("images/taboffbg.gif") repeat-x !important; color: #1C94C4; font-weight: bold}
 */
 
+
 .ui-tabs .ui-state-default{background:url("images/taboffbg.gif") repeat-x !important; color: #1C94C4; font-weight: bold;}
 .ui-tabs .ui-tabs-nav li.ui-tabs-active.ui-state-default{background:url("images/tabactivebg.gif") repeat-x  !important; border-left:1px solid #b1b1b1; border-right:1px solid #b1b1b1; border-top:1px solid #b1b1b1;}
 .tabbing .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited{color:#FFFFFF !important; text-decoration:none;}
+/*.tabbing .ui-state-default a{color:#FFFFFF !important; text-decoration:none;}*/
 .tabbing .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited{color:#666666 !important; text-decoration:none;}
 
 .ui-widget-content{background:#FFFFFF !important; border: 1px solid #DDDDDD; color: #333333;}
@@ -659,9 +661,9 @@ input.ui-button{padding: 0.2em 1em;}
 fieldset input.ui-button-text {background:#cccccc !important; color:#333 !important; border:1px solid #cccccc !important; }
 
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight{border:1px solid #CCCCCC !important;}
-.lineItemProdlist > li {margin:0px; padding:0px;}
+.lineItemProdlist > li {margin:0 0 10px 0; padding:0px;}
 /*login show start*/
-.loginShow {display:none;}5381a0
+.loginShow {display:none;}
 .loginShow a {color:#ffffff;}
 .loginHide a{ font-size:12px; color:#000; font-weight:bold; text-transform:uppercase; }
 .buyerLoggedIn span.loginShow {display:inline-block;}
@@ -677,22 +679,31 @@ fieldset input.ui-button-text {background:#cccccc !important; color:#333 !import
 
 /*Drop Dwon Menu Css*/
 ul#topnav{margin:0px; padding:0; float:left; list-style:none; position:relative;}
-ul#topnav li span{padding:0px 0 13px 0; position:absolute; left:0; top:27px;	display:none; background:#eae8e5; color:#fff; float:left; border-radius:6px 6px 6px 6px; border-left:1px solid #276b97; border-right:1px solid #276b97; border-bottom:1px solid #276b97; border-top:1px solid #276b97; z-index:9;}
+ul#topnav li span{padding:0px 0 13px 0; position:absolute; left:0; top:27px; display:none; background:#eae8e5; color:#fff; float:left; border-radius:6px 6px 6px 6px; border-left:1px solid #276b97; border-right:1px solid #276b97; border-bottom:1px solid #276b97; border-top:1px solid #276b97; z-index:9; opacity:0.90;}
 /*ul#topnav li span{padding:20px 0; position:absolute; left:0; top:27px;	display:none; min-width:600px; background:#eae8e5; color:#fff; float:left; border-radius:0 6px 6px 6px; border-left:2px solid #276b97; border-right:2px solid #276b97; border-bottom:2px solid #276b97; }*/
 ul#topnav li:hover span{display: block;}
 ul#topnav li span a{display: inline; color:#000000;}
 ul#topnav li span a:hover{text-decoration: underline;}
 
-ul#topnav li span ul{margin:0 20px 0 15px; padding:0px; float:left;}
+ul#topnav li span ul{margin:0 50px 0 0 ; padding:0px; float:left;}
 ul#topnav li span ul li{float:none;}
-ul#topnav li span ul li a{padding:8px 0 0 0; font-size:11px; float:left; color:#9a999a;}
-ul#topnav li span ul li a:hover{color:#818281;}
+ul#topnav li span ul li a{padding:4px 0 0 0; font-size:12px; float:left; color:#333;}
+ul#topnav li span ul li a:hover{color:#818281; text-decoration:none;}
 
 /*Drop Dwon Menu Css*/
-.sendmess{margin:0px; padding:0px; font-size:0px; border:0px; height:; width:; cursor:pointer;}
+.sendmess{margin:0px; padding:0px; font-size:0px; border:0px !important; height:23px !important; width:102px !important; cursor:pointer; background:none !important; background-image:url(images/send_massage.gif) !important; background-repeat:no-repeat;}
+.addtocarti{margin:0px; padding:0px; font-size:0px; border:0px !important; background:none !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
+.addtocartipro{margin:0 0 0 33px; padding:0px; font-size:0px; border:0px !important; background:none !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
+.prominh{min-height:205px !important; text-align:center;}
+.clickab{margin:0px; padding:0px; font-size:26px; font-family:'Abel', serif; color:#276b98; text-align:center;}
+.clickab a{color:#276b98 !important; text-decoration:none;}
+.clickab a:hover{color:#333 !important; text-decoration:none;}
+.ztitle2 {color: #666666; font-size: 14px;  font-weight: bold; margin:10px 0 0 0; font-family:'Ubuntu',serif;}
+.price{color:#FF0000; font-size:12.5px !important;}
+.basePrice{color:#FF0000; font-size:12.5px !important;}
 
 
-
+.ui-widget .ui-widget{font-size:12px;}
 
 
 

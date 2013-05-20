@@ -2,19 +2,12 @@
 <html>
 <head>
 <meta charset="utf-8">
-
 <!-- do not populate or add meta data or title, the SEO layer will add it -->
-
 <!-- used for optional social media extensions -->
 <meta property="og:type" content="" id='ogType' >
 <meta property="og:image" content="" id='ogImage' >
 <meta property="og:description" content="" id='ogDescription' >
-
-
 <base href='' /><!-- leave blank so it works for a local file. updated to / if protocol is not file: -->
-
-
-
 <script type="text/javascript">
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
@@ -26,7 +19,6 @@ var app = {vars:{
 	"checkoutAuthMode" : "required",//can be passive, active or required
 	"testURL":"http://www.9a34ba.pop.zoovy.net/" //used ONLY if protocol is file: (for testing)
 	},u:{},rq:[]};
-
 //set base url so images, css, js, etc all load from appropriate location once deployed.
 //baseURL as blank lets loadScript function run off local copy when testing locally.
 if(document.location.protocol == 'file:')	{
@@ -37,8 +29,6 @@ else	{
 	}
 document.getElementsByTagName('base')[0].href = app.vars.baseURL;
 </script>
-
-
 <!--
 all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
@@ -48,15 +38,12 @@ css files should be included before any .js file to ensure they are downloaded i
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Abel">
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Source+Sans+Pro">
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" />
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="resources/jquery.ui.widget.min.js"></script><!-- here so that plugins that may load before the jqueryui lib load without error -->
 <script type="text/javascript" src="loadscript.js"></script>
-
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-	
 $("ul#topnav li").hover(function() { //Hover over event on list item
 	//$(this).css({ 'background' : '#eae8e5'}); //Add background color + image on hovered list item
 	$(this).find("span").show(); //Show the subnav
@@ -64,31 +51,18 @@ $("ul#topnav li").hover(function() { //Hover over event on list item
 	$(this).css({ 'background' : 'none'}); //Ditch the background
 	$(this).find("span").hide(); //Hide the subnav
 });
-	
 });
 </script>
-
-
-
-
-
 <script type="text/javascript">
 app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 </script>
-
-
 </head>
-
 <body>
 <!-- DELETE THIS WHEN YOU GET STARTED -->
 <!--<h1>WELCOME TO QUICKSTART</h1>
 This file is intended to go along with the 10-step tutorial at:
 <a href="https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart">https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart</a>-->
 <!-- /DELETE THIS WHEN YOU GET STARTED -->
-
-
-
-
 <!-- what is displayed onLoad until the view is loaded -->
 <div id='appPreView'>
 <table>
@@ -122,9 +96,6 @@ This file is intended to go along with the 10-step tutorial at:
 </tr>
 </table>
 </div>
-
-
-
 <div id='appView' class='displayNone'>
 <!-- VIEW CONTENT -->
 <!-- leave the appView div, put your your html here ...  -->
@@ -164,19 +135,16 @@ This file is intended to go along with the 10-step tutorial at:
                         <li><a href="#.">Prints</a></li>
                         <li><a href="#.">Solids</a></li>
                     </ul> 
-                    
                     <ul>
                      	<li><a href="#.">Crochet</a></li>
                         <li><a href="#.">Thongs & Strings</a></li>
                         <li><a href="#.">Gauze</a></li>
                     </ul> 
-                    
                      <ul>
                      	<li><a href="#.">Metallic</a></li>
                         <li><a href="#.">Sheer</a></li>
                         <li><a href="#.">Skirted</a></li>
                     </ul> 
-                    
                     <ul>
                      	<li><a href="#.">Sport</a></li>
                         <li><a href="#.">Underwire</a></li>
@@ -267,7 +235,6 @@ This file is intended to go along with the 10-step tutorial at:
 	** REMINDER : DO NOT PUT ANY GRAPHICS/CONTENT THAT SHOULD NOT APPEAR ON EVERY PAGE IN THE VIEW (HERE)
 	**				  INSTEAD PUT THEM INTO <div id="homepageTemplate"></div>
 	-->
-	
 <!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
 <!-- These add specific functionality for the app. In most cases, you want to leave them alone. -->
 <div id='appNav' style="display:none;">
@@ -290,13 +257,9 @@ This file is intended to go along with the 10-step tutorial at:
 -->
 <div id='appTemplates' class='displayNone'>
 <!--
-
 ############################
-
 COMMONLY EDITED TEMPLATES
-
 ############################
-
 -->
 <!--
 the homepageTemplate template is loaded into mainContentArea by default when the application loads
@@ -336,6 +299,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 </ul>
 <div data-anytab-content='springReady'>
 <ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+<div class="clickab"><a href="#.">Click Here to browse more new releases</a></div>
 </div>
 <div data-anytab-content='greatGifts'>
 <ul data-bind="var: list($tab2.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25; hide_summary:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
@@ -408,16 +372,16 @@ remember to NOT put the button inside the 'onclick' container or two events will
 -->
 <li id='productListTemplate' class='loadingBG  ' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
 	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
-	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
+	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer prominh'>
 		<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
-		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='156' height='151' />
+		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='146' height='151' />
 		</div>
 		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
 		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
 <!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
 	</div>
-	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;">
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='addtocartipro prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;" >
 		<input type='hidden' name='qty' value='1' />
 		<button data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</button>
 	</form>
@@ -473,16 +437,15 @@ container ul should have lineItemProdlist class on it instead of productList
 Used for the product in a product list (prodlist), usually in the body of a category or the homepage.
 the loadingBG class is removed (must be that classname) when the template is translated.
 remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
-
 SANITY -> if you change the height and width of this image, change the .minimalMode .searchResultsProduct in qs_styles.css to match
 -->
 <li id='productListTemplateResults' class='loadingBG searchResultsProduct ' >
-	<div onClick="app.ext.myRIA.a.handleProdPreview($(this).parent().attr('data-pid'));" class='pointer'>
+	<div onClick="app.ext.myRIA.a.handleProdPreview($(this).parent().attr('data-pid'));" class='pointer' >
 		<div class='prodThumbContainer'>
 		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='120' height='120' />
 		</div>
 		<h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:text;'></h5>
-		<h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
+	<h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
 	</div>
 	<div class='hideInMinimalMode pointer moreDetails' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});">more details</div>
 </li>
@@ -503,13 +466,10 @@ NOTE - currently, variations.js supports only 1 viewer at a time. this will chan
 2 fieldsets are present:
  -> One is for variations/options and really ought to be present.
  -> The other is for a quantity input and is optional
-
 the submit button does not need to be within the form (a button could be used elsewhere if needed.
  -> use the button to submit the form, not execute the call or utility separately. That way if additional
  actions are added to the submit, they only have to be managed in one place.
-
 Additionally, the cross selling features also have hard coded id's, though they're specified within this extension in the xsell callback.
-
 this will likely become more flexible in the future. ###
 -->
 <div id='productTemplate' class='productPage'>
@@ -551,7 +511,7 @@ this will likely become more flexible in the future. ###
 	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this), {'action':'modal'}); return false;">
 		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 		<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'></fieldset>
-		<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
+		<input type='submit' value='Add to Cart' class='addtocarti ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
 	</form>
 	<div data-bind='var:product(zoovy:prod_cpsiawarning); format:cpsiaWarning; extension:myRIA;'></div>
 	<div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
@@ -560,8 +520,7 @@ this will likely become more flexible in the future. ###
 		<span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
 	</section>
 	<menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'>
-	<a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>Write Review</a>	|
-	<a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;">Add to Wishlist</a>
+	<a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'><img src="images/write_review.gif" alt="Write Review" title="Write Review" /></a>&nbsp;&nbsp;&nbsp;<a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;"><img src="images/add_whistlist.gif" alt="Add to Wishlist" title="Add to Wishlist" /></a>
 	</menu>
 	</td>
 </tr>
@@ -592,7 +551,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 	</div>
 	<div  class='tabContent' data-anytab-content='prodReviews'>
 		<div class='clearfix alignRight'>
-			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
+			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'><img src="images/write_review.gif"/></button>
 		</div>
 		<ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;"></ul>
 	</div>
@@ -610,10 +569,6 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 	<ul class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true; before:<h2>Similar Items</h2>; withReviews:1;"></ul>
 </div>
 </div><!-- productTemplate -->
-
-
-
-
 <!-- a template used for a quickview link off of a category page -->
 <div id='productTemplateQuickView'>
 <table class='prodViewerContainer'>
@@ -655,16 +610,12 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 	<h1>Unable to find page...</h1>
 </div>
 <!--
-
 ############################
-
 MOST OFTEN YOU WANT TO LEAVE THESE TEMPLATES ALONE
 if modified, be careful about changing id's or classes.
 adding classes is not likely to have any bad effects.
 if you change these, you should move them above this comment so that when you (or the next person) does an upgrade, you know what isn't default
-
 ############################
-
 -->
 <!--  used in breadcrumb -->
 <ul>
@@ -703,11 +654,18 @@ if you change these, you should move them above this comment so that when you (o
 				<div><label for='contactFormSubject'>Subject: </label><input type='text' name='subject' id='contactFormSubject' /></div>
 				<div><label for='contactFormOID'>Order ID: </label><input type='text' name='OID' id='contactFormOID' /></div>
 				<div><label for='contactFormBody'>Message: </label><textarea name='body' required='required' id='contactFormBody'></textarea></div>
-				<div class='alignRight'><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all sendmess' value='Send Message' />
+				<div class='alignRight'><input type='submit' class='ui-button ui-state-default ui-corner-all sendmess' value='Send Message' />
 				</div>
 			</fieldset>
 			</form>
 			<div data-bind='var: profile(zoovy:contact); format:wiki; wikiFormats:myRIA;' id='contactContent'></div>
+            <div class="ztitle2">Address:</div>
+            <div style="margin-bottom:10px;">
+            Comming Soon...
+            </div>
+            <div class="ztitle2">Phone:</div>
+	        <div style="margin-bottom:10px;">
+                000-000-0000</div>
 		</div>
 		<div id='faqArticle' class='displayNone textContentArea'>
 			<h1>Frequently Asked Questions</h1>
@@ -754,7 +712,6 @@ if you change these, you should move them above this comment so that when you (o
 		</div>
 	</div>
 </div><!-- /companyTemplate -->
-
 <!-- loadingBG needed on this for app init (content may take a moment to load) -->
 <div id='customerTemplate' class='clearfix' >
 	<div class='sideline'>
@@ -790,7 +747,6 @@ subscribeListsArticle is used for authenticated buyers
 		<div id='myaccountArticle' class='displayNone textContentArea'>
 			<h1>My Account</h1>
 			<section>
-
 <div class='billAddressContainer' data-app-role='addressContainer' data-app-addresstype='bill'>
 	<div class='marginBottom'>
 		<button class='floatRight' data-app-event='myRIA|showBuyerAddressAdd'>Add New Billing Address</button>
@@ -843,7 +799,7 @@ subscribeListsArticle is used for authenticated buyers
 	<!-- the div is use to show a detailed view of a product. should be hidden by default. -->
 	<div class='previewProductDetail displayNone'></div>
 	<div class='previewListContainer'>
-		<!-- productListTemplateResults gets loaded into here -->
+		<!-- productListTemplateResults gets loaded into here --><br clear="all">
 		<ul id='resultsProductListContainer' class='listStyleNone fluidList noPadOrMargin productList'></ul>
 	</div>
 </div>
@@ -862,7 +818,7 @@ onclicks are recursive, so only add it to the parent element.
 <div class='floatRight ddUlMenu mpControlsPagination'>
 <ul>
 	<li>
-	<a href='#' onClick='return false;'>
+	<a href='#' onClick='return false;' style="color:#1C94C4 !important;">
 	<span data-bind='var:prodlistmeta(page_in_focus); format:text; pretext: page ;'></span>
 	<span data-bind='var:prodlistmeta(total_page_count); format:text; pretext: of ;'></span>	</a>
 	<ul data-bind='var:prodlistmeta(total_page_count); format:mpPagesAsListItems; extension:store_prodlist;' class='ui-widget-content ui-corner-bottom'></ul>
@@ -877,7 +833,6 @@ onclicks are recursive, so only add it to the parent element.
 <span data-bind='var:prodlistmeta(total_product_count); format:text; pretext: of ;'></span>
 	</div><!-- /.mpControls -->
 </div><!-- /#mpControlSpec -->
-
 <!--
 used for store_cart.js
 The cart viewer is basically just a container for two other elements that get translated.
@@ -938,11 +893,9 @@ So the cart template should contain these two elements and the extension should 
 	</div>
 	</td>
 </tr>
-
 </table>
 </form>
 </div><!-- /cartTemplate -->
-
 <!-- cart line-item template -->
 <ul>
 	<li id='productListTemplateCart' class='padMargBorderBottom clearfix'>
@@ -1055,7 +1008,6 @@ used for store_crm.js
 <input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Subscribe' />
 </form>
 </div>
-
 <!-- used in the /customer section for order view -->
 <section id='orderLineItemTemplate' class='appAccordianesque' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>
 	<div data-app-role='orderHeader' onClick="app.ext.myRIA.u.showOrderDetails($(this).parent());" class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' >
