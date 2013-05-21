@@ -1,4 +1,4 @@
-body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; color:#808080; font-weight:normal;}
+body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; color:#231f20; font-weight:normal;}
 
 #appTemplates {display:none;} /* container for all templates. should be hidden */
 
@@ -22,11 +22,11 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 .contactsec{margin:0px; padding:0px; text-align:right; line-height:20px;}
 .contactsec a{color:#808080; text-decoration:none;}
 .contactsec a:hover{color:#000000; text-decoration:none;}
-.contactsec span{padding:0 10px;}
+.contactsec span{padding:0 10px; color: #808080;}
 .cartsec{margin:0px; padding:6px 0 0 0; text-align:right;}
 .cartsec img{margin:-3px 10px 0 0; padding:0;}
 .gryimgright{margin:0px; padding:0px; float:right;}
-.headerright2{margin:10px 0 0 0; padding:0px; width:435px; float:left;}
+.headerright2{margin:10px 0 0 0; padding:0px; width:435px; float:left; color: #808080;}
 .headerright2 .inpbox{margin:0 0 0 11px; padding:3px 5px 2px 5px; width:262px; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #808080; float:left;  border-right:none !important; font-size:11px;}
 .headerright2 .searchbut{margin:0px; padding:0px; float:left;}
 
@@ -86,7 +86,7 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 .coupons .fullinpbox{margin:4px 0 0 0; padding:2px 5px 1px 5px; width:153px; border:1px solid #b1b1b1; float:left; font-size:11px;}
 .footerbot{margin:0px; padding:0px; width:964px; float:left; text-align:center;}
 .foticon img{margin:0px; padding:3px 0 0 3px;}
-.copright{margin:0px; padding:7px 0 0 0;}
+.copright{margin:0px; padding:7px 0 0 0; color:#808080;}
 /*Footer Close*/
 /*Loader Page Start*/
 .loderwrapper{margin:10px auto; padding:0px; width:636px; height:410px; background:url(images/loaderbg.jpg) no-repeat;}
@@ -353,7 +353,12 @@ PRODUCT DETAIL PAGE (productTemplate)
 
 
 .prodSummaryContainer{width:90%; font-family:Arial, Helvetica, sans-serif;}
-
+.prodSummaryContainer h1{color: #54A7E1;
+    font-family: 'Abel',serif;
+    font-size: 28px;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;}
 
 .tabbedProductContent .prodReviewsTab	{display:block;} /* reviews tab always shows up */
 
@@ -701,9 +706,9 @@ ul#topnav li span ul li a:hover{color:#818281; text-decoration:none;}
 .ztitle2 {color: #666666; font-size: 14px;  font-weight: bold; margin:10px 0 0 0; font-family:'Ubuntu',serif;}
 .price{color:#FF0000; font-size:12.5px !important;}
 .basePrice{color:#FF0000; font-size:12.5px !important;}
-
-
 .ui-widget .ui-widget{font-size:12px;}
 
+.accaddtocart{margin:0px; padding:0px; font-size:0px !important; border:0px !important; background:none !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
+.accsize{margin:-80px 0 0 132px; padding:0px; width:776px; float:left;}
 
-
+/*.prodThumb:hover{-moz-transform:scale(2.2); position:relative}*/
