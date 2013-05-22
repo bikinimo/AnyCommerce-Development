@@ -655,7 +655,7 @@ CHECKOUT
 .tabbing .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited{color:#666666 !important; text-decoration:none;}
 
 .ui-widget-content{background:#FFFFFF !important; border: 1px solid #DDDDDD; color: #333333;}
-.ui-widget-header{background:#f7880a !important; border: 1px solid #f7880a !important; color: #FFFFFF; font-weight: bold;}
+.ui-widget-header{background:#d4b697 !important; border: 1px solid #d4b697 !important; color: #FFFFFF; font-weight: bold;}
 .shopingbag{color:#808080; padding:0 0 0 6px;}
 .cartItemCount{color:#808080;}
 
@@ -669,8 +669,8 @@ fieldset input.ui-button-text {background:#cccccc !important; color:#333 !import
 .lineItemProdlist > li {margin:0 0 10px 0; padding:0px;}
 /*login show start*/
 .loginShow {display:none;}
-.loginShow a {color:#ffffff;}
-.loginHide a{ font-size:12px; color:#000; font-weight:bold; text-transform:uppercase; }
+.loginShow a {color:#808080;}
+.loginHide a{ font-size:12px; color:#F00; font-weight:bold; text-transform:uppercase; }
 .buyerLoggedIn span.loginShow {display:inline-block;}
 .buyerLoggedIn .loginHide {display:none;}
 .hideIfLoggedIn{display:block;}
@@ -697,8 +697,10 @@ ul#topnav li span ul li a:hover{color:#818281; text-decoration:none;}
 
 /*Drop Dwon Menu Css*/
 .sendmess{margin:0px; padding:0px; font-size:0px; border:0px !important; height:23px !important; width:102px !important; cursor:pointer; background:none !important; background-image:url(images/send_massage.gif) !important; background-repeat:no-repeat;}
-.addtocarti{margin:0px; padding:0px; font-size:0px; border:0px !important; background:none !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
-.addtocartipro{margin:0 0 0 33px; padding:0px; font-size:0px; border:0px !important; background:none !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
+.addtocarti{margin:0px; padding:0px; font-size:0px; border:0px !important; background:none
+ !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
+.addtocartipro span{margin:0px; padding:0px; font-size:0px; border:0px !important; background:none !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
+.addtocartipro .ui-state-default{margin:0 0 0 33px;  border:none !important;background:none !important; /*padding:0px;  height:23px !important; width:83px !important;*/}
 .prominh{min-height:205px !important; text-align:center;}
 .clickab{margin:0px; padding:0px; font-size:26px; font-family:'Abel', serif; color:#276b98; text-align:center;}
 .clickab a{color:#276b98 !important; text-decoration:none;}
@@ -711,4 +713,9 @@ ul#topnav li span ul li a:hover{color:#818281; text-decoration:none;}
 .accaddtocart{margin:0px; padding:0px; font-size:0px !important; border:0px !important; background:none !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
 .accsize{margin:-80px 0 0 132px; padding:0px; width:776px; float:left;}
 
-/*.prodThumb:hover{-moz-transform:scale(2.2); position:relative}*/
+.emailinp{margin:0px; padding:4px; border:1px solid #CCCCCC;}
+.billinp{margin:0px; padding:4px; border:1px solid #CCCCCC; width:180px;}
+.billsel{width:190px; margin:2px 0; height:24px;}
+.billbor{border:1px solid #CCCCCC;}
+.lbbutt{ border:none !important;}
+.lbbutt span{margin:0px !important; padding:0px !important; border:none !important;}

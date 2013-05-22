@@ -108,7 +108,7 @@ This file is intended to go along with the 10-step tutorial at:
       	<div class="headerright1">
         	<div class="topsecmenu">
             	<div class="contactsec">
-					<a href="#" onClick="return showContent('company',{'show':'contact'});">Contact</a><span>|</span><a href="#" onClick="return showContent('company',{'show':'faq'});">FAQ</a><span>|</span><a href="#" onClick="return showContent('customer',{'show':'myaccount'});">My Account</a><span>|</span><span class="loginShow username" onClick="return showContent('customer',{'show':'myaccount'});" ></span> <span class="loginShow"> <a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></span>
+					<a href="#" onClick="return showContent('company',{'show':'contact'});">Contact</a><span>|</span><a href="#" onClick="return showContent('company',{'show':'faq'});">FAQ</a><span>|</span><a href="#" onClick="return showContent('customer',{'show':'myaccount'});">My Account</a><span>|</span><span class="loginShow username" onClick="return showContent('customer',{'show':'myaccount'});" ></span><span class="loginShow"><span>|</span> <a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></span>
 <a href="#" onClick="return showContent('customer',{'show':'myaccount'});" class="loginHide">Login</a>
 <br />
 <a href="#" onClick="return showContent('category',{navcat: '.005'});">Gift Cards</a><span>|</span><a href="#.">Sizing Guide</a>
@@ -203,20 +203,6 @@ This file is intended to go along with the 10-step tutorial at:
              	<p>
                 Sign up for our newsletter to<br />receive details on special discounts.
                 </p>
-              <!--<div id='subscribeFormTemplate'>
-<form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
-<fieldset class='userInfo borderNone'>
-<div>
-<input type='email' placeholder='email address' maxlength='50' size='30' required='required' name='login' value='' />
-</div>
-<div>
-<input type='text' placeholder='full name' maxlength='50' size='30' required='required' name='fullname' value='' />
-</div>
-</fieldset>
-<fieldset data-bind="var:newsletters(@lists); format:subscribeCheckboxes; extension:store_crm;" class='borderNone subscriberLists'></fieldset>
-<input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Subscribe' />
-</form>
-</div>-->
              <form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
                 <input type="email" class="fullinpbox" required='required' name='login' value='' placeholder='email address' /><br />
                  <input type="text" class="fullinpbox" required='required' name='fullname' placeholder='full name' />
@@ -326,13 +312,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
                 <a href="#.">Learn More.</a>
             </div>
          </div>
-<!--<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
-	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2>Featured Items</h2>; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
 	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
-<!-- a sample of how to format an elastic native search in a data-bind -->
-	<!--<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
-<!--<a href="#" onClick="return showContent('search',{'TAG':'IS_BESTSELLER'});">See all Best Sellers</a>-->
-<!-- a sample of how to get a 'list' src onto the page. -->
 	<ul data-bind="var: list($models.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 </div>
 <!--
@@ -1119,7 +1099,6 @@ The 'data-action' attribute is used to assign an onclick.
 </tr>
 </table>
 </div><!-- /templates -->
-
 <div id='loginFormForModal' class='loginOption displayNone' title='Please log in'>
 <!-- the contents of this div/id are toggled on/off when login/logout occurs. don't change the ID -->
 <p id='loginMessaging' class='marginBottom appMessaging'></p><br clear="left">
