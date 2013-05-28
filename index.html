@@ -13,7 +13,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"20130517194735",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20130528202435",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "required",//can be passive, active or required
@@ -29,6 +29,8 @@ else	{
 	}
 document.getElementsByTagName('base')[0].href = app.vars.baseURL;
 </script>
+<link href="magiczoom/magiczoom.css" rel="stylesheet" type="text/css" media="screen"/>
+<script src="magiczoom/magiczoom.js" type="text/javascript"></script>
 <!--
 all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
@@ -108,7 +110,7 @@ This file is intended to go along with the 10-step tutorial at:
       	<div class="headerright1">
         	<div class="topsecmenu">
             	<div class="contactsec">
-					<a href="#" onClick="return showContent('company',{'show':'contact'});">Contact</a><span>|</span><a href="#" onClick="return showContent('company',{'show':'faq'});">FAQ</a><span>|</span><a href="#" onClick="return showContent('customer',{'show':'myaccount'});">My Account</a><span>|</span><span class="loginShow username" onClick="return showContent('customer',{'show':'myaccount'});" ></span><span class="loginShow"><span>|</span> <a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></span>
+					<a href="#" onClick="return showContent('company',{'show':'contact'});">Contact</a><span>|</span><a href="#" onClick="return showContent('company',{'show':'faq'});">FAQ</a><span>|</span><a href="#" onClick="return showContent('customer',{'show':'myaccount'});">My Account</a><span>|</span><span class="loginShow username" onClick="return showContent('customer',{'show':'myaccount'});" ></span> <span class="loginShow"> <a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></span>
 <a href="#" onClick="return showContent('customer',{'show':'myaccount'});" class="loginHide">Login</a>
 <br />
 <a href="#" onClick="return showContent('category',{navcat: '.005'});">Gift Cards</a><span>|</span><a href="#.">Sizing Guide</a>
@@ -131,23 +133,23 @@ This file is intended to go along with the 10-step tutorial at:
         	<li><a href="#" onClick="return showContent('category',{navcat: '.01-new-2012-bikinis'});">Bikini Sets</a>
             	<span>
                 	<ul>
-                     	<li><a href="#.">Top Shelf</a></li>
-                        <li><a href="#.">Prints</a></li>
-                        <li><a href="#.">Solids</a></li>
+                     	<li><a href="#" onClick="return showContent('category',{navcat: '.02-top-shelf'});">Top Shelf</a></li>
+                        <li><a href="#" onClick="return showContent('category',{navcat: '.40-print-swimwear'});">Prints</a></li>
+                        <li><a href="#" onClick="return showContent('category',{navcat: '.45-solid-color-swimsuits'});">Solids</a></li>
                     </ul> 
                     <ul>
-                     	<li><a href="#.">Crochet</a></li>
-                        <li><a href="#.">Thongs & Strings</a></li>
-                        <li><a href="#.">Gauze</a></li>
+                     	<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'Crochet'});">Crochet</a></li>
+                        <li><a href="#" onClick="return showContent('category',{navcat: '.70-g-string-thong-bikini'});">Thongs & Strings</a></li>
+                        <li><a href="#" onClick="return showContent('category',{navcat: '.10-gauze-swimwear'});">Gauze</a></li>
                     </ul> 
                      <ul>
-                     	<li><a href="#.">Metallic</a></li>
-                        <li><a href="#.">Sheer</a></li>
-                        <li><a href="#.">Skirted</a></li>
+                     	<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'Metallic'});">Metallic</a></li>
+                        <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'sheer'});">Sheer</a></li>
+                        <li><a href="#" onClick="return showContent('category',{navcat: '.025-skirted-swimwear'});">Skirted</a></li>
                     </ul> 
                     <ul>
-                     	<li><a href="#.">Sport</a></li>
-                        <li><a href="#.">Underwire</a></li>
+                     	<li><a href="#" onClick="return showContent('category',{navcat: '.98-womens-sportswear'});">Sport</a></li>
+                        <li><a href="#" onClick="return showContent('category',{navcat: '.60-underwire-bikini'});">Underwire</a></li>
                      </ul> 
                   </span>
             </li>
@@ -203,6 +205,20 @@ This file is intended to go along with the 10-step tutorial at:
              	<p>
                 Sign up for our newsletter to<br />receive details on special discounts.
                 </p>
+              <!--<div id='subscribeFormTemplate'>
+<form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
+<fieldset class='userInfo borderNone'>
+<div>
+<input type='email' placeholder='email address' maxlength='50' size='30' required='required' name='login' value='' />
+</div>
+<div>
+<input type='text' placeholder='full name' maxlength='50' size='30' required='required' name='fullname' value='' />
+</div>
+</fieldset>
+<fieldset data-bind="var:newsletters(@lists); format:subscribeCheckboxes; extension:store_crm;" class='borderNone subscriberLists'></fieldset>
+<input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Subscribe' />
+</form>
+</div>-->
              <form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
                 <input type="email" class="fullinpbox" required='required' name='login' value='' placeholder='email address' /><br />
                  <input type="text" class="fullinpbox" required='required' name='fullname' placeholder='full name' />
@@ -273,6 +289,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
                 <div class="bannerright3"><img src="images/limit_botcarv.gif" alt="" /></div>
             </div>
         </div>
+        
         <!--<div class="tabbing"><img src="images/tabingpic.jpg" alt="" /></div>-->
 <div id='homepageTabs' class="tabbing">
 <!-- This works because of some awesome code in app-quickstart-init.js-->
@@ -285,10 +302,10 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 </ul>
 <div data-anytab-content='springReady'>
 <ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-<div class="clickab"><a href="#.">Click Here to browse more new releases</a></div>
+<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'IS_FRESH'})">Click Here to browse more new releases</a></div>
 </div>
 <div data-anytab-content='greatGifts'>
-<ul data-bind="var: list($tab2.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25; hide_summary:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+<ul data-bind="var: list($02-tankinis.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplateHotItem; hide_summary:1; withInventory:1; withVariations:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 </div>
 <div data-anytab-content='topAccessories'>
 <ul data-bind="var: list($tab3.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25; hide_summary:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
@@ -312,7 +329,13 @@ the homepageTemplate template is loaded into mainContentArea by default when the
                 <a href="#.">Learn More.</a>
             </div>
          </div>
+<!--<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
+	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2>Featured Items</h2>; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
 	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
+<!-- a sample of how to format an elastic native search in a data-bind -->
+	<!--<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
+<!--<a href="#" onClick="return showContent('search',{'TAG':'IS_BESTSELLER'});">See all Best Sellers</a>-->
+<!-- a sample of how to get a 'list' src onto the page. -->
 	<ul data-bind="var: list($models.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 </div>
 <!--
@@ -350,11 +373,16 @@ Used for the product in a product list (prodlist), usually in the body of a cate
 the loadingBG class is removed (must be that classname) when the template is translated.
 remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
 -->
+ <div id="dialog" title="Basic dialog">
+<p>This is an animated dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+</div>
+<button id="opener">Open Dialog</button>
 <li id='productListTemplate' class='loadingBG  ' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
 	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
-	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer prominh'>
+	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' id="selector" class='pointer prominh'>
 		<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
-		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='146' height='151' />
+		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='146' height='151' />
+        
 		</div>
 		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
 		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
@@ -420,7 +448,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 SANITY -> if you change the height and width of this image, change the .minimalMode .searchResultsProduct in qs_styles.css to match
 -->
 <li id='productListTemplateResults' class='loadingBG searchResultsProduct ' >
-	<div onClick="app.ext.myRIA.a.handleProdPreview($(this).parent().attr('data-pid'));" class='pointer' >
+	<div class='pointer' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">
 		<div class='prodThumbContainer'>
 		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='120' height='120' />
 		</div>
@@ -453,19 +481,21 @@ Additionally, the cross selling features also have hard coded id's, though they'
 this will likely become more flexible in the future. ###
 -->
 <div id='productTemplate' class='productPage'>
+
 <ul class='clearfix noPadOrMargin fluidList breadcrumb' data-bind='var: session(session.recentCategories.0); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 <table class='prodViewerContainer'>
 <tr>
 	<td class='imageContainer'>
-<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
-	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
-	<img src='blank.gif' class='prodBigImage' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='340' height='340' />
-</div>
-	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
-<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"2"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' alt='' width='100' height='100' /></div>
-<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"3"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image3); format:imageURL;' alt=''  width='100' height='100' /></div>
-<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"4"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' alt='' width='100' height='100' /></div>
-	</div>
+   
+	<!--<a href='blank.gif' data-bind='var: product(zoovy:prod_image1); format:imageURL2Href;' title='Sexy lady'  id='lady' class='MagicZoom'><img src='blank.gif' class='prodBigImage' alt='' data-bind='var: product(zoovy:prod_image1);format:magicZoomPlus;' width='340' height='340' /></a>-->
+    <img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:magicZoomPlus; extension:magicToolBox_mzp;' class='MagicZoom'	 id='lady' width='340' height='340' alt="" />
+    
+<!--<a href='blank.gif' rel='zoom-id:lady' rev='blank.gif'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2);  format:magicZoomPlus;extension:magicToolBox_mzp;' alt='' width='100' height='100' /></a>-->
+<img src='blank.gif' data-bind='var: product(zoovy:prod_image2);  format:magicZoomPlus;extension:magicToolBox_mzp;' alt='' width='100' height='100' class='MagicZoom' rel="zoom-id:lady" rev='blank.gif' />
+<!--<a href='blank.gif'  rel="zoom-id:lady" rev='blank.gif'><img src='blank.gif' data-bind='var: product(zoovy:prod_image3);  format:magicZoomPlus;extension:magicToolBox_mzp;' alt=''  width='100' height='100' /></a>-->
+<img src='blank.gif' data-bind='var: product(zoovy:prod_image3);  format:magicZoomPlus;extension:magicToolBox_mzp;' alt=''  width='100' height='100' class='MagicZoom' rel="zoom-id:lady" rev='blank.gif' />
+<!--<a href='blank.gif' rel="zoom-id:lady"  rev='blank.gif'><img src='blank.gif' data-bind='var: product(zoovy:prod_image4);  format:magicZoomPlus;extension:magicToolBox_mzp;' alt='' width='100' height='100' /></a>-->
+<img src='blank.gif' data-bind='var: product(zoovy:prod_image4);  format:magicZoomPlus;extension:magicToolBox_mzp;' alt='' width='100' height='100'  class='MagicZoom' rel="zoom-id:lady" rev='blank.gif' />
 	</td>
 	<td class='prodSummaryContainer marginBottom no_underline'>
 	<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
@@ -554,33 +584,136 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 <table class='prodViewerContainer'>
 <tr>
 	<td class='imageContainer'>
+
 <div>
+
 	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
-	<div data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'><img src='blank.gif' class='prodBigImage' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='240' height='240' /></div>
+	<div class='image1'>
+	<!--<a href='blank.gif' data-bind='var: product(zoovy:prod_image1);'><img src='blank.gif' class='prodBigImage' alt='' data-bind='var: product(zoovy:prod_image1); format:magicZoomPlus; extension:magicToolBox_mzp;' width='340' height='340' /></a>-->
+   
+    
+	</div>
+ <img src='blank.gif' class='prodBigImage' alt='' data-bind='var: product(zoovy:prod_image1); format:magicZoomPlus; extension:magicToolBox_mzp;' width='340' height='340' />
 </div>
+
+	<div  class='prodThumbs'>
+<img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='75' height='75' />
+<!--<a href='blank.gif' data-bind='var: product(zoovy:prod_image2);' ><img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='75' height='75' /></a>
+
+<a href='blank.gif' data-bind='var: product(zoovy:prod_image3);'  ><img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='75' height='75' /></a>
+
+<a href='blank.gif' data-bind='var: product(zoovy:prod_image4); '><img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='75' height='75' /></a>-->
+<img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='75' height='75' />
+<img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image4); format:magicZoomPlus; extension:magicToolBox_mzp;' width='75' height='75' />
+
+	</div>
+
 	</td>
+
 	<td class='prodSummaryContainer marginBottom no_underline'>
 	<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
-	<h6 class='ztable_row_small stid' data-bind='var: product(pid); format:text; className: stid; pretext: Sku#: ;'></h6>
-	<div class='priceContainer'>
-		<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
-		<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
-		<span class='savings'>
-			<span class='savingsDifference' data-bind='var: product(pid); format:priceRetailSavingsDifference; extension:myRIA; pretext: You save: ;'></span>
-			<span class='savingsPercentage' data-bind='var: product(pid); format:priceRetailSavingsPercentage; extension:myRIA; pretext: (; posttext:);'></span>
-		</span>
-	</div>
-	<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency'></div>
+
+	<hgroup class='marginBottom'>
+		<h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
+		<h5 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Mfg: ;'></h5>
+		<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
+	</hgroup>
+
+	<h3 class='basePrice marginBottom' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h3>
+
+	<table class='marginBottom fullWidth gridTable' data-app-role='childrenSiblingsContainer'>
+		<tbody data-bind="var: product(zoovy:grp_children); format:productList; extension:store_prodlist; loadsTemplate:productListTemplateChildren;hide_summary:true; withInventory:1; withVariations:1;"></tbody>
+	</table>
+
+
+	<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency marginBottom'></div>
+
+
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.cart_quickadd.a.addItemToCart($(this)); return false;">
+
+		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
+		<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'></fieldset>
+
+		<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
+	</form>
+
+	<div data-bind='var:product(zoovy:prod_cpsiawarning); format:cpsiaWarning; extension:myRIA;'></div>
+	<div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
+
 	<section class='marginBottom'>
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
 		<span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
 	</section>
-	<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+
+	<menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'>
+
+	<a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>Write Review</a>	|
+
+	<a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;">Add to Wishlist</a>
+
+	</menu>
+
 	</td>
 </tr>
 <tr>
-	<td colspan='2'>
-	<ul class='listStyleNone clearfix productReviewsList'  data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;"></ul>
+	<td colspan='2' class="tabbedProductContentTD">
+<!--
+the tabs are built in an onComplete.  ID's are added based on sku AND index, so the index (order) of the tabs MUST match the order of the tabContent divs
+or the tab clicked won't open the right content.
+It's done this way because ID's hard coded into template are bad mojo (templates are recycled) and because using data-binds to add id's caused some serious issues
+-->
+<div class='prodTabs tabbedProductContent'>
+
+	<ul class='tabs'>
+		<li class='prodDescTab'><a href='#prodDesc'>Description</a></li>
+		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href='#prodSpecs'>Specs</a></li>
+		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href='#prodFeatures'>Features</a></li>
+		<li class='prodReviewsTab'><a href='#prodReviews'>Reviews</a></li>
+		<li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href='#prodVideo'>Video</a></li>
+		<li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a href='#prodAccessories'>Accessories</a></li>
+	</ul>
+
+	<div class='tabContent' data-anytab-content='prodDesc'>
+		<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+	</div>
+
+	<div class='tabContent' data-anytab-content='prodSpecs'>
+		<div data-bind='var: product(zoovy:prod_detail); format:wiki; wikiFormats:myRIA;'></div>
+	</div>
+
+	<div class='tabContent' data-anytab-content='prodFeatures'>
+		<div data-bind='var: product(zoovy:prod_features); format:wiki; wikiFormats:myRIA;'></div>
+	</div>
+
+
+	<div  class='tabContent' data-anytab-content='prodReviews'>
+
+		<div class='clearfix alignRight'>
+			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
+		</div>
+
+		<ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;"></ul>
+
+	</div>
+
+	<div class='tabContent' data-anytab-content='prodVideo'>
+		<div data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
+	</div>
+
+	<div class='tabContent' data-anytab-content='prodAccessories'>
+
+
+<table class='fullWidth gridTable'>
+<tbody data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateATC;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;"></tbody>
+</table>
+
+	</div>
+
+
+
+
+</div>
+
 	</td>
 </tr>
 </table>
@@ -882,6 +1015,7 @@ So the cart template should contain these two elements and the extension should 
 		<button class='floatRight removeButton' data-bind='format:removeItemBtn; extension:store_cart; useParentData:true;' >Remove Item From Cart</button>
 		<button class='floatRight moveToWishlist marginRight' data-bind='format:moveToWishlistButton; extension:myRIA; useParentData:true;' >Move to Wishlist</button>
 		<div class='floatLeft'><img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); defaultVar: product(%attribs.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
+          
 		<h4 data-bind='var: product(prod_name); format:text; '></h4>
 		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 		<div>
@@ -1099,6 +1233,7 @@ The 'data-action' attribute is used to assign an onclick.
 </tr>
 </table>
 </div><!-- /templates -->
+
 <div id='loginFormForModal' class='loginOption displayNone' title='Please log in'>
 <!-- the contents of this div/id are toggled on/off when login/logout occurs. don't change the ID -->
 <p id='loginMessaging' class='marginBottom appMessaging'></p><br clear="left">

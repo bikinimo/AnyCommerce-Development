@@ -14,14 +14,16 @@ app.rq.push(['extension',0,'store_product','extensions/store_product.js']);
 app.rq.push(['extension',0,'store_cart','extensions/store_cart.js']);
 app.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 app.rq.push(['extension',0,'myRIA','app-quickstart.js','startMyProgram']);
+app.rq.push(['extension',0,'fancybox','extensions/fancybox/extension_fancybox.js','startExtension']);
 
 //app.rq.push(['extension',1,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
 app.rq.push(['extension',1,'tools_ABtesting','extensions/tools_ABtesting.js']);
+app.rq.push(['extension',1,'powerReviews','extensions/reviews_powerreviews.js','startExtension']);
 //app.rq.push(['extension',0,'partner_addthis','extensions/partner_addthis.js','startExtension']);
 //app.rq.push(['extension',1,'resellerratings_survey','extensions/partner_buysafe_guarantee.js','startExtension']); /// !!! needs testing.
 //app.rq.push(['extension',1,'buysafe_guarantee','extensions/partner_buysafe_guarantee.js','startExtension']);
 //app.rq.push(['extension',1,'powerReviews_reviews','extensions/partner_powerreviews_reviews.js','startExtension']);
-//app.rq.push(['extension',0,'magicToolBox_mzp','extensions/partner_magictoolbox_mzp.js','startExtension']); // (not working yet - ticket in to MTB)
+app.rq.push(['extension',0,'magicToolBox_mzp','extensions/partner_magictoolbox_mzp.js','startExtension']); // (not working yet - ticket in to MTB)
 
 app.rq.push(['script',0,(document.location.protocol == 'file:') ? app.vars.testURL+'jquery/config.js' : app.vars.baseURL+'jquery/config.js']); //The config.js is dynamically generated.
 app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){return (typeof zoovyModel == 'function') ? true : false;}}
@@ -32,8 +34,11 @@ app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']); //used pretty early in process..
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']); //in zero pass in case product page is first page.
 
+app.rq.push(['script',0,app.vars.baseURL+'resources/load-image.min.js']); //in zero pass in case product page is first page.
+app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.image-gallery.jt.js']); //in zero pass in case product page is first page.
 
-
+app.rq.push(['css',0,'examples/magictoolbox/magiczoomplus.css','mzpStylesheet']);
+app.rq.push(['script',0,'examples/magictoolbox/magiczoomplus.js',function(){}]);
 
 //add tabs to product data.
 //tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
@@ -48,6 +53,7 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 			}
 		else	{} //couldn't find the tab to tabificate.
 	}]);
+
 app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) { 
 	if(!$('#homepageTabs').hasClass('anytabs')){
 		$('#homepageTabs').addClass('anytabs').anytabs();
@@ -56,7 +62,6 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 		$('#homepageBottomTabs').addClass('anytabs').anytabs();
 		}
 	}]);
-
 //sample of an onDeparts. executed any time a user leaves this page/template type.
 //app.rq.push(['templateFunction','homepageTemplate','onDeparts',function(P) {app.u.dump("just left the homepage")}]);
 /*
@@ -153,12 +158,30 @@ app.u.appInitComplete = function(P)	{
 	}
 
 
-
+app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
+	
+	$('.gallery a[data-gallery]',app.u.jqSelector('#',P.parentID)).each(function(){
+		if($('img',$(this)).length < 1)	{
+			$(this).empty().remove(); //nuke any hrefs with no images. otherwise next/previous in gallery will show an empty spot
+			}
+		else	{
+			$(this).attr('title',app.data[P.datapointer]['%attribs']['zoovy:prod_name']); //title is used in gallery modal.
+			}
+		});
+//init gallery.
+	$('.gallery',app.u.jqSelector('#',P.parentID)).imagegallery({
+		show: 'swing',
+		hide: 'fade',
+		fullscreen: false,
+		slideshow: true
+		});
+	}]);
 
 //don't execute script till both jquery AND the dom are ready.
 $(document).ready(function(){
 	app.u.handleRQ(0)
 	});
+
 
 
 
