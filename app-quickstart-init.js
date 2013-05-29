@@ -37,8 +37,8 @@ app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']); 
 app.rq.push(['script',0,app.vars.baseURL+'resources/load-image.min.js']); //in zero pass in case product page is first page.
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.image-gallery.jt.js']); //in zero pass in case product page is first page.
 
-app.rq.push(['script',0,app.vars.baseURL+'carouFredSel-6.1.0/jquery.carouFredSel-6.1.0-packed.js']);
-
+app.rq.push(['css',0,'examples/magictoolbox/magiczoomplus.css','mzpStylesheet']);
+app.rq.push(['script',0,'examples/magictoolbox/magiczoomplus.js',function(){}]);
 
 //add tabs to product data.
 //tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
@@ -114,14 +114,10 @@ app.u.initMVC = function(attempts){
 		percentComplete = 100;
 		}
 
-	//$('#appPreViewProgressBar','#appPreView').val(percentComplete);
-	//$('#appPreViewProgressText','#appPreView').empty().append(percentComplete+"% Complete");
-   $('#progressBar').stop().animate({"width": percentComplete+"%"},100);
-	$('#progressText').empty().append("PLEASE WAIT WHILE YOUR SHOPPING EXPERIENCE LOADS");
+	$('#appPreViewProgressBar','#appPreView').val(percentComplete);
+	$('#appPreViewProgressText','#appPreView').empty().append(percentComplete+"% Complete");
 
 	if(resourcesLoaded == app.vars.rq.length)	{
-
-		/*
 		var clickToLoad = false;
 		if(clickToLoad){
 			$('#loader').fadeOut(1000);
@@ -131,13 +127,6 @@ app.u.initMVC = function(attempts){
 		} else {
 			app.u.loadApp();
 			}
-		*/
-		app.u.dump("Preference Selected? "+app.preferenceSelected);
-		if(app.preferenceSelected){
-			app.u.loadApp();
-		} else {
-			app.loadOnSelect = true;
-		}
 		}
 	else if(attempts > 50)	{
 		app.u.dump("WARNING! something went wrong in init.js");
@@ -150,32 +139,6 @@ app.u.initMVC = function(attempts){
 		}
 
 	}
-	
-	app.u.selectPreference = function(preference, save){
-	if(!app.preferenceSelected){
-		app.preferenceSelected = true;
-		if(typeof preference !== "undefined"){
-			app.u.dump("Preference Selected: " + preference);
-			if(save){
-				//localStorage.appPreferences = preference;
-			} else {
-				//don't save the preference to localStorage
-			}
-		}
-		$(".showWithPreferences").removeClass('displayNone');
-		$(".showSansPreferences").addClass('displayNone');
-		if(app.loadOnSelect){
-			app.u.loadApp();
-		}
-	} else {
-		//app preference is already set, don't do it again! (might screw with the loading process)
-	}
-	
-}
-
-app.u.skipPreference = function(){
-	app.u.selectPreference(undefined);
-}
 
 app.u.loadApp = function() {
 //instantiate controller. handles all logic and communication between model and view.
@@ -192,8 +155,27 @@ app.u.loadApp = function() {
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
 app.u.appInitComplete = function(P)	{
 	app.u.dump("Executing myAppIsLoaded code...");
-	showContent();
 	}
+
+
+app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
+	
+	$('.gallery a[data-gallery]',app.u.jqSelector('#',P.parentID)).each(function(){
+		if($('img',$(this)).length < 1)	{
+			$(this).empty().remove(); //nuke any hrefs with no images. otherwise next/previous in gallery will show an empty spot
+			}
+		else	{
+			$(this).attr('title',app.data[P.datapointer]['%attribs']['zoovy:prod_name']); //title is used in gallery modal.
+			}
+		});
+//init gallery.
+	$('.gallery',app.u.jqSelector('#',P.parentID)).imagegallery({
+		show: 'swing',
+		hide: 'fade',
+		fullscreen: false,
+		slideshow: true
+		});
+	}]);
 
 //don't execute script till both jquery AND the dom are ready.
 $(document).ready(function(){
