@@ -475,6 +475,194 @@ else	{
 		}, //callbacks
 
 
+a : {
+			showSizeChart : function(){
+				$('#size-chart').dialog({'modal':'true', 'title':'Sizing Chart','width':800, height:550});
+				},
+			showRMAForm : function(){
+				$('#rma-form').dialog({'modal':'true', 'title':'RMA Form','width':800, height:550});
+				},
+			addRMAItem : function(){
+				var index = $("#rmaItems .rmaItem").length + 1;
+				var $rmaItem = $('<div class="rmaItem"></div>');
+				$rmaItem.append($('<label class="col1">'+index+'</label>'));
+				$rmaItem.append($('<input class="col2" type="text" value="" name="returnid_'+index+'" id="returnid_'+index+'" />'));
+				$rmaItem.append($('<input class="col3" type="radio" name="retex_'+index+'" id="retex_'+index+'" value="refund" />'));
+				$rmaItem.append($('<input class="col4" type="radio" name="retex_'+index+'" id="retex_'+index+'" value="exchange" />'));
+				$rmaItem.append($('<input class="col5" type="text" name="exchangeid_'+index+'" id="exchangeid_'+index+'" value="" />'));
+				$rmaItem.append($('<button onClick="app.ext.cubworld.a.removeRMAItem($(this).parent()); return false;" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only"><span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span></button>'));
+				$('#rmaItems').append($rmaItem);
+				},
+			removeRMAItem : function($rmaItem){
+				$rmaItem.remove();
+				var index = 1;
+				$("#rmaItems .rmaItem").each(function(){
+					var $this = $(this);
+					$('.col1',$this).text(index);
+					$('.col2',$this).attr('name','returnid_'+index);
+					$('.col2',$this).attr('id','returnid_'+index);
+					$('.col3',$this).attr('name','retex_'+index);
+					$('.col3',$this).attr('id','retex_'+index);
+					$('.col4',$this).attr('name','retex_'+index);
+					$('.col4',$this).attr('id','retex_'+index);
+					$('.col5',$this).attr('name','exchangeid_'+index);
+					$('.col5',$this).attr('id','exchangeid_'+index);
+					index++;
+					});
+				},
+			handleRMAForm : function(){
+				var errors = [];
+				var obj = {};
+				var $form = $('#rma-form form');
+				obj.sender = $('#RMAFormEmail',$form).val();
+				obj.subject = "RMA Form Submission";
+				
+				obj.body = "";
+				
+				obj.body += "Customer: "+$('#RMAFormSender',$form).val() +"\n";
+				obj.body += "Order: "+$('#RMAFormOID',$form).val() +"\n";
+				obj.body += "Phone: "+$('#RMAFormPhone',$form).val() +"\n";
+				obj.body += "Email: "+$('#RMAFormEmail',$form).val() +"\n";
+				obj.body += "\n";
+				
+				obj.body += "Questions/Comments:\n";
+				obj.body += $('#RMAFormBody',$form).val()
+				obj.body += "\n";
+				obj.body += "\n";
+				
+				obj.body += "Permission to refund/charge card: "+$('input[name=cc_charge_confirm]:checked', $form).val()+"\n";
+				obj.body += "\n";
+				 var i=1;
+				$('#rmaItems .rmaItem', $form).each(function(){
+					var $rmaItem = $(this);
+					if(typeof $('input[name=returnid_'+i+']',$rmaItem).val() !== "" &&
+						typeof $('input[name=retex_'+i+']:checked',$rmaItem).val() !== "" &&
+						($('input[name=retex_'+i+']:checked',$rmaItem).val()==="refund"||
+							($('input[name=retex_'+i+']:checked',$rmaItem).val()==="exchange" && 
+								typeof $('input[name=exchangeid_'+i+']',$rmaItem).val() !== ""))){
+						obj.body += "SKU: "+$('input[name=returnid_'+i+']',$rmaItem).val()+"\n";
+						obj.body += "Item for "+$('input[name=retex_'+i+']:checked', $rmaItem).val()+"\n";
+						if($('input[name=retex_'+i+']:checked',$rmaItem).val()==="exchange"){
+							obj.body += "Exchange for: "+$('input[name=exchangeid_'+i+']',$rmaItem).val()+"\n";
+							}
+						obj.body += "\n";
+						}
+					else {
+						app.u.dump("ERROR"+i);
+						errors.push("Item number "+i+" contained errors");
+						}
+					i++;
+					});
+				
+				app.u.dump(obj);
+				app.u.dump(errors);
+				if(errors.length == 0){
+					var _tag = {
+						callback : function(){
+							$('#RMAFormMessaging', $form).anymessage({'message' : "Thank you, your request has been submitted"});
+							app.u.printByjqObj($form);
+							}
+						};
+					app.calls.appSendMessage.init(obj, _tag, 'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else {
+					var message = $("<ul></ul>");
+					for(var e in errors){
+						message.append($("<li>"+e+"/<li>"));
+					}
+					$('#RMAFormMessaging', $form).anymessage({'message' : message.html()});
+					}
+				},
+			showDropDown : function ($tag) {
+				//app.u.dump('showing');
+				//console.log($tag.data('timeoutNoShow'));
+				if(!$tag.data('timeoutNoShow') || $tag.data('timeoutNoShow')=== "false") {
+					var $dropdown = $(".dropdown", $tag);
+					var height = 0;
+					$dropdown.show();
+					if($dropdown.data('height')){
+						height = $dropdown.data('height');
+					} else{
+						$dropdown.children().each(function(){
+							height += $(this).outerHeight();
+						});
+					}
+					if($tag.data('timeout') && $tag.data('timeout')!== "false"){
+						clearTimeout($tag.data('timeout'));
+						$tag.data('timeout','false');
+						
+					}
+					$dropdown.stop().animate({"height":height+"px"}, 500);
+					return true;
+					}
+				return false;
+				},
+				
+			showDropDownClick : function($tag){
+				//app.u.dump('showClick');
+				if(this.showDropDown($tag)){
+					$('.dropdown',$tag).unbind('click');
+					$('.dropdown',$tag).click(function(event){event.stopPropagation()});
+					$tag.attr('onClick','').unbind('click');
+					setTimeout(function(){$('body').click(function(){
+						app.ext.cubworld.a.hideDropDownClick($tag);
+						});}, 500);
+					}
+				},
+				
+			hideDropDown : function ($tag) {
+				//app.u.dump('hiding');
+				$(".dropdown", $tag).stop().animate({"height":"0px"}, 500);
+				if($tag.data('timeout') && $tag.data('timeout')!== "false"){
+					$tag.data('timeout')
+					$tag.data('timeout','false');
+				}
+				$tag.data('timeout',setTimeout(function(){$(".dropdown", $tag).hide();},500));
+				return true;
+				},
+				
+			hideDropDownClick : function($tag){
+				//app.u.dump('hideClick');
+				if(this.hideDropDown($tag)){
+					$tag.click(function(){app.ext.cubworld.a.showDropDownClick($(this));});
+					$('body').unbind('click');
+					}
+				},
+				
+			hideDropDownOnSelect : function($tag){
+				this.hideDropDown($tag);
+				$tag.data('timeoutNoShow', setTimeout(function(){$tag.data('timeoutNoShow', 'false');}, 500));
+				},
+				
+			sendInquiry : function($form){
+				
+				var formJSON = $form.serializeJSON();
+				
+				obj = {
+					'sender' : formJSON.sender,
+					'subject' : 'Player Inquiry Form Submission',
+					'body' : 'Player: '+formJSON.playername+"\n"
+							+'Team: '+formJSON.team+"\n"
+							+'Message:\n'+formJSON.body
+					};
+				app.calls.appSendMessage.init(obj,{}, 'mutable');
+				app.model.dispatchThis('mutable');
+				},
+			sendGroupRequest : function($form){
+				var formJSON = $form.serializeJSON();
+				
+				obj = {
+					'sender' : formJSON.sender,
+					'subject' : formJSON.subject,
+					'body' : 'Name: '+formJSON.fullname+"\n"
+							+'Event Date: '+formJSON.eventdate+"\n"
+							+'Message:\n'+formJSON.body
+					};
+				app.calls.appSendMessage.init(obj,{}, 'mutable');
+				app.model.dispatchThis('mutable');
+				}
+			},
 
 ////////////////////////////////////   WIKILINKFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -3160,6 +3348,9 @@ else	{
 
 			
 			}, //util
+			
+			
+			
 
 ////////////////////////////////////   app Events [e]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -3230,6 +3421,8 @@ else	{
 				} //showBuyerAddressAdd
 
 			} // e/events
+		
+		
 		
 		} //r object.
 	return r;
