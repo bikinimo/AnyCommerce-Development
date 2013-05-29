@@ -61,56 +61,43 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 <script type="text/javascript" src="js/tabbing.js"></script>
 </head>
 <body>
+<!-- DELETE THIS WHEN YOU GET STARTED -->
+<!--<h1>WELCOME TO QUICKSTART</h1>
+This file is intended to go along with the 10-step tutorial at:
+<a href="https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart">https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart</a>-->
+<!-- /DELETE THIS WHEN YOU GET STARTED -->
+<!-- what is displayed onLoad until the view is loaded -->
 <div id='appPreView'>
-<div class="loderwrapper">
+<table>
+<tr>
+	<td><!-- put logo here --></td>
+	<td>
+	<div class="loderwrapper">
 	<div class="lodemid">
-<div id="previewLogo">
-	<img src="images/loaderlogo.png" />
-</div>
-
-<div id="previewContent" class="noiseBG">
-<div class="fashionclub">
+    	<div class="loaderlogo"><a href="#" onClick="return showContent('category',{'navcat' : '.'});"><img src="images/loaderlogo.png" alt="Bikinimo Swimwear" title="Bikinimo Swimwear" /></a></div>
+        <div class="fashionclub">
         	<h2>Join the</h2>
             <h1>Fashion Club!</h1>
 			<p>Stay informed about specials, discounts and <br />special events in the BikiniMo universe.</p>
  			<p>It’s free and we’ll send you a special gift just for joining.</p>
         </div>
-	<div id="categorySelector" class="showSansPreferences displayNone">
-		<div id="categorySelectorPaintball" class="floatLeft" onClick="app.u.selectPreference('paintball',false);">
-			<div class="categorySelectorButtonContainer alignLeft"><span class="categorySelectorButton pointer orbitron"><a href="#"><img src="images/remind_letter.png" alt="Remind Me Later" title="Remind Me Later" style="margin:0px;"/></a></span></div>
+        <div class="remidbutt"><a href="#."><img src="images/remind_letter.png" alt="Remind Me Later" title="Remind Me Later" style="margin:0px;"/></a><a href="#" onClick="showContent('customer',{'show':'newsletter'});"><img src="images/sign_up.png" alt="Sign Me Up" title="Sign Me Up" /></a><a href="#."><img src="images/continu_guest.png" alt="Continue as Guest" title="Continue as Guest" /></a></div>
+    </div>
+    <div id="loader">
+		<!--<h3>One moment please.</h3>-->
+		<div class='alignCenter'>
+		<progress id="appPreViewProgressBar" max="100" value="0"></progress><br>
 		</div>
-		<div id="categorySelectorAirsoft" class="floatRight" onClick="app.u.selectPreference('airsoft',false);">
-		<div class="categorySelectorButtonContainer alignCenter"><span class="categorySelectorButton pointer orbitron"><a href="#customer?show=newsletter"><img src="images/sign_up.png" alt="Sign Me Up" title="Sign Me Up" /></a></span></div>
-        <div class="categorySelectorButtonContainer alignRight"><span class="categorySelectorButton pointer orbitron"><a href="#"><img src="images/continu_guest.png" alt="Continue as Guest" title="Continue as Guest" /></a></span></div>
-		</div>
-		<div class="clear"></div>
-		</div>
-	<div id="progressBarContainer" class="showWithPreferences displayNone">
-    <div class='alignCenter'>
-		<div id="progressBarOutline">
-			<div id="progressBar"></div>
-		</div>
-	<h2 id='progressText'>PLEASE WAIT WHILE YOUR SHOPPING EXPERIENCE LOADS</h2>
-	</div>
+		<!--<div id='appPreViewProgressText'>0% Complete</div>-->
+      </div>
+    <div id="clickToLoad" class="plswait">
+		PLEASE WAIT WHILE YOUR SHOPPING EXPERIENCE 	LOADS
 	</div>
 </div>
-<script type="text/javascript">
-	app.preferenceSelected = !(typeof localStorage.appPreferences==="undefined");
-	if(app.preferenceSelected){
-		$(".showWithPreferences").removeClass('displayNone');
-	} else {
-		$(".showSansPreferences").removeClass('displayNone');
-		$("#categorySelectorAirsoft, #categorySelectorPaintball, #categorySelectorRemember, .categorySelectorButton, #categorySelectorChooseTitle, #categorySelectorSkipButton").hide();
-		$("#previewContent").hide().delay(200).fadeIn(800);
-		setTimeout( function() {
-			$("#categorySelectorAirsoft, #categorySelectorPaintball").css("top","-308px").animate({"top":"0px"}, {duration:300});
-			$(".categorySelectorButton, #categorySelectorChooseTitle, #categorySelectorSkipButton").delay(300).fadeIn({duration: 500});
-			$("#categorySelectorAirsoft, #categorySelectorPaintball, #categorySelectorRemember").fadeIn({duration: 500, queue:false});
-		}, 1000);
-	}
-</script>
-</div>
-</div>
+	<div class='appMessaging'></div>
+	</td>
+</tr>
+</table>
 </div>
 <div id='appView' class='displayNone'>
 <!-- VIEW CONTENT -->

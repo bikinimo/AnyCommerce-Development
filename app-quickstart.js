@@ -3160,9 +3160,6 @@ else	{
 
 			
 			}, //util
-			
-			
-			
 
 ////////////////////////////////////   app Events [e]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -3233,8 +3230,6 @@ else	{
 				} //showBuyerAddressAdd
 
 			} // e/events
-		
-		
 		
 		} //r object.
 	return r;
