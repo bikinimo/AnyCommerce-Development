@@ -58,6 +58,7 @@ $("ul#topnav li").hover(function() { //Hover over event on list item
 <script type="text/javascript">
 app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 </script>
+<script type="text/javascript" src="js/tabbing.js"></script>
 </head>
 <body>
 <!-- DELETE THIS WHEN YOU GET STARTED -->
@@ -380,6 +381,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <li id='productListTemplate' class='loadingBG  ' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
 	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
 	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' id="selector" class='pointer prominh'>
+    
 		<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
 		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='146' height='151' />
         
@@ -398,19 +400,19 @@ remember to NOT put the button inside the 'onclick' container or two events will
 for product lists with addToCart feature (accessories, for example)
 container ul should have lineItemProdlist class on it instead of productList
 -->
-<li id='productListTemplateATC' class='loadingBG  ' >
+<li id='productListTemplateATC' class='loadingBG tp' >
 	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
-		<div class='prodThumbContainer floatLeft'>
+		<div class="accMain"><div class='prodThumbContainer floatLeft'>
 		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
 		</div>
-		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
+		<div style="float:left;"><h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
 		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
 		<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm accsize clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this)); return false;">
 			<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 			<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:0;' class='borderNone'></fieldset>
 			<input type='submit' value='Add to Cart' class='accaddtocart displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
-		</form>
+		</form></div></div>
 	</div>
 </li>
 <li id='productListTemplateBuyerList' class='loadingBG clearfix' >
@@ -497,16 +499,16 @@ this will likely become more flexible in the future. ###
 <!--<a href='blank.gif' rel="zoom-id:lady"  rev='blank.gif'><img src='blank.gif' data-bind='var: product(zoovy:prod_image4);  format:magicZoomPlus;extension:magicToolBox_mzp;' alt='' width='100' height='100' /></a>-->
 <img src='blank.gif' data-bind='var: product(zoovy:prod_image4);  format:magicZoomPlus;extension:magicToolBox_mzp;' alt='' width='100' height='100'  class='MagicZoom' rel="zoom-id:lady" rev='blank.gif' />
 	</td>
-	<td class='prodSummaryContainer marginBottom no_underline'>
+        <td class='prodSummaryContainer marginBottom no_underline'>
 	<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
-	<hgroup class='marginBottom'>
+	<hgroup style=" margin:10px 0px; width:100%; float:left;" class="marginBottom">
 		<h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
 		<h5 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Mfg: ;'></h5>
 		<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
 	</hgroup>
 	<div class='priceContainer marginBottom'>
-		<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
-		<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
+		<h4 style="width:100%; float:left; margin:0px;" class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
+		<h5 style="width:100%; float:left; margin:10px 0px;" class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
 		<span class='savings'>
 			<span class='savingsDifference' data-bind='var: product(pid); format:priceRetailSavingsDifference; extension:myRIA; pretext: You save: ;'></span>
 			<span class='savingsPercentage' data-bind='var: product(pid); format:priceRetailSavingsPercentage; extension:myRIA; pretext: (; posttext:);'></span>
@@ -612,14 +614,15 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 
 	<td class='prodSummaryContainer marginBottom no_underline'>
 	<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
+    <h3 class='basePrice oprice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h3>
 
-	<hgroup class='marginBottom'>
+	<hgroup class='marginBottom' style=" margin:10px 0px; width:100%; float:left;">
 		<h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
 		<h5 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Mfg: ;'></h5>
 		<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
 	</hgroup>
 
-	<h3 class='basePrice marginBottom' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h3>
+	
 
 	<table class='marginBottom fullWidth gridTable' data-app-role='childrenSiblingsContainer'>
 		<tbody data-bind="var: product(zoovy:grp_children); format:productList; extension:store_prodlist; loadsTemplate:productListTemplateChildren;hide_summary:true; withInventory:1; withVariations:1;"></tbody>
@@ -664,6 +667,49 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 -->
 <div class='prodTabs tabbedProductContent'>
 
+
+<!-- Tabbing Section Start Here-->
+
+<div class="tabPaging">
+  <ul>
+    <li class='prodDescTab'><a id="href_dis" href="#prodDesc" onClick="toggle_div('dis');" class="active" title=""><span>Description</span></a></li>
+    <li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a id="href_Specs" href="#prodSpecs" onClick="toggle_div('Specs');" class="" title=""><span>Specs</span></a></li>
+    <li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a id="href_featured" href="#prodFeatures" onClick="toggle_div('featured');" class="" title=""><span>Features</span></a></li>
+    <li class='prodReviewsTab'><a id="href_Reviews" href="#prodReviews" onClick="toggle_div('Reviews');" class="" title=""><span>Reviews</span></a></li>
+    <li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a id="href_video" href="#prodVideo" onClick="toggle_div('video');" class="" title=""><span>Video</span></a></li>
+    <li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a id="href_Acc" href="#prodAccessories" onClick="toggle_div('Acc');" class="" title=""><span>Accessories</span></a></li>
+  </ul>
+  <!-- Repeat Section Start Here -->
+  <div class="tabingcontent"><div id="dis" style="display:block;">
+    <div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+  </div>
+  <div id="Specs" style="display:none;">
+    <div data-bind='var: product(zoovy:prod_detail); format:wiki; wikiFormats:myRIA;'></div>
+  </div>
+  <div id="featured" style="display:none;">
+    <div data-bind='var: product(zoovy:prod_features); format:wiki; wikiFormats:myRIA;'></div>
+  </div>
+  <div id="Reviews" style="display:none;">
+    <div class='clearfix alignRight'>
+      <button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
+    </div>
+    <ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;">
+    </ul>
+  </div>
+  <div id="video" style="display:none;">
+    <div data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
+  </div>
+  <div id="Acc" style="display:none;">
+    <table class='fullWidth gridTable'>
+      <tbody data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateATC;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;">
+      </tbody>
+    </table>
+  </div></div>
+  <!-- Repeat Section Close Here -->
+</div>
+
+
+<!--
 	<ul class='tabs'>
 		<li class='prodDescTab'><a href='#prodDesc'>Description</a></li>
 		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href='#prodSpecs'>Specs</a></li>
@@ -712,7 +758,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 
 
 
-</div>
+</div>-->
 
 	</td>
 </tr>

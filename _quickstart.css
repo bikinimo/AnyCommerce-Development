@@ -122,7 +122,7 @@ p	{margin-bottom:12px;}
 
 table {
 	border-collapse: collapse;
-	border-spacing: 0;
+	border-spacing: 0; list-style-type:none;
 	}
 td	{vertical-align:top;}
 td.valignMiddle	{vertical-align: middle;}
@@ -156,7 +156,7 @@ and offMenu is toggle off, hiding the change button.
 .bindByAnchor	{} /* here just to give a little aid to wysiwyg editors. no styles should be applied. used w/ bindNav feature */
 
 
-
+ul li{ list-style-type:none;}
 
 /* some general classes used for styling templates. feel free to use these. It's not recommended you delete or rename them */
 
@@ -711,7 +711,7 @@ ul#topnav li span ul li a:hover{color:#818281; text-decoration:none;}
 .ui-widget .ui-widget{font-size:12px;}
 
 .accaddtocart{margin:0px; padding:0px; font-size:0px !important; border:0px !important; background:none !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
-.accsize{margin:-80px 0 0 132px; padding:0px; width:776px; float:left;}
+.accsize{/*margin:-80px 0 0 132px; padding:0px; width:776px; float:left;*/}
 
 .emailinp{margin:0px; padding:4px; border:1px solid #CCCCCC;}
 .billinp{margin:0px; padding:4px; border:1px solid #CCCCCC; width:180px;}
@@ -719,3 +719,74 @@ ul#topnav li span ul li a:hover{color:#818281; text-decoration:none;}
 .billbor{border:1px solid #CCCCCC;}
 .lbbutt{ border:none !important;}
 .lbbutt span{margin:0px !important; padding:0px !important; border:none !important;}
+
+
+
+
+.tabPaging { margin:10px 0 0 0}
+.tabPaging p {
+	margin:0 0 20px 0;
+	padding:0px;
+}
+.tabPaging ul {
+	float:left; /*width:677px;*/ /*width:663px;*/
+	width:100%;
+ 	list-style-type:none;
+	margin:0px 0 0px; padding:0px;
+ }
+.tabPaging ul li {
+	float:left;
+	margin:0px;
+	padding:0px;
+}
+.tabPaging ul li a {
+	float:left;
+	font:normal 12px Arial, Helvetica, sans-serif;
+	color:#ffffff;
+	background:url(images/taboff-bg.gif) repeat-x;
+	padding:3px 10px;
+	margin:0 3px 0 0;
+	text-decoration:none;
+	cursor:pointer;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-radius-topleft: 5px;
+	-moz-border-radius-topright: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
+.tabPaging ul li a:hover {
+	color:#fff;
+	background:url(images/tabonbg.gif) repeat-x;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-radius-topleft: 5px;
+	-moz-border-radius-topright: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+.tabPaging ul li a.active {
+	color:#fff;
+	background:url(images/tabonbg.gif) repeat-x;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-radius-topleft: 5px;
+	-moz-border-radius-topright: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+.tabingcontent{ width:96%; float:left; padding:2%; border:#b2b2b2 solid 1px; -webkit-border-radius: 10px;
+-webkit-border-top-left-radius: 0;
+-moz-border-radius: 10px;
+-moz-border-radius-topleft: 0;
+border-radius: 10px;
+border-top-left-radius: 0;}
+.tabingcontent ul{ list-style-type:none; margin:0px; padding:0px;}
+.tabingcontent ul li{ list-style-type:none}
+.accMain{ float:left; width:100%;}
+.tp{ border-top:#CCCCCC solid 1px; padding-top:20px; float:left; width:100%;}
+.tp:first-child{ border-top:0px; padding-top:0px;}
+.marginBottom h5{ float:left; margin-left:30px;}
+.marginBottom h5:first-child{ margin-left:0px;}
+.oprice{ margin:5px 0 0 0px; color:#ef5a27}
