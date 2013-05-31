@@ -572,6 +572,7 @@ CHECKOUT
 
 ***************************************************/
 
+
 #paybySupplemental_CREDIT .ui-icon-help	{display:inline-block; margin-left:6px;}
 
 
@@ -790,9 +791,6 @@ border-top-left-radius: 0;}
 .marginBottom h5{ float:left; margin-left:30px;}
 .marginBottom h5:first-child{ margin-left:0px;}
 .oprice{ margin:5px 0 0 0px; color:#ef5a27}
-
-/*--preview load **/
-
 #previewLogo {
 	margin:16px 0 0 18px; padding:0px;
 }

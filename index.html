@@ -33,12 +33,14 @@ document.getElementsByTagName('base')[0].href = app.vars.baseURL;
 all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" />
+
 <link rel="stylesheet" type="text/css" href="_quickstart.css" />
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu">
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Abel">
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Source+Sans+Pro">
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="resources/jquery.ui.widget.min.js"></script><!-- here so that plugins that may load before the jqueryui lib load without error -->
 <script type="text/javascript" src="loadscript.js"></script>
 <script type="text/javascript" src="jquery.js"></script>
@@ -58,7 +60,10 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 </script>
 <link href="magiczoom/magiczoom.css" rel="stylesheet" type="text/css" media="screen"/>
 <script src="magiczoom/magiczoom.js" type="text/javascript"></script>
-
+<script type="text/javascript" src="js/tabbing.js"></script>
+<script src="js/jquery.countdown.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/script.js"></script>
+<link rel="stylesheet" href="js/jquery.countdown.css" />
 </head>
 <body>
 <!-- DELETE THIS WHEN YOU GET STARTED -->
@@ -131,7 +136,7 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 					<a href="#" onClick="return showContent('company',{'show':'contact'});">Contact</a><span>|</span><a href="#" onClick="return showContent('company',{'show':'faq'});">FAQ</a><span>|</span><a href="#" onClick="return showContent('customer',{'show':'myaccount'});">My Account</a><span>|</span><span class="loginShow username" onClick="return showContent('customer',{'show':'myaccount'});" ></span> <span class="loginShow"> <a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></span>
 <a href="#" onClick="return showContent('customer',{'show':'myaccount'});" class="loginHide">Login</a>
 <br />
-<a href="#" onClick="return showContent('category',{navcat: '.005'});">Gift Cards</a><span>|</span><a href="#" onClick="app.ext.cubworld.a.showSizeChart(); return false;">Sizing Guide</a>
+<a href="#" onClick="return showContent('category',{navcat: '.005'});">Gift Cards</a><span>|</span><a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'" style="color:#993300; text-decoration:none;">Sizing Guide</a>
                 </div>
                 <div class="cartsec"><img src="images/cartimg.gif" align="top" alt="" /><a href='#!cart?show=cart' class='bindByAnchor' style="text-decoration:none;"><span class="cartItemCount"></span><span class="shopingbag">Items in Your Shopping Bag</span></a></div>
             </div>
@@ -200,7 +205,7 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
                 	<li><a href="#" onClick="return showContent('company',{'show':'contact'});">Contact Us</a></li> 
                     <li><a href="#" onClick="return showContent('company',{'show':'privacy'});">Policies</a></li>
                     <li><a href="#" onClick="return showContent('company',{'show':'faq'});">FAQ</a></li>
-                    <li><a href="#.">Sizing Guide</a></li>
+                    <li><a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'" style="color:#993300; text-decoration:none;">Sizing Guide</a></li>
                 </ul>
                 <ul>
                     <li><a href="#" onClick="return showContent('customer',{'show':'myaccount'});">My Account</a></li>
@@ -284,8 +289,145 @@ COMMONLY EDITED TEMPLATES
 <!--
 the homepageTemplate template is loaded into mainContentArea by default when the application loads
 -->
+<style type="text/css">
+		.fancybox-custom .fancybox-skin {
+			box-shadow: 0 0 50px #222;
+		}
+	</style>
+    <script type="text/javascript" src="source/jquery.fancybox.js?v=2.1.4"></script>
+	<link rel="stylesheet" type="text/css" href="source/jquery.fancybox.css?v=2.1.4" media="screen" />
+    <script type="text/javascript">
+		$(document).ready(function() {
+			$('.fancybox').fancybox();
+			// Change title type, overlay closing speed
+			$(".fancybox-effects-a").fancybox({
+				helpers: {
+					title : {
+						type : 'outside'
+					},
+					overlay : {
+						speedOut : 0
+					}
+				}
+			});
+			// Disable opening and closing animations, change title type
+			$(".fancybox-effects-b").fancybox({
+				openEffect  : 'none',
+				closeEffect	: 'none',
+
+				helpers : {
+					title : {
+						type : 'over'
+					}
+				}
+			});
+			// Set custom style, close if clicked, change title type and overlay color
+			$(".fancybox-effects-c").fancybox({
+				wrapCSS    : 'fancybox-custom',
+				closeClick : true,
+				openEffect : 'none',
+				helpers : {
+					title : {
+						type : 'inside'
+					},
+					overlay : {
+						css : {
+							'background' : 'rgba(238,238,238,0.85)'
+						}
+					}
+				}
+			});
+			// Remove padding, set opening and closing animations, close if clicked and disable overlay
+			$(".fancybox-effects-d").fancybox({
+				padding: 0,
+				openEffect : 'elastic',
+				openSpeed  : 150,
+				closeEffect : 'elastic',
+				closeSpeed  : 150,
+				closeClick : true,
+				helpers : {
+					overlay : null
+				}
+			});
+			$('.fancybox-buttons').fancybox({
+				openEffect  : 'none',
+				closeEffect : 'none',
+
+				prevEffect : 'none',
+				nextEffect : 'none',
+
+				closeBtn  : false,
+
+				helpers : {
+					title : {
+						type : 'inside'
+					},
+					buttons	: {}
+				},
+				afterLoad : function() {
+					this.title = 'Image ' + (this.index + 1) + ' of ' + this.group.length + (this.title ? ' - ' + this.title : '');
+				}
+			});
+			$('.fancybox-thumbs').fancybox({
+				prevEffect : 'none',
+				nextEffect : 'none',
+				closeBtn  : false,
+				arrows    : false,
+				nextClick : true,
+				helpers : {
+					thumbs : {
+						width  : 50,
+						height : 50
+					}
+				}
+			});
+			$('.fancybox-media')
+				.attr('rel', 'media-gallery')
+				.fancybox({
+					openEffect : 'none',
+					closeEffect : 'none',
+					prevEffect : 'none',
+					nextEffect : 'none',
+					arrows : false,
+					helpers : {
+						media : {},
+						buttons : {}
+					}
+				});
+			$("#fancybox-manual-a").click(function() {
+				$.fancybox.open('blank.gif');
+			});
+			$("#fancybox-manual-b").click(function() {
+				$.fancybox.open({
+					href : 'iframe.html',
+					type : 'iframe',
+					padding : 5
+				});
+			});
+			$("#fancybox-manual-c").click(function() {
+				$.fancybox.open([
+					{
+						href : 'blank.gif',
+						title : 'My title'
+					}, {
+						href : 'blank.gif',
+						title : '2nd title'
+					}, {
+						href : 'blank.gif'
+					}
+				], {
+					helpers : {
+						thumbs : {
+							width: 200,
+							height: 350
+						}
+					}
+				});
+			});
+		});
+	</script>
 <div id='homepageTemplate' class='homeTemplate'>
-<div class="sizebg"><a href="#.">SIZING GUIDE</a><span>|</span><a href="#.">STYLE GUIDE</a></div>
+<div class="sizebg"><a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'" style="color:#993300; text-decoration:none;">Sizing Guide</a><span>|</span><a href="#.">STYLE GUIDE</a></div>
         <div class="banner">
             <div class="bannerleft"><img src="images/banner1.jpg" alt="" /></div>
             <div class="bannerright">
@@ -300,7 +442,8 @@ the homepageTemplate template is loaded into mainContentArea by default when the
                             <span>Regularly: $65.00 </span>
                                 <a href="#."><img src="images/add_cart.gif" alt="Add To Cart" border="0" class="addcart" title="Add To Cart" /></a><br clear="left" />
                             <span>This deal has ended.<br />check back soon for another deal!</span>
-                            <img src="images/time_remaining.gif" alt="" class="timerem" />
+                            <div class="countmain"><p>TIME REMAINING</p>
+                           <div id="countdown"></div></div>
                         </div>
                     </div>
                 </div>
@@ -363,7 +506,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 -->
 <div id='categoryTemplate' class='loadingBG categoryTemplate'>
 	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
-		<img data-fancybox-group='categoryTemplate' src="blank.gif" data-bind="var: category(%page.picture1); format:fancybox; extension:fancybox;" width="100" height="100"/>
+	<img  src="blank.gif" data-bind="var: category(%page.picture1); format:imageURL;" width="100" height="100"/>
 
 	<h2 data-bind="var: category(%page.header); format: text; editor: text;"></h2>
 	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
@@ -397,14 +540,14 @@ remember to NOT put the button inside the 'onclick' container or two events will
 </div>
 <button id="opener">Open Dialog</button>
 
-<li id='productListTemplate' class='loadingBG  ' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
-	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
-	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' id="selector" class='pointer prominh'>
+<li id='productListTemplate' class='loadingBG  '  onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
+	<button class='floatRight pointer quickView displayNone'>Quickview</button>
+	<div onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' id="selector" class='pointer prominh'>
 		<div class='prodThumbContainer' data-bind='var:product(pid);'>
-		<img src='blank.gif' class='prodThumb'  data-fancybox-group='productListTemplate' alt='' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='146' height='151' />
-        
-		</div>
-		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
+	
+<img src='blank.gif' data-fancybox-group="gallery" class='fancybox' alt='' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='146' height='151' />
+	</div>
+		<h5 data-bind='var: product(zoovy:prod_name); format:text;' ></h5>
 		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
 <!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
@@ -413,7 +556,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 		<input type='hidden' name='qty' value='1' />
 		<button data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</button>
 	</form>
-</li>
+    </li>
 <!--
 for product lists with addToCart feature (accessories, for example)
 container ul should have lineItemProdlist class on it instead of productList
@@ -630,22 +773,20 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 
 	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
 	<div class='image1'>
-	<!--<a href='blank.gif' data-bind='var: product(zoovy:prod_image1);'><img src='blank.gif' class='prodBigImage' alt='' data-bind='var: product(zoovy:prod_image1); format:magicZoomPlus; extension:magicToolBox_mzp;' width='340' height='340' /></a>-->
-   
+	<img src='blank.gif' class='prodBigImage' data-fancybox-group='gallery' alt='' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='340' height='340' />
     
 	</div>
- <img src='blank.gif' class='prodBigImage' alt='' data-bind='var: product(zoovy:prod_image1); format:magicZoomPlus; extension:magicToolBox_mzp;' width='340' height='340' />
 </div>
 
 	<div  class='prodThumbs'>
-<img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image2);format:magicZoomPlus; extension:magicToolBox_mzp;' width='75' height='75' />
+<img src='blank.gif' alt='' data-fancybox-group='gallery' data-bind='var: product(zoovy:prod_image2);format:fancybox; extension:fancybox;' width='75' height='75' />
 <!--<a href='blank.gif' data-bind='var: product(zoovy:prod_image2);' ><img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='75' height='75' /></a>
 
 <a href='blank.gif' data-bind='var: product(zoovy:prod_image3);'  ><img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='75' height='75' /></a>
 
 <a href='blank.gif' data-bind='var: product(zoovy:prod_image4); '><img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='75' height='75' /></a>-->
-<img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image3);format:magicZoomPlus; extension:magicToolBox_mzp;' width='75' height='75' />
-<img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image4); format:magicZoomPlus; extension:magicToolBox_mzp;' width='75' height='75' />
+<img src='blank.gif' alt='' data-fancybox-group='gallery' data-bind='var: product(zoovy:prod_image3);format:fancybox; extension:fancybox;' width='75' height='75' />
+<img src='blank.gif' alt='' data-fancybox-group='gallery'  data-bind='var: product(zoovy:prod_image4); format:fancybox; extension:fancybox;' width='75' height='75' />
 
 	</div>
 
@@ -703,56 +844,42 @@ the tabs are built in an onComplete.  ID's are added based on sku AND index, so 
 or the tab clicked won't open the right content.
 It's done this way because ID's hard coded into template are bad mojo (templates are recycled) and because using data-binds to add id's caused some serious issues
 -->
-<div class='prodTabs tabbedProductContent'>
-
-	<ul class='tabs'>
-		<li class='prodDescTab'><a href='#prodDesc'>Description</a></li>
-		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href='#prodSpecs'>Specs</a></li>
-		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href='#prodFeatures'>Features</a></li>
-		<li class='prodReviewsTab'><a href='#prodReviews'>Reviews</a></li>
-		<li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href='#prodVideo'>Video</a></li>
-		<li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a href='#prodAccessories'>Accessories</a></li>
-	</ul>
-
-	<div class='tabContent' data-anytab-content='prodDesc'>
-		<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
-	</div>
-
-	<div class='tabContent' data-anytab-content='prodSpecs'>
-		<div data-bind='var: product(zoovy:prod_detail); format:wiki; wikiFormats:myRIA;'></div>
-	</div>
-
-	<div class='tabContent' data-anytab-content='prodFeatures'>
-		<div data-bind='var: product(zoovy:prod_features); format:wiki; wikiFormats:myRIA;'></div>
-	</div>
-
-
-	<div  class='tabContent' data-anytab-content='prodReviews'>
-
-		<div class='clearfix alignRight'>
-			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
-		</div>
-
-		<ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;"></ul>
-
-	</div>
-
-	<div class='tabContent' data-anytab-content='prodVideo'>
-		<div data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
-	</div>
-
-	<div class='tabContent' data-anytab-content='prodAccessories'>
-
-
-<table class='fullWidth gridTable'>
-<tbody data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateATC;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;"></tbody>
-</table>
-
-	</div>
-
-
-
-
+<div class="tabPaging">
+  <ul>
+    <li class='prodDescTab'><a id="href_dis" href="#prodDesc" onClick="toggle_div('dis');" class="active" title=""><span>Description</span></a></li>
+    <li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a id="href_Specs" href="#prodSpecs" onClick="toggle_div('Specs');" class="" title=""><span>Specs</span></a></li>
+    <li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a id="href_featured" href="#prodFeatures" onClick="toggle_div('featured');" class="" title=""><span>Features</span></a></li>
+    <li class='prodReviewsTab'><a id="href_Reviews" href="#prodReviews" onClick="toggle_div('Reviews');" class="" title=""><span>Reviews</span></a></li>
+    <li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a id="href_video" href="#prodVideo" onClick="toggle_div('video');" class="" title=""><span>Video</span></a></li>
+    <li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a id="href_Acc" href="#prodAccessories" onClick="toggle_div('Acc');" class="" title=""><span>Accessories</span></a></li>
+  </ul>
+  <!-- Repeat Section Start Here -->
+  <div class="tabingcontent"><div id="dis" style="display:block;">
+    <div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+  </div>
+  <div id="Specs" style="display:none;">
+    <div data-bind='var: product(zoovy:prod_detail); format:wiki; wikiFormats:myRIA;'></div>
+  </div>
+  <div id="featured" style="display:none;">
+    <div data-bind='var: product(zoovy:prod_features); format:wiki; wikiFormats:myRIA;'></div>
+  </div>
+  <div id="Reviews" style="display:none;">
+    <div class='clearfix alignRight'>
+      <button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
+    </div>
+    <ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;">
+    </ul>
+  </div>
+  <div id="video" style="display:none;">
+    <div data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
+  </div>
+  <div id="Acc" style="display:none;">
+    <table class='fullWidth gridTable'>
+      <tbody data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateATC;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;">
+      </tbody>
+    </table>
+  </div></div>
+  <!-- Repeat Section Close Here -->
 </div>
 
 	</td>
@@ -1350,7 +1477,41 @@ The 'data-action' attribute is used to assign an onclick.
 </tr>
 </table>
 </div>
-<div id="rma-form" class="displayNone">
+<style>
+        .black_overlay{
+            display: none;
+            position: absolute;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            /*height: 100%;*/
+            background-color: black;
+            z-index:1001;
+            -moz-opacity: 0.8;
+            opacity:.80;
+            filter: alpha(opacity=80);
+        }
+        .white_content {
+            display: none;
+            position: absolute;
+            top: 35%;
+            left: 18%;
+            width: 50%;
+            height: 75%;
+            padding: 16px;
+            border: 3px solid #b70000;
+            background-color: white;
+			shadow
+            z-index:1002;
+            overflow: auto;
+			box-shadow: 1px 1px 3px 3px #000000;
+        }
+		.savethis{font-size:15px; font-weight:bold;}
+		
+    </style>
+    <div id="light" class="white_content">
+    <div style="position:relative; margin-top:-10px; text-align:right;"><a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'"><img src="images/close.png"/></a></div>
+<div id="rma-form">
 	<form onSubmit="app.ext.cubworld.a.handleRMAForm(); return false;">
 		
 			
@@ -1411,7 +1572,7 @@ The 'data-action' attribute is used to assign an onclick.
 
 	</form>
 </div>
-<div id="size-chart" class="displayNone">
+<div id="size-chart">
 	<p></p><center><em></em></center><div class="h3" align="left"><strong><font size="3"></font></strong></div><div class="h3" align="left"><strong><font size="3"></font></strong></div><div class="h3" align="left"><font><font></font></font><font><font></font></font><strong><font size="3">Sizing Tips</font></strong></div><div align="left"><font size="2">Use these tips as a general guide when finding your measurements:</font></div><ol><li><div align="left"><font size="2">Chest/Bust: With your arms at your sides, measure around the fullest part of your chest, across shoulder blades and under arms.</font></div></li><li><div align="left"><font size="2">Waist: To measure your natural waistline, wrap the tape so it intersects your navel. Keep tape flat, but comfortably loose.</font></div></li><li><div align="left"><font size="2">Hips: Stand with your heels together and measure the fullest part of your hips, keeping the measuring tape level and parallel to the floor, front, and back.</font></div></li><li><div align="left"><font size="2">Inseam: Stand up straight, and start tape measure high in your crotch. Straighten the tape down the inside of your leg to the top of your shoe/foot.</font></div></li></ol>
 <p></p><p>
 <br></p><center><center><center><table id="jersey_size_chart" cellspacing="1"><tbody><tr align="center" bgcolor="#dddddd"><td colspan="9"><font size="1" face="Verdana"><strong>ADULT AUTHENTIC BASEBALL JERSEY SIZE (Majestic Athletic)</strong></font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana"><strong>SIZE</strong></font></td><td><p align="center"><font size="1" face="Verdana"><strong>S/M</strong></font></p></td><td><p align="center"><font size="1" face="Verdana"><strong>L</strong></font></p></td><td><p align="center"><font size="1" face="Verdana"><strong>XL</strong></font></p></td><td><p align="center"><font size="1" face="Verdana"><strong>XXL</strong></font></p></td><td><p align="center"><font size="1" face="Verdana"><strong>3XL</strong></font></p></td><td><p align="center"><font size="1" face="Verdana"><strong>4XL</strong></font></p></td><td><p align="center"><font size="1" face="Verdana"><strong>5XL</strong></font></p></td><td><p align="center"><font size="1" face="Verdana"><strong>6XL</strong></font></p></td></tr><tr bgcolor="#eeeeee"><td width="75"><font size="1" face="Verdana"><strong>CHEST (In.)</strong></font></td><td width="40"><center><font size="1" face="Verdana">38-40</font></center></td><td width="40"><center><font size="1" face="Verdana">42-44</font></center></td><td width="40"><center><font size="1" face="Verdana">46-48</font></center></td><td width="40"><center><font size="1" face="Verdana">50-52</font></center></td><td width="40"><center><font size="1" face="Verdana">52-54</font></center></td><td width="40"><center><font size="1" face="Verdana">54-56</font></center></td><td width="40"><center><font size="1" face="Verdana">56-58</font></center></td><td width="40"><center><font size="1" face="Verdana">58-60</font></center></td></tr><tr bgcolor="#eeeeee"><td width="75"><font size="1" face="Verdana"><strong>WAIST (In.)</strong></font></td><td width="40"><center><font size="1" face="Verdana">30-32</font></center></td><td width="40"><center><font size="1" face="Verdana">34-36</font></center></td><td width="40"><center><font size="1" face="Verdana">38-40</font></center></td><td width="40"><center><font size="1" face="Verdana">42-44</font></center></td><td width="40"><center><font size="1" face="Verdana">46-48</font></center></td><td width="40"><center><font size="1" face="Verdana">48-50</font></center></td><td width="40"><center><font size="1" face="Verdana">50-52</font></center></td><td width="40"><center><font size="1" face="Verdana">52-54</font></center></td></tr></tbody></table>
@@ -1419,11 +1580,6 @@ The 'data-action' attribute is used to assign an onclick.
 </font></center><center><table id="size_chart" cellspacing="1"><tbody><tr bgcolor="#dddddd"><td><p align="center"><font size="1" face="Verdana"><strong>IN </strong></font></p></td><td><p align="center"><font size="1" face="Verdana"><strong>CM </strong></font></p></td><td colspan="4"><p align="center"><font size="1" face="Verdana"><strong>HAT SIZE (New Era, 59Fifty, Twins '47)</strong></font></p></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">21 1/4</font></td><td><p align="center"><font size="1" face="Verdana">54</font></p></td><td><font size="1" face="Verdana">6 3/4</font></td><td rowspan="2"><font size="1" face="Verdana">Small (S)</font></td><td rowspan="3"><font size="1" face="Verdana">Small/Medium (S/M)</font></td><td rowspan="2" bgcolor="#ffffff"><font size="1" face="Verdana"></font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">21 5/8</font></td><td><p align="center"><font size="1" face="Verdana">55</font></p></td><td><font size="1" face="Verdana">6 7/8</font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">22</font></td><td><p align="center"><font size="1" face="Verdana">55.9</font></p></td><td><font size="1" face="Verdana">7</font></td><td rowspan="2"><font size="1" face="Verdana">Medium (M)</font></td><td rowspan="5"><font size="1" face="Verdana">One Size Fits Most</font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">22 3/8</font></td><td><p align="center"><font size="1" face="Verdana">56.8</font></p></td><td><font size="1" face="Verdana">7-1/8</font></td><td rowspan="3"><font size="1" face="Verdana">Medium/Large (M/L)</font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">22 3/4</font></td><td><p align="center"><font size="1" face="Verdana">57.8</font></p></td><td><font size="1" face="Verdana">7-1/4</font></td><td rowspan="2"><font size="1" face="Verdana">Large (L)</font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">23 1/8</font></td><td><p align="center"><font size="1" face="Verdana">58.7</font></p></td><td><font size="1" face="Verdana">7 3/8</font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">23 1/2</font></td><td><p align="center"><font size="1" face="Verdana">59.7</font></p></td><td><font size="1" face="Verdana">7 1/2</font></td><td rowspan="2"><font size="1" face="Verdana">XL</font></td><td rowspan="3"><font size="1" face="Verdana">Large/XL (L/XL)</font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">23 7/8</font></td><td><p align="center"><font size="1" face="Verdana">60.6</font></p></td><td><font size="1" face="Verdana">7 5/8</font></td><td rowspan="4" bgcolor="#ffffff"><font size="1" face="Verdana"></font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">24 1/4</font></td><td><p align="center"><font size="1" face="Verdana">61.6</font></p></td><td><font size="1" face="Verdana">7 3/4</font></td><td rowspan="3"><font size="1" face="Verdana">XXL</font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">24 5/8</font></td><td><p align="center"><font size="1" face="Verdana">62.5</font></p></td><td><font size="1" face="Verdana">7 7/8</font></td><td rowspan="2" bgcolor="#ffffff"><font size="1" face="Verdana"></font></td></tr><tr bgcolor="#eeeeee"><td><p align="left"><font size="1" face="Verdana">25</font></p></td><td><p align="center"><font size="1" face="Verdana">63.5</font></p></td><td><font size="1" face="Verdana">8</font></td></tr></tbody></table></center><font size="1"><font size="1"></font></font><center>
 </center>
 </center></center><p></p>
-
-
-
-
-
 <p>
 <font size="1"><font size="1"><font size="1"></font></font></font></p><center><font size="1"><font size="1"><font size="1"></font></font></font><hr size="2" width="100%"><font size="1"><font size="1"><font size="1"><br>
 </font></font></font></center><center>
@@ -1623,7 +1779,8 @@ The 'data-action' attribute is used to assign an onclick.
 </tbody></table>
 <font size="1"><br>
 <i>* These charts are for reference only. Fit may vary slightly.</i></font></center></div><p></p>
-
 </div>
+</div>
+<div id="fade" class="black_overlay"></div>
 </body>
 </html>
