@@ -13,7 +13,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"20130531200335",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20130528202435",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "required",//can be passive, active or required
@@ -40,7 +40,7 @@ css files should be included before any .js file to ensure they are downloaded i
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Abel">
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Source+Sans+Pro">
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="resources/jquery.ui.widget.min.js"></script><!-- here so that plugins that may load before the jqueryui lib load without error -->
 <script type="text/javascript" src="loadscript.js"></script>
 <script type="text/javascript" src="jquery.js"></script>
@@ -221,18 +221,32 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
             </div>
           <div class="socialmedia">
             	<h1>Social Media</h1>
-              <div><a href="http://facebook.com/" target="_blank"><img src="images/facebook_fot.gif" alt="Facebook" border="0" title="Facebook" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://twitter.com" target="_blank"><img src="images/twitter_fot.gif" alt="Twitter" border="0" title="Twitter" /></a></div>
+              <div><a href="http://www.facebook.com/pages/Bikinimo-Swimwear/212444625437604" target="_blank"><img src="images/facebook_fot.gif" alt="Facebook" border="0" title="Facebook" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://twitter.com" target="_blank"><img src="images/twitter_fot.gif" alt="Twitter" border="0" title="Twitter" /></a></div>
           </div>            
           <div class="coupons">
             	<h1>Coupons & Dicsounts</h1>
              	<p>
                 Sign up for our newsletter to<br />receive details on special discounts.
                 </p>
-       <form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
+              <!--<div id='subscribeFormTemplate'>
+<form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
+<fieldset class='userInfo borderNone'>
+<div>
+<input type='email' placeholder='email address' maxlength='50' size='30' required='required' name='login' value='' />
+</div>
+<div>
+<input type='text' placeholder='full name' maxlength='50' size='30' required='required' name='fullname' value='' />
+</div>
+</fieldset>
+<fieldset data-bind="var:newsletters(@lists); format:subscribeCheckboxes; extension:store_crm;" class='borderNone subscriberLists'></fieldset>
+<input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Subscribe' />
+</form>
+</div>-->
+             <form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
                 <input type="email" class="fullinpbox" required='required' name='login' value='' placeholder='email address' /><br />
                  <input type="text" class="fullinpbox" required='required' name='fullname' placeholder='full name' />
                 <input type="image" value="" name="" src="images/sign_me_up.gif" class='searchbtn' style="margin:12px 0 0 11px;" alt="Sign Me Up" title="Sign Me Up" />
-       </form>
+            </form>
             </div>
         </div>
         <div class="footerbot">
@@ -438,27 +452,44 @@ the homepageTemplate template is loaded into mainContentArea by default when the
         </div>
         
         <!--<div class="tabbing"><img src="images/tabingpic.jpg" alt="" /></div>-->
+       
 <div id='homepageTabs' class="tabbing">
 <!-- This works because of some awesome code in app-quickstart-init.js-->
 <ul class="alignCenter">
-<li><a href='#springReady'>New Releases</a></li>
-<li><a href='#greatGifts'>What’s Hot</a></li>
-<li><a href='#topAccessories'>You May Also Like</a></li>
-<li><a href='#grillsSmokers'>Comparissons</a></li>
-<!--<li><a href='#professionalUse'>Professional Use</a></li>-->
+<li><a href='#newrelease'>New Releases</a></li>
+<li><a href='#whatshot'>What’s Hot</a></li>
+<li><a href='#like'>You May Also Like</a></li>
+<li><a href='#comparissons'>Comparissons</a></li>
 </ul>
-<div data-anytab-content='springReady'>
-<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'IS_FRESH'})">Click Here to browse more new releases</a></div>
+<div data-anytab-content='newrelease'><div class="carouselCont1">
+<ul id="carCat3" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"new  arrivals"}},"filter":{"not":{"term":{"tags":"IS_NEWARRIVAL"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList1'></ul>
+<div class="clear"></div>
+        <img id="caroPrev1" src="images/scroll_left.gif" class="pointer" alt="" />
+	   	<img id="caroNext1" src="images/scroll_right.gif" class="pointer" alt="" />
 </div>
-<div data-anytab-content='greatGifts'>
-<ul data-bind="var: list($02-tankinis.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplateHotItem; hide_summary:1; withInventory:1; withVariations:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'.IS_NEWARRIVAL'})">Click Here to browse more new releases</a></div>
 </div>
-<div data-anytab-content='topAccessories'>
-<ul data-bind="var: list($tab3.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25; hide_summary:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+<div data-anytab-content='whatshot'><div class="carouselCont2">
+<ul id="carCat2" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"Whats Hot "}},"filter":{"not":{"term":{"tags":"IS_BESTSELLERS"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList2'></ul>
+<div class="clear"></div>
+        <img id="caroPrev2" src="images/scroll_left.gif" class="pointer" alt="" />
+	   	<img id="caroNext2" src="images/scroll_right.gif" class="pointer" alt="" />
 </div>
-<div data-anytab-content='grillsSmokers'>
-<ul data-bind="var: list($tab4.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25; hide_summary:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+</div>
+<div data-anytab-content='like'><div class="carouselCont3">
+<ul id="carCat4" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"you may also like"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList3'></ul>
+<div class="clear"></div>
+        <img id="caroPrev3" src="images/scroll_left.gif" class="pointer" alt="" />
+	   	<img id="caroNext3" src="images/scroll_right.gif" class="pointer" alt="" />
+</div>
+</div>
+
+<div data-anytab-content='comparissons'><div class="carouselCont4">
+<ul id="carCat6" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"comparissons items"}},"filter":{"not":{"term":{"tags":"IS_CLEARANCE"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList4'></ul>
+<div class="clear"></div>
+        <img id="caroPrev4" src="images/scroll_left.gif" class="pointer" alt="" />
+	   	<img id="caroNext4" src="images/scroll_right.gif" class="pointer" alt="" />
+</div>
 </div>
 </div>
  <div class="madebox">
@@ -527,8 +558,8 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <button id="opener">Open Dialog</button>
 
 <li id='productListTemplate' class='loadingBG  '  onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
-	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
-	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' id="selector" class='pointer prominh'>
+	<button class='floatRight pointer quickView displayNone'>Quickview</button>
+	<div onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' id="selector" class='pointer prominh'>
 		<div class='prodThumbContainer' data-bind='var:product(pid);'>
 	
 <img src='blank.gif' data-fancybox-group="gallery" class='fancybox' alt='' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='146' height='151' />
@@ -540,7 +571,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	</div>
 	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='addtocartipro prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;" >
 		<input type='hidden' name='qty' value='1' />
-		<button data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</button>
+		<div data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'><img src="images/more_details.jpg"/></div>
 	</form>
     </li>
 <!--
@@ -604,7 +635,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 		<h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:text;'></h5>
 	<h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
 	</div>
-	<div class='hideInMinimalMode pointer moreDetails' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});">more details</div>
+	<div class='hideInMinimalMode pointer moreDetails' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});"><img src="images/more_details.jpg"/></div>
 </li>
 <li id='productListTemplateResultsNoPreview' class='loadingBG searchResultsProduct ' >
 	<div onClick="return showContent('product', {'pid' : $(this).parent().attr('data-pid')});" class='pointer'>
@@ -614,7 +645,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 	<h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:text;'></h5>
 	<h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
 	</div>
-	<div class='hideInMinimalMode pointer moreDetails' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});">more details</div>
+	<div class='hideInMinimalMode pointer moreDetails' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});"><img src="images/more_details.jpg"/></div>
 </li>
 </ul>
 <!--

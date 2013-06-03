@@ -37,9 +37,11 @@ app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']); 
 app.rq.push(['script',0,app.vars.baseURL+'resources/load-image.min.js']); //in zero pass in case product page is first page.
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.image-gallery.jt.js']); //in zero pass in case product page is first page.
 
-//app.rq.push(['script',0,app.vars.baseURL+'carouFredSel-6.1.0/jquery.carouFredSel-6.1.0-packed.js']);
+app.rq.push(['script',0,app.vars.baseURL+'carouFredSel-6.1.0/jquery.carouFredSel-6.1.0-packed.js']);
 
 
+//add tabs to product data.
+//tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
 //add tabs to product data.
 //tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
 app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
@@ -62,6 +64,98 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 		$('#homepageBottomTabs').addClass('anytabs').anytabs();
 		}
 	}]);
+
+
+//Homepage Slideshow image code and carousel code
+var homepageLoad = false;
+app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) 
+	{
+	if (homepageLoad == false)
+	{
+	//Carousel horizontal sliders
+	var carousel1;
+	function foo1(){ $(".productList1").carouFredSel({
+		width   : 980,
+		height	: 300,
+    	items   : 5,
+		scroll: 1,
+		auto : false,
+    prev : "#caroPrev1",
+    next : "#caroNext1"
+	});}
+	carousel1 = foo1;
+	setTimeout(carousel1, 2000);
+	//Carousel horizontal sliders
+	var carousel1;
+	function foo1(){ $(".productList1").carouFredSel({
+		width   : 980,
+		height	: 300,
+    	items   : 5,
+		scroll: 1,
+		auto : false,
+    prev : "#caroPrev1",
+    next : "#caroNext1"
+	});}
+	carousel1 = foo1;
+	setTimeout(carousel1, 2000);
+	//Carousel horizontal sliders
+	var carousel1;
+	function foo1(){ $(".productList1").carouFredSel({
+		width   : 980,
+		height	: 300,
+    	items   : 5,
+		scroll: 1,
+		auto : false,
+    prev : "#caroPrev1",
+    next : "#caroNext1"
+	});}
+	carousel1 = foo1;
+	setTimeout(carousel1, 2000);
+	
+	var carousel2;
+	function foo2(){ $(".productList2").carouFredSel({
+		width   : 980,
+		height	: 300,
+    	items   : 5,
+		scroll: 1,
+		auto : false,
+    prev : "#caroPrev2",
+    next : "#caroNext2"
+	});}
+	carousel2 = foo2;
+	setTimeout(carousel2, 2000);
+	
+	var carousel3;
+	function foo3(){ $(".productList3").carouFredSel({
+		width   : 980,
+		height	: 300,
+    	items   : 5,
+		scroll: 1,
+		auto : false,
+    prev : "#caroPrev3",
+    next : "#caroNext3"
+	});}
+	carousel3 = foo3;
+	setTimeout(carousel3, 2000);
+	
+	var carousel4;
+	function foo4(){ $(".productList4").carouFredSel({
+		width   : 980,
+		height	: 300,
+    	items   : 5,
+		scroll: 1,
+		auto : false,
+    prev : "#caroPrev4",
+    next : "#caroNext4"
+	});}
+	carousel4 = foo4;
+	setTimeout(carousel4, 2000);
+	
+	homepageLoad = true;
+	app.u.dump("Homepage functions loaded");
+	}
+	
+}]);
 //sample of an onDeparts. executed any time a user leaves this page/template type.
 //app.rq.push(['templateFunction','homepageTemplate','onDeparts',function(P) {app.u.dump("just left the homepage")}]);
 /*

@@ -903,3 +903,88 @@ border-top-left-radius: 0;}
 	font-size: 1em;
 	font-weight: normal;
 }
+carouselCont1{
+	position:relative;
+	height:300px;
+	width:1000px;
+	margin-left:10px;
+}
+
+.carouselCont1 div.caroufredsel_wrapper{
+	float:left;
+	clear:both;
+	width:1000px;
+	height:250px;
+	margin-right:10px;
+}
+#caroPrev1{
+	position:absolute;
+	bottom:130px;
+	left:-35px;
+	z-index:1;
+}
+#caroNext1{
+	position:absolute;
+	bottom:130px;
+	right:-15px;
+	z-index:1;
+}
+.productList1 > li	{width:146px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
+.productList2 > li	{width:146px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
+.productList3 > li	{width:146px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
+.productList4 > li	{width:146px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
+
+#caroPrev2{
+	position:absolute;
+	bottom:130px;
+	left:-35px;
+	z-index:1;
+}
+#caroNext2{
+	position:absolute;
+	bottom:130px;
+	right:-15px;
+	z-index:1;
+}
+.carouselCont2{
+	position:relative;
+	height:300px;
+	width:1000px;
+	margin-left:10px;
+}
+#caroPrev3{
+	position:absolute;
+	bottom:130px;
+	left:-35px;
+	z-index:1;
+}
+#caroNext3{
+	position:absolute;
+	bottom:130px;
+	right:-15px;
+	z-index:1;
+}
+.carouselCont3{
+	position:relative;
+	height:300px;
+	width:1000px;
+	margin-left:10px;
+}
+#caroPrev4{
+	position:absolute;
+	bottom:130px;
+	left:-35px;
+	z-index:1;
+}
+#caroNext4{
+	position:absolute;
+	bottom:130px;
+	right:-15px;
+	z-index:1;
+}
+.carouselCont4{
+	position:relative;
+	height:300px;
+	width:1000px;
+	margin-left:10px;
+}
