@@ -1,22 +1,14 @@
-.countmain{background:#000000;	border-radius:5px;	width:146px;height:50px;}
-.countmain p{color:#00FF00;}
+.countmain{background:#000000; border-radius:5px; width:145px; height:49px; font-family:'Electrolize', serif; margin:9px 0 0 0;}
+.countmain p{ padding:5px 0 0 7px; color:#00FF00; font-size:15px; margin:0px;}
 
-.countdownHolder{
-	/*width:450px;*/
-	margin:0 auto;
-	/*font: 40px/1.5 'Open Sans Condensed',sans-serif;*/
-	text-align:center;
-	letter-spacing:-3px;
-	
-	
-}
+.countdownHolder{margin:-2px 0 0 6px; padding:0px;}
 
 .position{
 	display: inline-block;
 	height: 2.6em;
-	overflow: hidden;
+	/*overflow: hidden;*/
 	position: relative;
-	width:1.06em;
+	width:15px;
 }
 
 .digit{
@@ -32,8 +24,8 @@
 
 .digit.static{
 color:#00FF00;
-font-size:18px;
-font-weight:bold;
+font-size:24px;
+font-weight:normal;
 width:2px;
 	/*box-shadow:1px 1px 1px rgba(4, 4, 4, 0.35);
 	
@@ -81,8 +73,8 @@ width:2px;
 	background-color:#00ff00;
 	border-radius:50%;
 	left:50%;
-	margin-left:-3px;
-	margin-top:-3px;
+	margin-left:-4px;
+	margin-top:-1px;
 	box-shadow:1px 1px 1px rgba(4, 4, 4, 0.5);
 	content:'';
 }
