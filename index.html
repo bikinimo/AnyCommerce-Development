@@ -11,7 +11,6 @@
 <script type="text/javascript">
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
-
 var app = {vars:{
 	"release":"20130528202435",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
@@ -33,8 +32,7 @@ document.getElementsByTagName('base')[0].href = app.vars.baseURL;
 all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
-        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" />
-
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" />
 <link rel="stylesheet" type="text/css" href="_quickstart.css" />
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu">
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Abel">
@@ -79,10 +77,10 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 
 <div id="previewContent" class="noiseBG">
 <div class="fashionclub">
-        	<h2>Join the</h2>
-            <h1>Fashion Club!</h1>
-			<p>Stay informed about specials, discounts and <br />special events in the BikiniMo universe.</p>
- 			<p>It’s free and we’ll send you a special gift just for joining.</p>
+        <h2>Join the</h2>
+        <h1>Fashion Club!</h1>
+        <p>Stay informed about specials, discounts and <br />special events in the BikiniMo universe.</p>
+        <p>It’s free and we’ll send you a special gift just for joining.</p>
         </div>
 	<div id="categorySelector" class="showSansPreferences displayNone" style="cursor:pointer;">
 		<div id="categorySelectorPaintball" class="floatLeft" onClick="app.u.selectPreference('paintball',false);">
@@ -454,7 +452,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
         
         <!--<div class="tabbing"><img src="images/tabingpic.jpg" alt="" /></div>-->
        
-<div id='homepageTabs' class="tabbing">
+<div id='homepageTabs' style="margin:3px 0 0 0; width:962px; float:left;">
 <!-- This works because of some awesome code in app-quickstart-init.js-->
 <ul class="alignCenter">
 <li><a href='#newrelease'>New Releases</a></li>
@@ -465,7 +463,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 <div data-anytab-content='newrelease'>
 <div class="carouselCont1">
-<ul id="carCat3" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"new  arrivals"}},"filter":{"not":{"term":{"tags":"IS_NEWARRIVAL"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList1'></ul>
+<ul id="carCat3" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"new  arrivals"}},"filter":{"not":{"term":{"tags":"IS_NEWARRIVAL"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList1 spangtsta'></ul>
 <div class="clear"></div>
         <img id="caroPrev1" src="images/scroll_left.gif" class="pointer" alt="" />
 	   	<img id="caroNext1" src="images/scroll_right.gif" class="pointer" alt="" />
@@ -565,13 +563,13 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <button id="opener">Open Dialog</button>
 
 <li id='productListTemplate' class='loadingBG  '  onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
-	<button class='floatRight pointer quickView displayNone'>Quickview</button>
+	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
 	<div onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' id="selector" class='pointer prominh'>
 		<div class='prodThumbContainer' data-bind='var:product(pid);'>
 	
 <img src='blank.gif' data-fancybox-group="gallery" class='fancybox' alt='' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='146' height='151' />
 	</div>
-		<h5 data-bind='var: product(zoovy:prod_name); format:text;' ></h5>
+		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
 		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
 <!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
@@ -639,10 +637,10 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 		<div class='prodThumbContainer'>
 		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='120' height='120' />
 		</div>
-		<h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:text;'></h5>
-	<h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
+		<h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:text;' style="min-height:50px; padding-top:5px; text-align:center;"></h5>
+	<h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;' style="min-height:25px; text-align:center;"></h6>
 	</div>
-	<div class='hideInMinimalMode pointer moreDetails' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});"><img src="images/more_details.jpg"/></div>
+	<div class='hideInMinimalMode pointer moreDetails reltabmore' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});"><img src="images/more_details.jpg"/></div>
 </li>
 <li id='productListTemplateResultsNoPreview' class='loadingBG searchResultsProduct ' >
 	<div onClick="return showContent('product', {'pid' : $(this).parent().attr('data-pid')});" class='pointer'>
@@ -687,14 +685,14 @@ this will likely become more flexible in the future. ###
 	</td>
 	<td class='prodSummaryContainer marginBottom no_underline'>
 	<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
-	<hgroup class='marginBottom'>
+    <h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
+	<hgroup class='marginBottom' style="padding:10px 0;">
 		<h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
 		<h5 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Mfg: ;'></h5>
 		<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
 	</hgroup>
-	<div class='priceContainer marginBottom'>
-		<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
-		<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
+	<div class='priceContainer marginBottom' style="text-align:left;">
+ 		<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
 		<span class='savings'>
 			<span class='savingsDifference' data-bind='var: product(pid); format:priceRetailSavingsDifference; extension:myRIA; pretext: You save: ;'></span>
 			<span class='savingsPercentage' data-bind='var: product(pid); format:priceRetailSavingsPercentage; extension:myRIA; pretext: (; posttext:);'></span>
@@ -756,7 +754,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 	<div  class='tabContent' data-anytab-content='prodReviews'>
 
 		<div class='clearfix alignRight'>
-			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
+			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'><img src="images/write_review.gif" alt="Write Review" title="Write Review" /></button>
 		</div>
 
 		<ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;"></ul>
@@ -818,15 +816,15 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 
 	<td class='prodSummaryContainer marginBottom no_underline'>
 	<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
+    
+    <h3 class='basePrice marginBottom' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;' style="text-align:left;"></h3>
 
 	<hgroup class='marginBottom'>
 		<h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
 		<h5 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Mfg: ;'></h5>
 		<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
 	</hgroup>
-
-	<h3 class='basePrice marginBottom' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h3>
-
+ 
 	<table class='marginBottom fullWidth gridTable' data-app-role='childrenSiblingsContainer'>
 		<tbody data-bind="var: product(zoovy:grp_children); format:productList; extension:store_prodlist; loadsTemplate:productListTemplateChildren;hide_summary:true; withInventory:1; withVariations:1;"></tbody>
 	</table>
@@ -840,7 +838,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 		<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'></fieldset>
 
-		<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
+		<input type='submit' value='Add to Cart' class='addtocarti ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
 	</form>
 
 	<div data-bind='var:product(zoovy:prod_cpsiawarning); format:cpsiaWarning; extension:myRIA;'></div>
@@ -853,9 +851,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 
 	<menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'>
 
-	<a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>Write Review</a>	|
-
-	<a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;">Add to Wishlist</a>
+	<a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'><img src="images/write_review.gif" alt="Write Review" title="Write Review" /></a>&nbsp;<a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;"><img src="images/add_whistlist.gif" alt="Add to Wishlist" title="Add to Wishlist" /></a>
 
 	</menu>
 
@@ -889,7 +885,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
   </div>
   <div id="Reviews" style="display:none;">
     <div class='clearfix alignRight'>
-      <button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
+      <button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'><img src="images/write_review.gif" alt="Write Review" title="Write Review" /></button>
     </div>
     <ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;">
     </ul>

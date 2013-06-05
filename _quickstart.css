@@ -60,7 +60,7 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 .perboxright .addcart{margin:16px 0 10px 0; padding:0px; }
 .timerem{margin:12px 0 0 0; padding:0px;}
 .bannerright3{margin:0px; padding:0px; float:left; width:346px;}
-.tabbing{margin:11px 0 0 0; padding:0px; float:left;}
+.tabbingstatic{margin:11px 0 0 0; padding:0px; float:left;}
 .madebox{margin:0px; padding:0px; width:964px; float:left; background:url(images/made_usa.gif) repeat-x; min-height:97px;}
 .madebox1{margin:12px 0 0 68px; padding:0px; width:226px; float:left;}
 .madebox1 h1{margin:0px; padding:0px; font-size:23px; font-family:'Abel', serif; color:#54a7e1; font-weight:normal; text-align:center;}
@@ -698,7 +698,7 @@ ul#topnav li span ul li a:hover{color:#818281; text-decoration:none;}
 
 /*Drop Dwon Menu Css*/
 .sendmess{margin:0px; padding:0px; font-size:0px; border:0px !important; height:23px !important; width:102px !important; cursor:pointer; background:none !important; background-image:url(images/send_massage.gif) !important; background-repeat:no-repeat;}
-.addtocarti{margin:0px; padding:0px; font-size:0px; border:0px !important; background:none
+.addtocarti{margin:0px; padding:0px; font-size:0px !important; border:0px !important; background:none
  !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
 .addtocartipro span{margin:0px; padding:0px; font-size:0px; border:0px !important; background:none !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
 .addtocartipro .ui-state-default{margin:0 0 0 33px;  border:none !important;background:none !important; /*padding:0px;  height:23px !important; width:83px !important;*/}
@@ -903,93 +903,95 @@ border-top-left-radius: 0;}
 	font-size: 1em;
 	font-weight: normal; padding:5px 0 0 0;
 }
-carouselCont1{
+.carouselCont1{
 	position:relative;
 	height:300px;
-	width:1000px;
-	margin-left:10px;
-}
-
-.carouselCont1 div.caroufredsel_wrapper{
-	float:left;
-	clear:both;
-	width:1000px;
-	height:250px;
-	margin-right:10px;
-}
-#caroPrev1{
-	position:absolute;
-	bottom:130px;
-	left:-35px;
-	z-index:1;
-}
-#caroNext1{
-	position:absolute;
-	bottom:130px;
-	right:-15px;
-	z-index:1;
-}
-.productList1 > li	{width:146px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
-.productList2 > li	{width:146px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
-.productList3 > li	{width:146px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
-.productList4 > li	{width:146px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
-
-#caroPrev2{
-	position:absolute;
-	bottom:130px;
-	left:-35px;
-	z-index:1;
-}
-#caroNext2{
-	position:absolute;
-	bottom:130px;
-	right:-15px;
-	z-index:1;
+	width:960px !important;
+	margin:0 0 0 -28px; padding:0px;
 }
 .carouselCont2{
 	position:relative;
 	height:300px;
-	width:1000px;
-	margin-left:10px;
+	width:960px !important;
+	margin:0 0 0 -28px; padding:0px;
 }
+
+.carouselCont3{
+	position:relative;
+	height:300px;
+	width:960px !important;
+	margin:0 0 0 -28px; padding:0px;
+}
+
+.carouselCont4{
+	position:relative;
+	height:300px;
+	width:960px !important;
+	margin:0 0 0 -28px; padding:0px;
+}
+/*.carouselCont1 div.caroufredsel_wrapper{
+	float:left;
+	clear:both;
+	width:960px;
+	height:250px;
+	margin-right:10px;
+}*/
+#caroPrev1{
+	position:absolute;
+	bottom:108px;
+	left:-10px;
+	z-index:1;
+}
+#caroNext1{
+	position:absolute;
+	bottom:108px;
+	right:-28px;
+	z-index:1;
+}
+.productList1 > li	{width:140px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
+.productList2 > li	{width:140px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
+.productList3 > li	{width:140px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
+.productList4 > li	{width:140px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
+
+#caroPrev2{
+	position:absolute;
+	bottom:108px;
+	left:-10px;
+	z-index:1;
+}
+#caroNext2{
+	position:absolute;
+	bottom:108px;
+	right:-28px;
+	z-index:1;
+}
+
 #caroPrev3{
 	position:absolute;
-	bottom:130px;
-	left:-35px;
+	bottom:108px;
+	left:-10px;
 	z-index:1;
 }
 #caroNext3{
 	position:absolute;
-	bottom:130px;
-	right:-15px;
+	bottom:108px;
+	right:-28px;
 	z-index:1;
 }
-.carouselCont3{
-	position:relative;
-	height:300px;
-	width:1000px;
-	margin-left:10px;
-}
+
 #caroPrev4{
 	position:absolute;
-	bottom:130px;
-	left:-35px;
+	bottom:108px;
+	left:-10px;
 	z-index:1;
 }
 #caroNext4{
 	position:absolute;
-	bottom:130px;
-	right:-15px;
+	bottom:108px;
+	right:-28px;
 	z-index:1;
 }
-.carouselCont4{
-	position:relative;
-	height:300px;
-	width:1000px;
-	margin-left:10px;
-}
 
- 
  /*popup css*/
  .black_overlay{
             display: none;
@@ -1041,5 +1043,5 @@ carouselCont1{
 .easyrebox p{margin:10px 0 0 0; padding:0px;}
 
 .adulttab{margin:10px auto; width:450px;}
-/*#homepageTabs .ui-tabs,.ui-tabs-panel{background: none repeat scroll 0 0 transparent; border-width: 0; display: block; padding:0px !important; margin:0px !important;}*/
- 
+.spangtsta{margin:0px; padding:0px;  width:960px !important;}
+.reltabmore{margin:0px; padding:0px; text-align:center;}

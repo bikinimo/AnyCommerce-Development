@@ -15,6 +15,7 @@
     display: inline-block;
     cursor: url(graphics/zoomin.cur), pointer;
     outline: 0 !important;
+	padding-bottom:15px;
 }
 
 /* Style of the small image */
