@@ -87,7 +87,7 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 			<div class="categorySelectorButtonContainer alignLeft"><span class="categorySelectorButton pointer orbitron"><a href="#"><img src="images/remind_letter.png" alt="Remind Me Later" title="Remind Me Later" style="margin:0px;"/></a></span></div>
 		</div>
 		<div id="categorySelectorAirsoft" class="floatRight" onClick="app.u.selectPreference('airsoft',false);">
-		<div class="categorySelectorButtonContainer alignCenter"><span class="categorySelectorButton pointer orbitron"><a href="#customer?show=newsletter"><img src="images/sign_up.png" alt="Sign Me Up" title="Sign Me Up" /></a></span></div>
+		<div class="categorySelectorButtonContainer alignCenter"><span class="categorySelectorButton pointer orbitron"><a href="#" onClick="return showContent('customer',{'show':'myaccount'});"><img src="images/sign_up.png" alt="Sign Me Up" title="Sign Me Up" /></a></span></div>
         <div class="categorySelectorButtonContainer alignRight"><span class="categorySelectorButton pointer orbitron"><a href="#"><img src="images/continu_guest.png" alt="Continue as Guest" title="Continue as Guest" /></a></span></div>
 		</div>
 		<div class="clear"></div>
@@ -298,6 +298,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
     <script type="text/javascript">
 		$(document).ready(function() {
 			$('.fancybox').fancybox();
+			$('#fancybox').fancybox();
 			// Change title type, overlay closing speed
 			$(".fancybox-effects-a").fancybox({
 				helpers: {
@@ -468,7 +469,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
         <img id="caroPrev1" src="images/scroll_left.gif" class="pointer" alt="" />
 	   	<img id="caroNext1" src="images/scroll_right.gif" class="pointer" alt="" />
 </div>
-<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'.IS_NEWARRIVAL'})">Click Here to browse more new releases</a></div>
+<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'IS_NEWARRIVAL'})">Click Here to browse more new releases</a></div>
 </div>
 
 <div data-anytab-content='whatshot'>
@@ -478,14 +479,15 @@ the homepageTemplate template is loaded into mainContentArea by default when the
         <img id="caroPrev2" src="images/scroll_left.gif" class="pointer" alt="" />
 	   	<img id="caroNext2" src="images/scroll_right.gif" class="pointer" alt="" />
 </div>
+<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'IS_FRESH'})">Click Here to browse more What's Hot</a></div>
 </div>
-
 <div data-anytab-content='like'><div class="carouselCont3">
 <ul id="carCat4" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"you may also like"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList3'></ul>
 <div class="clear"></div>
         <img id="caroPrev3" src="images/scroll_left.gif" class="pointer" alt="" />
 	   	<img id="caroNext3" src="images/scroll_right.gif" class="pointer" alt="" />
 </div>
+<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'IS_REFURB'})">Click Here to browse more Like</a></div>
 </div>
 
 <div data-anytab-content='comparissons'><div class="carouselCont4">
@@ -494,6 +496,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
         <img id="caroPrev4" src="images/scroll_left.gif" class="pointer" alt="" />
 	   	<img id="caroNext4" src="images/scroll_right.gif" class="pointer" alt="" />
 </div>
+<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'IS_OPENBOX'})">Click Here to browse more Comparissons</a></div>
 </div>
 
 </div>
@@ -564,15 +567,15 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 <li id='productListTemplate' class='loadingBG  '  onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
 	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
-	<div onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' id="selector" class='pointer prominh'>
+	<div  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' id="selector" class='pointer prominh'>
 		<div class='prodThumbContainer' data-bind='var:product(pid);'>
 	
-<img src='blank.gif' data-fancybox-group="gallery" class='fancybox' alt='' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='146' height='151' />
+<img src='blank.gif' data-fancybox-group='gallery' class='fancybox' alt='' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='146' height='151' />
 	</div>
-		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
+		 <div  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'onClick="return showContent('product',{'pid':$(this).attr('data-pid')})"><h5 data-bind='var: product(zoovy:prod_name); format:text;' ></h5></div>
 		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
-<!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
+     <span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span>
 	</div>
 	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='addtocartipro prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;" >
 		<input type='hidden' name='qty' value='1' />
@@ -586,7 +589,7 @@ container ul should have lineItemProdlist class on it instead of productList
 <li id='productListTemplateATC' class='loadingBG  ' >
 	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 		<div class='prodThumbContainer floatLeft'>
-		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
+      <img src='blank.gif' class='prodThumb' alt='' id='fancybox' data-fancybox-group='gallery' alt='' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='120' height='120' />
 		</div>
 		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
 		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
@@ -598,6 +601,7 @@ container ul should have lineItemProdlist class on it instead of productList
 		</form>
 	</div>
 </li>
+
 <li id='productListTemplateBuyerList' class='loadingBG clearfix' >
 	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' >
 		<div class='prodThumbContainer floatLeft'>
@@ -617,7 +621,7 @@ container ul should have lineItemProdlist class on it instead of productList
 <span class="ui-icon ui-icon-trash"></span>
 </button>
 </div>
-			</div>
+</div>
 		</div>
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite floatRight' ></span>
 		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
@@ -635,7 +639,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 <li id='productListTemplateResults' class='loadingBG searchResultsProduct ' >
 	<div class='pointer' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">
 		<div class='prodThumbContainer'>
-		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='120' height='120' />
+		<img src='blank.gif' class='prodThumb' alt='' id="fancybox" data-bind='var: product(images); format:imageURL;extension:fancybox;isElastic:1;bgcolor:ffffff;' width='120' height='120' />
 		</div>
 		<h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:text;' style="min-height:50px; padding-top:5px; text-align:center;"></h5>
 	<h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;' style="min-height:25px; text-align:center;"></h6>
@@ -794,24 +798,20 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 <div>
 
 	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
-	<div class='image1'>
-	<img src='blank.gif' class='prodBigImage' data-fancybox-group='gallery' alt='' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='340' height='340' />
-    
-	</div>
+
+	<img src='blank.gif' data-fancybox-group='gallery' data-bind='var: product(zoovy:prod_image2);format:fancybox; extension:fancybox;' width='340' height='340' />
+ 
 </div>
 
 	<div  class='prodThumbs'>
 <img src='blank.gif' alt='' data-fancybox-group='gallery' data-bind='var: product(zoovy:prod_image2);format:fancybox; extension:fancybox;' width='75' height='75' />
-<!--<a href='blank.gif' data-bind='var: product(zoovy:prod_image2);' ><img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='75' height='75' /></a>
-
-<a href='blank.gif' data-bind='var: product(zoovy:prod_image3);'  ><img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='75' height='75' /></a>
-
-<a href='blank.gif' data-bind='var: product(zoovy:prod_image4); '><img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='75' height='75' /></a>-->
 <img src='blank.gif' alt='' data-fancybox-group='gallery' data-bind='var: product(zoovy:prod_image3);format:fancybox; extension:fancybox;' width='75' height='75' />
 <img src='blank.gif' alt='' data-fancybox-group='gallery'  data-bind='var: product(zoovy:prod_image4); format:fancybox; extension:fancybox;' width='75' height='75' />
 
 	</div>
-
+<div class='tabContent' data-anytab-content='prodVideo'>
+		<div data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
+	</div>
 	</td>
 
 	<td class='prodSummaryContainer marginBottom no_underline'>
@@ -906,10 +906,11 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 </tr>
 </table>
 </div><!-- productTemplateQuickView -->
+
 <!-- 404 page -->
 <div id='pageNotFoundTemplate'>
-	<h1>Unable to find page...</h1>
-</div>
+<!--	<h1>Unable to find page...</h1>
+--></div>
 <!--
 ############################
 MOST OFTEN YOU WANT TO LEAVE THESE TEMPLATES ALONE
