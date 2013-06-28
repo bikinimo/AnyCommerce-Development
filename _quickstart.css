@@ -643,7 +643,7 @@ CHECKOUT
 	
 .debug{position:fixed; bottom:0; left:0; right:0; background:#ffffff; color:#000000; border-top:1px solid #666666; padding:5px;}
 
-.ui-tabs .ui-tabs-nav li a{float:left; padding:5px 62px 4px 63px !important; text-decoration:none; font-weight:normal;}
+.ui-tabs .ui-tabs-nav li a{float:left; padding:5px 62px 4px 62px !important; text-decoration:none; font-weight:normal;}
 .navtopsiz li a{font-size:18px !important;}
 
 
@@ -948,7 +948,7 @@ border-top-left-radius: 0;}
 	right:-28px;
 	z-index:1;
 }
-.productList1 > li	{width:140px; min-height:260px; position:relative; border:1px solid #B1B1B1; padding:10px;}
+.productList1 > li	{width:148px; min-height:260px; position:relative; border:1px solid #B1B1B1; padding:10px;}
 .productList2 > li	{width:140px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
 .productList3 > li	{width:140px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
 .productList4 > li	{width:140px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
