@@ -296,7 +296,8 @@ and override using classes or id's as needed.
 .quickView	{position:absolute; top:247px; right:48px; z-index:1001;} /* jqui modal has zindex 1002 */
 
 /* over rides - height and width ensure each row is the same height. percentages could be used for width */
-.productList > li	{width:146px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
+.productList > li	{width:148px; min-height:260px; position:relative; padding:0;}
+.productList > li > img{margin:0px; padding:0px; width:148px !important; height:208px !important;}
 .lineItemProdlist > li	{position:relative; display:block; padding:10px !important; width:99% !important; min-height:auto !important; /*border-bottom:1px dotted #efefef;*/} /* single column product list - used in cart, checkout, etc. productList class is also defined in these cases. */
 
 .lineItemProdlist .prodThumb	{margin-right:12px;}
@@ -698,8 +699,8 @@ ul#topnav li span ul li a:hover{color:#818281; text-decoration:none;}
 .addtocarti{margin:0px; padding:0px; font-size:0px !important; border:0px !important; background:none
  !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
 .addtocartipro span{margin:0px; padding:0px; font-size:0px; border:0px !important; background:none !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
-.addtocartipro .ui-state-default{margin:0 0 0 33px;  border:none !important;background:none !important; /*padding:0px;  height:23px !important; width:83px !important;*/}
-.prominh{min-height:205px !important; text-align:center;}
+.addtocartipro .ui-state-default{margin:0 0 0 33px;  border:none !important;background:none !important; display:none; /*padding:0px;  height:23px !important; width:83px !important;*/}
+.prominh{min-height:205px !important; text-align:left;}
 .clickab{margin:0px; padding:0px; font-size:26px; font-family:'Abel', serif; color:#276b98; text-align:center;}
 .clickab a{color:#276b98 !important; text-decoration:none;}
 .clickab a:hover{color:#333 !important; text-decoration:none;}
@@ -1057,15 +1058,13 @@ border-top-left-radius: 0;}
 .headerright2 .inpbox{margin:0 0 0 11px; padding:3px 5px 2px 5px; width:272px; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #808080; float:left; border-right:none !important; font-size:11px;}
 .madebox1{margin:12px 0 0 20px; padding:0px; width:283px; float:left;}
 .perboxright{margin:0 0 0 7px; padding:0px; width:158px; float:left; display:inline-block;}
+.ui-tabs .ui-tabs-nav li a{float:left; padding:5px 63px 4px 63px !important; text-decoration:none; font-weight:normal;}
 }
 
 .ui-tabs .ui-tabs-nav li{border-bottom: 0 none; float:left; list-style:none outside none;  margin:1px 0 0 0 !important;  padding:0; position:relative; top:0; white-space:nowrap;}
 
 .ui-tabs .ui-tabs-nav li.ui-tabs-active{margin-bottom:-1px; padding-bottom:0 !important;}
-
-/*.ui-resizable .ui-dialog-titlebar{background:#00FF00 !important;}
-*/
 .viimgta{margin:14px 0 14px 0; padding:0px; text-align:center;}
 .anytabs .ui-corner-tr{border-top-right-radius:0px !important;} 
-
+.mpControlContainer{display:none;}
 /*.anytabs > .ui-tabs-nav{margin:0px; padding:0px !important*/
