@@ -1058,8 +1058,10 @@ border-top-left-radius: 0;}
 .ui-tabs .ui-tabs-nav li{border-bottom: 0 none; float:left; list-style:none outside none;  margin:1px 0 0 0 !important;  padding:0; position:relative; top:0; white-space:nowrap;}
 
 .ui-tabs .ui-tabs-nav li.ui-tabs-active{margin-bottom:-1px; padding-bottom:0 !important;}
-.viimgta{margin:14px 0 14px 0; padding:0px; text-align:center;}
+.viimgta{margin:14px 0 14px 0; padding:0px;}
 .anytabs .ui-corner-tr{border-top-right-radius:0px !important;} 
 .mpControlContainer{display:none;}
-/*.anytabs > .ui-tabs-nav{margin:0px; padding:0px !important*/
 .gallpagebor{border:1px solid #b1b1b1; margin:0px; padding:0px; border-radius:10px;}
+
+.ui-resizable .ui-dialog-titlebar{background:#FFFFFF !important; border:0px !important;}
+.ui-resizable .ui-dialog-titlebar > .ui-dialog-title{visibility:hidden;}

@@ -741,22 +741,18 @@ It's done this way because ID's hard coded into template are bad mojo (templates
   <div id='productTemplateQuickView'>
     <table class='prodViewerContainer'>
       <tr>
-        <td class='imageContainer'><div>
+         <td class='imageContainer' style="width:305px;">
+        	<div>
             <div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
-            <img src='blank.gif' data-fancybox-group='gallery' data-bind='var: product(zoovy:prod_image2);format:fancybox; extension:fancybox;' width='340' height='340' /> </div>
+            <img src='blank.gif' data-fancybox-group='gallery' data-bind='var: product(zoovy:prod_image2);format:fancybox; extension:fancybox;' width='305' height='458' /> </div>
             <div class="viimgta"><img src="images/videoimg.gif" /></div>
           <div  class='prodThumbs' align="center"> <img src='blank.gif' alt='' data-fancybox-group='gallery' data-bind='var: product(zoovy:prod_image2);format:fancybox; extension:fancybox;' width='75' height='75' /> <img src='blank.gif' alt='' data-fancybox-group='gallery' data-bind='var: product(zoovy:prod_image3);format:fancybox; extension:fancybox;' width='75' height='75' /> <img src='blank.gif' alt='' data-fancybox-group='gallery'  data-bind='var: product(zoovy:prod_image4); format:fancybox; extension:fancybox;' width='75' height='75' /> </div>
           <div class='tabContent' data-anytab-content='prodVideo'>
             <div data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
           </div></td>
-        <td class='prodSummaryContainer marginBottom no_underline'><h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
-          <script type="text/javascript">
-	$('#myelement').click(function(){
-      $('#another-element').toggle('slow');
-  });
-	</script>
-          <div class="options" id="myelement">See more options</div>
-          <h3 class='basePrice marginBottom' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;' style="text-align:left;"></h3>
+          
+        <td class='prodSummaryContainer marginBottom no_underline' style="width:290px; margin:0 0 0 25px;"><h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
+           <h3 class='basePrice marginBottom' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;' style="text-align:left;"></h3>
           <hgroup class='marginBottom'>
             <h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
             <h5 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Mfg: ;'></h5>
@@ -781,7 +777,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
           <div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
           <section class='marginBottom'> <span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span> <span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span> </section>
           <menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'> <a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'><img src="images/write_review.gif" alt="Write Review" title="Write Review" /></a>&nbsp;<a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;"><img src="images/add_whistlist.gif" alt="Add to Wishlist" title="Add to Wishlist" /></a> </menu>
-          <table width="70%" border="0" cellspacing="0" cellpadding="0">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <tr>
               <td colspan='2' class="tabbedProductContentTD"><!--
 the tabs are built in an onComplete.  ID's are added based on sku AND index, so the index (order) of the tabs MUST match the order of the tabContent divs
@@ -829,7 +825,15 @@ It's done this way because ID's hard coded into template are bad mojo (templates
                 </div></td>
             </tr>
           </table></td>
-        <td><div id="another-element" style="display:none;">
+          
+        <td align="left">
+         <script type="text/javascript">
+	$('#myelement').click(function(){
+      $('#another-element').toggle('slow');
+  });
+	</script>
+          <div class="options" id="myelement">See more options</div>
+        <div id="another-element" style="display:none;">
             <ul>
               <li><a href="#like">You may also like</a></li>
               <li><a href="#">Recently viewed</a></li>
@@ -839,7 +843,9 @@ It's done this way because ID's hard coded into template are bad mojo (templates
               <tbody data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateATC;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;">
               </tbody>
             </table>
-          </div></td>
+          </div>
+          </td>
+          
       </tr>
     </table>
   </div>
