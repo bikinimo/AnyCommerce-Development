@@ -298,7 +298,7 @@
 				'top'			: 0,
 				'right'			: 'auto',
 				'bottom'		: 'auto',
-				'left'			: 0,
+				/*'left'			: 25,*/
 				'marginTop'		: 0,
 				'marginRight'	: 0,
 				'marginBottom'	: 0,
@@ -2172,7 +2172,7 @@
 				if (crsl.primarySizePercentage)
 				{
 					opts.maxDimension = avail_primary;
-					opts[opts.d['width']] = ms_getPercentage(avail_primary, crsl.primarySizePercentage);
+					opts[opts.d['width']] =ms_getPercentage(avail_primary, crsl.primarySizePercentage);
 				}
 				else
 				{
@@ -3654,7 +3654,7 @@
 			var $l = $v.last();
 			$l.css(o.d['marginRight'], $l.data('_cfs_origCssMargin') + r);
 			$c.css(o.d['top'], p[o.d[0]]);
-			$c.css(o.d['left'], p[o.d[3]]);
+			//$c.css(o.d['left'], p[o.d[3]]);
 		}
 
 		$c.css(o.d['width'], sz[o.d['width']]+(ms_getTotalSize($i, o, 'width')*2));
@@ -4120,7 +4120,7 @@
 				: itm[opt.d['outerHeight']](true);
 		}
 
-		obj.sizesConf.width = obj.width;
+		//obj.sizesConf.width = obj.width;
 		obj.sizesConf.height = obj.height;
 		return obj;
 	}
