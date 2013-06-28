@@ -1069,4 +1069,4 @@ border-top-left-radius: 0;}
 .viimgta{margin:14px 0 14px 0; padding:0px; text-align:center;}
 .anytabs .ui-corner-tr{border-top-right-radius:0px !important;} 
 
-#homepageTabs ul.ui-tabs .ui-tabs-nav{margin:0px; padding:0px !important;}
+.anytabs > .ui-tabs-nav{margin:0px; padding:0px !important;}
