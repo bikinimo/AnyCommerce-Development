@@ -291,12 +291,12 @@ and override using classes or id's as needed.
 
 .listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
 .noPadOrMargin	{padding:0; margin:0;}
-.fluidList li{float:left; margin:0 0 0 35px; padding:0; display:inline-block;}
+.fluidList li{float:left; margin:0 0 0 37px; padding:0; display:inline-block;}
 
 .quickView	{position:absolute; top:247px; right:48px; z-index:1001;} /* jqui modal has zindex 1002 */
 
 /* over rides - height and width ensure each row is the same height. percentages could be used for width */
-.productList > li	{width:148px; min-height:260px; position:relative; padding:0;}
+.productList > li	{width:148px; min-height:285px; position:relative; padding:0;}
 .productList > li > img{margin:0px; padding:0px; width:148px !important; height:208px !important;}
 .lineItemProdlist > li	{position:relative; display:block; padding:10px !important; width:99% !important; min-height:auto !important; /*border-bottom:1px dotted #efefef;*/} /* single column product list - used in cart, checkout, etc. productList class is also defined in these cases. */
 
@@ -421,17 +421,11 @@ BREADCRUMB
  -> used on product and category pages
 
 ***************************************************/
-
-
-.breadcrumb	{margin-bottom:12px;}
-.breadcrumb li	{padding:0; margin:0; cursor:pointer; padding-right:10px;}
-.breadcrumb li:after	{content:" \00BB "; padding-left:10px; font-size:10px; font-weight:bold; color:#999999;}
-.breadcrumb li:last-child:after	{content:"";}
-
-.breadcrumb li:last-child a	{color:#666666; text-decoration:none; font-weight:bold; cursor:text;}
-
-
-
+.breadcrumb	{margin-bottom:12px; font-family:'Abel', serif; font-size:42px; margin:3px 0 7px 40px;}
+.breadcrumb li{padding:0; margin:0; cursor:pointer;}
+.breadcrumb li:after{margin:0px; padding:0px; content:""; font-weight:bold;}
+.breadcrumb li:last-child:after{ margin:0px; padding:0px; content:"";}
+.breadcrumb li:last-child a	{color:#54A7E1; text-decoration:none; font-weight:bold; cursor:text;}
 /***************************************************
 
 cartTemplate
@@ -955,10 +949,10 @@ border-top-left-radius: 0;}
 .productList4{textAlign	:left;float: none;position: absolute;top: 0;right;:auto;bottom: auto;}*/
 
 
-.productList1 > li	{width:148px; min-height:260px; position:relative; /*border:1px solid #B1B1B1;*/ padding:0px;}
-.productList2 > li	{width:148px; min-height:260px; position:relative; /*border:1px solid #CCC;*/ padding:0px;}
-.productList3 > li	{width:148px; min-height:260px; position:relative; /*border:1px solid #CCC;*/ padding:0px;}
-.productList4 > li	{width:148px; min-height:260px; position:relative; /*border:1px solid #CCC;*/ padding:0px;}
+.productList1 > li	{width:148px; min-height:260px; position:relative; /*border:1px solid #B1B1B1;*/ padding:0px; margin:0 0 0 35px;}
+.productList2 > li	{width:148px; min-height:260px; position:relative; /*border:1px solid #CCC;*/ padding:0px; margin:0 0 0 35px;}
+.productList3 > li	{width:148px; min-height:260px; position:relative; /*border:1px solid #CCC;*/ padding:0px; margin:0 0 0 35px;}
+.productList4 > li	{width:148px; min-height:260px; position:relative; /*border:1px solid #CCC;*/ padding:0px; margin:0 0 0 35px;}
 
 #caroPrev2{
 	position:absolute;
@@ -1068,3 +1062,4 @@ border-top-left-radius: 0;}
 .anytabs .ui-corner-tr{border-top-right-radius:0px !important;} 
 .mpControlContainer{display:none;}
 /*.anytabs > .ui-tabs-nav{margin:0px; padding:0px !important*/
+.gallpagebor{border:1px solid #b1b1b1; margin:0px; padding:0px; border-radius:10px;}
