@@ -1057,7 +1057,6 @@ border-top-left-radius: 0;}
 .headerright2 .inpbox{margin:0 0 0 11px; padding:3px 5px 2px 5px; width:272px; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #808080; float:left; border-right:none !important; font-size:11px;}
 .madebox1{margin:12px 0 0 20px; padding:0px; width:283px; float:left;}
 .perboxright{margin:0 0 0 7px; padding:0px; width:158px; float:left; display:inline-block;}
-.ui-tabs .ui-tabs-nav li a{float:left; padding:5px 63px 4px 63px !important; text-decoration:none; font-weight:normal;}
 }
 
 .ui-tabs .ui-tabs-nav li{border-bottom: 0 none; float:left; list-style:none outside none;  margin:1px 0 0 0 !important;  padding:0; position:relative; top:0; white-space:nowrap;}
