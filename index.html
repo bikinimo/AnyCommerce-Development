@@ -617,8 +617,8 @@ SANITY -> if you change the height and width of this image, change the .minimalM
     <li id='productListTemplateResults' class='loadingBG searchResultsProduct ' >
       <div class='pointer' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">
         <div class='prodThumbContainer'> <img src='blank.gif' class='prodThumb' alt='' id="fancybox" data-bind='var: product(images); format:imageURL;extension:fancybox;isElastic:1;bgcolor:ffffff;' width='120' height='120' /> </div>
-        <h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:text;' style="min-height:50px; padding-top:5px; text-align:center;"></h5>
-        <h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;' style="min-height:25px; text-align:center;"></h6>
+        <h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:text;' style="min-height:15px; padding-top:5px; text-align:left;"></h5>
+        <h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
       </div>
       <div class='hideInMinimalMode pointer moreDetails reltabmore' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});" style="display:none;"><img src="images/more_details.jpg"/></div>
     </li>

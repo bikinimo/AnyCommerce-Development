@@ -291,7 +291,7 @@ and override using classes or id's as needed.
 
 .listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
 .noPadOrMargin	{padding:0; margin:0;}
-.fluidList li	{float:left; margin:12px; padding:0; display:inline-block;}
+.fluidList li{float:left; margin:0 0 0 35px; padding:0; display:inline-block;}
 
 .quickView	{position:absolute; top:247px; right:48px; z-index:1001;} /* jqui modal has zindex 1002 */
 
@@ -474,7 +474,7 @@ CUSTOMER PAGES
 #orderInvoiceSoloPage table	{width:700px;}
 .orderContentsProdlistContainer	{width:500px;}
 .orderContentsProdlistContainer .prodThumbContainer	{float:left; margin:0 5px 5px 0;}
-
+.prodThumbContainer .prodThumb{margin:0px; padding:0px; width:148px; height:208px;}
 
 /****** MY ACCOUNT ******/
 
@@ -905,29 +905,29 @@ border-top-left-radius: 0;}
 }
 .carouselCont1{
 	position:relative;
-	height:300px;
+	height:270px;
 	width:960px !important;
-	margin:0 0 0 -28px; padding:0px;
+	margin:0 0 0 -46px; padding:0px;
 }
 .carouselCont2{
 	position:relative;
-	height:300px;
+	height:270px;
 	width:960px !important;
-	margin:0 0 0 -28px; padding:0px;
+	margin:0 0 0 -46px; padding:0px;
 }
 
 .carouselCont3{
 	position:relative;
-	height:300px;
+	height:270px;
 	width:960px !important;
-	margin:0 0 0 -28px; padding:0px;
+	margin:0 0 0 -46px; padding:0px;
 }
 
 .carouselCont4{
 	position:relative;
-	height:300px;
+	height:270px;
 	width:960px !important;
-	margin:0 0 0 -28px; padding:0px;
+	margin:0 0 0 -46px; padding:0px;
 }
 /*.carouselCont1 div.caroufredsel_wrapper{
 	float:left;
@@ -936,59 +936,60 @@ border-top-left-radius: 0;}
 	height:250px;
 	margin-right:10px;
 }*/
+.caroufredsel_wrapper{height:260px !important;}
 #caroPrev1{
 	position:absolute;
 	bottom:108px;
-	left:-10px;
+	left:8px;
 	z-index:1;
 }
 #caroNext1{
 	position:absolute;
 	bottom:108px;
-	right:-28px;
+	right:-46px;
 	z-index:1;
 }
-.productList1 > li	{width:148px; min-height:260px; position:relative; border:1px solid #B1B1B1; padding:10px;}
-.productList2 > li	{width:140px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
-.productList3 > li	{width:140px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
-.productList4 > li	{width:140px; min-height:260px; position:relative; border:1px solid #CCC; padding:10px;}
+.productList1 > li	{width:148px; min-height:260px; position:relative; /*border:1px solid #B1B1B1;*/ padding:0px;}
+.productList2 > li	{width:148px; min-height:260px; position:relative; /*border:1px solid #CCC;*/ padding:0px;}
+.productList3 > li	{width:148px; min-height:260px; position:relative; /*border:1px solid #CCC;*/ padding:0px;}
+.productList4 > li	{width:148px; min-height:260px; position:relative; /*border:1px solid #CCC;*/ padding:0px;}
 
 #caroPrev2{
 	position:absolute;
 	bottom:108px;
-	left:-10px;
+	left:8px;
 	z-index:1;
 }
 #caroNext2{
 	position:absolute;
 	bottom:108px;
-	right:-28px;
+	right:-46px;
 	z-index:1;
 }
 
 #caroPrev3{
 	position:absolute;
 	bottom:108px;
-	left:-10px;
+	left:8px;
 	z-index:1;
 }
 #caroNext3{
 	position:absolute;
 	bottom:108px;
-	right:-28px;
+	right:-46px;
 	z-index:1;
 }
 
 #caroPrev4{
 	position:absolute;
 	bottom:108px;
-	left:-10px;
+	left:8px;
 	z-index:1;
 }
 #caroNext4{
 	position:absolute;
 	bottom:108px;
-	right:-28px;
+	right:-46px;
 	z-index:1;
 }
 
