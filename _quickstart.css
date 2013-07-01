@@ -1062,6 +1062,19 @@ border-top-left-radius: 0;}
 .anytabs .ui-corner-tr{border-top-right-radius:0px !important;} 
 .mpControlContainer{display:none;}
 .gallpagebor{border:1px solid #b1b1b1; margin:0px; padding:0px; border-radius:10px;}
+.proborview li{margin:0px; padding:10px !important; border:1px solid #CCC !important; min-height:50px !important;}
+ 
+ /*.ui-resizable .ui-dialog-titlebar{background:#FFFFFF !important; border:0px !important;}
+.ui-resizable .ui-dialog-titlebar > .ui-dialog-title{visibility:hidden;}*/
 
-.ui-resizable .ui-dialog-titlebar{background:#FFFFFF !important; border:0px !important;}
-.ui-resizable .ui-dialog-titlebar > .ui-dialog-title{visibility:hidden;}
+.comparissonsbox{margin:0px; padding:0px;}
+.comparissonsbox ul{margin:0px; padding:0px;}
+.comparissonsbox ul li{margin:0px; padding:0px; list-style-type:none; font-family:'Abel', serif; font-size:20px;}
+.comparissonsbox ul li a{color:#276b98; text-decoration:underline;}
+.comparissonsbox ul li a:hover{color:#333; text-decoration:underline;}
+
+.recentlybox{margin:10px 0 0 0; padding:0px;}
+.recentlybox .prodThumbContainer{margin:0px; padding:0 0 5px 0; float:left; width:100%;}
+.recentlybox .variation .label_select{float:left;}
+.recentlybox .variation_A2{margin:6px 0 0 0; padding:0px; display:inline-block;}
+.recentlybox .variation span > select{margin:0px; padding:0px; width:100px; float:left;}

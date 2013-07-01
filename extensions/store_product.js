@@ -619,7 +619,7 @@ NOTES
 					if($parent.length)	{$parent.empty()}
 					else	{
 						$parent = $("<div \/>").attr({"id":'product-modal',"title":""}).appendTo('body');
-						$parent.dialog({modal: true,width:'86%',height:$(window).height() - 100,autoOpen:false});
+						$parent.dialog({modal: true,width:'900px',height:$(window).height() - 100,autoOpen:false});
 						}
 					
 					
