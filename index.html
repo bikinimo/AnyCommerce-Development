@@ -766,7 +766,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
   </div>
   <!-- productTemplate -->
   <!-- a template used for a quickview link off of a category page -->
-  <div id='productTemplateQuickView'>
+  <div id='productTemplateQuickView' class="popupshado">
     <table class='prodViewerContainer'>
       <tr>
         <td class='imageContainer' style="width:305px;"><div>
@@ -905,13 +905,14 @@ It's done this way because ID's hard coded into template are bad mojo (templates
                 </div></td>
             </tr>
           </table></td>
-        <td align="right" valign="top"><script type="text/javascript">
+        <td align="right" valign="top">
+		<script type="text/javascript">
 	$('#myelement').click(function(){
       $('#another-element').toggle('slow');
   });
 	</script>
-          <div id="myelement"><img src="images/more_options.gif" /></div></td>
-        <td align="left" valign="top"><div id="another-element" style="display:none; width:190px; padding:0 10px;">
+          <div id="myelement" style="margin-top:50px;"><a href="#"><img src="images/more_options.gif" /></a></div></td>
+        <td align="left" valign="top"  id="another-element" style="display:none;"><div style="width:190px; padding:0 10px;">
             <div class="comparissonsbox">
               <ul>
                 <li><a href="#like">You may also like</a></li>
