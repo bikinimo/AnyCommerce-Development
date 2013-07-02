@@ -62,11 +62,41 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 <link href="magiczoom/magiczoom.css" rel="stylesheet" type="text/css" media="screen"/>
 <script src="magiczoom/magiczoom.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/tabbing.js"></script>
-<script src="js/jquery.countdown.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/script.js"></script>
 <link rel="stylesheet" href="js/jquery.countdown.css" />
+<SCRIPT LANGUAGE="JavaScript">
+var eventdate = new Date("july 25, 2013 23:59:59");
+
+function toSt(n) {
+ s=""
+ if(n<10) s+="0"
+ return s+n.toString();
+}
+
+function countdown() {
+ cl=document.clock;
+ d=new Date();
+ count=Math.floor((eventdate.getTime()-d.getTime())/1000);
+ if(count<=0)
+   {cl.days.value ="----";
+    cl.hours.value="--";
+    cl.mins.value="--";
+    cl.secs.value="--";
+    return;
+  }
+ cl.secs.value=toSt(count%60);
+ count=Math.floor(count/60);
+ cl.mins.value=toSt(count%60);
+ count=Math.floor(count/60);
+ cl.hours.value=toSt(count%24);
+ count=Math.floor(count/24);
+ cl.days.value=count;    
+ 
+ setTimeout("countdown()",500);
+}
+</SCRIPT>
 </head>
-<body>
+<body onLoad="countdown()">
 <!-- DELETE THIS WHEN YOU GET STARTED -->
 <!-- /DELETE THIS WHEN YOU GET STARTED -->
 <!-- what is displayed onLoad until the view is loaded -->
@@ -435,7 +465,9 @@ the homepageTemplate template is loaded into mainContentArea by default when the
               check back soon for another deal!</span>
               <div class="countmain">
                 <p>Time Remaining</p>
-                <iframe src="http://free.timeanddate.com/countdown/i3p03gq2/n137/cf12/cm0/cu4/ct1/cs0/ca0/co0/cr0/ss0/cac0f0/cpc000/pc000/tcfff/fs100/szw320/szh135/iso2013-06-29T00:00:00/pa2" frameborder="0" width="99" height="22" style="margin:3px 0 0 9px;"></iframe>
+                 <FORM name="clock">
+<div><INPUT name="days" size=2 class="counttext" readonly/><div class="colon">:</div><INPUT name="hours" class="counttext" size=2 readonly/><div class="colon">:</div><INPUT name="mins" class="counttext" size=2 readonly/><div class="colon">:</div><INPUT name="secs" class="counttext" size=2 readonly/></div>
+</FORM>
               </div>
             </div>
           </div>
@@ -443,8 +475,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
         <div class="bannerright3"><img src="images/limit_botcarv.gif" alt="" /></div>
       </div>
     </div>
-    <!--<div class="tabbing"><img src="images/tabingpic.jpg" alt="" /></div>-->
-    <div id='homepageTabs' style="margin:3px 0 0 0; width:962px; float:left;">
+     <div id='homepageTabs' style="margin:3px 0 0 0; width:962px; float:left;">
       <!-- This works because of some awesome code in app-quickstart-init.js-->
       <ul class="alignCenter navtopsiz">
         <li><a href='#newrelease'>New Releases</a></li>
