@@ -65,6 +65,11 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 		}
 	}]);
 
+  app.rq.push(['templateFunction','companyTemplate','onCompletes',function(P) { 
+ if(!$('#homepageBottomTabs').hasClass('anytabs')){
+  $('#homepageBottomTabs').addClass('anytabs').anytabs();
+  }
+ }]);
 
 //Homepage Slideshow image code and carousel code
 var homepageLoad = false;

@@ -1087,3 +1087,7 @@ z-index:1002; overflow: auto; /*box-shadow: 1px 1px 3px 3px #000000;*/ font-fami
  !important; height:31px !important; width:112px !important; cursor:pointer; background-image:url(images/gallery_cart.gif) !important; background-repeat:no-repeat;}
  
 .active{color:#fff; background:url(images/taboff-bg.gif) repeat-x !important; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; 	-moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; border-top-left-radius: 5px; border-top-right-radius: 5px; padding:3px 22px;} 
+
+/*vilas added*/
+#homepageBottomTabs .ui-tabs-nav li a{float:left; padding:5px 87px 4px 87px !important; text-decoration:none; font-weight:normal;}
+/*vilas added*
