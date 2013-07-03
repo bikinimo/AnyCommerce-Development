@@ -777,8 +777,8 @@ It's done this way because ID's hard coded into template are bad mojo (templates
           <div class='tabContent' data-anytab-content='prodVideo'>
             <div data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
           </div></td>
-        <td class='prodSummaryContainer marginBottom no_underline' style="width:290px; margin:0 0 0 25px;"><h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
-          <h3 class='basePrice marginBottom' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;' style="text-align:left;"></h3>
+        <td class='prodSummaryContainer marginBottom no_underline' style="width:340px; margin:0 0 0 25px;"><h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
+          <h3 class='basePrice marginBottom' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: <h5>Only :</h5> ;' style="text-align:left;"></h3>
           <hgroup class='marginBottom'>
             <h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
             <h5 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Mfg: ;'></h5>
@@ -797,7 +797,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
             </fieldset>
             <fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'>
             </fieldset>
-            <input type='submit' value='Add to Cart' class='addtocarti ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
+            <input type='submit' value='Add to Cart' class='galladdtocarti ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
           </form>
           <script language="javascript">
 function validateForm()
@@ -858,7 +858,7 @@ if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length)
           <div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
           <section class='marginBottom'> <span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span> <span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span> </section>
           <menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'><a href = "javascript:void(0)" onclick = "document.getElementById('light1').style.display='block';document.getElementById('fade').style.display='block'">Tell a Friend</a> | <a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>Write Review</a> | <a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;">Add to Wishlist</a> </menu>
-          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <table width="97%" border="0" cellspacing="0" cellpadding="0">
             <tr>
               <td colspan='2' class="tabbedProductContentTD"><!--
 the tabs are built in an onComplete.  ID's are added based on sku AND index, so the index (order) of the tabs MUST match the order of the tabContent divs
@@ -867,40 +867,23 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 -->
                 <div class="tabPaging">
                   <ul>
-                    <!--<li class='prodDescTab'><a id="href_dis" href="#prodDesc" onClick="toggle_div('dis');" class="active" title=""><span>Description</span></a></li>
-    <li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a id="href_Specs" href="#prodSpecs" onClick="toggle_div('Specs');" class="" title=""><span>Specs</span></a></li>-->
-                    <li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a id="href_featured" href="#prodFeatures" onClick="toggle_div('featured');" class="" title=""><span>Features</span></a></li>
+                     <li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a id="href_featured" href="#prodFeatures" onClick="toggle_div('featured');" class="active" title=""><span>Features</span></a></li>
                     <li class='prodReviewsTab'><a id="href_Reviews" href="#prodReviews" onClick="toggle_div('Reviews');" class="" title=""><span>Reviews</span></a></li>
-                    <li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a id="href_video" href="#prodVideo" onClick="toggle_div('video');" class="" title=""><span>Video</span></a></li>
-                    <!-- <li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a id="href_Acc" href="#prodAccessories" onClick="toggle_div('Acc');" class="" title=""><span>Accessories</span></a></li>-->
-                  </ul>
+                    </ul>
                   <!-- Repeat Section Start Here -->
                   <div class="tabingcontent">
-                    <div id="dis" style="display:block;">
-                      <div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
-                    </div>
-                    <div id="Specs" style="display:none;">
-                      <div data-bind='var: product(zoovy:prod_detail); format:wiki; wikiFormats:myRIA;'></div>
-                    </div>
-                    <div id="featured" style="display:none;">
+                     <div id="featured">
                       <div data-bind='var: product(zoovy:prod_features); format:wiki; wikiFormats:myRIA;'></div>
                     </div>
-                    <div id="Reviews" style="display:none;">
+                    <div id="Reviews">
                       <div class='clearfix alignRight'>
                         <button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'><img src="images/write_review.gif" alt="Write Review" title="Write Review" /></button>
                       </div>
                       <ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;">
                       </ul>
                     </div>
-                    <div id="video" style="display:none;">
-                      <div data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
-                    </div>
-                    <div id="Acc" style="display:none;">
-                      <table class='fullWidth gridTable'>
-                        <tbody data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateATC;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;">
-                        </tbody>
-                      </table>
-                    </div>
+                     
+                     
                   </div>
                   <!-- Repeat Section Close Here -->
                 </div></td>
@@ -910,10 +893,11 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 		<script type="text/javascript">
 	$('#myelement').click(function(){
       $('#another-element').toggle('slow');
+	  $('#myelement').hide();
   });
 	</script>
           <div id="myelement"><a href="#"><img src="images/more_options.gif" /></a></div></td>
-        <td align="left" valign="top"  id="another-element" style="display:none;"><div style="width:190px; padding:0 10px; border-left:1px solid #b1b1b1;">
+        <td align="left" valign="top"  id="another-element" style="display:none;"><div style="width:140px; padding:0 10px; border-left:1px solid #b1b1b1;">
             <div class="comparissonsbox">
               <ul>
                 <li><a href="#like">You may also like</a></li>
