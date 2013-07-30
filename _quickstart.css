@@ -131,7 +131,6 @@ td.valignMiddle	{vertical-align: middle;}
 
 /* feel free to delete these or override in your own .css file */
 h1, h2, h3, h4, h5, h6	{padding:0; margin:0;}
-p	{margin:0 0 12px 0;}
 
 /* chrome and safari add an outer border/glow to the input in focus. this removes it. */
 input:focus {
@@ -469,7 +468,6 @@ CUSTOMER PAGES
 #orderInvoiceSoloPage table	{width:700px;}
 .orderContentsProdlistContainer	{width:500px;}
 .orderContentsProdlistContainer .prodThumbContainer	{float:left; margin:0 5px 5px 0;}
-.prodThumbContainer .prodThumb{margin:0px; padding:0px; width:148px; height:208px;}
 
 /****** MY ACCOUNT ******/
 
@@ -647,7 +645,6 @@ CHECKOUT
 .tabbing .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited{color:#666666 !important; text-decoration:none;}
 
 .ui-widget-content{background:#FFFFFF !important; color:#333333; border-color:#b1b1b1 !important;}
-.ui-widget-header{background:#d4b697 !important; border: 1px solid #d4b697 !important; color: #FFFFFF; font-weight: bold;}
 .shopingbag{color:#808080; padding:0 0 0 6px;}
 .cartItemCount{color:#808080;}
 
@@ -677,7 +674,7 @@ fieldset input.ui-button-text {background:#cccccc !important; color:#333 !import
 
 /*Drop Dwon Menu Css*/
 ul#topnav{margin:0px; padding:0; float:left; list-style:none; position:relative;}
-ul#topnav li span{padding:0px 0 13px 0; position:absolute; left:0; top:27px; display:none; background:#eae8e5; color:#fff; float:left; border-radius:6px 6px 6px 6px; border-left:1px solid #276b97; border-right:1px solid #276b97; border-bottom:1px solid #276b97; border-top:1px solid #276b97; z-index:9; opacity:0.90;}
+ul#topnav li span{padding:0px 0 13px 0; position:absolute; left:0; top:27px; display:none; background:#eae8e5; color:#fff; float:left; border: 2px solid #276b97; border-radius:0px 0px 6px 6px; z-index:9; opacity:0.90;}
 /*ul#topnav li span{padding:20px 0; position:absolute; left:0; top:27px;	display:none; min-width:600px; background:#eae8e5; color:#fff; float:left; border-radius:0 6px 6px 6px; border-left:2px solid #276b97; border-right:2px solid #276b97; border-bottom:2px solid #276b97; }*/
 ul#topnav li:hover span{display: block;}
 ul#topnav li span a{display: inline; color:#000000;}
