@@ -26,9 +26,9 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 .cartsec{margin:0px; padding:6px 0 0 0; text-align:right;}
 .cartsec img{margin:-3px 10px 0 0; padding:0;}
 .gryimgright{margin:0px; padding:0px; float:right;}
-.headerright2{margin:10px 0 0 0; padding:0px; width:435px; float:left; color: #808080;}
-.headerright2 .inpbox{margin:0 0 0 11px; padding:3px 5px 2px 5px; width:262px; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #808080; float:left;  border-right:none !important; font-size:11px;}
-.headerright2 .searchbut{margin:0px; padding:0px; float:left;}
+.headerright2{margin:10px 0 0 0; padding:0px; width:435px; float:left; color: #808080; font-size: 14px;}
+.headerright2 .inpbox{margin:0 2px 0 5px; padding:3px; width:254px; border: 1px solid #808080; font-size:11px; color: #404040;}
+.headerright2 .searchbut{margin:0px; padding:0px; float:right;}
 
 .navsection{margin:6px 0 0 0; padding:0px; width:964px; float:left; background:url(images/nav_bg.png) no-repeat; height:27px;}
 .navsection ul{margin:0px; padding:0px;}
