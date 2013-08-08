@@ -32,11 +32,11 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 
 .navsection{margin:6px 0 0 0; padding:0px; width:964px; float:left; background:url(images/nav_bg.png) no-repeat; height:27px;}
 .navsection ul{margin:0px; padding:0px;}
-.navsection ul li{margin:0px; padding:4px 15px 5px 15px; list-style-type:none; float:left;}
+.navsection ul li{margin:0px; padding:6px 10px; list-style-type:none; float:left;}
 /*.navsection ul li:hover{margin:0px; padding:4px 15px 5px 15px; list-style-type:none; float:left; border-radius:5px 5px 0 0 ;  color:#221f1f !important; background:#EAE8E5 !important;}
 */
-.navsection ul li a{color:#FFFFFF; font-size:14px; text-decoration:none;}
-.navsection ul li a:hover{color:#221f1f; text-decoration:none;}
+.navsection ul li a{color:#FFFFFF; font-size:14px; text-decoration:none; padding: 4px;}
+.navsection ul li a:hover{color:#fe7a00;}
 /*Header Close*/
 
 /*Middle Start*/
@@ -674,7 +674,7 @@ fieldset input.ui-button-text {background:#cccccc !important; color:#333 !import
 
 /*Drop Dwon Menu Css*/
 ul#topnav{margin:0px; padding:0; float:left; list-style:none; position:relative;}
-ul#topnav li span{padding:0px 0 13px 0; position:absolute; left:0; top:27px; display:none; background:#eae8e5; color:#fff; float:left; border: 2px solid #276b97; border-radius:0px 0px 6px 6px; z-index:9; opacity:0.90;}
+ul#topnav li span{padding:0px 0 13px 0; position:absolute; left:0; top:25px; display:none; background:#eae8e5; color:#fff; float:left; border-color:#276B97; border-width: 0px 2px 2px; border-style: none solid solid; border-radius:0px 0px 6px 6px; z-index:9;}
 /*ul#topnav li span{padding:20px 0; position:absolute; left:0; top:27px;	display:none; min-width:600px; background:#eae8e5; color:#fff; float:left; border-radius:0 6px 6px 6px; border-left:2px solid #276b97; border-right:2px solid #276b97; border-bottom:2px solid #276b97; }*/
 ul#topnav li:hover span{display: block;}
 ul#topnav li span a{display: inline; color:#000000;}
@@ -683,7 +683,7 @@ ul#topnav li span a:hover{text-decoration: underline;}
 ul#topnav li span ul{margin:0 50px 0 0 ; padding:0px; float:left;}
 ul#topnav li span ul li{float:none;}
 ul#topnav li span ul li a{padding:4px 0 0 0; font-size:12px; float:left; color:#333;}
-ul#topnav li span ul li a:hover{color:#818281; text-decoration:none;}
+ul#topnav li span ul li a:hover{color:#34719e; text-decoration:none;}
 
 /*Drop Dwon Menu Css*/
 .sendmess{margin:0px; padding:0px; font-size:0px; border:0px !important; height:23px !important; width:102px !important; cursor:pointer; background:none !important; background-image:url(images/send_massage.gif) !important; background-repeat:no-repeat;}
