@@ -600,7 +600,6 @@ remember to NOT put the button inside the 'onclick' container or two events will
         <span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span> <span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> </div>
       <form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='addtocartipro prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;" >
         <input type='hidden' name='qty' value='1' />
-        <div data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'><img src="images/more_details.jpg"/></div>
       </form>
     </li>
     <!--
