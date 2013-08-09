@@ -645,14 +645,17 @@ the loadingBG class is removed (must be that classname) when the template is tra
 remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
 SANITY -> if you change the height and width of this image, change the .minimalMode .searchResultsProduct in qs_styles.css to match
 -->
-    <li id='productListTemplateResults' class='loadingBG searchResultsProduct ' >
-      <div class='pointer' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">
-        <div class='prodThumbContainer floatLeft'  data-fancybox-group='gallery' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'> <img src='blank.gif' class='prodThumb' alt='' id="fancybox" data-bind='var: product(images); format:imageURL;extension:fancybox;isElastic:1;bgcolor:ffffff;' width='150' height='210' /> </div>
-        <h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:text;' style="min-height:15px; padding-top:5px; text-align:left;"></h5>
-        <h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
-      </div>
-      <div class='hideInMinimalMode pointer moreDetails reltabmore' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});" style="display:none;"><img src="images/more_details.jpg"/></div>
-    </li>
+	<li id='productListTemplateResults' class='loadingBG searchResultsProduct ' >
+		<div class='pointer' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">
+			<div class='prodThumbContainer floatLeft'  data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'> 
+				<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='150' height='210' /> 
+			</div>
+			<h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:text;' style="min-height:15px; padding-top:5px; text-align:left;"></h5>
+			<h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
+		</div>
+		<div class='hideInMinimalMode pointer moreDetails reltabmore' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});" style="display:none;"><img src="images/more_details.jpg"/></div>
+	</li>
+	
     <li id='productListTemplateResultsNoPreview' class='loadingBG searchResultsProduct ' >
       <div onClick="return showContent('product', {'pid' : $(this).parent().attr('data-pid')});" class='pointer'>
         <div class='prodThumbContainer floatLeft'  data-fancybox-group='gallery' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'> <img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='120' height='120' /> </div>
