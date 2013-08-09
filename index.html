@@ -589,8 +589,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
       <p>This is an animated dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
     </div>
     <button id="opener">Open Dialog</button>
-    <li id='productListTemplate' class='loadingBG  '  onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
-      <button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
+    <li id='productListTemplate' class='loadingBG  '>
       <div  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' id="selector" class='pointer prominh'>
         <div class='prodThumbContainer floatLeft'  data-fancybox-group='gallery' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'> <img src='blank.gif' data-fancybox-group='gallery' class='fancybox' alt='' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='150' height='210' /> </div>
         <div  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'onClick="return showContent('product',{'pid':$(this).attr('data-pid')})">
