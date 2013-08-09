@@ -585,22 +585,26 @@ Used for the product in a product list (prodlist), usually in the body of a cate
 the loadingBG class is removed (must be that classname) when the template is translated.
 remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
 -->
-    <div id="dialog" title="Basic dialog">
-      <p>This is an animated dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
-    </div>
-    <button id="opener">Open Dialog</button>
-    <li id='productListTemplate' class='loadingBG  '>
-      <div  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' id="selector" class='pointer prominh'>
-        <div class='prodThumbContainer floatLeft'  data-fancybox-group='gallery' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'> <img src='blank.gif' data-fancybox-group='gallery' class='fancybox' alt='' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='150' height='210' /> </div>
-        <div  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'onClick="return showContent('product',{'pid':$(this).attr('data-pid')})">
-          <h5 data-bind='var: product(zoovy:prod_name); format:text;' ></h5>
-        </div>
-        <h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
-        <span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span> <span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> </div>
-      <form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='addtocartipro prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;" >
-        <input type='hidden' name='qty' value='1' />
-      </form>
-    </li>
+	<div id="dialog" title="Basic dialog">
+		<p>This is an animated dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+	</div>
+	<button id="opener">Open Dialog</button>
+	
+	<li id='productListTemplate' class='loadingBG  '>
+		<div  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' id="selector" class='pointer prominh' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">
+			<div class='prodThumbContainer floatLeft'  data-fancybox-group='gallery' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'> 
+				<img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='150' height='210' /> 
+			</div>
+			<div  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' >
+				<h5 data-bind='var: product(zoovy:prod_name); format:text;' ></h5>
+			</div>
+			<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
+			<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span> <span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> 
+		</div>
+		<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='addtocartipro prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;" >
+			<input type='hidden' name='qty' value='1' />
+		</form>
+	</li>
     <!--
 for product lists with addToCart feature (accessories, for example)
 container ul should have lineItemProdlist class on it instead of productList
