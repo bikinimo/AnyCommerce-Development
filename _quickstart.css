@@ -2,7 +2,7 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 
 #appTemplates {display:none;} /* container for all templates. should be hidden */
 
-#appPreView	{height:100%; width:100%; background:rgba(0,0,0,0.5); margin:0; position:absolute;}
+#appPreView	{height:100%; width:100%; background:rgba(0,0,0,0.5); margin:0; position:absolute; z-index:10;}
 
 /********** NEW CSS ADD**********/
 .fl{float:left;}
@@ -168,7 +168,7 @@ ul li{ list-style-type:none;}
 .floatRight	{float:right;}
 
 .alignCenter	{text-align:center;}
-.alignCenter #appPreViewProgressBar{height:4px; width:315px; background:#0033FF; border-radius:5px; margin:0 0 0 200px; z-index:10;}
+.alignCenter #appPreViewProgressBar{height:4px; width:315px; background:#0033FF; border-radius:5px; margin:0 0 0 200px;}
 .alignLeft	{text-align:left;}
 .alignRight	{text-align:right;}
 
