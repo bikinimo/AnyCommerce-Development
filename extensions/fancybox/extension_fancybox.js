@@ -46,18 +46,7 @@ var fancybox = function() {
 								}
 							});
 						}]);
-					app.rq.push(['templateFunction','categoryTemplateCuties','onCompletes',function(P) {
-						var $context = $(app.u.jqSelector('#',P.parentID)); 
-						$('.fancybox', $context).fancybox({
-							'helpers': {
-								'overlay' : {
-									'css' : {
-										'background': 'rgba(0,38,117,.45)'
-										}
-									}
-								}
-							});
-						}]);
+					
 					}]);
 				},
 			onError : function()	{

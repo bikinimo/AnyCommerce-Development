@@ -90,7 +90,7 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 .copright{margin:0px; padding:7px 0 0 0; color:#808080;}
 /*Footer Close*/
 /*Loader Page Start*/
-.loderwrapper{margin:10px auto; padding:0px; width:636px; height:410px; background:url(images/loaderbg.jpg) no-repeat; position:relative; z-index:10;}
+.loderwrapper{margin:10px auto; padding:0px; width:636px; height:410px; background:url(images/loader-bg_643x415.png) no-repeat; position:relative; z-index:10;}
 .lodemid{margin:0 0 0 213px; padding:0px; float:left; width:397px;}
 .loaderlogo{margin:16px 0 0 18px; padding:0px;}
 .fashionclub{margin:38px 0 0 28px; padding:0px; width:338px; text-align:center; color:#2e5f80; font-family:'Source Sans Pro', serif; font-weight:bold;}
@@ -168,7 +168,7 @@ ul li{ list-style-type:none;}
 .floatRight	{float:right;}
 
 .alignCenter	{text-align:center;}
-.alignCenter #appPreViewProgressBar{height:4px; width:315px; background:#0033FF; border-radius:5px; margin:0 0 0 200px;}
+.alignCenter #appPreViewProgressBar{height:4px; width:315px; background:#0033FF; border-radius:5px; margin:0 0 0 200px; z-index:10;}
 .alignLeft	{text-align:left;}
 .alignRight	{text-align:right;}
 
