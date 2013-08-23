@@ -597,8 +597,8 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	
 	<li id='productListTemplate' class='loadingBG  '>
 		<div  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' id="selector" class='pointer prominh' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">
-			<div class='prodThumbContainer floatLeft'  data-fancybox-group='gallery' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'> 
-				<img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='150' height='210' /> 
+			<div class='prodThumbContainer floatLeft' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'> 
+				<img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='150' height='210' /> 
 			</div>
 			<div  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' >
 				<h5 data-bind='var: product(zoovy:prod_name); format:truncText; numCharacters: 38;' ></h5>
