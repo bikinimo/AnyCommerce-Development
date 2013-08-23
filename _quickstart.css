@@ -14,10 +14,10 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 /*Header Start*/
 .header{margin:16px 0 0 0; padding:0px; width:964px; float:left;}
 .headerone{margin:0px; padding:0px; width:964px; float:left;}
-.headerleft{margin:0px; padding:0px; width:529px; float:left;}
+.headerleft{margin:0px; padding:0px; float:left;} /*width:529px;*/
 .headerleft img{margin:9px 0 0 14px;}
-.headerright{margin:0px; padding:0px; width:435px; float:left;}
-.headerright1{margin:0px; padding:0px; width:435px; float:left;}
+.headerright{margin:0px; padding:0px; width:445px; float:right;}
+.headerright1{margin:0px; padding:0px; width:445px; float:left;}
 .topsecmenu{margin:0px; padding:0px; width:362px; float:left;}
 .contactsec{margin:0px; padding:0px; text-align:right; line-height:20px;}
 .contactsec a{color:#808080; text-decoration:none;}
@@ -26,7 +26,7 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 .cartsec{margin:0px; padding:6px 0 0 0; text-align:right;}
 .cartsec img{margin:-3px 10px 0 0; padding:0;}
 .gryimgright{margin:0px; padding:0px; float:right;}
-.headerright2{margin:10px 0 0 0; padding:0px; width:435px; float:left; color: #808080; font-size: 14px;}
+.headerright2{margin:10px 0 0 0; padding:0px; width:445px; float:left; color: #808080; font-size: 14px;}
 .headerright2 .inpbox{margin:0 2px 0 5px; padding:3px; width:254px; border: 1px solid #808080; font-size:11px; color: #404040;}
 .headerright2 .searchbut{margin:0px; padding:0px; float:right;}
 
