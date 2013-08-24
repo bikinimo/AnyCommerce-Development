@@ -174,15 +174,33 @@ var store_bmo = function() {
 		renderFormats : {
 		
 			//HIDE ZERO INVENTORY IN PRODUCT LISTS
-			var pid = data.value.pid;
-			//app.u.dump('***PID:'); app.u.dump(pid);
-			if(data.value['@inventory'] && data.value['@inventory'][pid]) {
-				var inventory = data.value['@inventory'][pid]['inv'];
-				if(inventory < 1) {
-					$tag.addClass('hideMe');
-					//$('.boxShadower',$tag).css('background','red');
+			hideZeroInv : function($tag, data) {
+				var pid = data.value.pid;
+				//app.u.dump('***PID:'); app.u.dump(pid);
+				if(data.value['@inventory'] && data.value['@inventory'][pid]) {
+					var inventory = data.value['@inventory'][pid]['inv'];
+					if(inventory < 1) {
+						//have to put hideMe class into css w/ displayNone and any other requirements
+						$tag.addClass('hideMe');
+					}
 				}
-			}
+			},
+			
+			addInfiniteSlider : function($tag,data)	{
+//				app.u.dump("BEGIN myRIA.renderFormats.addPicSlider: "+data.value);
+				if(typeof app.data['appProductGet|'+data.value] == 'object')	{
+					var pdata = app.data['appProductGet|'+data.value]['%attribs'];
+//if image 1 or 2 isn't set, likely there are no secondary images. stop.
+					if(app.u.isSet(pdata['zoovy:prod_image1']) && app.u.isSet(pdata['zoovy:prod_image2']))	{
+						$tag.attr('data-pid',data.value); //no params are passed into picSlider function, so pid is added to tag for easy ref.
+//						app.u.dump(" -> image1 ["+pdata['zoovy:prod_image1']+"] and image2 ["+pdata['zoovy:prod_image2']+"] both are set.");
+//adding this as part of mouseenter means pics won't be downloaded till/unless needed.
+// no anonymous function in mouseenter. We'll need this fixed to ensure no double add (most likely) if template re-rendered.
+//							$tag.unbind('mouseenter.myslider'); // ensure event is only binded once.
+							$tag.bind('mouseenter.myslider',app.ext.store_bmo.u.addPicSlider2UL);//.bind('mouseleave',function(){window.slider.kill()})
+						}
+					}
+				},
 			
 		}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -190,6 +208,57 @@ var store_bmo = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+		
+			//obj is going to be the container around the img. probably a div.
+			//the internal img tag gets nuked in favor of an ordered list.
+			addPicSlider2UL : function(){
+//				app.u.dump("BEGIN store_bmo.u.addPicSlider2UL");
+				
+				var $obj = $(this);
+				if($obj.data('slider') == 'rendered') {
+					//do nothing. list has aready been generated.
+//					app.u.dump("the slideshow has already been rendered. re-init");
+				//	window.slider.kill(); //make sure it was nuked.
+				//	window.slider = new imgSlider($('ul',$obj))
+				}
+				else {
+					$obj.data('slider','rendered'); //used to determine if the ul contents have already been added.
+					var pid = $obj.attr('data-pid');
+//					app.u.dump(" -> pid: "+pid);
+					var data = app.data['appProductGet|'+pid]['%attribs'];
+					var $img = $obj.find('img')
+					var width = $img.attr('width'); //using width() and height() here caused unusual results in the makeImage function below.
+					var height = $img.attr('height');
+					$obj.width(width).height(height).css({'overflow':'hidden','position':'relative'});
+					var $ul = $('<ul>').addClass('slideMe'); //.css({'height':height+'px','width':'20000px'}); /* inline width to override inheretance */
+					
+					var $li; //recycled.
+					for(var i = 2; i <= 10; i += 1)	{
+						if(data['zoovy:prod_image'+i])	{
+							$li = $('<li>').append(app.u.makeImage({"name":data['zoovy:prod_image'+i],"w":width,"h":height,"b":"FFFFFF","tag":1}));
+							$li.appendTo($ul);
+						}
+						else	{break} //end loop at first empty image spot.
+					}
+					$li = $("<li>").append($img);
+					$ul.prepend($li); //move the original image to the front of the list instead of re-requesting it. prevents a 'flicker' from happening
+					$obj.append($ul); //kill existing image. will b replaced w/ imagery in ul.
+//					$img.remove(); //get rid of original img instance.
+
+					$("ul:first-child",$obj).infiniteCarousel(
+						{
+							displayTime			: 0,
+							transitionSpeed		: 3000,
+							displayProgressRing	: false,
+							autoPilot			: true
+						}
+					);
+					//$obj.carousel('.PrevBlah','.NextBlah',1000);
+					$obj.css('background','black');
+
+				//	window.slider = new imgSlider($('ul',$obj))
+				}
+			},	
 		
 			toSt : function(n) {
 				var s = '';
@@ -222,14 +291,14 @@ var store_bmo = function() {
 				cl.days.value=count;    
 
 				setTimeout("countdown()",500);
-				}
+				},
 			
 		
 		
 		
 		
 		
-/*******FUNCTIONS THAT WILL POSSIBLY BE USEFULL, BUT NOT PART OF APP YET*/		
+/*******UTIL FUNCTIONS THAT WILL POSSIBLY BE USEFULL, BUT NOT PART OF APP YET*/		
 			setTitle : function(title) {
 				if(title && typeof title === "string") {
 					//This is what is expected

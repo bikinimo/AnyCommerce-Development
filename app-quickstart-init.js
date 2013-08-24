@@ -25,6 +25,8 @@ app.rq.push(['extension',1,'powerReviews','extensions/reviews_powerreviews.js','
 //app.rq.push(['extension',1,'powerReviews_reviews','extensions/partner_powerreviews_reviews.js','startExtension']);
 //app.rq.push(['extension',0,'magicToolBox_mzp','extensions/partner_magictoolbox_mzp.js','startExtension']); // (not working yet - ticket in to MTB)
 
+app.rq.push(['extension',0,'store_bmo','extensions/store_bmo.js']);
+
 app.rq.push(['script',0,(document.location.protocol == 'file:') ? app.vars.testURL+'jquery/config.js' : app.vars.baseURL+'jquery/config.js']); //The config.js is dynamically generated.
 app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){return (typeof zoovyModel == 'function') ? true : false;}}
 app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
@@ -39,6 +41,9 @@ app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.image-gallery.jt.js']
 
 app.rq.push(['script',0,app.vars.baseURL+'carouFredSel-6.1.0/jquery.carouFredSel-6.1.0-packed.js']);
 app.rq.push(['script',0,app.vars.baseURL+'carouFredSel-6.1.0/jquery.carouFredSel-6.1.0.js']);
+
+app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.infinitecarousel3.min.js']); //light infinite carousel for prod pages (replaces imgSlider)
+
 
 //add tabs to product data.
 //tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product

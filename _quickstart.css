@@ -324,7 +324,7 @@ and override using classes or id's as needed.
 
 .slideMe	{position:absolute; top:0px;}
 .slideMe, .slideMe li	{list-style:none; margin:0; padding:0;}
-.slideMe li	{float:left; margin-right:2px; border:0;}
+.slideMe li	{float:left; border:0;}
 
 
 
@@ -1088,4 +1088,6 @@ z-index:1002; overflow: auto; /*box-shadow: 1px 1px 3px 3px #000000;*/ font-fami
 
 /*vilas added*/
 #homepageBottomTabs .ui-tabs-nav li a{float:left; padding:5px 87px 4px 87px !important; text-decoration:none; font-weight:normal;}
-/*vilas added*
+/*vilas added*/
+
+
