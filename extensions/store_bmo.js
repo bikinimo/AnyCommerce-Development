@@ -37,13 +37,13 @@ var store_bmo = function() {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				
-				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
-					
-				}]);
+				//app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
+				//	
+				//}]);
 				
-				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
+				//app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
 					//var $context = $(app.u.jqSelector('#'+infoObj.parentID));
-				}]);
+				//}]);
 				
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
@@ -80,31 +80,9 @@ var store_bmo = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 		
-			stopProp : function(pid, $this){
-	//			$('.ic_controls',$this).click(function(event){
-	//				event.stopPropagation();
-					//app.u.dump('this is ...'); app.u.dump(pid);
-	//			});
-			},
 		
-			playInfCar : function(pid, $this) {
-			
-				$this.click(function() {
-					app.ext.myRIA.a.quickView('product',{'templateID':'productTemplateQuickView','pid':pid});
-				});
-				
-			//	$('.ic_controls',$this).click(function(event){
-			//		event.stopPropagation();
-			//		//app.u.dump('this is ...'); app.u.dump(pid);
-			//	});
-	//			$('.ic_controls',$this).click();
-	//			app.u.dump('mouseIN');
-			},
-	
-			pauseInfCar : function(pid, $this) {
-	//			$('.ic_controls',$this).click();
-	//			app.u.dump('mouseout');
-			},
+		
+		//**************BELOW ARE FUNCTIONS THAT MAY BE USEFULL LATER BUT ARE NOT USED IN APP YET
 	
 			//copied from app-quickstart.js so additional parameter could be used to assign the error location (for diff. login screens)
 			loginFrmSubmit : function(email,password,errorDiv)	{
@@ -202,8 +180,28 @@ var store_bmo = function() {
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
-		
-			//HIDE ZERO INVENTORY IN PRODUCT LISTS
+					
+			addInfiniteSlider : function($tag,data)	{
+//				app.u.dump("BEGIN myRIA.renderFormats.addPicSlider: "+data.value);
+				if(typeof app.data['appProductGet|'+data.value] == 'object')	{
+					var pdata = app.data['appProductGet|'+data.value]['%attribs'];
+					//if image 1 or 2 isn't set, likely there are no secondary images. stop.
+					if(app.u.isSet(pdata['zoovy:prod_image1']) && app.u.isSet(pdata['zoovy:prod_image2']))	{
+						$tag.attr('data-pid',data.value); //no params are passed into picSlider function, so pid is added to tag for easy ref.
+//						app.u.dump(" -> image1 ["+pdata['zoovy:prod_image1']+"] and image2 ["+pdata['zoovy:prod_image2']+"] both are set.");
+//adding this as part of mouseenter means pics won't be downloaded till/unless needed.
+// no anonymous function in mouseenter. We'll need this fixed to ensure no double add (most likely) if template re-rendered.
+//							$tag.unbind('mouseenter.myslider'); // ensure event is only binded once.
+							$tag.bind('mouseenter.myslider',app.ext.store_bmo.u.addPicSlider2UL);//.bind('mouseleave',function(){window.slider.kill()})
+						}
+					}
+				},
+				
+				
+				
+//**************BELOW ARE FUNCTIONS THAT MAY BE USEFULL LATER BUT ARE NOT USED IN APP YET
+
+			//HIDE ZERO INVENTORY IN PRODUCT LISTS (MUST USE INFINITE SCROLL ON LISTS)
 			hideZeroInv : function($tag, data) {
 				var pid = data.value.pid;
 				//app.u.dump('***PID:'); app.u.dump(pid);
@@ -215,22 +213,6 @@ var store_bmo = function() {
 					}
 				}
 			},
-			
-			addInfiniteSlider : function($tag,data)	{
-//				app.u.dump("BEGIN myRIA.renderFormats.addPicSlider: "+data.value);
-				if(typeof app.data['appProductGet|'+data.value] == 'object')	{
-					var pdata = app.data['appProductGet|'+data.value]['%attribs'];
-//if image 1 or 2 isn't set, likely there are no secondary images. stop.
-					if(app.u.isSet(pdata['zoovy:prod_image1']) && app.u.isSet(pdata['zoovy:prod_image2']))	{
-						$tag.attr('data-pid',data.value); //no params are passed into picSlider function, so pid is added to tag for easy ref.
-//						app.u.dump(" -> image1 ["+pdata['zoovy:prod_image1']+"] and image2 ["+pdata['zoovy:prod_image2']+"] both are set.");
-//adding this as part of mouseenter means pics won't be downloaded till/unless needed.
-// no anonymous function in mouseenter. We'll need this fixed to ensure no double add (most likely) if template re-rendered.
-//							$tag.unbind('mouseenter.myslider'); // ensure event is only binded once.
-							$tag.bind('mouseenter.myslider',app.ext.store_bmo.u.addPicSlider2UL);//.bind('mouseleave',function(){window.slider.kill()})
-						}
-					}
-				},
 			
 		}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -425,6 +407,7 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 					}
 				},
 		
+			//USES CAROUFREDSEL ;)
 			runCarousel : function() {
 				var $target = $('.logoCarousel');
 				if($target.data('isCarousel')) {} //only make it a carousel once (even though it's in the footer)

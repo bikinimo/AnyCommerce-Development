@@ -249,7 +249,7 @@
 				{
 					$(obj).append('<div id="ic_controls_'+randID+'" class="ic_controls" style="background:url('+o.imagePath+'controls.png) no-repeat -12px 0;opacity:.5;cursor:pointer;height:10px;position:absolute;right:9px;top:10px;width:10px;z-index:1">');
 					if(!o.autoPilot) $('#ic_controls_'+randID).css('background-position','1px 0');
-					var $context = $('.prodThumbContainer',$("li").find("[data-pid = '"+o.productID+"']"));
+					var $context = $('.prodThumbContainer',$("div").find("[data-pid = '"+o.productID+"']"));
 
 					$context.on('mouseenter', function(){
 						play();
@@ -334,7 +334,7 @@
 				}
 				function pause()
 				{
-					app.u.dump('PAUSE');
+					//app.u.dump('PAUSE');
 					o.onPauseClick.call(this); 
 					o.autoPilot = false;
 					$('#ic_controls_'+randID).css('background-position','1px 0');
@@ -343,7 +343,7 @@
 				}
 				function play()
 				{
-					app.u.dump('START');
+					//app.u.dump('START');
 					o.autoPilot = true;
 					if(o.autoPilot && !$('.ic_tray',obj).is(':animated') ) animatedTimer(o.displayTime);
 					$('#ic_controls_'+randID).css('background-position','-12px 0');
