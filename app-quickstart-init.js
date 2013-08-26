@@ -42,7 +42,8 @@ app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.image-gallery.jt.js']
 app.rq.push(['script',0,app.vars.baseURL+'carouFredSel-6.1.0/jquery.carouFredSel-6.1.0-packed.js']);
 app.rq.push(['script',0,app.vars.baseURL+'carouFredSel-6.1.0/jquery.carouFredSel-6.1.0.js']);
 
-app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.infinitecarousel3.min.js']); //light infinite carousel for prod pages (replaces imgSlider)
+//app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.infinitecarousel3.min.js']); //light infinite carousel for prod pages (replaces imgSlider)
+app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.infinitecarousel3.js']); //light infinite carousel for prod pages (replaces imgSlider)
 
 
 //add tabs to product data.

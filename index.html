@@ -595,8 +595,8 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	</div>
 	<button id="opener">Open Dialog</button>
 	
-	<li id='productListTemplate' class='loadingBG  '>
-		<div  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' id="selector" class='pointer prominh' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">
+	<li id='productListTemplate' class='loadingBG'>
+		<div  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' id="selector" class='pointer prominh'  onMouseOver="app.ext.store_bmo.a.playInfCar($(this).attr('data-pid'), $(this)); app.ext.store_bmo.a.stopProp($(this).attr('data-pid'), $(this))"; onMouseOut="app.ext.store_bmo.a.pauseInfCar($(this).attr('data-pid'), $(this))";>
 			<!-- <div class='prodThumbContainer floatLeft' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'> -->
 			<div class='prodThumbContainer floatLeft' data-bind='var:product(pid); format:addInfiniteSlider; extension:store_bmo;'> 
 				<img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='150' height='210' /> 

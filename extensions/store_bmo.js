@@ -40,7 +40,11 @@ var store_bmo = function() {
 				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
 					
 				}]);
-			
+				
+				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
+					//var $context = $(app.u.jqSelector('#'+infoObj.parentID));
+				}]);
+				
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
 
@@ -75,6 +79,32 @@ var store_bmo = function() {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
+		
+			stopProp : function(pid, $this){
+	//			$('.ic_controls',$this).click(function(event){
+	//				event.stopPropagation();
+					//app.u.dump('this is ...'); app.u.dump(pid);
+	//			});
+			},
+		
+			playInfCar : function(pid, $this) {
+			
+				$this.click(function() {
+					app.ext.myRIA.a.quickView('product',{'templateID':'productTemplateQuickView','pid':pid});
+				});
+				
+			//	$('.ic_controls',$this).click(function(event){
+			//		event.stopPropagation();
+			//		//app.u.dump('this is ...'); app.u.dump(pid);
+			//	});
+	//			$('.ic_controls',$this).click();
+	//			app.u.dump('mouseIN');
+			},
+	
+			pauseInfCar : function(pid, $this) {
+	//			$('.ic_controls',$this).click();
+	//			app.u.dump('mouseout');
+			},
 	
 			//copied from app-quickstart.js so additional parameter could be used to assign the error location (for diff. login screens)
 			loginFrmSubmit : function(email,password,errorDiv)	{
@@ -250,11 +280,12 @@ var store_bmo = function() {
 							displayTime			: 0,
 							transitionSpeed		: 3000,
 							displayProgressRing	: false,
-							autoPilot			: true
+							imagePath			: "images/",
+							productID			: ''+pid
+						//	showControls		: false,	controls hidden w/ css, removing from plugin produced un-desired effects
+						//	autoPilot			: true
 						}
 					);
-					//$obj.carousel('.PrevBlah','.NextBlah',1000);
-					$obj.css('background','black');
 
 				//	window.slider = new imgSlider($('ul',$obj))
 				}

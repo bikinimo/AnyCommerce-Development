@@ -1090,4 +1090,6 @@ z-index:1002; overflow: auto; /*box-shadow: 1px 1px 3px 3px #000000;*/ font-fami
 #homepageBottomTabs .ui-tabs-nav li a{float:left; padding:5px 87px 4px 87px !important; text-decoration:none; font-weight:normal;}
 /*vilas added*/
 
+.ic_right_nav, .ic_left_nav, .ic_controls {display:none;}
+
 
