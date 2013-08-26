@@ -88,6 +88,8 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 .footerbot{margin:0px; padding:0px; width:964px; float:left; text-align:center;}
 .foticon img{margin:0px; padding:3px 0 0 3px;}
 .copright{margin:0px; padding:7px 0 0 0; color:#808080;}
+.copright a {text-decoration:none; color:#808080;}
+.copright a:hover{color:yellow;}
 /*Footer Close*/
 /*Loader Page Start*/
 .loderwrapper{margin:10px auto; padding:0px; width:636px; height:410px; background:url(images/loader-bg_643x415.png) no-repeat; position:relative; z-index:10;}
