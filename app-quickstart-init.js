@@ -84,7 +84,7 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P)
 	if (homepageLoad == false)
 	{
 	//Carousel horizontal sliders
-	var carousel1;
+/*	var carousel1;
 	function foo1(){ $(".productList1").carouFredSel({
 		width   : 980,
 		height	: 300,
@@ -122,7 +122,7 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P)
 	});}
 	carousel1 = foo1;
 	setTimeout(carousel1, 2000);
-	
+*/	
 	var carousel2;
 	function foo2(){ $(".productList2").carouFredSel({
 		width   : 980,

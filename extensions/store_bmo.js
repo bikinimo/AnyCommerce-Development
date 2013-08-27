@@ -37,9 +37,10 @@ var store_bmo = function() {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				
-				//app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
-				//	
-				//}]);
+				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
+					var $context = $(app.u.jqSelector('#'+infoObj.parentID));
+					app.ext.store_bmo.u.runHomeCarousel1($context);
+				}]);
 				
 				//app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
 					//var $context = $(app.u.jqSelector('#'+infoObj.parentID));
@@ -306,6 +307,50 @@ var store_bmo = function() {
 				setTimeout("countdown()",500);
 				},
 			
+			runHomeCarousel1 : function($context) {
+				var $target = $('.productList1',$context);
+				if($target.data('isCarousel')) {} //only make it a carousel once.
+				else {
+					$target.data('isCarousel',true);
+					//for whatever reason, caroufredsel needs to be executed after a moment.
+					setTimeout(function(){
+						$target.carouFredSel({
+							width	: 920,
+							height	: 265,
+							items	: 
+							{
+								minimum 	: 1
+							},
+							auto	: 
+							{
+								items			: 1,
+								duration		: 3000,
+								easing			: 'linear',
+								timeoutDuration	: 0,
+								pauseOnHover	: 'immediate'
+							},
+							prev	: '.caroPrev1',
+							next	: '.caroNext1',
+						});
+					},2000);
+					
+					//previous button hover action
+					$('.caroPrev1', $context).hover(function(){
+						$target.trigger('configuration', ['direction','right']);
+						$target.trigger('play');
+					}).click(function(){
+						return false;
+					});
+					
+					//next button hover action
+					$('.caroNext1', $context).hover(function(){
+						$target.trigger('configuration', ['direction','left']);
+						$target.trigger('play');
+					}).click(function(){
+						return false;
+					});
+				}
+			},
 		
 		
 		
