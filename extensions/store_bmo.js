@@ -318,8 +318,8 @@ var store_bmo = function() {
 					//for whatever reason, caroufredsel needs to be executed after a moment.
 					setTimeout(function(){
 						$target.carouFredSel({
-						//	width	: 920,
-						//	height	: 265,
+							width	: 920,
+							height	: 265,
 							items	: 
 							{
 								minimum 	: 1
@@ -354,6 +354,7 @@ var store_bmo = function() {
 					});
 					
 					$('.homeTab1', $context).hover(function(){
+						$target.trigger('configuration', ['direction','left']);
 						$target.trigger('play');
 					});
 				}
@@ -367,8 +368,8 @@ var store_bmo = function() {
 					//for whatever reason, caroufredsel needs to be executed after a moment.
 					setTimeout(function(){
 						$target.carouFredSel({
-						//	width	: 920,
-						//	height	: 265,
+							width	: 920,
+							height	: 265,
 							items	: 
 							{
 								minimum 	: 1
@@ -403,8 +404,8 @@ var store_bmo = function() {
 					});
 					
 					$('.homeTab2', $context).hover(function(){
+						$target.trigger('configuration', ['direction','left']);
 						$target.trigger('play');
-						app.u.dump('Got Here');
 					});
 				}
 			},
@@ -417,8 +418,8 @@ var store_bmo = function() {
 					//for whatever reason, caroufredsel needs to be executed after a moment.
 					setTimeout(function(){
 						$target.carouFredSel({
-						//	width	: 920,
-						//	height	: 265,
+							width	: 920,
+							height	: 265,
 							items	: 
 							{
 								minimum 	: 1
@@ -451,6 +452,11 @@ var store_bmo = function() {
 					}).click(function(){
 						return false;
 					});
+										
+					$('.homeTab3', $context).hover(function(){
+						$target.trigger('configuration', ['direction','left']);
+						$target.trigger('play');
+					});
 				}
 			},
 			
@@ -462,8 +468,8 @@ var store_bmo = function() {
 					//for whatever reason, caroufredsel needs to be executed after a moment.
 					setTimeout(function(){
 						$target.carouFredSel({
-						//	width	: 920,
-						//	height	: 265,
+							width	: 920,
+							height	: 265,
 							items	: 
 							{
 								minimum 	: 1
@@ -495,6 +501,11 @@ var store_bmo = function() {
 						$target.trigger('play');
 					}).click(function(){
 						return false;
+					});
+										
+					$('.homeTab4', $context).hover(function(){
+						$target.trigger('configuration', ['direction','left']);
+						$target.trigger('play');
 					});
 				}
 			},
