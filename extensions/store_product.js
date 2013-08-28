@@ -624,6 +624,28 @@ NOTES
 					
 					
 					$parent.dialog('open');
+					
+/*bmo*/				//handler too allow modal to close when clicked outside of, removed when modal is closed
+/*bmo*/				var documentHandler = (function(mod) {
+/*bmo*/					if(!$(mod.target).parents().filter('.ui-dialog').length) {
+/*bmo*/						$parent.dialog('close');
+/*bmo*/						$('.productList1').trigger('play',true);
+/*bmo*/						$('.productList2').trigger('play',true);
+/*bmo*/						$('.productList3').trigger('play',true);
+/*bmo*/						$('.productList4').trigger('play',true); 
+/*bmo*/						$(document).unbind('click', documentHandler);
+/*bmo*/					}
+/*bmo*/				});		
+/*bmo*/
+/*bmo*/				//handler to be sure the above handler is removed when the close button is used,
+/*bmo*/				//otherwise modals will not open again
+/*bmo*/				var closeButHandler = (function() {
+/*bmo*/					$(document).unbind('click', closeButHandler);
+/*bmo*/				});
+/*bmo*/
+/*bmo*/				//binds handlers for modal close on click outside of modal
+/*bmo*/				setTimeout(function(){$(document).bind('click', documentHandler);},500);
+/*bmo*/				setTimeout(function(){$('.ui-dialog-titlebar-close', $parent.parent()).bind('click', closeButHandler);},500);
 
 					app.ext.store_product.calls.appProductGet.init(P.pid,{'callback': function(rd){
 						if(app.model.responseHasErrors(rd)){
