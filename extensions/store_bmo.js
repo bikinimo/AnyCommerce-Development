@@ -84,7 +84,10 @@ var store_bmo = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 		
-		
+			pauseFred : function($this) {
+				app.u.dump('gothere');
+				$this.trigger('stop');
+			},
 		
 		//**************BELOW ARE FUNCTIONS THAT MAY BE USEFULL LATER BUT ARE NOT USED IN APP YET
 	
