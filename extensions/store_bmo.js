@@ -39,7 +39,10 @@ var store_bmo = function() {
 				
 				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
 					var $context = $(app.u.jqSelector('#'+infoObj.parentID));
-					app.ext.store_bmo.u.runHomeCarousel1($context);
+					app.ext.store_bmo.u.runHomeCarouselTab1($context);
+					app.ext.store_bmo.u.runHomeCarouselTab2($context);
+					app.ext.store_bmo.u.runHomeCarouselTab3($context);
+					app.ext.store_bmo.u.runHomeCarouselTab4($context);
 				}]);
 				
 				//app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
@@ -307,7 +310,7 @@ var store_bmo = function() {
 				setTimeout("countdown()",500);
 				},
 			
-			runHomeCarousel1 : function($context) {
+			runHomeCarouselTab1 : function($context) {
 				var $target = $('.productList1',$context);
 				if($target.data('isCarousel')) {} //only make it a carousel once.
 				else {
@@ -315,8 +318,8 @@ var store_bmo = function() {
 					//for whatever reason, caroufredsel needs to be executed after a moment.
 					setTimeout(function(){
 						$target.carouFredSel({
-							width	: 920,
-							height	: 265,
+						//	width	: 920,
+						//	height	: 265,
 							items	: 
 							{
 								minimum 	: 1
@@ -331,7 +334,7 @@ var store_bmo = function() {
 							},
 							prev	: '.caroPrev1',
 							next	: '.caroNext1',
-						});
+						}).trigger('play');
 					},2000);
 					
 					//previous button hover action
@@ -344,6 +347,150 @@ var store_bmo = function() {
 					
 					//next button hover action
 					$('.caroNext1', $context).hover(function(){
+						$target.trigger('configuration', ['direction','left']);
+						$target.trigger('play');
+					}).click(function(){
+						return false;
+					});
+					
+					$('.homeTab1', $context).hover(function(){
+						$target.trigger('play');
+					});
+				}
+			},
+			
+			runHomeCarouselTab2 : function($context) {
+				var $target = $('.productList2',$context);
+				if($target.data('isCarousel')) {} //only make it a carousel once.
+				else {
+					$target.data('isCarousel',true);
+					//for whatever reason, caroufredsel needs to be executed after a moment.
+					setTimeout(function(){
+						$target.carouFredSel({
+						//	width	: 920,
+						//	height	: 265,
+							items	: 
+							{
+								minimum 	: 1
+							},
+							auto	: 
+							{
+								items			: 1,
+								duration		: 3000,
+								easing			: 'linear',
+								timeoutDuration	: 0,
+								pauseOnHover	: 'immediate'
+							},
+							prev	: '.caroPrev2',
+							next	: '.caroNext2',
+						}).trigger('play');
+					},2000);
+					
+					//previous button hover action
+					$('.caroPrev2', $context).hover(function(){
+						$target.trigger('configuration', ['direction','right']);
+						$target.trigger('play');
+					}).click(function(){
+						return false;
+					});
+					
+					//next button hover action
+					$('.caroNext2', $context).hover(function(){
+						$target.trigger('configuration', ['direction','left']);
+						$target.trigger('play');
+					}).click(function(){
+						return false;
+					});
+					
+					$('.homeTab2', $context).hover(function(){
+						$target.trigger('play');
+						app.u.dump('Got Here');
+					});
+				}
+			},
+			
+			runHomeCarouselTab3 : function($context) {
+				var $target = $('.productList3',$context);
+				if($target.data('isCarousel')) {} //only make it a carousel once.
+				else {
+					$target.data('isCarousel',true);
+					//for whatever reason, caroufredsel needs to be executed after a moment.
+					setTimeout(function(){
+						$target.carouFredSel({
+						//	width	: 920,
+						//	height	: 265,
+							items	: 
+							{
+								minimum 	: 1
+							},
+							auto	: 
+							{
+								items			: 1,
+								duration		: 3000,
+								easing			: 'linear',
+								timeoutDuration	: 0,
+								pauseOnHover	: 'immediate'
+							},
+							prev	: '.caroPrev3',
+							next	: '.caroNext3',
+						}).trigger('play');
+					},2000);
+					
+					//previous button hover action
+					$('.caroPrev3', $context).hover(function(){
+						$target.trigger('configuration', ['direction','right']);
+						$target.trigger('play');
+					}).click(function(){
+						return false;
+					});
+					
+					//next button hover action
+					$('.caroNext3', $context).hover(function(){
+						$target.trigger('configuration', ['direction','left']);
+						$target.trigger('play');
+					}).click(function(){
+						return false;
+					});
+				}
+			},
+			
+			runHomeCarouselTab4 : function($context) {
+				var $target = $('.productList4',$context);
+				if($target.data('isCarousel')) {} //only make it a carousel once.
+				else {
+					$target.data('isCarousel',true);
+					//for whatever reason, caroufredsel needs to be executed after a moment.
+					setTimeout(function(){
+						$target.carouFredSel({
+						//	width	: 920,
+						//	height	: 265,
+							items	: 
+							{
+								minimum 	: 1
+							},
+							auto	: 
+							{
+								items			: 1,
+								duration		: 3000,
+								easing			: 'linear',
+								timeoutDuration	: 0,
+								pauseOnHover	: 'immediate'
+							},
+							prev	: '.caroPrev4',
+							next	: '.caroNext4',
+						}).trigger('play');
+					},2000);
+					
+					//previous button hover action
+					$('.caroPrev4', $context).hover(function(){
+						$target.trigger('configuration', ['direction','right']);
+						$target.trigger('play');
+					}).click(function(){
+						return false;
+					});
+					
+					//next button hover action
+					$('.caroNext4', $context).hover(function(){
 						$target.trigger('configuration', ['direction','left']);
 						$target.trigger('play');
 					}).click(function(){
@@ -451,34 +598,6 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 					$('.prodWriteReviewContainer','#productTemplate_'+P.pid).css('display','block');
 					}
 				},
-		
-			//USES CAROUFREDSEL ;)
-			runCarousel : function() {
-				var $target = $('.logoCarousel');
-				if($target.data('isCarousel')) {} //only make it a carousel once (even though it's in the footer)
-				setTimeout(function(){	//for whatever reason, caroufredsel needs to be executed after a moment
-					$target.carouFredSel({
-						responsive	:	true,
-						width		: 	'100%',
-						height		:	100,
-						items: { 	
-							visible	:	{
-											min	: 1,
-											max	: 5
-										},
-							width	:	125,//'variable',
-							height	:	'variable'//100
-						},
-						swipe: {
-							onMouse	: 	true,
-							onTouch	: 	true
-						},
-						auto		: 	false,
-						next		:	'.footerPrev',
-						prev		:	'.footerNext'
-					});
-				},2000);
-			},
 		
 		}, //u [utilities]
 

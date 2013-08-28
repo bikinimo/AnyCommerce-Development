@@ -490,10 +490,10 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		<div id='homepageTabs' style="margin:3px 0 0 0; width:962px; float:left;">
 			<!-- This works because of some awesome code in app-quickstart-init.js-->
 			<ul class="alignCenter navtopsiz">
-				<li><a href='#newrelease'>New Releases</a></li>
-				<li><a href='#whatshot'>What's Hot</a></li>
-				<li><a href='#like'>You May Also Like</a></li>
-				<li><a href='#comparissons'>Comparissons</a></li>
+				<li class='homeTab1'><a href='#newrelease'>New Releases</a></li>
+				<li class='homeTab2'><a href='#whatshot'>What's Hot</a></li>
+				<li class='homeTab3'><a href='#like'>You May Also Like</a></li>
+				<li class='homeTab4'><a href='#comparissons'>Comparissons</a></li>
 			</ul>
 			<div data-anytab-content='newrelease'>
 				<div class="carouselCont1">
@@ -508,25 +508,28 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				<div class="carouselCont2">
 					<ul id="carCat2" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"Whats Hot "}},"filter":{"not":{"term":{"tags":"IS_BESTSELLERS"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList2'></ul>
 					<div class="clear"></div>
-					<img id="caroPrev2" src="images/scroll_left.gif" class="pointer" alt="" /> <img id="caroNext2" src="images/scroll_right.gif" class="pointer" alt="" /> 
 				</div>
+				<img src="images/scroll_left.gif" class="pointer caroPrev2" alt="" /> 
+				<img src="images/scroll_right.gif" class="pointer caroNext2" alt="" /> 
 				<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'IS_FRESH'})">Click Here to browse more Whats Hot</a></div>
 			</div>
 			<div data-anytab-content='like'>
 				<div class="carouselCont3">
-					<ul id="carCat4" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"you may also like"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList3'></ul>
+					<ul id="carCat4" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"comparissons items"}},"filter":{"not":{"term":{"tags":"IS_CLEARANCE"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList3'></ul>
 					<div class="clear"></div>
-					<img id="caroPrev3" src="images/scroll_left.gif" class="pointer" alt="" /> <img id="caroNext3" src="images/scroll_right.gif" class="pointer" alt="" /> 
 				</div>
-				<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'IS_REFURB'})">Click Here to browse more Like</a></div>
+				<img src="images/scroll_left.gif" class="pointer caroPrev3" alt="" /> 
+				<img src="images/scroll_right.gif" class="pointer caroNext3" alt="" />
+				<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'IS_OPENBOX'})">Click Here to browse more Comparissons</a></div>
 			</div>
 			<div data-anytab-content='comparissons'>
 				<div class="carouselCont4">
-					<ul id="carCat6" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"comparissons items"}},"filter":{"not":{"term":{"tags":"IS_CLEARANCE"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList4'></ul>
-					<div class="clear"></div>
-					<img id="caroPrev4" src="images/scroll_left.gif" class="pointer" alt="" /> <img id="caroNext4" src="images/scroll_right.gif" class="pointer" alt="" /> 
+					<ul id="carCat6" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"you may also like"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList4'></ul>
+					<div class="clear"></div> 
 				</div>
-				<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'IS_OPENBOX'})">Click Here to browse more Comparissons</a></div>
+				<img src="images/scroll_left.gif" class="pointer caroPrev4" alt="" /> 
+				<img src="images/scroll_right.gif" class="pointer caroNext4" alt="" />
+				<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'IS_REFURB'})">Click Here to browse more Like</a></div>
 			</div>
 		</div>
 		<div class="madebox">
