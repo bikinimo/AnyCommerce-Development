@@ -155,6 +155,7 @@ app.u.initMVC = function(attempts){
 			} else {
 				$(".showSansPreferences").removeClass('displayNone');
 				$(".previewButtonCont").hide();
+				$("#previewContent").hide().delay(200).fadeIn(800);
 				setTimeout( function() {
 					$(".previewButtonCont").delay(300).fadeIn({duration: 500});
 				}, 1000);
