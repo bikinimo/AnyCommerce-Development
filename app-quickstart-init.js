@@ -148,6 +148,18 @@ app.u.initMVC = function(attempts){
 			app.u.loadApp();
 			}
 		*/
+		
+		app.preferenceSelected = !(typeof localStorage.appPreferences==="undefined");
+			if(app.preferenceSelected){
+				$(".showWithPreferences").removeClass('displayNone');
+			} else {
+				$(".showSansPreferences").removeClass('displayNone');
+				$(".previewButtonCont").hide();
+				setTimeout( function() {
+					$(".previewButtonCont").delay(300).fadeIn({duration: 500});
+				}, 1000);
+			}
+		
 		app.u.dump("Preference Selected? "+app.preferenceSelected);
 		if(app.preferenceSelected == true){
 			
@@ -179,8 +191,8 @@ app.u.initMVC = function(attempts){
 				//don't save the preference to localStorage
 			}
 		}
-		$(".showWithPreferences").removeClass('displayNone');
-		$(".showSansPreferences").addClass('displayNone');
+	//	$(".showWithPreferences").removeClass('displayNone');
+	//	$(".showSansPreferences").addClass('displayNone');
 		if(app.loadOnSelect){
 			app.u.loadApp();
 		}
@@ -209,8 +221,10 @@ app.u.loadApp = function() {
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
 app.u.appInitComplete = function(P)	{
 	app.u.dump("Executing myAppIsLoaded code...");
-	if(app.preferenceSelected = true;) {
-		return showContent('customer',{'show':'myaccount'});
+	if(app.preferenceSelected = true) {
+		if(localStorage.appPreferences == "signedUp") {
+			return showContent('customer',{'show':'myaccount'});
+		}
 	}
 	else {showContent();}
 	}

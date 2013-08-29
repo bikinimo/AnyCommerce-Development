@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"201318.20130828151700",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201318.20130829123700",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "required",//can be passive, active or required
@@ -136,21 +136,6 @@ document.getElementById("deal").style.display = 'none';
 					</div>
 				</div>
 			</div>
-			<script type="text/javascript">
-			app.preferenceSelected = !(typeof localStorage.appPreferences==="undefined");
-			if(app.preferenceSelected){
-				$(".showWithPreferences").removeClass('displayNone');
-			} else {
-				$(".showSansPreferences").removeClass('displayNone');
-				$("#categorySelectorAirsoft, #categorySelectorPaintball, #categorySelectorRemember, .categorySelectorButton, #categorySelectorChooseTitle, #categorySelectorSkipButton").hide();
-				$("#previewContent").hide().delay(200).fadeIn(800);
-				setTimeout( function() {
-					$("#categorySelectorAirsoft, #categorySelectorPaintball").css("top","-308px").animate({"top":"0px"}, {duration:300});
-					$(".categorySelectorButton, #categorySelectorChooseTitle, #categorySelectorSkipButton").delay(300).fadeIn({duration: 500});
-					$("#categorySelectorAirsoft, #categorySelectorPaintball, #categorySelectorRemember").fadeIn({duration: 500, queue:false});
-				}, 1000);
-			}
-			</script> 
 		</div>
 	</div>
 </div>

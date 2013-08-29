@@ -803,41 +803,8 @@ border-top-left-radius: 0;}
 	position:relative;
 }
 
-#previewContent #categorySelectorChooseTitle{
-	position: absolute;
-	left: 30px;
-	top: -20px;
-	font-size: 22px;
-	font-weight: bold;
-}
-
-#previewContent #categorySelectorSkipButton {
-	position: absolute;
-	right: 0px;
-	top: -20px;
-	height: 20px;
-	line-height: 20px;
-	font-weight: bold;
-	color: white;
-	background: black;
-	padding: 0px 15px;
-	
-}
-
 .previewButtonCont {height:auto; width:auto; position:absolute; bottom:17px; right:0; cursor:auto !important;}
 
-#categorySelectorPaintball, #categorySelectorAirsoft{
-/*	height: 105px;
-*/	width: 420px;
-	position: absolute;
-	/*background: red;*/
-	/*box-shadow: 0px 0px 5px rgba(0,0,0,.75);*/
-	margin-top: 150px;
-	margin-left:-14px;
-}
-
-/*#categorySelectorPaintball { margin-left: 30px; background: url(img/categorySelectorPaintball.jpg) top left no-repeat;}
-#categorySelectorAirsoft { margin-right: 30px; background: url(img/categorySelectorAirsoft.jpg) top left no-repeat;}*/
 
 .categorySelectorTitle {
 	position: absolute;
@@ -870,13 +837,6 @@ border-top-left-radius: 0;}
 .categorySelectorTitle h1 {
 	color: white;
 	padding: 0px 20px;
-}
-#categorySelectorRemember {
-	margin: 0px auto;
-	margin-top: 20px;
-	clear: both;
-	color: white;
-	text-align: center;
 }
 
 #progressBarContainer {
