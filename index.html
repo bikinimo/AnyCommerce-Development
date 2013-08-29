@@ -121,14 +121,10 @@ document.getElementById("deal").style.display = 'none';
 						special events in the BikiniMo universe.</p>
 					<p>It&#39;s free and we&#39;ll send you a special gift just for joining.</p>
 				</div>
-				<div id="categorySelector" class="showSansPreferences displayNone" style="cursor:pointer;">
-					<div id="categorySelectorPaintball" class="floatLeft" onClick="app.u.selectPreference('paintball',false);">
-						<div class="categorySelectorButtonContainer alignLeft"><span class="categorySelectorButton pointer orbitron"><a href="#"><img src="images/remind_letter.png" alt="Remind Me Later" title="Remind Me Later" style="margin:0px;"/></a></span></div>
-					</div>
-					<div id="categorySelectorAirsoft" class="floatRight" onClick="app.u.selectPreference('airsoft',false);">
-						<div class="categorySelectorButtonContainer alignCenter"><span class="categorySelectorButton pointer orbitron"><a href="#" onClick="return showContent('customer',{'show':'myaccount'});"><img src="images/sign_up.png" alt="Sign Me Up" title="Sign Me Up" /></a></span></div>
-						<div class="categorySelectorButtonContainer alignRight"><span class="categorySelectorButton pointer orbitron"><a href="#"><img src="images/continu_guest.png" alt="Continue as Guest" title="Continue as Guest" /></a></span></div>
-					</div>
+				<div id="categorySelector" class="previewButtonCont showSansPreferences displayNone" style="cursor:pointer;">
+					<div class="categorySelectorButtonContainer floatLeft" onClick="app.u.selectPreference('remind',false);"><span class="categorySelectorButton pointer"><a href="#"><img src="images/remind_letter.png" alt="Remind Me Later" title="Remind Me Later" style="margin:0px;"/></a></span></div>
+					<div class="categorySelectorButtonContainer floatLeft" onClick="app.u.selectPreference('signedUp',true);"><span class="categorySelectorButton pointer"><a href="#" onClick="return showContent('customer',{'show':'myaccount'});"><img src="images/sign_up.png" alt="Sign Me Up" title="Sign Me Up" /></a></span></div>
+					<div class="categorySelectorButtonContainer floatLeft" onClick="app.u.selectPreference('guest',false);"><span class="categorySelectorButton pointer"><a href="#"><img src="images/continu_guest.png" alt="Continue as Guest" title="Continue as Guest" /></a></span></div>
 					<div class="clear"></div>
 				</div>
 				<div id="progressBarContainer" class="showWithPreferences displayNone">

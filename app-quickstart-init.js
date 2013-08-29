@@ -149,13 +149,14 @@ app.u.initMVC = function(attempts){
 			}
 		*/
 		app.u.dump("Preference Selected? "+app.preferenceSelected);
-		if(app.preferenceSelected){
+		if(app.preferenceSelected == true){
+			
 			app.u.loadApp();
 		} else {
 			app.loadOnSelect = true;
 		}
 		}
-	else if(attempts > 50)	{
+	else if(attempts > 100)	{
 		app.u.dump("WARNING! something went wrong in init.js");
 		//this is 10 seconds of trying. something isn't going well.
 		$('#appPreView').empty().append("<h2>Uh Oh. Something seems to have gone wrong. </h2><p>Several attempts were made to load the store but some necessary files were not found or could not load. We apologize for the inconvenience. Please try 'refresh' and see if that helps.<br><b>If the error persists, please contact the site administrator</b><br> - dev: see console.</p>");
@@ -173,7 +174,7 @@ app.u.initMVC = function(attempts){
 		if(typeof preference !== "undefined"){
 			app.u.dump("Preference Selected: " + preference);
 			if(save){
-				//localStorage.appPreferences = preference;
+				localStorage.appPreferences = preference;
 			} else {
 				//don't save the preference to localStorage
 			}
@@ -208,7 +209,10 @@ app.u.loadApp = function() {
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
 app.u.appInitComplete = function(P)	{
 	app.u.dump("Executing myAppIsLoaded code...");
-	showContent();
+	if(app.preferenceSelected = true;) {
+		return showContent('customer',{'show':'myaccount'});
+	}
+	else {showContent();}
 	}
 
 //don't execute script till both jquery AND the dom are ready.

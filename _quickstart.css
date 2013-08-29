@@ -799,8 +799,8 @@ border-top-left-radius: 0;}
 }
 
 #previewContent {
-	height: 418px;
-	position: relative;
+	height:238px;
+	position:relative;
 }
 
 #previewContent #categorySelectorChooseTitle{
@@ -823,6 +823,8 @@ border-top-left-radius: 0;}
 	padding: 0px 15px;
 	
 }
+
+.previewButtonCont {height:auto; width:auto; position:absolute; bottom:17px; right:0; cursor:auto !important;}
 
 #categorySelectorPaintball, #categorySelectorAirsoft{
 /*	height: 105px;
@@ -847,11 +849,7 @@ border-top-left-radius: 0;}
 	line-height: 90px;
 }
 
-.categorySelectorButtonContainer {
-	position: absolute;
-	bottom: -75px;
-	width:95%; margin:0 0 0 15px;
-}
+.categorySelectorButtonContainer {width:129px; margin:0 0 0 2px}
 
 .categorySelectorButton {
 	/*margin: 0px 20px;*/
