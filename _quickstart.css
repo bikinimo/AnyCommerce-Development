@@ -382,6 +382,7 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 .variation > label:after	{content:":"; padding-right:12px;} /* applies to first label in a group. so no impact on radio labels */
 
 .CRMButtonMenu	{margin:0; padding:0; margin-bottom:12px;}
+.ui-widget-content .CRMButtonMenu a {color:#286C99;}
 
 .pogType_attribs	{display:none;} /* don't show finder attributes */
 
