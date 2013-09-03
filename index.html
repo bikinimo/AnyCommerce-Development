@@ -41,7 +41,8 @@ css files should be included before any .js file to ensure they are downloaded i
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Abel">
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Source+Sans+Pro">
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Electrolize">
-<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" />
+<!-- <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" /> -->
+<link rel="stylesheet" type="text/css" href="jquery-ui-1.10.3.custom/css/custom-theme/jquery-ui-1.10.3.custom.css" /> 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="resources/jquery.ui.widget.min.js"></script>
 <!-- here so that plugins that may load before the jqueryui lib load without error -->
@@ -768,157 +769,171 @@ It's done this way because ID's hard coded into template are bad mojo (templates
       <ul class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true; before:<h2>Similar Items</h2>; withReviews:1;">
       </ul>
     </div>
-  </div>
-  <!-- productTemplate -->
-  <!-- a template used for a quickview link off of a category page -->
-  <div id='productTemplateQuickView' class="popupshado">
-    <table class='prodViewerContainer'>
-      <tr>
-        <td class='imageContainer' style="width:305px;"><div>
-            <div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
-            <img src='blank.gif' data-fancybox-group='gallery' data-bind='var: product(zoovy:prod_image2);format:fancybox; extension:fancybox;' width='305' height='458' /> </div>
-          <div class="viimgta"><img src="images/videoimg.gif" /></div>
-          <div  class='prodThumbs' align="center"> <img src='blank.gif' alt='' data-fancybox-group='gallery' data-bind='var: product(zoovy:prod_image2);format:fancybox; extension:fancybox;' width='92' height='145' />&nbsp;&nbsp;<img src='blank.gif' alt='' data-fancybox-group='gallery' data-bind='var: product(zoovy:prod_image3);format:fancybox; extension:fancybox;' width='92' height='145' />&nbsp;&nbsp;<img src='blank.gif' alt='' data-fancybox-group='gallery'  data-bind='var: product(zoovy:prod_image4); format:fancybox; extension:fancybox;' width='92' height='145' /> </div>
-          <div class='tabContent' data-anytab-content='prodVideo'>
-            <div data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
-          </div></td>
-        <td class='prodSummaryContainer marginBottom no_underline' style="width:340px; margin:0 0 0 25px;"><h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
-          <h3 class='basePrice marginBottom' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: <h5>Only :</h5> ;' style="text-align:left;"></h3>
-          <hgroup class='marginBottom'>
-            <h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
-            <h5 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Mfg: ;'></h5>
-            <h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
-          </hgroup>
-          <div id="dis" style="display:block; width:300px; padding-top:20px;">
-            <div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
-          </div>
-          <table class='marginBottom fullWidth gridTable' data-app-role='childrenSiblingsContainer'>
-            <tbody data-bind="var: product(zoovy:grp_children); format:productList; extension:store_prodlist; loadsTemplate:productListTemplateChildren;hide_summary:true; withInventory:1; withVariations:1;">
-            </tbody>
-          </table>
-          <div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency marginBottom'></div>
-          <form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.cart_quickadd.a.addItemToCart($(this)); return false;">
-            <fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'>
-            </fieldset>
-            <fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'>
-            </fieldset>
-            <input type='submit' value='Add to Cart' class='galladdtocarti ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
-          </form>
-          <script language="javascript">
+  </div><!-- productTemplate -->
+  
+	<!-- a template used for a quickview link off of a category page -->
+	<div id='productTemplateQuickView' class="popupshado">
+		<table class='prodViewerContainer'>
+		<tr>
+		<td class='imageContainer' style="width:305px;">
+			<div>
+				<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
+				<img src='blank.gif' data-fancybox-group='gallery' data-bind='var: product(zoovy:prod_image2);format:fancybox; extension:fancybox;' width='305' height='458' /> 
+			</div>
+			<div class="viimgta"><img src="images/videoimg.gif" /></div>
+			<div  class='prodThumbs' align="center"> 
+				<img src='blank.gif' alt='' data-fancybox-group='gallery' data-bind='var: product(zoovy:prod_image2);format:fancybox; extension:fancybox;' width='92' height='145' />
+				&nbsp;&nbsp;
+				<img src='blank.gif' alt='' data-fancybox-group='gallery' data-bind='var: product(zoovy:prod_image3);format:fancybox; extension:fancybox;' width='92' height='145' />
+				&nbsp;&nbsp;
+				<img src='blank.gif' alt='' data-fancybox-group='gallery'  data-bind='var: product(zoovy:prod_image4); format:fancybox; extension:fancybox;' width='92' height='145' /> 
+			</div>
+			<div class='tabContent' data-anytab-content='prodVideo'>
+				<div data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
+			</div>
+		</td>
+		<td class='prodSummaryContainer marginBottom no_underline' style="width:340px; margin:0 0 0 25px;">
+			<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
+			<h3 class='basePrice marginBottom' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: <h5>Only :</h5> ;' style="text-align:left;"></h3>
+			<hgroup class='marginBottom'>
+				<h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
+				<h5 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Mfg: ;'></h5>
+				<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
+			</hgroup>
+			<div id="dis" style="display:block; width:300px; padding-top:20px;">
+				<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+			</div>
+			<table class='marginBottom fullWidth gridTable' data-app-role='childrenSiblingsContainer'>
+				<tbody data-bind="var: product(zoovy:grp_children); format:productList; extension:store_prodlist; loadsTemplate:productListTemplateChildren;hide_summary:true; withInventory:1; withVariations:1;"></tbody>
+			</table>
+			<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency marginBottom'></div>
+			<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.cart_quickadd.a.addItemToCart($(this)); return false;">
+				<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
+				<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'></fieldset>
+				<input type='submit' value='Add to Cart' class='galladdtocarti ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
+			</form>
+<script language="javascript">
 function validateForm()
 {
 var x=document.forms["eMailer"]["yourname"].value;
 if (x==null || x=="")
-  {
-  alert("Your name must be filled out");
-  return false;
-  }
+{
+alert("Your name must be filled out");
+return false;
+}
 var x=document.forms["eMailer"]["email"].value;
 var atpos=x.indexOf("@");
 var dotpos=x.lastIndexOf(".");
 if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length)
-  {
-  alert("Not a valid e-mail address");
-  return false;
-  }
+{
+alert("Not a valid e-mail address");
+return false;
+}
 }
 
 </script>
-          <div id="light1" class="white_content">
-            <div class="closebutt"><a href = "javascript:void(0)" onclick = "document.getElementById('light1').style.display='none';document.getElementById('fade').style.display='none'"><img src="images/close.png"/></a> </div>
-               <form name="eMailer" onSubmit="return validateForm()">
-               <img src="images/tell_logo.png" align="middle" style="margin:0 0 15px 0;" /><br clear="all">
-                <strong>Use the form below to send out a notice about this product.</strong>
-                
-                <div class="tellb">
-                	 <label>Your Name :</label>
-                     <input type="text" name="yourname" size="50"/>
-                </div>
-                
-                 <div class="tellb">
-                    <label>Recipients Email: </label>
-                    <input type="text" name="email" size="50" value=""/>
-                 </div>
-                 
-                 <div class="tellb">
-                    <label>Message Title :</label>
-                    <input type="text" name="subject" size="50" value=""/>
-                  </div>
-                  
-                  <div class="tellb">
-                        <label>Custom Message :</label>
-                        <textarea name="message" id="message" cols="50" rows="4"></textarea>
-                   </div>
-                   
-                   <div class="tellbbut">
-                    <a href = "javascript:void(0)" onclick = "document.getElementById('light1').style.display='none';document.getElementById('fade').style.display='none'">
-                    <input type="button" value="Cancel" class="addRMAItemButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"/></a>
-                    <input type="submit" value="Send Message" class="addRMAItemButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"/>
-                    </div>
-                
-                
-              </form>
-           </div>
-          <div data-bind='var:product(zoovy:prod_cpsiawarning); format:cpsiaWarning; extension:myRIA;'></div>
-          <div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
-          <section class='marginBottom'> <span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span> <span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span> </section>
-          <menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'><a href = "javascript:void(0)" onclick = "document.getElementById('light1').style.display='block';document.getElementById('fade').style.display='block'">Tell a Friend</a> | <a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>Write Review</a> | <a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;">Add to Wishlist</a> </menu>
-          <table width="97%" border="0" cellspacing="0" cellpadding="0">
-            <tr>
-              <td colspan='2' class="tabbedProductContentTD"><!--
-the tabs are built in an onComplete.  ID's are added based on sku AND index, so the index (order) of the tabs MUST match the order of the tabContent divs
-or the tab clicked won't open the right content.
-It's done this way because ID's hard coded into template are bad mojo (templates are recycled) and because using data-binds to add id's caused some serious issues
--->
-                <div class="tabPaging">
-                  <ul>
-                     <li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a id="href_featured" href="#prodFeatures" onClick="toggle_div('featured');" class="active" title=""><span>Features</span></a></li>
-                    <li class='prodReviewsTab'><a id="href_Reviews" href="#prodReviews" onClick="toggle_div('Reviews');" class="" title=""><span>Reviews</span></a></li>
-                    </ul>
-                  <!-- Repeat Section Start Here -->
-                  <div class="tabingcontent">
-                     <div id="featured">
-                      <div data-bind='var: product(zoovy:prod_features); format:wiki; wikiFormats:myRIA;'></div>
-                    </div>
-                    <div id="Reviews">
-                      <div class='clearfix alignRight'>
-                        <button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'><img src="images/write_review.gif" alt="Write Review" title="Write Review" /></button>
-                      </div>
-                      <ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;">
-                      </ul>
-                    </div>
-                     
-                     
-                  </div>
-                  <!-- Repeat Section Close Here -->
-                </div></td>
-            </tr>
-          </table></td>
-        <td align="right" valign="top">
-		<script type="text/javascript">
-	$('#myelement').click(function(){
-      $('#another-element').toggle('slow');
-	  $('#myelement').hide();
-  });
-	</script>
-          <div id="myelement"><a href="#moreoptions"><img src="images/more_options.gif" /></a></div></td>
-        <td align="left" valign="top"  id="another-element" style="display:none;"><div style="width:140px; padding:0 10px; border-left:1px solid #b1b1b1;">
-            <div class="comparissonsbox">
-              <ul>
-                <li><a href="#like">You may also like</a></li>
-                <li><a href="#">Recently viewed</a></li>
-                <li><a href="#">Comparissons</a></li>
-              </ul>
-            </div>
-            <table class='fullWidth gridTable recentlybox'>
-              <tbody data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateATC;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;">
-              </tbody>
-            </table>
-          </div></td>
-      </tr>
-    </table>
-  </div>
-  <!-- productTemplateQuickView -->
+			<div id="light1" class="white_content">
+				<div class="closebutt"><a href = "javascript:void(0)" onclick = "document.getElementById('light1').style.display='none';document.getElementById('fade').style.display='none'"><img src="images/close.png"/></a> </div>
+				<form name="eMailer" onSubmit="return validateForm()">
+					<img src="images/tell_logo.png" align="middle" style="margin:0 0 15px 0;" /><br clear="all">
+					<strong>Use the form below to send out a notice about this product.</strong>
+
+					<div class="tellb">
+						<label>Your Name :</label>
+						<input type="text" name="yourname" size="50"/>
+					</div>
+
+					<div class="tellb">
+						<label>Recipients Email: </label>
+						<input type="text" name="email" size="50" value=""/>
+					</div>
+
+					<div class="tellb">
+						<label>Message Title :</label>
+						<input type="text" name="subject" size="50" value=""/>
+					</div>
+
+					<div class="tellb">
+						<label>Custom Message :</label>
+						<textarea name="message" id="message" cols="50" rows="4"></textarea>
+					</div>
+
+					<div class="tellbbut">
+						<a href = "javascript:void(0)" onclick = "document.getElementById('light1').style.display='none';document.getElementById('fade').style.display='none'">
+						<input type="button" value="Cancel" class="addRMAItemButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"/></a>
+						<input type="submit" value="Send Message" class="addRMAItemButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"/>
+					</div>
+				</form>
+			</div>
+			<div data-bind='var:product(zoovy:prod_cpsiawarning); format:cpsiaWarning; extension:myRIA;'></div>
+			<div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
+			<section class='marginBottom'> 
+				<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span> 
+				<span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span> 
+			</section>
+			<menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'>
+				<a href = "javascript:void(0)" onclick = "document.getElementById('light1').style.display='block';document.getElementById('fade').style.display='block'">Tell a Friend</a> 
+				| <a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>Write Review</a>
+				| <a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;">Add to Wishlist</a> 
+			</menu>
+			<table width="97%" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td colspan='2' class="tabbedProductContentTD"><!--
+				the tabs are built in an onComplete.  ID's are added based on sku AND index, so the index (order) of the tabs MUST match the order of the tabContent divs
+				or the tab clicked won't open the right content.
+				It's done this way because ID's hard coded into template are bad mojo (templates are recycled) and because using data-binds to add id's caused some serious issues
+				-->
+					<div class="tabPaging">
+						<ul>
+							<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a id="href_featured" href="#prodFeatures" onClick="toggle_div('featured');" class="active" title=""><span>Features</span></a></li>
+							<li class='prodReviewsTab'><a id="href_Reviews" href="#prodReviews" onClick="toggle_div('Reviews');" class="" title=""><span>Reviews</span></a></li>
+						</ul>
+						<!-- Repeat Section Start Here -->
+						<div class="tabingcontent">
+							<div id="featured">
+								<div data-bind='var: product(zoovy:prod_features); format:wiki; wikiFormats:myRIA;'></div>
+							</div>
+							<div id="Reviews">
+								<div class='clearfix alignRight'>
+									<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'><img src="images/write_review.gif" alt="Write Review" title="Write Review" /></button>
+								</div>
+								<ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;"></ul>
+							</div>
+						</div>
+					<!-- Repeat Section Close Here -->
+					</div>
+				</td>
+			</tr>
+			</table>
+		</td>
+		<td align="right" valign="top">
+<script type="text/javascript">
+$('#myelement').click(function(){
+$('#another-element').toggle('slow');
+$('#myelement').hide();
+});
+</script>
+			<div id="myelement"><a href="#moreoptions"><img src="images/more_options.gif" /></a></div>
+		</td>
+		<td align="left" valign="top"  id="another-element" style="display:none;">
+			<div style="width:140px; padding:0 10px; border-left:1px solid #b1b1b1;">
+				<div class="comparissonsbox">
+					<ul>
+						<li><a href="#like">You may also like</a></li>
+						<li><a href="#">Recently viewed</a></li>
+						<li><a href="#">Comparissons</a></li>
+					</ul>
+				</div>
+				<table class='fullWidth gridTable recentlybox'>
+					<tbody data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateATC;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;"></tbody>
+				</table>
+			</div>
+		</td>
+		</tr>
+		</table>
+	</div><!-- productTemplateQuickView -->
+  
+
   <!-- 404 page -->
   <div id='pageNotFoundTemplate'>
     <!--	<h1>Unable to find page...</h1>
