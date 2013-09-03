@@ -777,8 +777,8 @@ ul#topnav li span ul li a:hover{color:#34719e; text-decoration:none;}
 -moz-border-radius-topleft: 0;
 border-radius: 10px;
 border-top-left-radius: 0;}
-.tabingcontent ul{ list-style-type:none; margin:0px; padding:0px;}
-.tabingcontent ul li{ list-style-type:none}
+.tabingcontent ul{list-style-type:none; margin:0px; padding:0 0 0 20px;}
+.tabingcontent ul li{height:auto; width:22em; list-style-type:disc; clear:both;}
 .accMain{ float:left; width:100%;}
 .tp{ border-top:#CCCCCC solid 1px; padding-top:20px; float:left; width:100%;}
 .tp:first-child{ border-top:0px; padding-top:0px;}
