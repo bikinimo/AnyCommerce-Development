@@ -69,6 +69,9 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 	if(!$('#homepageBottomTabs').hasClass('anytabs')){
 		$('#homepageBottomTabs').addClass('anytabs').anytabs();
 		}
+	if(!$('#homepageSizingTabs').hasClass('anytabs')){
+		$('#homepageSizingTabs').addClass('anytabs').anytabs();
+		}
 	}]);
 
   app.rq.push(['templateFunction','companyTemplate','onCompletes',function(P) { 

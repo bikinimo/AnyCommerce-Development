@@ -85,7 +85,11 @@ var store_bmo = function() {
 		a : {
 		
 			showSizeChart : function() {
-				$('#sizingGuideTemplate').dialog({'modal':'true', 'title':'Sizing Chart','width':800, height:550});
+				$('#sizingGuideTemplate').dialog({'modal':'true', 'title':'Sizing Guide','width':800, height:550});
+			},
+			
+			showStyleChart : function() {
+				$('#styleGuideTemplate').dialog({'modal':'true', 'title':'Style Guide','width':800, height:550});
 			},
 		
 			pauseFred : function($this) {
