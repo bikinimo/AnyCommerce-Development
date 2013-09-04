@@ -191,6 +191,8 @@ ul li{ list-style-type:none;}
 /* used when an element needs to start of hidden. this is used frequently. */
 .displayNone	{display:none;}
 
+.visibilityHidden {visibility:hidden;}
+
 .lineThrough	{text-decoration:line-through}
 .underline	{text-decoration:underline; cursor:pointer} /* only use this on clickable text */
 .borderNone	{border:none;}

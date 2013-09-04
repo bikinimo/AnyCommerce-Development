@@ -312,29 +312,33 @@ var store_bmo = function() {
 				
 				var cl = $('form[name="clock"]', $context);
 				var d = new Date();
-				count=Math.floor((app.ext.store_bmo.vars.eventdate.getTime()-d.getTime())/1000);
+				var count=Math.floor((app.ext.store_bmo.vars.eventdate.getTime()-d.getTime())/1000);
 			//	app.u.dump('count is: '); app.u.dump(count);
+
 				if(count<=0) {
 					$('input[name=days]', cl).val('00');
 					$('input[name=hours]', cl).val('00');
 					$('input[name=mins]', cl).val('00');
 					$('input[name=secs]', cl).val('00');
-					return;
-					document.getElementById("deal").style.display = 'block';
+					
+					$('#deal',$context).removeClass('visibilityHidden');
+					//document.getElementById("deal").style.display = 'block';
 				}
 				else {
-					document.getElementById("deal").style.display = 'none';
+					$('#deal',$context).addClass('visibilityHidden');
+					//document.getElementById("deal").style.display = 'none';
+				
+					$('input[name=secs]', cl).val(''+app.ext.store_bmo.u.toSt(count%60));
+					count=Math.floor(count/60);
+					$('input[name=mins]', cl).val(''+app.ext.store_bmo.u.toSt(count%60));
+					count=Math.floor(count/60);
+					$('input[name=hours]', cl).val(''+app.ext.store_bmo.u.toSt(count%24));
+					count=Math.floor(count/24);
+					$('input[name=days]', cl).val(''+count);    
+				
+					setTimeout(function(){app.ext.store_bmo.u.countdown($context);},1000);
 				}
-				$('input[name=secs]', cl).val(''+app.ext.store_bmo.u.toSt(count%60));
-				count=Math.floor(count/60);
-				$('input[name=mins]', cl).val(''+app.ext.store_bmo.u.toSt(count%60));
-				count=Math.floor(count/60);
-				$('input[name=hours]', cl).val(''+app.ext.store_bmo.u.toSt(count%24));
-				count=Math.floor(count/24);
-				$('input[name=days]', cl).val(''+count);    
-
-				setTimeout(function(){app.ext.store_bmo.u.countdown($context);},1000);
-				},
+			},
 			
 			runHomeCarouselTab1 : function($context) {
 				var $target = $('.productList1',$context);
