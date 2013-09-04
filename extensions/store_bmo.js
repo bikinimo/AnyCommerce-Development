@@ -28,7 +28,7 @@ var store_bmo = function() {
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 	vars : { 
-
+		eventdate : new Date("september 6, 2013 15:48:59")
 	},
 
 	callbacks : {
@@ -304,36 +304,36 @@ var store_bmo = function() {
 			toSt : function(n) {
 				var s = '';
 				if(n < 10) s +='0';
-				//app.u.dump(n); app.u.dump(s); 
+			//	app.u.dump(n); app.u.dump(s); 
 				return s+n.toString();
 			},
 			
 			countdown : function($context) {
-				var eventdate = new Date("september 6, 2013 15:48:59");
+				
 				var cl = $('form[name="clock"]', $context);
 				var d = new Date();
-				count=Math.floor((eventdate.getTime()-d.getTime())/1000);
-				app.u.dump('count is: '); app.u.dump(count);
+				count=Math.floor((app.ext.store_bmo.vars.eventdate.getTime()-d.getTime())/1000);
+			//	app.u.dump('count is: '); app.u.dump(count);
 				if(count<=0) {
-					cl.days.value ="00";
-					cl.hours.value="00";
-					cl.mins.value="00";
-					cl.secs.value="00";
+					$('input[name=days]', cl).val('00');
+					$('input[name=hours]', cl).val('00');
+					$('input[name=mins]', cl).val('00');
+					$('input[name=secs]', cl).val('00');
 					return;
 					document.getElementById("deal").style.display = 'block';
 				}
 				else {
 					document.getElementById("deal").style.display = 'none';
 				}
-				cl.secs.value=app.ext.store_bmo.u.toSt(count%60);
+				$('input[name=secs]', cl).val(''+app.ext.store_bmo.u.toSt(count%60));
 				count=Math.floor(count/60);
-				cl.mins.value=app.ext.store_bmo.u.toSt(count%60);
+				$('input[name=mins]', cl).val(''+app.ext.store_bmo.u.toSt(count%60));
 				count=Math.floor(count/60);
-				cl.hours.value=app.ext.store_bmo.u.toSt(count%24);
+				$('input[name=hours]', cl).val(''+app.ext.store_bmo.u.toSt(count%24));
 				count=Math.floor(count/24);
-				cl.days.value=count;    
+				$('input[name=days]', cl).val(''+count);    
 
-				setTimeout("countdown()",500);
+				setTimeout(function(){app.ext.store_bmo.u.countdown($context);},1000);
 				},
 			
 			runHomeCarouselTab1 : function($context) {
