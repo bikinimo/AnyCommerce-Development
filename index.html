@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"201318.20130904110800",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201318.20130904132600",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "required",//can be passive, active or required
@@ -168,7 +168,7 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
         </ul>
       </div>
 	 <!-- <div class="sizebg"><a href="#" onClick="return showContent('company',{'show':'size'});">SIZING GUIDE</a><span>|</span><a href="#.">STYLE GUIDE</a></div> -->
-	 <div class="sizebg pointer" onClick="app.ext.store_bmo.a.showMeTheMoney({'templateID':'sizingGuideTemplate', guide:'sizing', data:'null'});">SIZING GUIDE<span>|</span><a href="#.">STYLE GUIDE</a></div>
+	 <div class="sizebg pointer"><a href="#." onClick="app.ext.store_bmo.a.showSizeChart(); return false">SIZING GUIDE</a><span>|</span><a href="#.">STYLE GUIDE</a></div>
 	</div>
     <!--Header Close-->
     <!--Middle Start-->

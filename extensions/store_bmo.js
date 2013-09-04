@@ -84,25 +84,8 @@ var store_bmo = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 		
-			showMeTheMoney : function(infoObj) {
-				if(infoObj.templateID && infoObj.guide) {
-					infoObj.dialogID = infoObj.templateID+'_'+app.u.makeSafeHTMLId(infoObj.guide)+"_dialog";
-					infoObj.dialog = $.isEmptyObject(infoObj.dialog) ? {modal: true, width:'86%',height:$(window).height() - 100} : infoObj.dialog;
-					infoObj.dialog.autoOpen = false;
-					var $parent =  $(app.u.jqSelector('#'+infoObj.dialogID));
-					
-					if($parent.length) {$parent.empty()}
-					else {$parent = $("<div \/>").attr({"id":'999',"title":"Sizing Guide"}).appendTo('body');}
-					
-					infoObj.parentID = infoObj.dialogID+"_content";
-					this.showPage(infoObj);
-					$parent.dialog(infoObj.dialog);
-					$parent.dialog('open');
-				}	
-				else {
-					app.u.dump("WARNING! either templateID ["+infoObj.templateID+"] or guide ["+infoObj.guide+"] not passed into showPageInDialog");
-				}
-				return infoObj;
+			showSizeChart : function() {
+				$('#sizingGuideTemplate').dialog({'modal':'true', 'title':'Sizing Chart','width':800, height:550});
 			},
 		
 			pauseFred : function($this) {

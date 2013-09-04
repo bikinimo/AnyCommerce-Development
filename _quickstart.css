@@ -986,7 +986,7 @@ z-index:1002; overflow: auto; /*box-shadow: 1px 1px 3px 3px #000000;*/ font-fami
 .active{color:#fff; background:url(images/tabonbg.gif) repeat-x !important; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; 	-moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; border-top-left-radius: 5px; border-top-right-radius: 5px; padding:3px 22px;} 
 
 /*vilas added*/
-#homepageBottomTabs .ui-tabs-nav li a{float:left; padding:5px 85px 4px 87px !important; text-decoration:none; font-weight:normal;}
+#homepageBottomTabs .ui-tabs-nav li a{float:left; padding:5px 58px 4px 58px !important; text-decoration:none; font-weight:normal;}
 /*vilas added*/
 
 
