@@ -16,7 +16,7 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 .headerone{margin:0px; padding:0px; width:964px; float:left;}
 .headerleft{margin:0px; padding:0px; float:left;} /*width:529px;*/
 .headerleft img{margin:9px 0 0 14px;}
-.headerright{margin:0px; padding:0px; width:445px; float:right;}
+.headerright{margin:0px; padding:0px; width:450px; float:right;}
 .headerright1{margin:0px; padding:0px; width:445px; float:left;}
 .topsecmenu{margin:0px; padding:0px; width:362px; float:left;}
 .contactsec{margin:0px; padding:0px; text-align:right; line-height:20px;}
@@ -26,7 +26,7 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 .cartsec{margin:0px; padding:6px 0 0 0; text-align:right;}
 .cartsec img{margin:-3px 10px 0 0; padding:0;}
 .gryimgright{margin:0px; padding:0px; float:right;}
-.headerright2{margin:10px 0 0 0; padding:0px; width:445px; float:left; color: #808080; font-size: 14px;}
+.headerright2{margin:10px 0 0 0; padding:0px; width:450px; float:left; color: #808080; font-size: 14px;}
 .headerright2 .inpbox{margin:0 2px 0 5px; padding:3px; width:254px; border: 1px solid #808080; font-size:11px; color: #404040;}
 .headerright2 .searchbut{margin:0px; padding:0px; float:right;}
 
@@ -925,7 +925,7 @@ z-index:1002; overflow: auto; /*box-shadow: 1px 1px 3px 3px #000000;*/ font-fami
 .headerright2 .inpbox{margin:0 0 0 11px; padding:3px 5px 2px 5px; width:272px; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #808080; float:left; border-right:none !important; font-size:11px;}
 .madebox1{margin:12px 0 0 20px; padding:0px; width:283px; float:left;}
 .perboxright{margin:0 0 0 7px; padding:0px; width:158px; float:left; display:inline-block;}
-.ui-tabs .ui-tabs-nav li a{float:left; padding:5px 64px 4px 63px !important; text-decoration:none; font-weight:normal;}
+.ui-tabs .ui-tabs-nav li a{float:left; padding:5px 60px 4px 60px !important; text-decoration:none; font-weight:normal;}
 }
 
 .ui-tabs .ui-tabs-nav li{border-bottom: 0 none; float:left; list-style:none outside none;  margin:1px 0 0 0 !important;  padding:0; position:relative; top:0; white-space:nowrap;}
