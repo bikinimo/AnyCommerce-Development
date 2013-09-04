@@ -221,13 +221,12 @@ app.u.loadApp = function() {
 //Any code that needs to be executed after the app init has occured can go here.
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
 app.u.appInitComplete = function(P)	{
-	app.u.dump("Executing myAppIsLoaded code...");
 	if(app.preferenceSelected = true) {
 		if(localStorage.appPreferences == "signedUp") {
 			return showContent('customer',{'show':'myaccount'});
 		}
 	}
-	else {showContent();}
+	else {app.u.dump("Executing myAppIsLoaded code...");}
 	}
 
 //don't execute script till both jquery AND the dom are ready.

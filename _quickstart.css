@@ -645,7 +645,7 @@ CHECKOUT
 	
 .debug{position:fixed; bottom:0; left:0; right:0; background:#ffffff; color:#000000; border-top:1px solid #666666; padding:5px;}
 
-.ui-tabs .ui-tabs-nav li a{float:left; padding:5px 60px 4px 63px !important; text-decoration:none; font-weight:normal;}
+.ui-tabs .ui-tabs-nav li a{float:left; padding:5px 60px 4px 60px !important; text-decoration:none; font-weight:normal;}
 .navtopsiz li a{font-size:18px !important;}
 .ui-tabs .ui-state-default{background:url("images/taboffbg.gif") repeat-x #808080 !important; color: #1C94C4; font-weight: bold;}
 .ui-tabs .ui-tabs-nav li.ui-tabs-active.ui-state-default{background:url("images/tabactivebg.gif") repeat-x #d9d9d9 !important; border-left:1px solid #b1b1b1; border-right:1px solid #b1b1b1; border-top:1px solid #b1b1b1;}
@@ -683,7 +683,7 @@ fieldset input.ui-button-text {background:#cccccc !important; color:#333 !import
 
 /*Drop Dwon Menu Css*/
 ul#topnav{margin:0px; padding:0; float:left; list-style:none; position:relative;}
-ul#topnav li span{padding:0px 0 13px 0; position:absolute; left:0; top:25px; display:none; background:#eae8e5; color:#fff; float:left; border-color:#276B97; border-width: 0px 2px 2px; border-style: none solid solid; border-radius:0px 0px 6px 6px; z-index:9;}
+ul#topnav li span{padding:0px 0 13px 0; position:absolute; left:0; top:25px; display:none; background:#6dbcff; color:#fff; float:left; border-color:#276B97; border-width: 0px 2px 2px; border-style: none solid solid; border-radius:0px 0px 6px 6px; z-index:9;}
 /*ul#topnav li span{padding:20px 0; position:absolute; left:0; top:27px;	display:none; min-width:600px; background:#eae8e5; color:#fff; float:left; border-radius:0 6px 6px 6px; border-left:2px solid #276b97; border-right:2px solid #276b97; border-bottom:2px solid #276b97; }*/
 ul#topnav li:hover span{display: block;}
 ul#topnav li span a{display: inline; color:#000000;}
@@ -691,7 +691,7 @@ ul#topnav li span a:hover{text-decoration: underline;}
 
 ul#topnav li span ul{margin:0 50px 0 0 ; padding:0px; float:left;}
 ul#topnav li span ul li{float:none;}
-ul#topnav li span ul li a{padding:4px 0 0 0; font-size:12px; float:left; color:#333;}
+ul#topnav li span ul li a{padding:4px 0 0 0; font-size:12px; float:left; color:#ffffff;}
 ul#topnav li span ul li a:hover{color:#34719e; text-decoration:none;}
 
 /*Drop Dwon Menu Css*/
@@ -778,7 +778,7 @@ ul#topnav li span ul li a:hover{color:#34719e; text-decoration:none;}
 border-radius: 10px;
 border-top-left-radius: 0;}
 .tabingcontent ul{list-style-type:none; margin:0px; padding:0 0 0 20px;}
-.tabingcontent ul li{height:auto; width:22em; list-style-type:disc; clear:both;}
+.tabingcontent ul li{height:auto; width:90%; list-style-type:disc; clear:both;}
 .accMain{ float:left; width:100%;}
 .tp{ border-top:#CCCCCC solid 1px; padding-top:20px; float:left; width:100%;}
 .tp:first-child{ border-top:0px; padding-top:0px;}
