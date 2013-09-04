@@ -39,15 +39,15 @@ var store_bmo = function() {
 				
 				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
 					var $context = $(app.u.jqSelector('#'+infoObj.parentID));
+					if(!$context.data('countingdown')) {
+						app.ext.store_bmo.u.countdown($context);
+						$context.data('countingdown');
+					}
 					app.ext.store_bmo.u.runHomeCarouselTab1($context);
 					app.ext.store_bmo.u.runHomeCarouselTab2($context);
 					app.ext.store_bmo.u.runHomeCarouselTab3($context);
 					app.ext.store_bmo.u.runHomeCarouselTab4($context);
 				}]);
-				
-				//app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
-					//var $context = $(app.u.jqSelector('#'+infoObj.parentID));
-				//}]);
 				
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
@@ -308,20 +308,22 @@ var store_bmo = function() {
 				return s+n.toString();
 			},
 			
-			countdown : function() {
-				cl=document.clock;
-				d=new Date();
+			countdown : function($context) {
+				var eventdate = new Date("september 6, 2013 15:48:59");
+				var cl = $('form[name="clock"]', $context);
+				var d = new Date();
 				count=Math.floor((eventdate.getTime()-d.getTime())/1000);
-				if(count<=0)
-				{cl.days.value ="00";
-				cl.hours.value="00";
-				cl.mins.value="00";
-				cl.secs.value="00";
-				return;
-				document.getElementById("deal").style.display = 'block';
+				app.u.dump('count is: '); app.u.dump(count);
+				if(count<=0) {
+					cl.days.value ="00";
+					cl.hours.value="00";
+					cl.mins.value="00";
+					cl.secs.value="00";
+					return;
+					document.getElementById("deal").style.display = 'block';
 				}
 				else {
-				document.getElementById("deal").style.display = 'none';
+					document.getElementById("deal").style.display = 'none';
 				}
 				cl.secs.value=app.ext.store_bmo.u.toSt(count%60);
 				count=Math.floor(count/60);
