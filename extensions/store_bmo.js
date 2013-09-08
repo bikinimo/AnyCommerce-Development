@@ -93,7 +93,7 @@ var store_bmo = function() {
 			},
 		
 			pauseFred : function($this) {
-				app.u.dump('gothere');
+				//app.u.dump('gothere');
 				$this.trigger('stop');
 			},
 		
@@ -526,6 +526,8 @@ var store_bmo = function() {
 					});
 				}
 			},
+			
+
 		
 		
 		
