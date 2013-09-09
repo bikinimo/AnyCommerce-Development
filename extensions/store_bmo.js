@@ -196,16 +196,16 @@ var store_bmo = function() {
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 					
+			//embeds youtube video directly into $tag (built for product modal, but should work elsewhere)
 			youtubeIframe : function($tag,data)	{
-				 var $ele = $('.youtubeVideoContainer');
-				 if ($ele.length == 0) {
+				var $ele = $('.youtubeVideoContainer');
+				if ($ele.length == 0) {
 					$ele = $('<div />').attr('class','youtubeVideoContainer').appendTo($tag);
 				}
-				$ele.empty().append("<iframe width='305' height='172' src='"+data.value+"' frameborder='0' allowfullscreen></iframe>"); //clear any past videos.
-				app.u.dump(data.value);
+				$ele.empty().append("<iframe width='305' height='172' src='https://i3.ytimg.com/vi/"+data.value+"' frameborder='0' allowfullscreen></iframe>"); //clear any past videos.
 				//$tag.attr('src',"https://i3.ytimg.com/vi/iAIE1RBPyO0/1.jpg");
 				return false;
-			}, //youtubeThumbnail
+			}, //youtubeIframe
 					
 			addInfiniteSlider : function($tag,data)	{
 //				app.u.dump("BEGIN myRIA.renderFormats.addPicSlider: "+data.value);
