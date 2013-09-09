@@ -202,8 +202,7 @@ var store_bmo = function() {
 				if ($ele.length == 0) {
 					$ele = $('<div />').attr('class','youtubeVideoContainer').appendTo($tag);
 				}
-				$ele.empty().append("<iframe width='305' height='172' src='https://i3.ytimg.com/vi/"+data.value+"' frameborder='0' allowfullscreen></iframe>"); //clear any past videos.
-				//$tag.attr('src',"https://i3.ytimg.com/vi/iAIE1RBPyO0/1.jpg");
+				$ele.empty().append("<iframe width='305' height='172' src='https://www.youtube.com/embed/"+data.value+"' frameborder='0' allowfullscreen></iframe>"); //clear any past videos.
 				return false;
 			}, //youtubeIframe
 					
