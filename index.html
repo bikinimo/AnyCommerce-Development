@@ -749,7 +749,11 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 				<img src='blank.gif' data-fancybox-group='gallery' data-bind='var: product(zoovy:prod_image2);format:fancybox; extension:fancybox;' width='305' height='458' /> 
 			</div>
 			<div class="viimgta">
-			 <div class='pointer' src='blank.gif' data-bind='var:product(user:prod_videoid); format:youtubeThumbnail; extension:myRIA;'></div> 
+			 <div data-bind="var: product(user:prod_videoid); format: assignAttribute; attribute: data-youtubeid;">
+				<!-- <img class="pointer" src="blank.gif" data-bind="var: product(user:prod_videoid); format:youtubeThumbnail; extension:myRIA;" onClick="app.ext.myRIA.a.showYoutubeInModal($(this).parent().data('youtubeid')); return false;" alt="" /> -->
+				 <div class='pointer' data-bind="var: product(user:prod_videoid); format:youtubeIframe; extension:store_bmo;"></div>
+				<!-- <iframe width="305" height="172" src="https://www.youtube.com/embed/iAIE1RBPyO0" frameborder="0" allowfullscreen data-bind="var: product(user:prod_videoid); format:youtubeIframe; extension:store_bmo;"></iframe> -->
+			 </div> 
 			<!-- <img src="images/videoimg.gif" /> -->
 			</div>
 			<div  class='prodThumbs' align="center"> 
