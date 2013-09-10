@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"201318.20130910131300",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201318.20130910132500",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "required",//can be passive, active or required
@@ -745,7 +745,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 		<tr>
 		<td class='imageContainer' style="width:305px;" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
 
-			<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image1; groupingPrefix:prodPage_; groupingAttr:pid; w:400; h:600;">
+			<a data-bind="useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image1; groupingPrefix:prodPage_; groupingAttr:pid; w:700; h:1050;">
 				<img src='blank.gif' class='prodBigImage' data-bind="var:product(zoovy:prod_image1); format:imageURL;" width='305' height='458' />
 			</a>
 
@@ -756,13 +756,13 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 				</div> 
 			</div>
 			<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs' class='prodThumbs' align="center"> 
-				<a class='prodSmallImage' data-bind='useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image2; groupingPrefix:prodPage_; groupingAttr:pid; w:400; h:600;'>
+				<a class='prodSmallImage' data-bind='useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image2; groupingPrefix:prodPage_; groupingAttr:pid; w:500; h:750;'>
 					<img src='blank.gif' data-bind="var:product(zoovy:prod_image2); format:imageURL;" width='92' height='145' />
 				</a>
 				<a class='prodSmallImage' data-bind='useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image3; groupingPrefix:prodPage_; groupingAttr:pid; w:400; h:600;'>
 					<img src='blank.gif' data-bind="var:product(zoovy:prod_image3); format:imageURL;" width='92' height='145' />
 				</a>
-				<a class='prodSmallImage' data-bind='useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image4; groupingPrefix:prodPage_; groupingAttr:pid; w:400; h:600;'>
+				<a class='prodSmallImage' data-bind='useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image4; groupingPrefix:prodPage_; groupingAttr:pid; w:700; h:1050;'>
 					<img src='blank.gif' data-bind="var:product(zoovy:prod_image4); format:imageURL;" width='92' height='145' />
 				</a>
 			</div>
