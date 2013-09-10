@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"201318.20130909140100",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201318.20130909170600",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "required",//can be passive, active or required
@@ -746,7 +746,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 		<td class='imageContainer' style="width:305px;">
 			<div>
 				<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
-				<img src='blank.gif' data-fancybox-group='gallery' data-bind='var: product(zoovy:prod_image2);format:fancybox; extension:fancybox;' width='305' height='458' /> 
+				<img src='blank.gif' data-fancybox-group='gallery' data-bind='var: product(zoovy:prod_image2);format:fancybox; extension:fancybox;' width='305' height='458' />
 			</div>
 			<div class="viimgta">
 			 <div data-bind="var: product(user:prod_videoid); format: assignAttribute; attribute: data-youtubeid;">
