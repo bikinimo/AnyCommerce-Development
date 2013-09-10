@@ -360,7 +360,7 @@ PRODUCT DETAIL PAGE (productTemplate)
 /* primary image and thumbnails */
 .imageContainer	{width:10%; padding-right:24px;}
 .prodViewerContainer .prodThumbs div	{float:left; margin:12px 12px 0 0;}
-
+.prodSmallImage {margin:0 10px 0 0; text-decoration:none;}
 
 .prodSummaryContainer{width:90%; font-family:Arial, Helvetica, sans-serif;}
 .prodSummaryContainer h1{color: #54A7E1;

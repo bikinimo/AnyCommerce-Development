@@ -177,7 +177,7 @@ lightbox = new Lightbox options
         }
       }
       $window = $(window);
-      top = $window.scrollTop() + $window.height() / 10;
+      top = $window.scrollTop() + $window.height() / 20;
       left = $window.scrollLeft();
       $lightbox = $('#lightbox');
       $lightbox.css({
