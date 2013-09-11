@@ -2613,7 +2613,7 @@ buyer to 'take with them' as they move between  pages.
 				$('#loginSuccessContainer').hide(); //contains 'continue' button.
 				$('#loginMessaging, #recoverPasswordMessaging').empty(); //used for success and fail messaging.
 				$('#loginFormContainer, #recoverPasswordContainer').show(); //contains actual form and password recovery form (second id)
-				$('#loginFormForModal').dialog({modal: true,width: ($(window).width() > 500) ? 500 : '90%',autoOpen:false});
+/*bmo*/			$('#loginFormForModal').dialog({modal: true, height:'auto', minHeight:350, width: ($(window).width() > 500) ? 700 : '90%',autoOpen:false});
 				$('#loginFormForModal').dialog('open');
 				
 		

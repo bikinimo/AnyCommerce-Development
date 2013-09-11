@@ -990,5 +990,21 @@ z-index:1002; overflow: auto; /*box-shadow: 1px 1px 3px 3px #000000;*/ font-fami
 /*vilas added*/
 
 
+/*************************************************************************************
+LOGIN MODAL
+*************************************************************************************/
 
+.createAccount {height:270px; width:44%; margin:0 3%; float:left; font-family:ubuntu; text-align:center;}
+.createAccount h1 {color:#000000; text-align:center; font-family:Electrolize; font-size:2.0em; margin:28px 0 8px 0;}
+.createAccount p {font-size:1.5em;}
+.createAccount .modalCreateButton {padding:5px; margin:10px; font-family:Electrolize; border:none; font-size:1.6em; background:#286c99; color:#ffffff; box-shadow:0 0 14px 2px #999; border-radius:4px;} 
+
+#gotAccount {height:270px; width:44%; margin:14px 3% 0 3%; float:right; background:#286c99; font-family:ubuntu; font-weight:normal; box-shadow:0 0 14px 2px #999; border-radius:4px;}
+#gotAccount h1 {color:#ffffff; text-align:center; margin:29px 0 0 0; font-family:Electrolize;}
+#gotAccount fieldset {padding:0; border:0}
+#gotAccount input {margin:10px auto; display:block; border:none; padding:5px 0 5px 5px; font-size:1.6em;}
+#gotAccount input.logInModalSubmit {height:auto; width:100px; font-size:1.6em; font-family:Electrolize; color:#ffffff; font-weight:normal; background:#c2976b !important;}
+#gotAccount a {color:#ffffff; font-family:"source sans pro"; font-size:12px; text-align:center; text-decoration:underline; margin:auto; display:block;}
+
+#recoverPasswordContainer .recoverField {margin:5px 0 12px 12px; float:left;}
 

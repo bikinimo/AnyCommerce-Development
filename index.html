@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"201318.20130910132500",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201318.20130910212200",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "required",//can be passive, active or required
@@ -2414,55 +2414,45 @@ The 'data-action' attribute is used to assign an onclick.
   </table>
 </div>
 <!-- /templates -->
-<div id='loginFormForModal' class='loginOption displayNone' title='Please log in'>
-  <!-- the contents of this div/id are toggled on/off when login/logout occurs. don't change the ID -->
-  <p id='loginMessaging' class='marginBottom appMessaging'></p>
-  <br clear="left">
-  <div id='loginFormContainer'>
-    <form action='#' onSubmit='app.ext.myRIA.u.loginFrmSubmit($("#modalLoginlogin").val(),$("#modalLoginpassword").val()); return false;' id='modalLoginForm'>
-      <input type='hidden' name='loginCallback' id='loginCallback' value='' />
-      <!-- used to save a callback action in -->
-      <fieldset>
-      <div>
-        <label for='modalLoginlogin'>Login/Email</label>
-        <input type='email' class='zform_textbox zform_email'  name='login' id='modalLoginlogin' value='' size='25' />
-      </div>
-      <div>
-        <label for='modalLoginpassword'>Password</label>
-        <input type='password' class='zform_textbox zform_password'   name='password' id='modalLoginpassword' value='' size='25' />
-      </div>
-      <div>
-        <input type='submit' value='log in' class='ui-button-text ui-button ui-state-default ui-corner-all ' />
-      </div>
-      </fieldset>
-    </form>
-    <div id='recoverPasswordContainer'>
-      <hr class="logbor" />
-      <h3 class='marginBottom'>Recover Password</h3>
-      <div id='recoverPasswordMessaging'></div>
-      <form action='#' onSubmit="app.calls.appBuyerPasswordRecover.init($('#passwordRecoveryLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'recoverPasswordMessaging'}); app.model.dispatchThis('immutable'); return false;">
-        <fieldset>
-        <div class='marginBottom'>
-          <label for='passwordRecoveryLogin'>Login/Email</label>
-          <input type='text' name='login' required='required' id='passwordRecoveryLogin' size='25' />
-        </div>
-        <div>
-          <input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all ' value='Email Password to Me' />
-        </div>
-        </fieldset>
-      </form>
-    </div>
-    <!-- /recoverPasswordContainer -->
-    <div>
-      <hr class="logbor" />
-      <button class='ui-button-text ui-button ui-state-default ui-corner-all ' onClick="showContent('customer',{'show':'newsletter'});"><img src="images/create_account.gif" /></button>
-    </div>
-  </div>
-  <!-- this div will appear after a successful login. if you bind a new action to the button, best to empty the div and re-add the button, so the actions don't statck. -->
-  <div id='loginSuccessContainer' class='center displayNone'>
-    <button class='ui-button-text ui-button ui-state-default ui-corner-all ' id='modalLoginContinueButton' onClick="$('#loginFormForModal').dialog('close');">Continue</button>
-  </div>
-</div>
+
+
+
+
+	<div id='loginFormForModal' class='loginOption displayNone' title='Please log in'>
+		<!-- the contents of this div/id are toggled on/off when login/logout occurs. don't change the ID -->
+		<p id='loginMessaging' class='marginBottom appMessaging'></p>
+
+		<div id='loginFormContainer'>
+			<div class='createAccount'>
+				<h1 class='smallcaps'>First Time With Us?</h1>
+				<p>If you have never made a purchase at this web site and have never subscribed to this store's mailing list,
+					please choose this option.</p>
+				<button class='modalCreateButton tertiaryColorHover' onClick="return showContent('customer',{'show':'createaccount'});">Create an Account</button>
+			</div>
+
+			<div id="gotAccount"> 
+				<h1 class='smallcaps'>Welcome Back</h1>
+				<!-- Third parameter is id of message destination -->
+				<form action='#' onSubmit='app.ext.store_thesev.a.loginFrmSubmit($("input[name=login]",$(this)).val(),$("input[name=password]",$(this)).val(),$("#loginMessaging")); return false;' id='modalLoginForm'>
+					<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
+					<fieldset>
+						<input type='email' class='zform_textbox zform_email' name='login' id='modalLoginlogin' value='' size='20' placeholder='E-mail address' />
+						<input type='password' class='zform_textbox zform_password' name='password' id='modalLoginpassword' value='' size='20' placeholder='Password' />
+						<input type='submit' value='Log In' class='smallcaps ui-button-text ui-button ui-corner-all logInModalSubmit' />
+					</fieldset>
+				</form>
+				<a href="#" onClick="app.calls.appBuyerPasswordRecover.init($('input[name=login]', $(this).parent()).val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'loginMessaging'}); app.model.dispatchThis('immutable'); return false;">Forgot your password?<br> Enter your username and click hear to retrieve it!</a>
+			</div>
+		</div><!-- /recoverPasswordContainer -->
+		<div id='loginSuccessContainer' class='center displayNone'>
+			<button class='ui-button-text ui-button ui-state-default ui-corner-all ' id='modalLoginContinueButton' onClick="$('#loginFormForModal').dialog('close');">Continue</button>
+		</div>
+	</div>
+
+
+
+
+
 <div class='debug displayNone'>
   <table>
     <tr>
