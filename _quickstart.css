@@ -1042,6 +1042,7 @@ createaccountArticle
 .fieldM input.textfcity {width:179px;}
 .fieldM.stateFix {position:relative; top:-6px;}
 .selectWrapperS {height:30px; width:60px; display:inline-block; overflow:hidden; border:2px solid #286c99; margin:0 7px; position:relative; bottom:-13px; border-radius:4px;}
+@media screen and (-webkit-min-device-pixel-ratio:0) {.selectWrapperS{bottom:-1px;}}
 .fieldM select.textfstate {height:30px; width:80px; padding:6px 0px 3px 2px; border:none; background-position:33px 0px; margin:0;}
 .fieldM .selectField {position:relative; bottom:10px;}
 .selectWrapperC {height:30px; width:245px; display:inline-block; overflow:hidden; border:2px solid #286c99; margin:0 7px; border-radius:4px;}
