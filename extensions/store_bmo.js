@@ -83,7 +83,13 @@ var store_bmo = function() {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
-		
+			
+			showMoreOptions : function($this, pid) {
+				var _pid = app.u.makeSafeHTMLId(pid);
+				$this.hide();
+				$('.anotherElement_'+_pid).show();
+			},
+			
 			showSizeChart : function() {
 				$('#sizingGuideTemplate').dialog({'modal':'true', 'title':'Sizing Guide','width':800, height:550});
 			},
@@ -195,7 +201,14 @@ var store_bmo = function() {
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
-					
+		
+			classyId : function($tag, data) {
+				if(data.value.pid){
+					var pid = app.u.makeSafeHTMLId(data.value.pid)
+					$tag.addClass('anotherElement_'+pid);
+				}
+			},
+							
 			//embeds youtube video directly into $tag (built for product modal, but should work elsewhere)
 			youtubeIframe : function($tag,data)	{
 				var $ele = $('.youtubeVideoContainer');
