@@ -2502,6 +2502,9 @@ elasticsearch.size = 50;
 								app.ext.cco.calls.appCheckoutDestinations.init({},'mutable'); //needed for country list in address editor.
 								app.calls.buyerAddressList.init({'callback':'showAddresses','extension':'myRIA'},'mutable');
 								break;
+							case 'createaccount':
+								app.ext.cco.calls.appCheckoutDestinations.init({},'mutable'); //needed for country list in address entry.
+								break;
 							default:
 								app.u.dump("WARNING - unknown article/show ["+infoObj.show+" in showCustomer. ");
 							}
