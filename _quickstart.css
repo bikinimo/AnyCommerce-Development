@@ -1002,9 +1002,50 @@ LOGIN MODAL
 #gotAccount {height:270px; width:44%; margin:14px 3% 0 3%; float:right; background:#286c99; font-family:ubuntu; font-weight:normal; box-shadow:0 0 14px 2px #999; border-radius:4px;}
 #gotAccount h1 {color:#ffffff; text-align:center; margin:29px 0 0 0; font-family:Electrolize;}
 #gotAccount fieldset {padding:0; border:0}
-#gotAccount input {margin:10px auto; display:block; border:none; padding:5px 0 5px 5px; font-size:1.6em;}
+#gotAccount input {margin:10px auto; display:block; border:none; padding:5px 0 5px 5px; font-size:1.6em; border-radius:4px;}
 #gotAccount input.logInModalSubmit {height:auto; width:100px; font-size:1.6em; font-family:Electrolize; color:#ffffff; font-weight:normal; background:#c2976b !important;}
 #gotAccount a {color:#ffffff; font-family:"source sans pro"; font-size:12px; text-align:center; text-decoration:underline; margin:auto; display:block;}
 
 #recoverPasswordContainer .recoverField {margin:5px 0 12px 12px; float:left;}
 
+
+/*************************************************************************************
+createaccountArticle
+*************************************************************************************/
+
+#loginMessagingInline.appMessaging {margin:0 0 12px 40px;}
+.buyerLoggedIn .hideIfLoggedIn{display:none;}
+.hideIfLoggedOut{display:none;}
+.buyerLoggedIn .hideIfLoggedOut	{display: block;} /* may be 'block' */
+.buyerLoggedIn span.hideIfLoggedOut, .buyerLoggedIn a.hideIfLoggedOut{display: inline;} /* ensures inline on span elements */
+
+#createaccountArticle .creatAccount {height:auto; width:960px; margin:20px auto;}
+#gotAccount1 {height:auto; width:300px; float:left; background:#286c99; font-family:ubuntu; font-weight:bold; padding:0 0 20px 0; border-radius:4px;}
+#gotAccount1 h1 {color:#ffffff; text-align:center; margin:29px 0 0 0; font-family:Electrolize;}
+#gotAccount1 fieldset {padding:0; border:0}
+#gotAccount1 input {margin:10px auto; display:block; border:none; padding:5px 0 5px 5px; border-radius:4px;}
+#gotAccount1 input[type='submit'] {height:auto; width:100px; font-size:1.6em; font-family:Electrolize; color:#ffffff; font-weight:normal; background:#c2976b !important;}
+#gotAccount1 a {color:#ffffff; font-family:"source sans pro"; font-size:12px; text-align:center; text-decoration:underline; margin:auto; display:block;}
+
+.Account {height:auto; width:620px; float:right; font-family:"source sans pro"; font-size:1.2em; font-weight:bold;}
+.Account h1 {font-family:Electrolize; font-weight:bold; margin:0 0 30px 0; color:#286c99;}
+.fieldM {height:auto; width:590px; padding:0 0 10px 0; margin:0 auto; overflow:hidden; color:#286c99;}
+.field {height:auto; width:83px; display:inline-block; text-align:right;}
+.fieldM input, .fieldM select {height:30px; width:91px; margin:0 7px; padding:0 9px; border-radius:4px; font-family:ubuntu; border:2px solid #286c99;}
+.fieldM option {height:20px; padding:5px 0 0 5px;}
+.fieldM input.textfname {width:154px;}
+.fieldM input.textflast {width:187px;}
+.fieldM input.textfadd {width:260px;}
+.fieldM input.textfadd1 {width:150px;}
+.fieldM input.textfcity {width:179px;}
+.fieldM.stateFix {position:relative; top:-6px;}
+.selectWrapperS {height:30px; width:60px; display:inline-block; overflow:hidden; border:2px solid #286c99; margin:0 7px; position:relative; bottom:-13px; border-radius:4px;}
+.fieldM select.textfstate {height:30px; width:80px; padding:6px 0px 3px 2px; border:none; background-position:33px -100px; margin:0;}
+.fieldM .selectField {position:relative; bottom:10px;}
+.selectWrapperC {height:30px; width:245px; display:inline-block; overflow:hidden; border:2px solid #286c99; margin:0 7px; border-radius:4px;}
+.fieldM select.textfcountry {width:285px; padding:7px 3px 3px 3px; background-position:216px -100px; border:none; margin:0; background-repeat:no-repeat;}
+.fieldM input.textfmail {width:140px; margin:0 26px 0 7px;}
+.fieldM input.textfpass {width:140px;}
+.fieldM input.textfphone {width:152px;}
+.Account .createButton {color:#ffffff; padding:15px; margin:10px auto; border:none; display:block; font-family:Electrolize; font-weight:bold; font-size:1.8em; background:#febc00; border-radius:4px;}
+.Account .createButton:hover {color:#febc00; background:#286c99;}
