@@ -4,6 +4,8 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 
 #appPreView	{height:100%; width:100%; background:rgba(0,0,0,0.5); margin:0; position:absolute; z-index:10;}
 
+.sprite {background-image:url(images/sprites-500x500.png);}
+
 /********** NEW CSS ADD**********/
 .fl{float:left;}
 .fr{float:right;}
@@ -1040,10 +1042,10 @@ createaccountArticle
 .fieldM input.textfcity {width:179px;}
 .fieldM.stateFix {position:relative; top:-6px;}
 .selectWrapperS {height:30px; width:60px; display:inline-block; overflow:hidden; border:2px solid #286c99; margin:0 7px; position:relative; bottom:-13px; border-radius:4px;}
-.fieldM select.textfstate {height:30px; width:80px; padding:6px 0px 3px 2px; border:none; background-position:33px -100px; margin:0;}
+.fieldM select.textfstate {height:30px; width:80px; padding:6px 0px 3px 2px; border:none; background-position:33px 0px; margin:0;}
 .fieldM .selectField {position:relative; bottom:10px;}
 .selectWrapperC {height:30px; width:245px; display:inline-block; overflow:hidden; border:2px solid #286c99; margin:0 7px; border-radius:4px;}
-.fieldM select.textfcountry {width:285px; padding:7px 3px 3px 3px; background-position:216px -100px; border:none; margin:0; background-repeat:no-repeat;}
+.fieldM select.textfcountry {width:285px; padding:7px 3px 3px 3px; background-position:219px 0px; border:none; margin:0; background-repeat:no-repeat;}
 .fieldM input.textfmail {width:140px; margin:0 26px 0 7px;}
 .fieldM input.textfpass {width:140px;}
 .fieldM input.textfphone {width:152px;}
