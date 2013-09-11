@@ -1003,7 +1003,7 @@ LOGIN MODAL
 
 #gotAccount {height:270px; width:44%; margin:14px 3% 0 3%; float:right; background:#286c99; font-family:ubuntu; font-weight:normal; box-shadow:0 0 14px 2px #999; border-radius:4px;}
 #gotAccount h1 {color:#ffffff; text-align:center; margin:29px 0 0 0; font-family:Electrolize;}
-#gotAccount fieldset {padding:0; border:0}
+#gotAccount fieldset {padding:0; border:0;}
 #gotAccount input {margin:10px auto; display:block; border:none; padding:5px 0 5px 5px; font-size:1.6em; border-radius:4px;}
 #gotAccount input.logInModalSubmit {height:auto; width:100px; font-size:1.6em; font-family:Electrolize; color:#ffffff; font-weight:normal; background:#c2976b !important;}
 #gotAccount a {color:#ffffff; font-family:"source sans pro"; font-size:12px; text-align:center; text-decoration:underline; margin:auto; display:block;}
