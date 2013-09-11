@@ -54,17 +54,6 @@ css files should be included before any .js file to ensure they are downloaded i
 <link rel="ICON" href="images/bikiniMoFavicon.ico" />
 
 <script type="text/javascript">
-$(document).ready(function() {
-$("ul#topnav li").hover(function() { //Hover over event on list item
-	//$(this).css({ 'background' : '#eae8e5'}); //Add background color + image on hovered list item
-	$(this).find("span").show(); //Show the subnav
-} , function() { //on hover out...
-	$(this).css({ 'background' : 'none'}); //Ditch the background
-	$(this).find("span").hide(); //Hide the subnav
-});
-});
-</script>
-<script type="text/javascript">
 app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 </script>
 <link href="magiczoom/magiczoom.css" rel="stylesheet" type="text/css" media="screen"/>
@@ -608,7 +597,7 @@ container ul should have lineItemProdlist class on it instead of productList
 		
 		<li id='productListTemplateBuyerList' class='loadingBG clearfix' >
 			<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' >
-				<div class='prodThumbContainer floatLeft'  data-fancybox-group='gallery' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
+				<div class='prodThumbContainer floatLeft'>
 					<div class='ui-widget ui-widget-content ui-corner-all'> <img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='160' height='160' />
 						<div class='buttonList ui-widget ui-widget-header ui-corner-all alignCenter'>
 							<button class='ui-state-default ui-corner-all' title='add item to cart' onClick="showContent('product',{'pid':$(this).closest('[data-pid]').attr('data-pid')});"> <span class="ui-icon ui-icon-cart"></span> </button>
