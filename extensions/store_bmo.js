@@ -84,6 +84,13 @@ var store_bmo = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 		
+			//allow only numbers in a form field, plus . ( ) -
+			checkForInt : function(evt) {
+				evt = ( evt ) ? evt : window.event;
+				var charCode = ( evt.which ) ? evt.which : evt.keyCode
+				return (charCode == 45 || charCode == 46 || charCode == 40 || charCode == 41 || charCode <= 31 || (charCode >= 48 && charCode <= 57))
+			},
+		
 			//copied from app-quickstart.js so additional parameter could be used to assign the error location (for diff. login screens)
 			loginFrmSubmit : function(email,password,errorDiv)	{
 				var errors = '';

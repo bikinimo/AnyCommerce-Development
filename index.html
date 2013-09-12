@@ -1066,11 +1066,11 @@ return false;
 					  </div>
 					  <div class="form_input">
 						<label for="phone">Phone:</label>
-						<input type="text" size="12" onKeyPress="return checkForInt(event)" class="zform_textbox" id="phone" name="phone" value="">
+						<input type="text" size="12" onKeyPress="return app.ext.store_bmo.a.checkForInt(event)" class="zform_textbox" id="phone" name="phone" value="">
 					  </div>
 					  <div class="form_input">
 						<label for="order_id">Order #:</label>
-						<input type="text" size="12" onKeyPress="return checkForInt(event)" class="zform_textbox" id="order_id" name="order_id" value="">
+						<input type="text" size="12" onKeyPress="return app.ext.store_bmo.a.checkForInt(event)" class="zform_textbox" id="order_id" name="order_id" value="">
 					  </div>
 					  <div class="form_input">
 						<label for="subject">Subject:</label>
@@ -1802,11 +1802,11 @@ if you change these, you should move them above this comment so that when you (o
 						  </div>
 						  <div class="form_input">
 							<label for="phone">Phone:</label>
-							<input type="text" size="12" onKeyPress="return checkForInt(event)" class="zform_textbox" id="phone" name="phone" value="">
+							<input type="text" size="12" onKeyPress="return app.ext.store_bmo.a.checkForInt(event)" class="zform_textbox" id="phone" name="phone" value="">
 						  </div>
 						  <div class="form_input">
 							<label for="order_id">Order #:</label>
-							<input type="text" size="12" onKeyPress="return checkForInt(event)" class="zform_textbox" id="order_id" name="order_id" value="">
+							<input type="text" size="12" onKeyPress="return app.ext.store_bmo.a.checkForInt(event)" class="zform_textbox" id="order_id" name="order_id" value="">
 						  </div>
 						  <div class="form_input">
 							<label for="subject">Subject:</label>
@@ -1859,12 +1859,6 @@ if (str.indexOf(" ")!=-1){
 return false
 }
 return true
-}
-//allow only numbers in a form field, plus . ( ) -
-function checkForInt(evt) {
-evt = ( evt ) ? evt : window.event;
-var charCode = ( evt.which ) ? evt.which : evt.keyCode
-return (charCode == 45 || charCode == 46 || charCode == 40 || charCode == 41 || charCode <= 31 || (charCode >= 48 && charCode <= 57))
 }
 function validate_form ( ){
 var emailID=document.contact_form.from;
