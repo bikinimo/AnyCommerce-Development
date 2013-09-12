@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"201318.20130911125000",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201318.20130912144800",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "required",//can be passive, active or required
@@ -80,7 +80,7 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 				</div>
 				<div id="categorySelector" class="previewButtonCont showSansPreferences displayNone" style="cursor:pointer;">
 					<div class="categorySelectorButtonContainer floatLeft" onClick="app.u.selectPreference('remind',false);"><span class="categorySelectorButton pointer"><a href="#"><img src="images/remind_letter.png" alt="Remind Me Later" title="Remind Me Later" style="margin:0px;"/></a></span></div>
-					<div class="categorySelectorButtonContainer floatLeft" onClick="app.u.selectPreference('signedUp',true);"><span class="categorySelectorButton pointer"><a href="#" onClick="return showContent('customer',{'show':'myaccount'});"><img src="images/sign_up.png" alt="Sign Me Up" title="Sign Me Up" /></a></span></div>
+					<div class="categorySelectorButtonContainer floatLeft" onClick="app.u.selectPreference('signMeUp',true);"><span class="categorySelectorButton pointer"><a href="#"><img src="images/sign_up.png" alt="Sign Me Up" title="Sign Me Up" /></a></span></div>
 					<div class="categorySelectorButtonContainer floatLeft" onClick="app.u.selectPreference('guest',false);"><span class="categorySelectorButton pointer"><a href="#"><img src="images/continu_guest.png" alt="Continue as Guest" title="Continue as Guest" /></a></span></div>
 					<div class="clear"></div>
 				</div>
@@ -1227,7 +1227,222 @@ return false;
 <!-- END SIZING GUIDE TEMPLATE -->
   
   
-  
+	<div id='createaccountArticle' class="displayNone textContentArea">
+		<p id='loginMessagingInline' class='marginBottom appMessaging'></p>
+		<div class="creatAccount">
+			<div id="gotAccount1"> 
+				<h1 class='smallcaps'>WELCOME BACK</h1>
+				<!-- Third parameter is id of message destination -->
+				<form action='#' onSubmit='app.ext.store_bmo.a.loginFrmSubmit($("input[name=login]",$(this)).val(),$("input[name=password]",$(this)).val(),$("#loginMessagingInline")); return false;' id='modalLoginForm1'>
+					<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
+					<fieldset>
+						<input type='email' class='zform_textbox zform_email' name='login' id='modalLoginLogin' value='' size='39' placeholder='E-mail address' />
+						<input type='password' class='zform_textbox zform_password' name='password' id='modalLoginpassword' value='' size='39' placeholder='Password' />
+						<input type='submit' value='SIGN IN' class='ui-button-text ui-button ui-corner-all ' />
+					</fieldset>
+				</form>
+				<a class='primaryCTH' href="#" onClick="app.calls.appBuyerPasswordRecover.init($('input[name=login]', $(this).parent()).val(),{'callback':'showMessaging','message':'Thank you, you will receive an email shortly','targetID':'loginMessagingInline'}); app.model.dispatchThis('immutable'); return false;">Forgot your password?<br> Enter your username and click hear to retrieve it!</a>
+			</div>
+			<div class="Account" >
+				<!--<form action='#' class='inputsAsBreaks'  onSubmit="app.ext.myRIA.u.handleAppBuyerCreate($(this)); return false;">-->
+				<form action='#' class='inputsAsBreaks'  onSubmit="app.ext.store_bmo.u.handleAppLoginCreate($(this)); return false;">
+					<input type="hidden" name="vendor" value="bikinimo"/>
+					<h1>First Time With Us?</h1><input type='hidden' name='form' value='wholesale' />
+					<div class="fieldM"><span class="field">First Name</span> <input name='firstname' type='text' size='30' class='textfname' placeholder='First Name' required='required' />
+					<b>Last Name</b> <input name='lastname' type='text' size='30' placeholder='Last Name' required='required' class='textflast'/></div>
+					<!--<div class="passwordInput"><b>Password</b><input name="password" size="30" placeholder="Password" required /></div>-->
+					<div class="fieldM"><span class="field">Address</span> <input name='address1' type='text' size='30' placeholder='Address' class='textfadd' required='required' /> 
+					<input name='address2' type='text' size='30' placeholder='Address (Line 2)' class='textfadd1'/></div>
+					<div class="fieldM stateFix"><span class="field">City</span> <input name='city' type='text' size='30' placeholder='City' required='required' class='textfcity'/> 	
+						<b>State</b> 
+						<div class='selectWrapperS'>
+							<select name='region' class='textfstate sprite'>
+								<option value='AL'>AL</option>
+								<option value='AK'>AK</option>
+								<option value='AZ'>AZ</option>
+								<option value='AR'>AR</option>
+								<option value='CA'>CA</option>
+								<option value='CO'>CO</option>
+								<option value='CT'>CT</option>
+								<option value='DE'>DE</option>
+								<option value='DC'>DC</option>
+								<option value='FL'>FL</option>
+								<option value='GA'>GA</option>
+								<option value='HI'>HI</option>
+								<option value='ID'>ID</option>
+								<option value='IL'>IL</option>
+								<option value='IN'>IN</option>
+								<option value='IA'>IA</option>
+								<option value='KS'>KS</option>
+								<option value='KY'>KY</option>
+								<option value='LA'>LA</option>
+								<option value='ME'>ME</option>
+								<option value='MD'>MD</option>
+								<option value='MA'>MA</option>
+								<option value='MI'>MI</option>
+								<option value='MN'>MN</option>
+								<option value='MS'>MS</option>
+								<option value='MO'>MO</option>
+								<option value='MT'>MT</option>
+								<option value='NE'>NE</option>
+								<option value='NV'>NV</option>
+								<option value='NH'>NH</option>
+								<option value='NJ'>NJ</option>
+								<option value='NM'>NM</option>
+								<option value='NY'>NY</option>
+								<option value='NC'>NC</option>
+								<option value='ND'>ND</option>
+								<option value='OH'>OH</option>
+								<option value='OK'>OK</option>
+								<option value='OR'>OR</option>
+								<option value='PA'>PA</option>
+								<option value='RI'>RI</option>
+								<option value='SC'>SC</option>
+								<option value='SD'>SD</option>
+								<option value='TN'>TN</option>
+								<option value='TX'>TX</option>
+								<option value='UT'>UT</option>
+								<option value='VT'>VT</option>
+								<option value='VA'>VA</option>
+								<option value='WA'>WA</option>
+								<option value='WV'>WV</option>
+								<option value='WI'>WI</option>
+								<option value='WY'>WY</option>
+							</select>
+						</div>
+						<b>Zip</b> <input name='postal' type='text' size='10' placeholder='00000-0000' class='textfzip'/>
+					</div>
+					<div class="fieldM">
+						<div class="field selectField">Country</div> 
+						<div class='selectWrapperC'>
+							<select name="country" class="textfcountry sprite">
+								<option value='USA'>United States of America</option>
+							</select>
+						</div>
+					</div>
+					<div class="fieldM"><span class="field">E-mail</span> <input name='email' type='email' size='30' class='textfmail' placeholder='E-mail Address' required='required' /> <b>Phone Number</b> <input name='phone' type='tel' size='12' placeholder='Phone Number' class='textfphone' required='required'/> </div>
+					<div class="fieldM"><span class="field">Password</span> <input name='pass' type='password' size='30' class='textfpass' placeholder='7-18 Characters' required='required' /> <b>Confirm Password</b> <input name='pass2' type='password' size='12' placeholder='Must be a match' class='textfphone' required='required'/> </div>
+					<!--<fieldset class='marginBottom'>
+						<legend>About Your Business</legend>
+						<div class="fieldM"><input name='order_volume' type='text' size='30' placeholder='Anticipated Order Volume' />
+						<input name='resaleid' type='text' size='30' placeholder='State Resale Permit' /></div>
+						<div class="fieldM"><input name='ein' type='text' size='30' placeholder='Company EIN/Tax ID' />
+						<input name='credit_limit' type='number' step='0.01' min='0' placeholder='Requested Credit Limit' /></div>
+					</fieldset>-->
+					<input type="submit" value="Create an Account" class="createButton pointer"></input>
+				</form>
+			</div>
+		</div>
+		
+		
+		
+	</div><div id='createaccountTemplate' class="displayNone textContentArea">
+		<p id='loginMessagingInline' class='marginBottom appMessaging'></p>
+		<div class="creatAccount">
+			<div id="gotAccount1"> 
+				<h1 class='smallcaps'>WELCOME BACK</h1>
+				<!-- Third parameter is id of message destination -->
+				<form action='#' onSubmit='app.ext.store_bmo.a.loginFrmSubmit($("input[name=login]",$(this)).val(),$("input[name=password]",$(this)).val(),$("#loginMessagingInline")); return false;' id='modalLoginForm1'>
+					<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
+					<fieldset>
+						<input type='email' class='zform_textbox zform_email' name='login' id='modalLoginLogin' value='' size='39' placeholder='E-mail address' />
+						<input type='password' class='zform_textbox zform_password' name='password' id='modalLoginpassword' value='' size='39' placeholder='Password' />
+						<input type='submit' value='SIGN IN' class='ui-button-text ui-button ui-corner-all ' />
+					</fieldset>
+				</form>
+				<a class='primaryCTH' href="#" onClick="app.calls.appBuyerPasswordRecover.init($('input[name=login]', $(this).parent()).val(),{'callback':'showMessaging','message':'Thank you, you will receive an email shortly','targetID':'loginMessagingInline'}); app.model.dispatchThis('immutable'); return false;">Forgot your password?<br> Enter your username and click hear to retrieve it!</a>
+			</div>
+			<div class="Account" >
+				<!--<form action='#' class='inputsAsBreaks'  onSubmit="app.ext.myRIA.u.handleAppBuyerCreate($(this)); return false;">-->
+				<form action='#' class='inputsAsBreaks'  onSubmit="app.ext.store_bmo.u.handleAppLoginCreate($(this)); return false;">
+					<input type="hidden" name="vendor" value="bikinimo"/>
+					<h1>First Time With Us?</h1><input type='hidden' name='form' value='wholesale' />
+					<div class="fieldM"><span class="field">First Name</span> <input name='firstname' type='text' size='30' class='textfname' placeholder='First Name' required='required' value="f"/>
+					<b>Last Name</b> <input name='lastname' type='text' size='30' placeholder='Last Name' required='required' class='textflast'  value="f"/></div>
+					<!--<div class="passwordInput"><b>Password</b><input name="password" size="30" placeholder="Password" required /></div>-->
+					<div class="fieldM"><span class="field">Address</span> <input name='address1' type='text' size='30' placeholder='Address' class='textfadd' required='required'  value="f"/> 
+					<input name='address2' type='text' size='30' placeholder='Address (Line 2)' class='textfadd1'/></div>
+					<div class="fieldM stateFix"><span class="field">City</span> <input name='city' type='text' size='30' placeholder='City' required='required' class='textfcity'  value="f"/> 	
+						<b>State</b> 
+						<div class='selectWrapperS'>
+							<select name='region' class='textfstate sprite'>
+								<option value='AL'>AL</option>
+								<option value='AK'>AK</option>
+								<option value='AZ'>AZ</option>
+								<option value='AR'>AR</option>
+								<option value='CA'>CA</option>
+								<option value='CO'>CO</option>
+								<option value='CT'>CT</option>
+								<option value='DE'>DE</option>
+								<option value='DC'>DC</option>
+								<option value='FL'>FL</option>
+								<option value='GA'>GA</option>
+								<option value='HI'>HI</option>
+								<option value='ID'>ID</option>
+								<option value='IL'>IL</option>
+								<option value='IN'>IN</option>
+								<option value='IA'>IA</option>
+								<option value='KS'>KS</option>
+								<option value='KY'>KY</option>
+								<option value='LA'>LA</option>
+								<option value='ME'>ME</option>
+								<option value='MD'>MD</option>
+								<option value='MA'>MA</option>
+								<option value='MI'>MI</option>
+								<option value='MN'>MN</option>
+								<option value='MS'>MS</option>
+								<option value='MO'>MO</option>
+								<option value='MT'>MT</option>
+								<option value='NE'>NE</option>
+								<option value='NV'>NV</option>
+								<option value='NH'>NH</option>
+								<option value='NJ'>NJ</option>
+								<option value='NM'>NM</option>
+								<option value='NY'>NY</option>
+								<option value='NC'>NC</option>
+								<option value='ND'>ND</option>
+								<option value='OH'>OH</option>
+								<option value='OK'>OK</option>
+								<option value='OR'>OR</option>
+								<option value='PA'>PA</option>
+								<option value='RI'>RI</option>
+								<option value='SC'>SC</option>
+								<option value='SD'>SD</option>
+								<option value='TN'>TN</option>
+								<option value='TX'>TX</option>
+								<option value='UT'>UT</option>
+								<option value='VT'>VT</option>
+								<option value='VA'>VA</option>
+								<option value='WA'>WA</option>
+								<option value='WV'>WV</option>
+								<option value='WI'>WI</option>
+								<option value='WY'>WY</option>
+							</select>
+						</div>
+						<b>Zip</b> <input name='postal' type='text' size='10' placeholder='00000-0000' class='textfzip'/>
+					</div>
+					<div class="fieldM">
+						<div class="field selectField">Country</div> 
+						<div class='selectWrapperC'>
+							<select name="country" class="textfcountry sprite">
+								<option value='USA'>United States of America</option>
+							</select>
+						</div>
+					</div>
+					<div class="fieldM"><span class="field">E-mail</span> <input name='email' type='email' size='30' class='textfmail' placeholder='E-mail Address' required='required'  value="ryanm@zoovy.com" /> <b>Phone Number</b> <input name='phone' type='tel' size='12' placeholder='Phone Number' class='textfphone' required='required'  value="9516965769"/> </div>
+					<div class="fieldM"><span class="field">Password</span> <input name='pass' type='password' size='30' class='textfpass' placeholder='7-18 Characters' required='required'  value="12345678p" /> <b>Confirm Password</b> <input name='pass2' type='password' size='12' placeholder='Must be a match' class='textfphone' required='required'  value="12345678p"/> </div>
+					<!--<fieldset class='marginBottom'>
+						<legend>About Your Business</legend>
+						<div class="fieldM"><input name='order_volume' type='text' size='30' placeholder='Anticipated Order Volume' />
+						<input name='resaleid' type='text' size='30' placeholder='State Resale Permit' /></div>
+						<div class="fieldM"><input name='ein' type='text' size='30' placeholder='Company EIN/Tax ID' />
+						<input name='credit_limit' type='number' step='0.01' min='0' placeholder='Requested Credit Limit' /></div>
+					</fieldset>-->
+					<input type="submit" value="Create an Account" class="createButton pointer"></input>
+				</form>
+			</div>
+		</div>
+	</div>
   
   
   
@@ -1917,7 +2132,8 @@ The 'data-action' attribute is used to assign an onclick.
 				<h1 class='smallcaps'>First Time With Us?</h1>
 				<p>If you have never made a purchase at this web site and have never subscribed to this store's mailing list,
 					please choose this option.</p>
-				<button class='modalCreateButton tertiaryColorHover' onClick="return showContent('customer',{'show':'createaccount'});">Create an Account</button>
+				<!-- <button class='modalCreateButton tertiaryColorHover' onClick="return showContent('customer',{'show':'createaccount'});">Create an Account</button> -->
+				<button class='modalCreateButton tertiaryColorHover' onClick="app.ext.store_bmo.a.showAccountCreate();">Create an Account</button>
 			</div>
 
 			<div id="gotAccount"> 

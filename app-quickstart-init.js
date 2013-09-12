@@ -186,6 +186,7 @@ app.u.initMVC = function(attempts){
 	}
 	
 	app.u.selectPreference = function(preference, save){
+app.u.dump('I did!');
 	if(!app.preferenceSelected){
 		app.preferenceSelected = true;
 		if(typeof preference !== "undefined"){
@@ -228,6 +229,10 @@ app.u.appInitComplete = function(P)	{
 	if(app.preferenceSelected = true) {
 		if(localStorage.appPreferences == "signedUp") {
 			return showContent('customer',{'show':'myaccount'});
+		}
+		else if(localStorage.appPreferences == 'signMeUp') {		
+			localStorage.clear();
+			return app.ext.store_bmo.a.showAccountCreate();
 		}
 	}
 	else {app.u.dump("Executing myAppIsLoaded code...");}

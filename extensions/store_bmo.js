@@ -111,7 +111,7 @@ var store_bmo = function() {
 				else {
 					$errorDiv.anymessage({'message':errors});
 					}
-				showContent('customer',{'show':'myaccount'})
+				//showContent('customer',{'show':'myaccount'})
 			}, //loginFrmSubmit
 			
 			showMoreOptions : function($this, pid) {
@@ -120,12 +120,16 @@ var store_bmo = function() {
 				$('.anotherElement_'+_pid).show();
 			},
 			
+			showAccountCreate : function() {
+				$('#createaccountTemplate').dialog({'modal':'true','title':'Create Account','width':980,'height':500});
+			},
+			
 			showSizeChart : function() {
-				$('#sizingGuideTemplate').dialog({'modal':'true', 'title':'Sizing Guide','width':800, height:550});
+				$('#sizingGuideTemplate').dialog({'modal':'true', 'title':'Sizing Guide','width':800, 'height':550});
 			},
 			
 			showStyleChart : function() {
-				$('#styleGuideTemplate').dialog({'modal':'true', 'title':'Style Guide','width':800, height:550});
+				$('#styleGuideTemplate').dialog({'modal':'true', 'title':'Style Guide','width':800, 'height':550});
 			},
 		
 			pauseFred : function($this) {
@@ -342,6 +346,7 @@ var store_bmo = function() {
 			},	
 			
 			handleAppLoginCreate : function($form)	{
+				app.u.dump('got here!!!!!!!!!!!!!!!!!');
 				if($form)	{
 					var formObj = $form.serializeJSON();
 					
@@ -364,6 +369,10 @@ var store_bmo = function() {
 					
 					formObj._vendor = "bikinimo";
 					app.calls.appBuyerCreate.init(formObj,tagObj,'immutable');
+					
+					app.u.selectPreference('signedUp',true);
+					app.u.dump('Select preferance just ran');	
+					
 					app.model.dispatchThis('immutable');
 				}
 				else {
@@ -628,36 +637,6 @@ var store_bmo = function() {
 				document.title = title+" | BikiniMo";
 			}, //end setTitle
 			
-			handleAppLoginCreate : function($form)	{
-				if($form)	{
-					var formObj = $form.serializeJSON();
-					
-					if(formObj.pass !== formObj.pass2) {
-						app.u.throwMessage('Sorry, your passwords do not match! Please re-enter your password');
-						return;
-					}
-					
-					var tagObj = {
-						'callback':function(rd) {
-							if(app.model.responseHasErrors(rd)) {
-								$form.anymessage({'message':rd});
-							}
-							else {
-								showContent('customer',{'show':'myaccount'});
-								app.u.throwMessage(app.u.successMsgObject("Your account has been created!"));
-							}
-						}
-					}
-					
-					formObj._vendor = "bikinimo";
-					app.calls.appBuyerCreate.init(formObj,tagObj,'immutable');
-					app.model.dispatchThis('immutable');
-				}
-				else {
-					$('#globalMessaging').anymessage({'message':'$form not passed into myRIA.u.handleBuyerAccountCreate','gMessage':true});
-				}
-			},
-	
 			sansReviews : function($context) {
 				if($('.noReviews', $context).children().length === 0) {
 					app.u.dump('No reviews. Running existing messge check');
