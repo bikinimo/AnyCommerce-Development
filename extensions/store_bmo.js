@@ -28,7 +28,7 @@ var store_bmo = function() {
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 	vars : { 
-		eventdate : new Date("september 6, 2013 15:48:59")
+		eventdate : new Date("november 6, 2013 15:48:59")
 	},
 
 	callbacks : {
@@ -106,6 +106,7 @@ var store_bmo = function() {
 					app.calls.appBuyerLogin.init({"login":email,"password":password},{'callback':'authenticateBuyer','extension':'myRIA'});
 					app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
 //					app.calls.buyerProductLists.init('forgetme',{'callback':'handleForgetmeList','extension':'store_prodlist'},'immutable');
+					if(localStorage.appPreferences !== 'signedUp') {app.u.dump('tweety bird'); localStorage.appPreferences = 'signedUp';}
 					app.model.dispatchThis('immutable');
 					}
 				else {
@@ -138,32 +139,9 @@ var store_bmo = function() {
 			},
 		
 		//**************BELOW ARE FUNCTIONS THAT MAY BE USEFULL LATER BUT ARE NOT USED IN APP YET
-	
-			//copied from app-quickstart.js so additional parameter could be used to assign the error location (for diff. login screens)
-			loginFrmSubmit : function(email,password,errorDiv)	{
-				var errors = '';
-				$errorDiv = errorDiv.empty(); //make sure error screen is empty. do not hide or callback errors won't show up.
-
-				if(app.u.isValidEmail(email) == false){
-					errors += "Please provide a valid email address<br \/>";
-					}
-				if(!password)	{
-					errors += "Please provide your password<br \/>";
-					}
-				if(errors == ''){
-					app.calls.appBuyerLogin.init({"login":email,"password":password},{'callback':'authenticateBuyer','extension':'myRIA'});
-					app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
-//					app.calls.buyerProductLists.init('forgetme',{'callback':'handleForgetmeList','extension':'store_prodlist'},'immutable');
-					app.model.dispatchThis('immutable');
-					}
-				else {
-					$errorDiv.anymessage({'message':errors});
-					}
-				showContent('customer',{'show':'myaccount'})
-			}, //loginFrmSubmit
 			
 			//activates drop down menus
-			showDropDown : function($tag) {
+	/*		showDropDown : function($tag) {
 				if(!$tag.data('timeoutNoShow') || $tag.data('timeoutNoShow') === 'false') {
 					var $dropdown = $('.dropdown',$tag);
 					var height = 0;
@@ -186,7 +164,7 @@ var store_bmo = function() {
 				}
 				return false;
 			},
-			
+	*/	 /*	
 			hideDropDown : function($tag) {
 				$('.dropdown',$tag).stop().animate({'height':'0px'},500);
 				if($tag.data('timeout') && $tag.data('timeout') !== 'false') {
@@ -199,7 +177,7 @@ var store_bmo = function() {
 				},500));
 				return true;
 			},
-		
+	*/ /*	
 			//places customer reviews on the product page
 			showReviews : function(pid, action, hide, show) {
 				var $context = $('#productTemplate_'+app.u.makeSafeHTMLId(pid));
@@ -212,7 +190,7 @@ var store_bmo = function() {
 					$(show, $context).show();
 				}, 250);
 			}, //END showReviews
-			
+	*/ /*		
 			//reverts customer reveiws to the product description on the product page
 			showDescription : function(pid, action, hide, show) {
 				var $context = $('#productTemplate_'+app.u.makeSafeHTMLId(pid));
@@ -226,7 +204,7 @@ var store_bmo = function() {
 					$(show, $context).show();
 				}, 250);
 			} //END showDescription
-		
+	*/	
 		}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -361,6 +339,8 @@ var store_bmo = function() {
 								$form.anymessage({'message':rd});
 							}
 							else {
+								localStorage.removeItem('appPreferences');
+								localStorage.appPreferences = 'signedUp';
 								showContent('customer',{'show':'myaccount'});
 								app.u.throwMessage(app.u.successMsgObject("Your account has been created!"));
 							}
@@ -368,11 +348,7 @@ var store_bmo = function() {
 					}
 					
 					formObj._vendor = "bikinimo";
-					app.calls.appBuyerCreate.init(formObj,tagObj,'immutable');
-					
-					app.u.selectPreference('signedUp',true);
-					app.u.dump('Select preferance just ran');	
-					
+					app.calls.appBuyerCreate.init(formObj,tagObj,'immutable');				
 					app.model.dispatchThis('immutable');
 				}
 				else {
@@ -394,6 +370,7 @@ var store_bmo = function() {
 				var count=Math.floor((app.ext.store_bmo.vars.eventdate.getTime()-d.getTime())/1000);
 			//	app.u.dump('count is: '); app.u.dump(count);
 
+			
 				if(count<=0) {
 					$('input[name=days]', cl).val('00');
 					$('input[name=hours]', cl).val('00');
