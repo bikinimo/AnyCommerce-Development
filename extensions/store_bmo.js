@@ -106,13 +106,14 @@ var store_bmo = function() {
 					app.calls.appBuyerLogin.init({"login":email,"password":password},{'callback':'authenticateBuyer','extension':'myRIA'});
 					app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
 //					app.calls.buyerProductLists.init('forgetme',{'callback':'handleForgetmeList','extension':'store_prodlist'},'immutable');
-					if(localStorage.appPreferences !== 'signedUp') {app.u.dump('tweety bird'); localStorage.appPreferences = 'signedUp';}
+					if(localStorage.appPreferences !== 'signedUp') {localStorage.appPreferences = 'signedUp';} //set preference to bypass loading offer in case it was nuked elsewhere
 					app.model.dispatchThis('immutable');
 					}
 				else {
 					$errorDiv.anymessage({'message':errors});
 					}
-				//showContent('customer',{'show':'myaccount'})
+				showContent('customer',{'show':'myaccount'})
+				//showContent('homepage',{})
 			}, //loginFrmSubmit
 			
 			showMoreOptions : function($this, pid) {
