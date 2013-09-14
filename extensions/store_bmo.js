@@ -28,7 +28,8 @@ var store_bmo = function() {
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 	vars : { 
-		eventdate : new Date("november 6, 2013 15:48:59")
+		//eventdate : new Date("november 6, 2013 15:48:59")
+		eventdate : "2013110615" //YYYYMMDDHH format
 	},
 
 	callbacks : {
@@ -423,11 +424,12 @@ var store_bmo = function() {
 			
 			countdown : function($context) {
 				
+				var endTime = new Date(app.ext.store_bmo.u.yyyymmdd2Pretty(app.ext.store_bmo.vars.eventdate));
+			//	app.u.dump('End Time is: '); app.u.dump(endTime);
+				
 				var cl = $('form[name="clock"]', $context);
 				var d = new Date();
-				var count=Math.floor((app.ext.store_bmo.vars.eventdate.getTime()-d.getTime())/1000);
-			//	app.u.dump('count is: '); app.u.dump(count);
-
+				var count=Math.floor((endTime.getTime()-d.getTime())/1000);
 			
 				if(count<=0) {
 					$('input[name=days]', cl).val('00');
@@ -453,6 +455,44 @@ var store_bmo = function() {
 					setTimeout(function(){app.ext.store_bmo.u.countdown($context);},1000);
 				}
 			},
+			
+			//returns text format of day of the week based on date object value passed in
+			getDOWFromDay : function(X)	{
+//				app.u.dump("BEGIN beachmart.u.getDOWFromDay ["+X+"]");
+				var weekdays = new Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
+				return weekdays[X];
+			},
+			
+			//returns text format of month of the year based on date object value passed in
+			getMonthFromNumber : function(X) {
+				var months = new Array('january','february','march','april','may','june','july','august','september','october','november','december');
+				return months[X];
+			},
+		
+			//returns: MONTH DAY, YEAR HOUR MIN SEC format. ie: september 14, 2013 16:48:10
+			yyyymmdd2Pretty : function(str)	{
+				var r = false;
+				if(Number(str))	{
+					var year = str.substr(0,4);
+					var month = Number(str.substr(4,2));
+					var day = str.substr(6,2);
+					var hour = str.substr(8,2);
+					var d = new Date();
+					//mins and secs may not always be passed, use value if they are, 0 if not
+					if (str.substr(10,2)) {var min = str.substr(10,2);}
+					else {var min = 0;}
+					if (str.substr(12,2)) {var sec = str.substr(12,2);}
+					else {var sec = 0;}
+					d.setFullYear(year, (month - 1), day);
+//					app.u.dump(" date obj: "); app.u.dump(d);
+//					app.u.dump(" -> YYYYMMDD2Pretty ["+str+"]: Y["+year+"]  Y["+month+"]  Y["+day+"] ");
+					r = this.getMonthFromNumber(d.getMonth())+" "+day+", "+year+" "+hour+":"+min+":"+sec;
+				}
+				else	{
+					app.u.dump("WARNING! the parameter passed into YYYYMMDD2Pretty is not a number ["+str+"]");
+				}
+				return r;
+			}, //yyyymmdd2Pretty 
 			
 			runHomeCarouselTab1 : function($context) {
 				var $target = $('.productList1',$context);
