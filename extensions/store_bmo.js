@@ -72,6 +72,21 @@ var store_bmo = function() {
 				onError : function (){
 					app.u.dump('BEGIN app.ext.store_bmo.callbacks.startExtension.onError');
 				}
+			},
+			
+			renderMatchingProduct : {
+				// call function with the data response passed as argument 
+				// (dataresponse is returned from the model when the API request returns, 
+				// generaly just a repeat of _tag object you passed, but contains error response durring an error)
+				onSuccess:function(responseData){		
+					// call anycontent (from anyplugins) on class to put content in ** '.match_'+app.data[responseData.datapointer].pid) **, 
+					//using the template you want to render with ** "matchingProductTemplate" **, using a pointr to the data that was returned ** "datapointer":responseData.datapointer **. 
+					app.u.dump(responseData.datapointer);// app.u.dump($('.prodViewerAddToCartForm ','.match_'+app.data[responseData.datapointer].pid));
+					$('.match_'+app.data[responseData.datapointer].pid).anycontent({"templateID":"matchingProductTemplate","datapointer":responseData.datapointer}); 
+				},
+				onError:function(responseData){	
+					app.u.dump('Error in extension: store_bmo renderMatchingProduct'); // error response goes here if needed
+				}
 			}
 			
 		}, //callbacks
@@ -215,6 +230,20 @@ var store_bmo = function() {
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 		
+			//adds class w/ pid of matching top or bottom of suit for product page that is loaded
+			//so that anyContent can locate in product page modal
+			addMatch : function($tag, data) {
+				if(typeof app.data['appProductGet|'+data.value.pid] == 'object') {
+					var pdata = app.data['appProductGet|'+data.value.pid]['%attribs'];
+					if(app.u.isSet(pdata['user:matching_piece'])){
+						var matchData = pdata['user:matching_piece'];
+					}
+				}
+				//$tag.attr('data-pid',data.value.pid);
+				$tag.addClass('match_'+matchData);
+			},
+			
+			//add class w/ pid to be used as a selector for moreOptions section in prod page modal
 			classyId : function($tag, data) {
 				if(data.value.pid){
 					var pid = app.u.makeSafeHTMLId(data.value.pid)
@@ -271,6 +300,34 @@ var store_bmo = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+		
+			//anyContent to add matching top or bottom to a top or bottom prod page
+			loadMatchingProduct : function(pid) {
+			//	app.u.dump('PID:'); app.u.dump(pid);
+				
+				if(typeof app.data['appProductGet|'+pid] == 'object') {
+					var pdata = app.data['appProductGet|'+pid]['%attribs'];
+				//	app.u.dump('pdata'); app.u.dump(pdata);
+					if(app.u.isSet(pdata['user:matching_piece'])){
+						var matchData = pdata['user:matching_piece'];
+				//		app.u.dump('Matchdata'); app.u.dump(matchData);
+					}
+				}
+				
+				var obj = {									// object to hold product id for product
+					"pid" : matchData
+				};
+					//console.debug(obj);					// see what was returned in console
+				var _tag = {								// create holder for call back
+					"callback":"renderMatchingProduct",		// call back function (in callbacks above)
+					"extension":"store_bmo"					// extension that holds call back (this extension you're in)
+				};
+				app.calls.appProductGet.init(obj, _tag);	// call appProductGet.init on the product id with the callback and callback location
+					
+				
+				//execute calls
+				app.model.dispatchThis('mutable');			
+			},
 
 			//obj is going to be the container around the img. probably a div.
 			//the internal img tag gets nuked in favor of an ordered list.
