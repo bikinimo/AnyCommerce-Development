@@ -66,6 +66,8 @@ var store_bmo = function() {
 				onSuccess : function() {
 					if(app.ext.myRIA && app.ext.myRIA.template){
 						app.u.dump("store_bmo Extension Started");
+						$.extend(handlePogs.prototype,app.ext.store_bmo.variations);
+						app.u.dump('*** Extending Pogs');
 					} else	{
 						setTimeout(function(){app.ext.store_bmo.callbacks.startExtension.onSuccess()},250);
 					}
@@ -774,7 +776,58 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 //while no naming convention is stricly forced, 
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
-			} //e [app Events]
+			}, //e [app Events]
+			
+		
+
+		variations : {
+		
+			renderOptionCUSTOMSELECT : function(pog) {
+			
+				app.u.dump('POG -> '); app.u.dump(pog);
+
+			//	app.u.dump('BEGIN renderOptionSELECT for pog '+pog.id+' and safe id = '+safeid);
+				var pogid = pog.id;
+				var $parentDiv = $("<span class='someClassIKnow' \/>");
+				var $selectList = $("<select>").attr({"name":pogid});
+				var i = 0;
+				var len = pog.options.length;
+
+				var selOption; //used to hold each option added to the select
+				var optionTxt;
+
+			//if the option is 'optional' AND has more than one option, add blank prompt. If required, add a please choose prompt first.
+				if(len > 0)	{
+					optionTxt = (pog['optional'] == 1) ?  "" :  "Please choose (one required)";
+					selOption = "<option value='' disable='disabled' selected='selected'>"+optionTxt+"<\/option>";
+					$selectList.append(selOption);
+					}
+			//adds options to the select list.
+				while (i < len) {
+					optionTxt = pog['options'][i]['prompt'];
+					if(pog['options'][i]['p'])
+						optionTxt += pogs.handlePogPrice(pog['options'][i]['p']); //' '+pog['options'][i]['p'][0]+'$'+pog['options'][i]['p'].substr(1);
+					selOption = "<option value='"+pog['options'][i]['v']+"'>"+optionTxt+"<\/option>";
+					$selectList.append(selOption);
+					i++;
+					}
+
+			//	app.u.dump(" -> pogid: "+pogid);
+			//	app.u.dump(" -> pog hint: "+pog['ghint']);
+				$selectList.appendTo($parentDiv);
+				if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
+				return $parentDiv;
+
+				
+			}, //renderOptionCUSTOMSELECT
+			
+			xinit : function(){
+				this.addHandler("type","select","renderOptionCUSTOMSELECT");
+				app.u.dump("--- RUNNING XINIT");
+			}
+		
+		} //variations
+			
 		} //r object.
 	return r;
 	}
