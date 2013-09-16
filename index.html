@@ -361,6 +361,30 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	</div>
 	
 	
+	<div id='limitedTimeOffersTemplate' class="perbox">
+		<div class="perboxleft">
+			<img src='blank.gif' data-bind="var:product(zoovy:prod_image1); format:imageURL;" width='153' height='231' />
+		</div>
+		
+		<div class="perboxright">
+			<h1>Perfect Fit Slimsuit Bikini in 3 Colors</h1>
+			<h2>Only: $49.00</h2>
+			<span>Regularly: $65.00 </span> 
+<!-- NEED ATC FORM HERE!!!! -->
+			<a href="#."><img src="images/add_cart.gif" alt="Add To Cart" border="0" class="addcart" title="Add To Cart" /></a><br clear="left" /></a>
+<!-- NEED ATC FORM HERE!!!! -->		
+			<span id="deal" class='visibilityHidden'>This deal has ended.<br />
+				check back soon for another deal!</span>
+			<div class="countmain">
+				<p>Time Remaining</p>
+				<FORM name="clock">
+					<div><INPUT name="days" size=2 class="counttext" readonly/><div class="colon">:</div><INPUT name="hours" class="counttext" size=2 readonly/><div class="colon">:</div><INPUT name="mins" class="counttext" size=2 readonly/><div class="colon">:</div><INPUT name="secs" class="counttext" size=2 readonly/></div>
+				</FORM>
+			</div>
+		</div>
+	</div>
+	
+	
   <!--
 used to organize content when a category is clicked.
 each of the 'sections' are used to load another template. don't change the id.
