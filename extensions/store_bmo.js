@@ -105,14 +105,17 @@ var store_bmo = function() {
 			addToCart : function($this) {
 			//	app.u.dump('First:'); app.u.dump($('select.prodOpt:eq(0)',$this));
 			//	app.u.dump('Second: '); app.u.dump($('select.prodOpt:eq(1)',$this));
-				var pid = []; addThis = []; $opt = [];
+				
+				var pid = []; addThis = []; $opt = []; $form = [];
 				var qty = $('input[name="qty"]',$this).val();
 				for(var i = 0; i < 2; i++) {
+					$form[i] = $('form.prodViewerAddToCartForm:eq("'+i+'")',$this);
 					$opt[i] = $('select.prodOpt:eq("'+i+'")',$this);
-					var id = $('.zwarn:eq("'+i+'")',$this).attr('id').split('_');
-					pid[i] = id[1];
+			//		var id = $('.zwarn:eq("'+i+'")',$this).attr('id').split('_');
+			//		pid[i] = id[1];
 					if($opt[i].val()) {
-						addThis[i] = pid[i];
+						addThis[i] = app.ext.store_product.u.buildCartItemAppendObj($form[i]);
+			//			addThis[i] = pid[i];
 						//app.u.dump(addThis[i]);
 					}
 				}
@@ -122,7 +125,7 @@ var store_bmo = function() {
 				else {
 					for(var j = 0; j < 2; j++) {
 						if(addThis[j]) {
-							app.calls.cartItemAppend.init({"sku":pid[j],"qty":qty});
+							app.calls.cartItemAppend.init({"sku":$form[j],"qty":qty});
 							//app.u.dump('Buying this:'); app.u.dump(addThis[j]);
 						}
 					}
@@ -263,6 +266,16 @@ var store_bmo = function() {
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
+		
+			matchATCFormPID : function($tag, data) {
+				if(typeof app.data['appProductGet|'+data.value] == 'object') {
+					var pdata = app.data['appProductGet|'+data.value]['%attribs'];
+					if(app.u.isSet(pdata['user:matching_piece'])){
+						var matchData = pdata['user:matching_piece'];
+					}
+				}
+				$tag.append("<input type='hidden' name='sku' value='"+matchData+"' />");
+			},
 		
 			//adds class w/ pid of matching top or bottom of suit for product page that is loaded
 			//so that anyContent can locate in product page modal
@@ -815,7 +828,7 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 		
 			renderOptionCUSTOMSELECT : function(pog) {
 			
-				app.u.dump('POG -> '); app.u.dump(pog);
+			//	app.u.dump('POG -> '); app.u.dump(pog);
 
 			//	app.u.dump('BEGIN renderOptionSELECT for pog '+pog.id+' and safe id = '+safeid);
 				var pogid = pog.id;
@@ -854,7 +867,7 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 			
 			xinit : function(){
 				this.addHandler("type","select","renderOptionCUSTOMSELECT");
-				app.u.dump("--- RUNNING XINIT");
+				//app.u.dump("--- RUNNING XINIT");
 			}
 		
 		} //variations

@@ -262,6 +262,7 @@ formerly showCart
 				
 			removeItemBtn : function($tag,data)	{
 //nuke remove button for coupons.
+				app.u.dump('data.value:'); app.u.dump(data.value);
 				if(data.value.stid[0] == '%')	{$tag.remove()}
 				else if(data.value.asm_master)	{$tag.remove()}
 				else	{
