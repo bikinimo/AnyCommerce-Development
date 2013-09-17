@@ -135,7 +135,7 @@ $('#tabs-4').append(app.ext.analyzer.u.buildTagsList({'id':'tagList'}));
 				onError : function(responseData,uuid)	{
 	//throw some messaging at the user.  since the categories should have appeared in the left col, that's where we'll add the messaging.
 					app.u.dump("BEGIN analyzer.callbacks.handleFlexedit.onError");
-					app.u.handleErrors(responseData,uuid);
+					//app.u.handleErrors(responseData,uuid);
 					}
 				}, //handleFlexedit
 				
