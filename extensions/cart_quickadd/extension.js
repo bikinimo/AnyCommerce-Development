@@ -80,7 +80,7 @@ var cart_quickadd = function() {
 		a : {
 			//add this as the action on your form
 			addItemToCart : function($form)	{
-
+			
 				var quickAddCallback = function(rd){
 					var $QC = $("#quickaddCart")
 					$QC.hideLoading(); //only close on error. otherwise leave for removal in subsequent call.
