@@ -17,7 +17,7 @@ var app = {vars:{
 	"release":"201318.20130913182100",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
-	"checkoutAuthMode" : "required",//can be passive, active or required
+	"checkoutAuthMode" : "active",//can be passive, active or required
 	"testURL":"http://www.9a34ba.pop.zoovy.net/" //used ONLY if protocol is file: (for testing)
 	},u:{},rq:[]};
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -720,7 +720,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 				</div>
 			</div>
 			
-				<script language="javascript">
+<script language="javascript">
 function validateForm()
 {
 var x=document.forms["eMailer"]["yourname"].value;
