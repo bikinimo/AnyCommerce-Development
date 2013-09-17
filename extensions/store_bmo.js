@@ -102,6 +102,37 @@ var store_bmo = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 		
+			addToCart : function($this) {
+			//	app.u.dump('First:'); app.u.dump($('select.prodOpt:eq(0)',$this));
+			//	app.u.dump('Second: '); app.u.dump($('select.prodOpt:eq(1)',$this));
+				var pid = []; addThis = []; $opt = [];
+				var qty = $('input[name="qty"]',$this).val();
+				for(var i = 0; i < 2; i++) {
+					$opt[i] = $('select.prodOpt:eq("'+i+'")',$this);
+					var id = $('.zwarn:eq("'+i+'")',$this).attr('id').split('_');
+					pid[i] = id[1];
+					if($opt[i].val()) {
+						addThis[i] = pid[i];
+						//app.u.dump(addThis[i]);
+					}
+				}
+				if(!addThis.length) {
+					app.u.throwMessage('Sorry, you must select at least 1 item');
+				}
+				else {
+					for(var j = 0; j < 2; j++) {
+						if(addThis[j]) {
+							app.calls.cartItemAppend.init({"sku":pid[j],"qty":qty});
+							//app.u.dump('Buying this:'); app.u.dump(addThis[j]);
+						}
+					}
+					app.calls.refreshCart.init({'callback':function(){app.ext.myRIA.u.showCart();}},'immutable');
+					app.model.dispatchThis('immutable');
+				}
+				
+
+			},
+		
 			//allow only numbers in a form field, plus . ( ) -
 			checkForInt : function(evt) {
 				evt = ( evt ) ? evt : window.event;
@@ -303,7 +334,7 @@ var store_bmo = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
-		
+				
 			//anyContent to add matching top or bottom to a top or bottom prod page
 			loadMatchingProduct : function(pid) {
 			//	app.u.dump('PID:'); app.u.dump(pid);
@@ -788,8 +819,8 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 
 			//	app.u.dump('BEGIN renderOptionSELECT for pog '+pog.id+' and safe id = '+safeid);
 				var pogid = pog.id;
-				var $parentDiv = $("<span class='someClassIKnow' \/>");
-				var $selectList = $("<select>").attr({"name":pogid});
+				var $parentDiv = $("<span \/>");
+				var $selectList = $("<select  class='prodOpt'>").attr({"name":pogid});
 				var i = 0;
 				var len = pog.options.length;
 
