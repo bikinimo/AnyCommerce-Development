@@ -483,15 +483,26 @@ var store_bmo = function() {
 				return s+n.toString();
 			},
 			
+			makeHomeTimeMS : function() {
+				var d = new Date();
+				var localTime = d.getTime();
+				var localOffset = d.getTimezoneOffset() * 6000;
+				var UTC = localTime + localOffset;
+				var destOffset = 4; 
+				var homeTime = UTC + (3600000*destOffset);
+				return homeTime; 
+			},
+			
 			countdown : function($context) {
 				
 				var endTime = new Date(app.ext.store_bmo.u.yyyymmdd2Pretty(app.ext.store_bmo.vars.eventdate));
 			//	app.u.dump('End Time is: '); app.u.dump(endTime);
-				
+				//app.u.dump(app.ext.store_bmo.u.makeHomeTime() - 1);
 				var cl = $('form[name="clock"]', $context);
-				var d = new Date();
-				var count=Math.floor((endTime.getTime()-d.getTime())/1000);
-			
+			//	var d = new Date();
+			//	var count=Math.floor((endTime.getTime()-d.getTime())/1000);
+				var count=Math.floor((endTime.getTime()-app.ext.store_bmo.u.makeHomeTimeMS())/1000);
+
 				if(count<=0) {
 					$('input[name=days]', cl).val('00');
 					$('input[name=hours]', cl).val('00');

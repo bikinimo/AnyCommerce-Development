@@ -37,8 +37,11 @@ var store_bmo_lto = function() {
 					var $context = $(app.u.jqSelector('#', infoObj.parentID));
 					$.getJSON("extensions/limited_time_offer/products/products.json?_="+(new Date().getTime()))
 						.done(function(data){
-							app.u.dump(data);
-							app.u.dump(data.product.length)
+							//app.u.dump(data);
+							//app.u.dump(data.product.length)
+							for(var i = 0; i < data.product.length; i++) {
+								app.u.dump(data.product[i]);
+							}
 						});
 				}]);
 				
