@@ -60,8 +60,14 @@ jQuery.extend(zController.prototype, {
 		if(app.u.getParameterByName('flush') == 1)	{
 			app.u.dump("URI param flush is true. CLEAR LOCAL STORAGE");
 /*bmo*/		//localStorage.clear();
-/*bmo*/		app.ext.store_bmo.a.handleLocalStorage();			
-			}
+/*bmo*/		if(localStorage.appPreferences == 'signedUp') { //user has an account lets keep that info intact
+/*bmo*/			localStorage.clear(); //clear everything from localStorage.
+/*bmo*/			localStorage.appPreferences = 'signedUp'; //add indication that user has account back into localStorage
+/*bmo*/		}
+/*bmo*/		else { //no indication that user has account kill'em all
+/*bmo*/			localStorage.clear(); //clear everything from localStorage.
+/*bmo*/		}			
+		}
 		
 		app.vars.debug = app.u.getParameterByName('debug'); //set a var for this so the URI doesn't have to be checked each time.
 //in some cases, such as the zoovy UI, zglobals may not be defined. If that's the case, certain vars, such as jqurl, must be passed in via P in initialize:
