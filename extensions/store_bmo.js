@@ -84,7 +84,7 @@ var store_bmo = function() {
 				onSuccess:function(responseData){		
 					// call anycontent (from anyplugins) on class to put content in ** '.match_'+app.data[responseData.datapointer].pid) **, 
 					//using the template you want to render with ** "matchingProductTemplate" **, using a pointr to the data that was returned ** "datapointer":responseData.datapointer **. 
-					//app.u.dump(responseData.datapointer);// app.u.dump($('.prodViewerAddToCartForm ','.match_'+app.data[responseData.datapointer].pid));
+					//app.u.dump('ResponseData pointer'); app.u.dump(responseData.datapointer);// app.u.dump($('.prodViewerAddToCartForm ','.match_'+app.data[responseData.datapointer].pid));
 					$('.match_'+app.data[responseData.datapointer].pid).anycontent({"templateID":"matchingProductTemplate","datapointer":responseData.datapointer}); 
 				},
 				onError:function(responseData){	
@@ -361,21 +361,19 @@ var store_bmo = function() {
 			//anyContent to add matching top or bottom to a top or bottom prod page
 			loadMatchingProduct : function(pid) {
 				//app.u.dump('PID:'); app.u.dump(pid);
-				var matchdata = "";
-				var test = app.data['appProductGet|'+pid];
-				app.u.dump('app get'); app.u.dump(test);
+				var matchData = "";
 				if(typeof app.data['appProductGet|'+pid] == 'object') { 
 					if(app.data['appProductGet|'+pid]) {
-						var pdata = app.data['appProductGet|'+pid]['%attribs']; 
+						var pdata = app.data['appProductGet|'+pid]['%attribs'];
 						//app.u.dump('pdata'); app.u.dump(pdata);
 						if(app.u.isSet(pdata['user:matching_piece'])){
 							matchData = pdata['user:matching_piece'];
-							//app.u.dump('Matchdata'); app.u.dump(matchData);
+							//app.u.dump('matchData'); app.u.dump(matchData);
 						}
 					}
 				}
 				
-				if(matchdata) {	
+				if(matchData) {
 					var obj = {									// object to hold product id for product
 						"pid" : matchData
 					};
