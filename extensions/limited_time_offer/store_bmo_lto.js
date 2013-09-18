@@ -17,8 +17,8 @@
 ************************************************************** */
 
 
-var stor_bmo_lto = function() {
-
+var store_bmo_lto = function() {
+	var theseTemplates = new Array('');
 	var r = {
 	
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -29,10 +29,18 @@ var stor_bmo_lto = function() {
 		init : {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-
+				
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
 				
+				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj){
+					var $context = $(app.u.jqSelector('#', infoObj.parentID));
+					$.getJSON("extensions/limited_time_offer/products/products.json?_="+(new Date().getTime()))
+						.done(function(data){
+							app.u.dump(data);
+							app.u.dump(data.product.length)
+						});
+				}]);
 				
 				return r;
 				},
@@ -78,11 +86,11 @@ var stor_bmo_lto = function() {
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 			}, //e [app Events]
-		vars : {
-			paramsByPID : {
+	//	vars : {
+	//		paramsByPID : {
 				
-				}
-			}
+	//			}
+	//		}
 		} //r object.
 		
 	return r;
