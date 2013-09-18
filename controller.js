@@ -59,7 +59,8 @@ jQuery.extend(zController.prototype, {
 //used in conjunction with support/admin login. nukes entire local cache.
 		if(app.u.getParameterByName('flush') == 1)	{
 			app.u.dump("URI param flush is true. CLEAR LOCAL STORAGE");
-			localStorage.clear();
+/*bmo*/		//localStorage.clear();
+/*bmo*/		app.ext.store_bmo.a.handleLocalStorage();			
 			}
 		
 		app.vars.debug = app.u.getParameterByName('debug'); //set a var for this so the URI doesn't have to be checked each time.
@@ -1444,13 +1445,8 @@ AUTHENTICATION/USER
 			app.model.destroy('cartDetail'); //need the cart object to update again w/out customer details.
 			app.model.destroy('whoAmI'); //need this nuked too.
 			app.vars.cid = null; //used in soft-auth.
-/*bmo*/		if(localStorage.appPreferences == 'signedUp') { //user has an account lets keep that info intact
-/*bmo*/			localStorage.clear(); //clear everything from localStorage.
-/*bmo*/			localStorage.appPreferences = 'signedUp'; //add indication that user has account back into localStorage
-/*bmo*/		}
-/*bmo*/			else { //no indication that user has account kill'em all
-				localStorage.clear(); //clear everything from localStorage.
-/*bmo*/		}
+/*bmo*/		//localStorage.clear();
+/*bmo*/		app.ext.store_bmo.a.handleLocalStorage();
 			
 			app.calls.buyerLogout.init({'callback':'showMessaging','message':'Thank you, you are now logged out'});
 			app.calls.refreshCart.init({},'immutable');

@@ -101,6 +101,16 @@ var store_bmo = function() {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
+			
+			handleLocalStorage : function() {
+				if(localStorage.appPreferences == 'signedUp') { //user has an account lets keep that info intact
+				localStorage.clear(); //clear everything from localStorage.
+				localStorage.appPreferences = 'signedUp'; //add indication that user has account back into localStorage
+				}
+				else { //no indication that user has account kill'em all
+					localStorage.clear(); //clear everything from localStorage.
+				}
+			},
 		
 			addToCart : function($this) {
 			//	app.u.dump('First:'); app.u.dump($('select.prodOpt:eq(0)',$this));
