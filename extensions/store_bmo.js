@@ -363,7 +363,7 @@ var store_bmo = function() {
 				//app.u.dump('PID:'); app.u.dump(pid);
 				var matchdata = "";
 				var test = app.data['appProductGet|'+pid];
-				//app.u.dump('app get'); app.u.dump(test);
+				app.u.dump('app get'); app.u.dump(test);
 				if(typeof app.data['appProductGet|'+pid] == 'object') { 
 					if(app.data['appProductGet|'+pid]) {
 						var pdata = app.data['appProductGet|'+pid]['%attribs']; 

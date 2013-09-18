@@ -625,7 +625,7 @@ NOTES
 					
 					$parent.dialog('open');
 					
-/*bmo*/				//handler too allow modal to close when clicked outside of, removed when modal is closed
+/*bmo*/				//handler to allow modal to close when clicked outside of, removed when modal is closed
 /*bmo*/				var documentHandler = (function(mod) {
 /*bmo*/					if(!$(mod.target).parents().filter('.ui-dialog').length) {
 /*bmo*/						$parent.dialog('close');
@@ -654,6 +654,7 @@ NOTES
 						else	{
 							$parent.dialog( "option", "title", app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'] );
 							$parent.anycontent({'templateID':P.templateID,'datapointer':"appProductGet|"+P.pid});
+							app.ext.store_bmo.u.loadMatchingProduct(P.pid);
 							}
 						}});
 					app.ext.store_product.calls.appReviewsList.init(P.pid); //

@@ -1147,7 +1147,6 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 					if(pageType == 'product' && infoObj.pid)	{
 						app.ext.store_product.u.prodDataInModal(infoObj);
 						_gaq.push(['_trackEvent','Quickview','User Event','product',infoObj.pid]);
-						app.ext.store_bmo.u.loadMatchingProduct(infoObj.pid);
 						}
 						
 					else if(pageType == 'category' && infoObj.navcat)	{
