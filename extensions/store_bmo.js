@@ -362,7 +362,8 @@ var store_bmo = function() {
 			loadMatchingProduct : function(pid) {
 				//app.u.dump('PID:'); app.u.dump(pid);
 				var matchdata = "";
-				
+				var test = app.data['appProductGet|'+pid];
+				//app.u.dump('app get'); app.u.dump(test);
 				if(typeof app.data['appProductGet|'+pid] == 'object') { 
 					if(app.data['appProductGet|'+pid]) {
 						var pdata = app.data['appProductGet|'+pid]['%attribs']; 
@@ -483,7 +484,7 @@ var store_bmo = function() {
 				return s+n.toString();
 			},
 			
-			makeHomeTimeMS : function() {
+			makeUTCFloridaTimeMS : function() {
 				var d = new Date();
 				var localTime = d.getTime();
 				var localOffset = d.getTimezoneOffset() * 6000;
@@ -493,15 +494,24 @@ var store_bmo = function() {
 				return homeTime; 
 			},
 			
-			countdown : function($context) {
-				
+			millisecondsToYYMMDDHH : function(dateObj) {
+				var year = dateObj.getFullYear();
+				var month = dateObj.getMonth()+1;
+				var day = dateObj.getDate();
+				var hours = dateObj.getHours();
+				if (month < 10){month = '0'+month};
+				if (day < 10){day = '0'+day};
+				return year+month+day+hours;
+			},
+			
+			countdown : function($context) {				
 				var endTime = new Date(app.ext.store_bmo.u.yyyymmdd2Pretty(app.ext.store_bmo.vars.eventdate));
 			//	app.u.dump('End Time is: '); app.u.dump(endTime);
 				//app.u.dump(app.ext.store_bmo.u.makeHomeTime() - 1);
 				var cl = $('form[name="clock"]', $context);
 			//	var d = new Date();
 			//	var count=Math.floor((endTime.getTime()-d.getTime())/1000);
-				var count=Math.floor((endTime.getTime()-app.ext.store_bmo.u.makeHomeTimeMS())/1000);
+				var count=Math.floor((endTime.getTime()-app.ext.store_bmo.u.makeUTCFloridaTimeMS())/1000);
 
 				if(count<=0) {
 					$('input[name=days]', cl).val('00');

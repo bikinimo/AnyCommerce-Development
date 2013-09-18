@@ -39,9 +39,24 @@ var store_bmo_lto = function() {
 						.done(function(data){
 							//app.u.dump(data);
 							//app.u.dump(data.product.length)
+							var a = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
+							var endTime = app.ext.store_bmo.u.millisecondsToYYMMDDHH(a); //current time in Florida
 							for(var i = 0; i < data.product.length; i++) {
-								app.u.dump(data.product[i]);
+								var tprod = data.product[i];
+								//app.u.dump(tprod.date);
+								if(tprod.date <= endTime) {
+									app.u.dump('Ending date for'); app.u.dump(data.product[i]); app.u.dump('has already passed. Enter a later date in products.json.');
+									data.product[i] = "";
+									//app.u.dump(data.product[i]);
+								}
+// uncomment when				else if(!app.data['appProductGet|'+tprod.pid]) {
+// appProductGet| issue				app.u.dump('SKU for '); app.u.dump(data.product[i]); app.u.dump('does not pass validation. Enter a new SKU in products.json');
+// is resolved						data.product[i] = "";
+//								}
 							}
+							app.ext.store_bmo_lto.vars.params = $.extend(true, [], data.product);
+							//app.u.dump('data:'); app.u.dump(data.product);
+							//app.u.dump('params:'); app.u.dump(app.ext.store_bmo_lto.vars.params);
 						});
 				}]);
 				
@@ -89,11 +104,11 @@ var store_bmo_lto = function() {
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 			}, //e [app Events]
-	//	vars : {
-	//		paramsByPID : {
+		vars : {
+			params : {
 				
-	//			}
-	//		}
+				}
+			}
 		} //r object.
 		
 	return r;
