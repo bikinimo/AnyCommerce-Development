@@ -20,6 +20,12 @@
 var store_bmo_lto = function() {
 	var theseTemplates = new Array('');
 	var r = {
+
+		vars : {
+			params : {
+			}
+		},
+
 	
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -35,12 +41,14 @@ var store_bmo_lto = function() {
 				
 				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj){
 					var $context = $(app.u.jqSelector('#', infoObj.parentID));
+						//get the sku/data product array from products.json
 					$.getJSON("extensions/limited_time_offer/products/products.json?_="+(new Date().getTime()))
 						.done(function(data){
 							//app.u.dump(data);
 							//app.u.dump(data.product.length)
 							var a = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
 							var endTime = app.ext.store_bmo.u.millisecondsToYYMMDDHH(a); //current time in Florida
+								//loop through and make sure that products exist and end dates are not in the past
 							for(var i = 0; i < data.product.length; i++) {
 								var tprod = data.product[i];
 								//app.u.dump(tprod.date);
@@ -54,9 +62,25 @@ var store_bmo_lto = function() {
 // is resolved						data.product[i] = "";
 //								}
 							}
-							app.ext.store_bmo_lto.vars.params = $.extend(true, [], data.product);
+
+								//records for products that do not exist or have past dates will be set to ""
+								//check for the first non "" index and use its record for anyContent
+							for (var j = 0; j < data.product.length; j++) {
+								if(data.product[j] != "") {
+									app.ext.store_bmo_lto.vars.params = data.product[j];
+									break;
+								}
+								// !!!DEFAULT TO SHOW HERE IF LIST END IS REACHED?
+							}
+							//app.u.dump('the beat goes on'); app.u.dump(app.ext.store_bmo_lto.vars.params);
+							//app.ext.store_bmo_lto.vars.params = $.extend(true, [], data.product);
 							//app.u.dump('data:'); app.u.dump(data.product);
 							//app.u.dump('params:'); app.u.dump(app.ext.store_bmo_lto.vars.params);
+							
+								//set event date to that of the chosen record
+							app.ext.store_bmo.vars.eventdate = app.ext.store_bmo_lto.vars.params.date;
+								//start any content for LTO section
+							app.ext.store_bmo_lto.u.loadLTOProduct();
 						});
 				}]);
 				
@@ -94,8 +118,31 @@ var store_bmo_lto = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+		
+			loadLTOProduct : function() {
+			
+				var prodLTO = app.ext.store_bmo_lto.vars.params.sku;
 				
-			}, //u [utilities]
+				if(matchData) {
+					var obj = {									// object to hold product id for product
+						"pid" : matchData
+					};
+						//console.debug(obj);					// see what was returned in console
+					var _tag = {								// create holder for call back
+						"callback":"renderMatchingProduct",		// call back function (in callbacks above)
+						"extension":"store_bmo"					// extension that holds call back (this extension you're in)
+					};
+					app.calls.appProductGet.init(obj, _tag);	// call appProductGet.init on the product id with the callback and callback location
+					
+					//execute calls
+					app.model.dispatchThis('mutable');			
+				}
+				else { //no match data don't add any content
+				}
+				
+			} //loadLTOProduct
+				
+		}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"
 //right now, these are not fully supported, but they will be going forward. 
@@ -104,11 +151,7 @@ var store_bmo_lto = function() {
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 			}, //e [app Events]
-		vars : {
-			params : {
-				
-				}
-			}
+
 		} //r object.
 		
 	return r;

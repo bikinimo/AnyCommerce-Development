@@ -29,7 +29,8 @@ var store_bmo = function() {
 
 	vars : { 
 		//eventdate : new Date("november 6, 2013 15:48:59")
-		eventdate : "2013110615" //YYYYMMDDHH format
+		//eventdate : "2013110615" //YYYYMMDDHH format
+		eventdate : "9999999999" //YYYYMMDDHH format
 	},
 
 	callbacks : {
