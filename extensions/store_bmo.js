@@ -82,11 +82,13 @@ var store_bmo = function() {
 				// call function with the data response passed as argument 
 				// (dataresponse is returned from the model when the API request returns, 
 				// generaly just a repeat of _tag object you passed, but contains error response durring an error)
-				onSuccess:function(responseData){		
+				onSuccess:function(responseData){	
+					app.u.dump(' -> renderMatchingProduct');
 					// call anycontent (from anyplugins) on class to put content in ** '.match_'+app.data[responseData.datapointer].pid) **, 
 					//using the template you want to render with ** "matchingProductTemplate" **, using a pointr to the data that was returned ** "datapointer":responseData.datapointer **. 
 					//app.u.dump('ResponseData pointer'); app.u.dump(responseData.datapointer);// app.u.dump($('.prodViewerAddToCartForm ','.match_'+app.data[responseData.datapointer].pid));
-					$('.match_'+app.data[responseData.datapointer].pid).anycontent({"templateID":"matchingProductTemplate","datapointer":responseData.datapointer}); 
+					//$('.match_'+app.data[responseData.datapointer].pid).anycontent({"templateID":"matchingProductTemplate","datapointer":responseData.datapointer}); 
+					responseData.$container.anycontent({"templateID":responseData.loadsTemplate,"datapointer":responseData.datapointer}); 
 				},
 				onError:function(responseData){	
 					app.u.dump('Error in extension: store_bmo renderMatchingProduct'); // error response goes here if needed
@@ -116,33 +118,65 @@ var store_bmo = function() {
 			addToCart : function($this) {
 			//	app.u.dump('First:'); app.u.dump($('select.prodOpt:eq(0)',$this));
 			//	app.u.dump('Second: '); app.u.dump($('select.prodOpt:eq(1)',$this));
-				
+				app.u.dump('-> store_bmo addToCart');
 				var pid = []; addThis = []; $opt = []; $form = [];
 				var qty = $('input[name="qty"]',$this).val();
-				for(var i = 0; i < 2; i++) {
-					$form[i] = $('form.prodViewerAddToCartForm:eq("'+i+'")',$this);
-					$opt[i] = $('select.prodOpt:eq("'+i+'")',$this);
+				
+				var numCalls = 0;
+				$('form', $this).each(function(){
+					//app.u.dump($(this));
+					$(this).data('skipvalidation', true);
+					var cartObj = app.ext.store_product.u.buildCartItemAppendObj($(this));
+					
+					valid = true;
+					
+					//do validation
+					var someErrorHasOccurred = false;
+					if(someErrorHasOccurred){
+						valid = false;
+					}
+					
+					
+					if(valid)
+						numCalls++;
+						app.calls.cartItemAppend.init(cartObj,{},'immutable');	
+					} 
+				});
+				if(numCalls > 0){
+					app.model.destroy('cartDetail');
+					app.calls.cartDetail.init({'callback':function(rd){
+						showContent('cart',{});
+						}},'immutable');
+					app.model.dispatchThis('immutable');
+				} else {
+					//Notify user of problem
+					$('.messagingContainer', $this).anymessage(app.u.youErrObject("You must select variations for at least one product!"));
+				}
+				
+			//	for(var i = 0; i < 2; i++) {
+			//		$form[i] = $('form.prodViewerAddToCartForm:eq("'+i+'")',$this);
+			//		$opt[i] = $('select.prodOpt:eq("'+i+'")',$this);
 			//		var id = $('.zwarn:eq("'+i+'")',$this).attr('id').split('_');
 			//		pid[i] = id[1];
-					if($opt[i].val()) {
-						addThis[i] = app.ext.store_product.u.buildCartItemAppendObj($form[i]);
+			//		if($opt[i].val()) {
+			//			addThis[i] = app.ext.store_product.u.buildCartItemAppendObj($form[i]);
 			//			addThis[i] = pid[i];
 						//app.u.dump(addThis[i]);
-					}
-				}
-				if(!addThis.length) {
-					app.u.throwMessage('Sorry, you must select at least 1 item');
-				}
-				else {
-					for(var j = 0; j < 2; j++) {
-						if(addThis[j]) {
-							app.calls.cartItemAppend.init({"sku":$form[j],"qty":qty});
+			//		}
+			//	}
+			//	if(!addThis.length) {
+			//		app.u.throwMessage('Sorry, you must select at least 1 item');
+			//	}
+			//	else {
+			//		for(var j = 0; j < 2; j++) {
+			//			if(addThis[j]) {
+			//				app.calls.cartItemAppend.init({"sku":$form[j],"qty":qty});
 							//app.u.dump('Buying this:'); app.u.dump(addThis[j]);
-						}
-					}
-					app.calls.refreshCart.init({'callback':function(){app.ext.myRIA.u.showCart();}},'immutable');
-					app.model.dispatchThis('immutable');
-				}
+			//			}
+			//		}
+			//		app.calls.refreshCart.init({'callback':function(){app.ext.myRIA.u.showCart();}},'immutable');
+			//		app.model.dispatchThis('immutable');
+			//	}
 				
 
 			},
@@ -277,7 +311,27 @@ var store_bmo = function() {
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
-		
+			
+			loadProd : function($tag, data){
+				var obj = {									// object to hold product id for product
+					"pid" : data.value,
+					"withVariations":1,
+					"withInventory":1
+				};
+					//console.debug(obj);					// see what was returned in console
+				var _tag = {								// create holder for call back
+					"callback":"renderMatchingProduct",		// call back function (in callbacks above)
+					"extension":"store_bmo",			// extension that holds call back (this extension you're in)
+					"$container" : $tag,
+					"loadsTemplate" : data.bindData.loadsTemplate
+				};
+				app.calls.appProductGet.init(obj, _tag, 'immutable');	// call appProductGet.init on the product id with the callback and callback location
+				
+				//execute calls
+				app.model.dispatchThis('immutable');
+			},
+			
+			
 			matchATCFormPID : function($tag, data) {
 				if(typeof app.data['appProductGet|'+data.value] == 'object') {
 					var pdata = app.data['appProductGet|'+data.value]['%attribs'];
@@ -383,10 +437,10 @@ var store_bmo = function() {
 						"callback":"renderMatchingProduct",		// call back function (in callbacks above)
 						"extension":"store_bmo"					// extension that holds call back (this extension you're in)
 					};
-					app.calls.appProductGet.init(obj, _tag);	// call appProductGet.init on the product id with the callback and callback location
+					app.calls.appProductGet.init(obj, _tag, 'immutable');	// call appProductGet.init on the product id with the callback and callback location
 					
 					//execute calls
-					app.model.dispatchThis('mutable');			
+					app.model.dispatchThis('immutable');			
 				}
 				else { //no match data don't add any content
 				}

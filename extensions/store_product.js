@@ -654,7 +654,7 @@ NOTES
 						else	{
 							$parent.dialog( "option", "title", app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'] );
 							$parent.anycontent({'templateID':P.templateID,'datapointer':"appProductGet|"+P.pid});
-							app.ext.store_bmo.u.loadMatchingProduct(P.pid);
+							//app.ext.store_bmo.u.loadMatchingProduct(P.pid, $('.match_'+app.data["appProductGet|"+P.pid].pid) );
 							}
 						}});
 					app.ext.store_product.calls.appReviewsList.init(P.pid); //
