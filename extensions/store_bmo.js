@@ -337,7 +337,7 @@ var store_bmo = function() {
 				
 				
 				
-//**************BELOW ARE FUNCTIONS THAT MAY BE USEFULL LATER BUT ARE NOT USED IN APP YET
+/**************BELOW ARE FUNCTIONS THAT MAY BE USEFULL LATER BUT ARE NOT USED IN APP YET
 
 			//HIDE ZERO INVENTORY IN PRODUCT LISTS (MUST USE INFINITE SCROLL ON LISTS)
 			hideZeroInv : function($tag, data) {
@@ -351,7 +351,7 @@ var store_bmo = function() {
 					}
 				}
 			},
-			
+	*/		
 		}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -781,7 +781,7 @@ var store_bmo = function() {
 		
 		
 		
-/*******UTIL FUNCTIONS THAT WILL POSSIBLY BE USEFULL, BUT NOT PART OF APP YET*/		
+/*******UTIL FUNCTIONS THAT WILL POSSIBLY BE USEFULL, BUT NOT PART OF APP YET	
 			setTitle : function(title) {
 				if(title && typeof title === "string") {
 					//This is what is expected
@@ -812,7 +812,7 @@ var store_bmo = function() {
 					app.u.dump('Reviews exist, function aborted. Reviews length: '+$('.reviewsBind').children.length);
 				}
 			},
-		
+	*/	
 /*
 P.pid, P.templateID are both required.
 modal id is fixed. data-pid is updated each time a new modal is created.
@@ -820,7 +820,7 @@ if a modal is opened and p.pid matches data-pid, do NOT empty it. could be a mod
 if the P.pid and data-pid do not match, empty the modal before openeing/populating.
 !!! incomplete.
 */
-			showReviewFrmInline : function(P, hide)	{
+	/*		showReviewFrmInline : function(P, hide)	{
 				if(!P.pid || !P.templateID)	{
 					app.u.dump(" -> pid or template id left blank");
 					}
@@ -846,7 +846,7 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 					$('.prodWriteReviewContainer','#productTemplate_'+P.pid).css('display','block');
 					}
 				},
-		
+	*/	
 		}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"
