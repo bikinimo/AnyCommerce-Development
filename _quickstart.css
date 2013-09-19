@@ -52,13 +52,13 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 .bannerleft{margin:0px; padding:0px; float:left; width:609px;}
 .bannerright{margin:0 0 0 9px; padding:0px; float:left; width:346px;}
 .bannerright1{margin:0px; padding:0px; float:left; width:346px; height:10px;}
-.bannerright2{margin:0px; padding:0 14px; float:left; width:316px; border-left:1px solid #b1b1b1; border-right:1px solid #b1b1b1;}
+.bannerright2{margin:0px; padding:4px 14px 16px 14px; float:left; height:290px; width:316px; border:1px solid #b1b1b1; border-radius:5px;}
 .bannerright2 h1{margin:0px; padding:0px; font-size:42px; font-family:'Abel', serif; color:#54a7e1; font-weight:normal;}
 .perbox{margin:2px 0 4px 0; padding:0px; width:318px; float:left;}
 .perboxleft{margin:0px; padding:0px; width:153px; float:left;}
 .perboxright{margin:0 0 0 10px; padding:0px; width:155px; float:left; display:inline-block;}
 .perboxright h1{margin:0px; padding:0px; font-size:17px; color:#000000; font-family:'Ubuntu', serif;}
-.perboxright h2{margin:0px; padding:6px 0 0 0; font-size:18px; color:#ec1c24; font-family:'Ubuntu', serif; font-weight:bold;}
+.perboxright h2, .perboxright span.cents {margin:0px; padding:6px 0 0 0; font-size:18px; color:#ec1c24; font-family:'Ubuntu', serif; font-weight:bold;}
 .perboxright span{ color:#000000; font-size:10px; }
 .perboxright .addcart{margin:16px 0 10px 0; padding:0px; }
 .timerem{margin:12px 0 0 0; padding:0px;}
@@ -709,7 +709,7 @@ ul#topnav li span ul li a:hover{color:#34719e; text-decoration:none;}
 .clickab a{color:#276b98 !important; text-decoration:none;}
 .clickab a:hover{color:#333 !important; text-decoration:none;}
 .ztitle2 {color: #666666; font-size: 14px;  font-weight: bold; margin:10px 0 0 0; font-family:'Ubuntu',serif;}
-.price{color:#f05a24; font-size:13.5px !important;}
+.price, .perboxright span.cents {color:#f05a24; font-size:13.5px !important;}
 
 .basePrice{color:#f05a24; font-size:15.5px !important;}
 .basePrice h5{color:#000; font-size:12px; padding:2px 6px 0 0 ;}

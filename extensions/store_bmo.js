@@ -43,7 +43,7 @@ var store_bmo = function() {
 					var $context = $(app.u.jqSelector('#'+infoObj.parentID));
 					if(!$context.data('countingdown')) {
 						app.ext.store_bmo.u.countdown($context);
-						$context.data('countingdown');
+						$context.data('countingdown',true);
 					}
 					app.ext.store_bmo.u.runHomeCarouselTab1($context);
 					app.ext.store_bmo.u.runHomeCarouselTab2($context);

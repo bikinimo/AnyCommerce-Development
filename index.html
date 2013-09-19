@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"201318.20130913182100",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201318.20130918194800",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
@@ -264,10 +264,11 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<div class="bannerleft"><img src="images/banner1.jpg" alt="" /></div>
 			
 			<div class="bannerright">
-				<div class="bannerright1"><img src="images/limit_topcarv.gif" alt="" align="top" /></div>
+		<!--		<div class="bannerright1"><img src="images/limit_topcarv.gif" alt="" align="top" /></div> -->
 				<div class="bannerright2">
 					<h1>Limited Time Offers</h1>
-					<div class="perbox">
+					<div class="perbox limitedOffer"> <!-- limitedTimeOffersTemplate is loaded here -->	
+		<!--				
 						<div class="perboxleft"><img src="images/limiitpic1.jpg" /></div>
 						
 						<div class="perboxright">
@@ -283,10 +284,10 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 								</FORM>
 							</div>
 						</div>
+		-->			
 					</div>
 				</div>
-				
-				<div class="bannerright3"><img src="images/limit_botcarv.gif" alt="" /></div>
+		<!--		<div class="bannerright3"><img src="images/limit_botcarv.gif" alt="" /></div> -->
 			</div>
 		</div>
 		<div id='homepageTabs' style="margin:3px 0 0 0; width:962px; float:left;">
