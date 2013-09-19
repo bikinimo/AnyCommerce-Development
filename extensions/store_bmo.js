@@ -137,7 +137,7 @@ var store_bmo = function() {
 					}
 					
 					
-					if(valid)
+					if(valid){ 
 						numCalls++;
 						app.calls.cartItemAppend.init(cartObj,{},'immutable');	
 					} 
