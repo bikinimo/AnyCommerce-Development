@@ -619,39 +619,30 @@ NOTES
 					if($parent.length)	{$parent.empty()}
 					else	{
 						$parent = $("<div \/>").attr({"id":'product-modal',"title":""}).appendTo('body');
-/*bmo*/						$parent.dialog({modal: true,width:'auto',height:'auto',position:{my:"left top", at:"left+15% top+10%", of:window},autoOpen:false});
-						}
-					
+/*bmo*/					$parent.dialog({
+/*bmo*/						modal: true,width:'auto',
+/*bmo*/						height:'auto',
+/*bmo*/						position:{my:"left top", at:"left+15% top+10%", of:window},
+/*bmo*/						autoOpen:false,
+/*bmo*/						open : function(event, ui){ $('.ui-widget-overlay').on('click.closeModal', function(){$parent.dialog('close')});},
+/*bmo*/						close : function(event, ui){ 
+/*bmo*/							$('.ui-widget-overlay').off('click.closeModal');
+/*bmo*/							$('.productList1').trigger('play',true);
+/*bmo*/							$('.productList2').trigger('play',true);
+/*bmo*/							$('.productList3').trigger('play',true);
+/*bmo*/							$('.productList4').trigger('play',true);
+/*bmo*/						}
+/*bmo*/					});
+					}
 					
 					$parent.dialog('open');
-					
-/*bmo*/				//handler to allow modal to close when clicked outside of, removed when modal is closed
-/*bmo*/				var documentHandler = (function(mod) {
-/*bmo*/					if(!$(mod.target).parents().filter('.ui-dialog').length) {
-/*bmo*/						$parent.dialog('close');
-/*bmo*/						$('.productList1').trigger('play',true);
-/*bmo*/						$('.productList2').trigger('play',true);
-/*bmo*/						$('.productList3').trigger('play',true);
-/*bmo*/						$('.productList4').trigger('play',true); 
-/*bmo*/						$(document).unbind('click', documentHandler);
-/*bmo*/					}
-/*bmo*/				});		
-/*bmo*/
-/*bmo*/				//handler to be sure the above handler is removed when the close button is used,
-/*bmo*/				//otherwise modals will not open again
-/*bmo*/				var closeButHandler = (function() {
-/*bmo*/					$(document).unbind('click', closeButHandler);
-/*bmo*/				});
-/*bmo*/
-/*bmo*/				//binds handlers for modal close on click outside of modal
-/*bmo*/				setTimeout(function(){$(document).bind('click', documentHandler);},500);
-/*bmo*/				setTimeout(function(){$('.ui-dialog-titlebar-close', $parent.parent()).bind('click', closeButHandler);},500);
 
 					app.ext.store_product.calls.appProductGet.init(P.pid,{'callback': function(rd){
 						if(app.model.responseHasErrors(rd)){
 							$parent.anymessage({'message':rd});
 							}
 						else	{
+							
 							$parent.dialog( "option", "title", app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'] );
 							$parent.anycontent({'templateID':P.templateID,'datapointer':"appProductGet|"+P.pid});
 							//app.ext.store_bmo.u.loadMatchingProduct(P.pid, $('.match_'+app.data["appProductGet|"+P.pid].pid) );
