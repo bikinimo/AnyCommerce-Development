@@ -715,12 +715,13 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 		
 			<div class='displayNone' data-bind='var:product(user:matching_piece); format:showIfSet;'>
 				<div class='customATCForm'>
+				
+					<div class='atcPogErrors'></div>
+				
 					<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.store_bmo.a.addToCart($(this)); return false;"> 
 						<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 						<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'></fieldset>
 					</form>
-					
-					
 					
 					<form data-bind='var: product(pid); format:matchATCFormPID; extension:store_bmo;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.store_bmo.a.addToCart($(this)); return false;"> 
 						<span data-bind='var: product(user:matching_piece); format: loadProd; extension: store_bmo; loadsTemplate:matchingProductTemplate;'></span>

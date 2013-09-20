@@ -119,22 +119,119 @@ var store_bmo = function() {
 			//	app.u.dump('First:'); app.u.dump($('select.prodOpt:eq(0)',$this));
 			//	app.u.dump('Second: '); app.u.dump($('select.prodOpt:eq(1)',$this));
 				app.u.dump('-> store_bmo addToCart');
-				var pid = []; addThis = []; $opt = []; $form = [];
-				var qty = $('input[name="qty"]',$this).val();
+			//	var pid = []; addThis = []; $opt = []; $form = [];
+			//	var qty = $('input[name="qty"]',$this).val();
 				
+
 				var numCalls = 0;
 				$('form', $this).each(function(){
 					//app.u.dump($(this));
+					var id = $('.zwarn',$(this)).attr('id').split('_');
+					var pid = id[1];
+					var $form = $(this);
+					
 					$(this).data('skipvalidation', true);
 					var cartObj = app.ext.store_product.u.buildCartItemAppendObj($(this));
 					
-					valid = true;
+					var valid = true;
+		/*			var someErrorHasOccurred = false;
 					
 					//do validation
-					var someErrorHasOccurred = false;
+					$('form', $this).each(function(){
+						//app.u.dump('Cart Object:'); app.u.dump(cartObj);
+						$('select.prodOpt','form', $this).each(function(){
+							if(!$(this).val()){
+								someErrorHasOccurred = true;
+							}
+						});	
+					});
+
+					
 					if(someErrorHasOccurred){
 						valid = false;
 					}
+*/
+
+					if(pid && $form)	{
+						//copied locally for quick reference.
+						var sogJSON = app.data['appProductGet|'+pid]['@variations'],
+						formJSON = $form.serializeJSON();
+						console.debug($form.serializeJSON());
+						
+					//	app.u.dump('BEGIN validate_pogs. Formid ='+formId);
+					
+						if($.isEmptyObject(sogJSON))	{
+							app.u.dump('no sogs present (or empty object)'); //valid. product may not have sogs.
+							}
+						else if($.isEmptyObject(formJSON))	{
+				//			app.u.throwGMessage("In store_product.validate.addToCart, formJSON is empty.");
+							} //this shouldn't be empty. if it is, likely $form not valid or on DOM.
+						else	{
+							app.u.dump(" -> everything is accounted for. Start validating.");	
+							$('.appMessage',$form).empty().remove(); //clear all existing errors/messages.
+						
+							var thisSTID = pid, //used to compose the STID for inventory lookup.
+							inventorySogPrompts = '',//the prompts for sogs with inventory. used to report inventory messaging if inventory checks are performed
+							errors = '', pogid, pogType;
+							
+				//			app.u.dump(" -> formJSON: "); app.u.dump(formJSON);
+							
+				//No work to do if there are no sogs. 
+							if(sogJSON)	{
+					//			app.u.dump('got into the pogs-are-present validation');
+								for(var i = 0; i < sogJSON.length; i++)	{
+									pogid = sogJSON[i]['id']; //the id is used multiple times so a var is created to reduce number of lookups needed.
+									pogType = sogJSON[i]['type']; //the type is used multiple times so a var is created to reduce number of lookups needed.
+						
+									if(sogJSON[i]['optional'] == 1)	{
+										//if the pog is optional, validation isn't needed.			
+										}
+									else if (pogType == 'attribs' || pogType == 'hidden' || pogType == 'readonly' || pogType == 'cb'){
+										//these types don't require validation.
+										}
+						//Okay, validate what's left.
+									else	{
+						//If the option IS required (not set to optional) AND the option value is blank, AND the option type is not attribs (finder) record an error
+										if(formJSON[pogid]){}
+										else	{
+											valid = false;
+											errors += "<li>"+sogJSON[i]['prompt']+"<!--  id: "+pogid+" --><\/li>";
+											}
+						
+										}
+									
+									//compose the STID
+									if(sogJSON[i]['inv'] == 1)	{
+										thisSTID += ':'+pogid+formJSON[pogid];
+										inventorySogPrompts += "<li>"+sogJSON[i]['prompt']+"<\/li>";
+										}
+									
+									}
+								}
+					
+/****************/					
+					//		app.u.dump('past validation, before inventory validation. valid = '+valid);
+		/*				
+						//if errors occured, report them.
+							 if(valid == false)	{
+					//			app.u.dump(errors);
+								var errObj = app.u.youErrObject("Uh oh! Looks like you left something out. Please make the following selection(s):<ul>"+errors+"<\/ul>",'42');
+								errObj.parentID = 'JSONpogErrors_'+pid
+								app.u.throwMessage(errObj);
+								}
+						//if all options are selected AND checkinventory is on, do inventory check.
+							else if(valid == true && typeof zGlobals == 'object' && zGlobals.globalSettings.inv_mode > 1)	{
+						//		alert(thisSTID);
+								if(!$.isEmptyObject(app.data['appProductGet|'+pid]['@inventory']) && !$.isEmptyObject(app.data['appProductGet|'+pid]['@inventory'][thisSTID]) && app.data['appProductGet|'+pid]['@inventory'][thisSTID]['inv'] < 1)	{
+									var errObj = app.u.youErrObject("We're sorry, but the combination of selections you've made is not available. Try changing one of the following:<ul>"+inventorySogPrompts+"<\/ul>",'42');
+									errObj.parentID = 'JSONpogErrors_'+pid
+									app.u.throwMessage(errObj);
+									valid = false;
+									}
+						
+								}
+		*/					}
+						}
 					
 					
 					if(valid){ 
@@ -150,9 +247,12 @@ var store_bmo = function() {
 					app.model.dispatchThis('immutable');
 				} else {
 					//Notify user of problem
-					$('.messagingContainer', $this).anymessage(app.u.youErrObject("You must select variations for at least one product!"));
+					$('.atcPogErrors', $this).anymessage(app.u.youErrObject("You must select variations for at least one product!",'#'));
+					
 				}
-				
+			
+
+			
 			//	for(var i = 0; i < 2; i++) {
 			//		$form[i] = $('form.prodViewerAddToCartForm:eq("'+i+'")',$this);
 			//		$opt[i] = $('select.prodOpt:eq("'+i+'")',$this);
