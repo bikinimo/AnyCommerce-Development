@@ -116,42 +116,20 @@ var store_bmo = function() {
 			},
 		
 			addToCart : function($this) {
-			//	app.u.dump('First:'); app.u.dump($('select.prodOpt:eq(0)',$this));
-			//	app.u.dump('Second: '); app.u.dump($('select.prodOpt:eq(1)',$this));
-				app.u.dump('-> store_bmo addToCart');
-			//	var pid = []; addThis = []; $opt = []; $form = [];
-			//	var qty = $('input[name="qty"]',$this).val();
-				
-
+				//app.u.dump('-> store_bmo addToCart');
+	
 				var numCalls = 0;
 				$('form', $this).each(function(){
 					//app.u.dump($(this));
-					var id = $('.zwarn',$(this)).attr('id').split('_');
-					var pid = id[1];
-					var $form = $(this);
+					var id = $('.zwarn',$(this)).attr('id').split('_'); //get pid from id added render options
+					var pid = id[1]; 		//break pid out of id
+					var $form = $(this); 	//holder for the current form
 					
-					$(this).data('skipvalidation', true);
-					var cartObj = app.ext.store_product.u.buildCartItemAppendObj($(this));
-					
-					var valid = true;
-		/*			var someErrorHasOccurred = false;
-					
-					//do validation
-					$('form', $this).each(function(){
-						//app.u.dump('Cart Object:'); app.u.dump(cartObj);
-						$('select.prodOpt','form', $this).each(function(){
-							if(!$(this).val()){
-								someErrorHasOccurred = true;
-							}
-						});	
-					});
+					$(this).data('skipvalidation', true); //don't use native app validation
+					var cartObj = app.ext.store_product.u.buildCartItemAppendObj($(this)); //build cart object 
+					var valid = true; //check this to ensure options selected
 
-					
-					if(someErrorHasOccurred){
-						valid = false;
-					}
-*/
-
+					//validate
 					if(pid && $form)	{
 						//copied locally for quick reference.
 						var sogJSON = app.data['appProductGet|'+pid]['@variations'],
@@ -195,9 +173,9 @@ var store_bmo = function() {
 										if(formJSON[pogid]){}
 										else	{
 											valid = false;
-											errors += "<li>"+sogJSON[i]['prompt']+"<!--  id: "+pogid+" --><\/li>";
+											//maybe for later versions to specify exactly what isn't selected
+											//errors += "<li>"+sogJSON[i]['prompt']+"<!--  id: "+pogid+" --><\/li>";
 											}
-						
 										}
 									
 									//compose the STID
@@ -219,8 +197,9 @@ var store_bmo = function() {
 								errObj.parentID = 'JSONpogErrors_'+pid
 								app.u.throwMessage(errObj);
 								}
-						//if all options are selected AND checkinventory is on, do inventory check.
-							else if(valid == true && typeof zGlobals == 'object' && zGlobals.globalSettings.inv_mode > 1)	{
+		*/				//if all options are selected AND checkinventory is on, do inventory check.
+							//else 
+							if(valid == true && typeof zGlobals == 'object' && zGlobals.globalSettings.inv_mode > 1)	{
 						//		alert(thisSTID);
 								if(!$.isEmptyObject(app.data['appProductGet|'+pid]['@inventory']) && !$.isEmptyObject(app.data['appProductGet|'+pid]['@inventory'][thisSTID]) && app.data['appProductGet|'+pid]['@inventory'][thisSTID]['inv'] < 1)	{
 									var errObj = app.u.youErrObject("We're sorry, but the combination of selections you've made is not available. Try changing one of the following:<ul>"+inventorySogPrompts+"<\/ul>",'42');
@@ -230,15 +209,15 @@ var store_bmo = function() {
 									}
 						
 								}
-		*/					}
-						}
+							}
+						} //validation
 					
 					
 					if(valid){ 
 						numCalls++;
 						app.calls.cartItemAppend.init(cartObj,{},'immutable');	
 					} 
-				});
+				}); // form processing
 				if(numCalls > 0){
 					app.model.destroy('cartDetail');
 					app.calls.cartDetail.init({'callback':function(rd){
@@ -250,36 +229,7 @@ var store_bmo = function() {
 					$('.atcPogErrors', $this).anymessage(app.u.youErrObject("You must select variations for at least one product!",'#'));
 					
 				}
-			
-
-			
-			//	for(var i = 0; i < 2; i++) {
-			//		$form[i] = $('form.prodViewerAddToCartForm:eq("'+i+'")',$this);
-			//		$opt[i] = $('select.prodOpt:eq("'+i+'")',$this);
-			//		var id = $('.zwarn:eq("'+i+'")',$this).attr('id').split('_');
-			//		pid[i] = id[1];
-			//		if($opt[i].val()) {
-			//			addThis[i] = app.ext.store_product.u.buildCartItemAppendObj($form[i]);
-			//			addThis[i] = pid[i];
-						//app.u.dump(addThis[i]);
-			//		}
-			//	}
-			//	if(!addThis.length) {
-			//		app.u.throwMessage('Sorry, you must select at least 1 item');
-			//	}
-			//	else {
-			//		for(var j = 0; j < 2; j++) {
-			//			if(addThis[j]) {
-			//				app.calls.cartItemAppend.init({"sku":$form[j],"qty":qty});
-							//app.u.dump('Buying this:'); app.u.dump(addThis[j]);
-			//			}
-			//		}
-			//		app.calls.refreshCart.init({'callback':function(){app.ext.myRIA.u.showCart();}},'immutable');
-			//		app.model.dispatchThis('immutable');
-			//	}
-				
-
-			},
+			}, // addToCart
 		
 			//allow only numbers in a form field, plus . ( ) -
 			checkForInt : function(evt) {
