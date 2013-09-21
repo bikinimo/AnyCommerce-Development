@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"201318.20130919181800",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201318.20130921144900",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
@@ -657,9 +657,9 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 			</a>
 
 			<div class="viimgta">
-				<div data-bind="var: product(user:prod_videoid); format: assignAttribute; attribute: data-youtubeid;">
+				<div data-bind="var: product(youtube:videoid); format: assignAttribute; attribute: data-youtubeid;">
 					<!-- <img class="pointer" src="blank.gif" data-bind="var: product(user:prod_videoid); format:youtubeThumbnail; extension:myRIA;" onClick="app.ext.myRIA.a.showYoutubeInModal($(this).parent().data('youtubeid')); return false;" alt="" /> -->
-					<div class='pointer' data-bind="var: product(user:prod_videoid); format:youtubeIframe; extension:store_bmo;"></div>
+					<div class='pointer' data-bind="var: product(youtube:videoid); format:youtubeIframe; extension:store_bmo;"></div>
 				</div> 
 			</div>
 			<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs' class='prodThumbs' align="center"> 
