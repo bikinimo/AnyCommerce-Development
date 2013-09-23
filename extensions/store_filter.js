@@ -34,18 +34,22 @@ var store_filter = function() {
 	//key is safe id. value is name of the filter form.
 	filterMap : {
 	
-		".someCategoryPath":{ //category for filter
-			"filter": "someFilterName",	//name of filter form to use for this category
+		".70-g-string-thong-bikini":{ //category for filter
+			"filter": "bikiniSetsForm",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:500});}
 		},
 	
-	}
+	},
 
 	callbacks : {
 //executed when extension is loaded. should include any validation that needs to occur.
 		init : {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
+				
+				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
+					app.u.dump('Store_filter started');
+				}]);
 				
 				
 				//Filter Search:
@@ -94,16 +98,16 @@ var store_filter = function() {
 				
 				
 				return r;
-				},
-			onError : function()	{
+			},
+			onError : function() {
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
 				app.u.dump('BEGIN app.ext.store_filter.callbacks.init.onError');
-				}
-			},
+			}
+		}
 			
 			
-		}, //callbacks
+	}, //callbacks
 		
 		
 		
