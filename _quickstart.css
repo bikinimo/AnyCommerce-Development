@@ -1053,3 +1053,28 @@ createaccountArticle
 .fieldM input.textfphone {width:145px;}
 .Account .createButton {color:#ffffff; padding:15px; margin:10px auto; border:none; display:block; font-family:Electrolize; font-weight:bold; font-size:1.8em; background:#febc00; border-radius:4px;}
 .Account .createButton:hover {color:#febc00; background:#286c99;}
+
+
+/*************************************************************************************
+Layered search styles
+*************************************************************************************/
+
+.filterContainer {float:left;}
+.filterBox {height:auto; width:auto; background-color:#3BB3C3; margin-top:10px; font-family:"Open Sans";}
+.productColumn {width:auto;}
+.catTitle {height:35px; width:auto; margin: 0 10px; color:#3BB3C3; font-family:"Open Sans"; font-size:24px; font-weight:bold; line-height:32px; position:absolute; top:215px; left:530px; background:none;}
+.buyerGuides {height:30px; width:220px; border:2px solid #F8C301; position:absolute; top:215px; right:207px; color:#3BB3C3; text-align:center; font-family:"Open Sans"; font-size:14px; font-weight:bold; background:#F5F1DE;}
+.buyerGuides span {font-size:10px; color:#000000; font-weight:normal; display:block; margin:-4px 0 0 0;}
+.buyerGuides:hover {color:#E0463A;}
+.numItemsOnListContainer {height:30px; width:45px; position:absolute; top:253px; right:510px; overflow:hidden;}
+.numItemsOnList {background-color:#3bb3c3; width:67px; height:auto; border:none; color:#ffffff; background-image:url(images/sprites-500x500.png); background-position:-455px -183px;}
+.numItemsOnList option {text-align:center;}
+.categoryTemplateContainer {height:auto; width:761px;}
+label.break	{display:block; margin:0 0 4px 6px; color:#276B98; padding:0 0 0 23px; text-indent:-23px;}
+.layeredSearch	{height:auto; width:148px; margin:16px 0 16px 37px; color:#000000;}
+.layeredSearch legend	{font-size:1.0em; font-family:electrolize;  font-weight:normal; text-align:center; border:none; margin:0 0 4px 0; padding:0 5px; color:#F05A24;}
+.layeredSearch fieldset {border:1px solid #b1b1b1; border-radius:5px; margin-bottom:12px;} 
+.layeredSearch .sliderValue {height:auto; width:95%; text-align:center; margin:0 0 15px 0;}
+.layeredSearch .slider-range {width:90%; margin:auto;}
+.layeredSearch .resetButton {height:auto; width:100%; color:#ffffff; background-color:#276B98; border:none; border-radius:5px; box-shadow:2px 2px 1px 1px #b1b1b1; font-family:electrolize;  font-weight:bold; padding:5px; margin:10px auto; display:block;}
+
