@@ -38,8 +38,48 @@ var store_filter = function() {
 			"filter": "bikiniSetsForm",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:500});}
 		},
+		
+		".96-sexy-pajamas":{ //category for filter
+			"filter": "separatesForm",	//name of filter form to use for this category
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:500});}
+		},
+		
+		".02-tankinis":{ //category for filter
+			"filter": "tankinisForm",	//name of filter form to use for this category
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:500});}
+		},
+		
+		".015-swimdress":{ //category for filter
+			"filter": "tankinisForm",	//name of filter form to use for this category
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:500});}
+		},
+		
+		".85-one-piece-swimwear":{ //category for filter
+			"filter": "onePiecesForm",	//name of filter form to use for this category
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:500});}
+		},
+		
+		".45-solid-color-swimsuits":{ //category for filter
+			"filter": "solidColorsForm",	//name of filter form to use for this category
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:500});}
+		},
+		
+		".90-cover-up-swimwear":{ //category for filter
+			"filter": "tankinisForm",	//name of filter form to use for this category
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:500});}
+		},
+		
+		".96-sexy-pajamas":{ //category for filter
+			"filter": "tankinisForm",	//name of filter form to use for this category
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:500});}
+		},
+		
+		".95-swim-dress-swimwear":{ //category for filter
+			"filter": "tankinisForm",	//name of filter form to use for this category
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:500});}
+		},
 	
-	},
+	},//
 
 	callbacks : {
 //executed when extension is loaded. should include any validation that needs to occur.
