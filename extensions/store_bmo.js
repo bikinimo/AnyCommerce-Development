@@ -425,20 +425,19 @@ var store_bmo = function() {
 					
 			addInfiniteSlider : function($tag,data)	{
 //				app.u.dump("BEGIN store_bmo.renderFormats.addInfiniteSlider: "+data.value);
-		app.u.dump('GOT HERE...1');
-		//		if(typeof app.data['appProductGet|'+data.value] == 'object')	{
-		app.u.dump('GOT HERE...2');			app.u.dump(app.data['appProductGet|'+data.value]);
-					var pdata = app.data['appProductGet|'+data.value]['%attribs'];
-		app.u.dump('GOT HERE...3');			//if image 1 or 2 isn't set, likely there are no secondary images. stop.
+
+				if(typeof data.value == 'object')	{
+					var pdata = data.value['%attribs'];
+					//if image 1 or 2 isn't set, likely there are no secondary images. stop.
 					if(app.u.isSet(pdata['zoovy:prod_image1']) && app.u.isSet(pdata['zoovy:prod_image2']))	{
-						$tag.attr('data-pid',data.value); //no params are passed into picSlider function, so pid is added to tag for easy ref.
+						$tag.attr('data-pid',data.value.pid); //no params are passed into picSlider function, so pid is added to tag for easy ref.
 //						app.u.dump(" -> image1 ["+pdata['zoovy:prod_image1']+"] and image2 ["+pdata['zoovy:prod_image2']+"] both are set.");
 //adding this as part of mouseenter means pics won't be downloaded till/unless needed.
 // no anonymous function in mouseenter. We'll need this fixed to ensure no double add (most likely) if template re-rendered.
 //							$tag.unbind('mouseenter.myslider'); // ensure event is only binded once.
 							$tag.bind('mouseenter.myslider',app.ext.store_bmo.u.addPicSlider2UL);//.bind('mouseleave',function(){window.slider.kill()})
 						}
-		//			}
+					}
 				},
 				
 				
