@@ -516,7 +516,7 @@ params that are missing will be auto-generated.
 					if($tag)	{$tag.attr('id',plObj.parentID);}
 					else	{$tag = $('#'+plObj.parentID);}
 //a wrapper around all the prodlist content is created just one. Used in multipage to clear old multipage content. This allows for multiple multi-page prodlists on one page. Hey. it could happen.
-					if($('#'+plObj.parentID+'_container').length == 0)	{
+					if($('#'+plObj.parentID+'_containerP').length == 0)	{
 						if($tag.is('tbody'))	{
 							$tag.closest('table').wrap("<div id='"+plObj.parentID+"_container' />");
 							}

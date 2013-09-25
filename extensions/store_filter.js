@@ -100,6 +100,8 @@ var store_filter = function() {
 					app.u.dump("BEGIN categoryTemplate onCompletes for filtering");
 					if(app.ext.store_filter.filterMap[infoObj.navcat]) {
 						app.u.dump(" -> safe id DOES have a filter.");
+						
+						app.ext.store_filter.u.changeLayoutToFilter($context);
 
 						var $page = $(app.u.jqSelector('#',infoObj.parentID));
 						app.u.dump(" -> $page.length: "+$page.length);
@@ -124,11 +126,11 @@ var store_filter = function() {
 						}
 					}
 						
-						//selector for reset button to reload page
-						$('.resetButton', $context).click(function(){
-							$context.empty().remove();
-							showContent('category',{'navcat':infoObj.navcat});
-						});
+					//selector for reset button to reload page
+					$('.resetButton', $context).click(function(){
+						$context.empty().remove();
+						showContent('category',{'navcat':infoObj.navcat});
+					});
 
 				}]);
 				
@@ -226,7 +228,8 @@ var store_filter = function() {
 								}
 							}
 
-						},'datapointer':'appPublicSearch|elasticFiltering','templateID':'productListTemplateResultsNoPreview'});
+						//},'datapointer':'appPublicSearch|elasticFiltering','templateID':'productListTemplateResultsNoPreview'});
+						},'datapointer':'appPublicSearch|elasticFiltering','templateID':'productListTemplateResults'});
 						
 						app.model.dispatchThis();
 					}
@@ -257,6 +260,13 @@ var store_filter = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+		
+			changeLayoutToFilter : function($context) {
+				app.u.dump($context);
+				$context.css('display','inline-block');
+				$('.catContainer',$context).css({'width':'777px','float':'left'});
+				//width:777px;
+			},
 		
 			//pass in form as object.  This function will verify that each fieldset has the appropriate attributes.
 			//will also verify that each filterType has a getElasticFilter function.
