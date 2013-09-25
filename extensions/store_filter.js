@@ -262,10 +262,8 @@ var store_filter = function() {
 		u : {
 		
 			changeLayoutToFilter : function($context) {
-				app.u.dump($context);
 				$context.css('display','inline-block');
 				$('.catContainer',$context).css({'width':'777px','float':'left'});
-				//width:777px;
 			},
 		
 			//pass in form as object.  This function will verify that each fieldset has the appropriate attributes.
