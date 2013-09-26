@@ -425,8 +425,16 @@ var store_bmo = function() {
 					
 			addInfiniteSlider : function($tag,data)	{
 //				app.u.dump("BEGIN store_bmo.renderFormats.addInfiniteSlider: "+data.value);
-
-				if(typeof data.value == 'object')	{
+				
+				if(data.bindData.isElastic) { 
+					//app.u.dump(data.value);
+					$tag.bind('mouseenter.myslider',app.ext.store_bmo.u.addPicSlider2UL);
+					$tag.attr('data-images',data.value);
+					$tag.attr('data-lastic',true);
+					$tag.attr('data-pid','j381st');
+				}
+				
+				else if(typeof data.value == 'object') {
 					var pdata = data.value['%attribs'];
 					//if image 1 or 2 isn't set, likely there are no secondary images. stop.
 					if(app.u.isSet(pdata['zoovy:prod_image1']) && app.u.isSet(pdata['zoovy:prod_image2']))	{
@@ -496,38 +504,62 @@ var store_bmo = function() {
 				else { //no match data don't add any content
 				}
 			},
+			
+			addPicSlider2ElasticUL : function(info) {
+				app.u.dump('in addPicSlider2ElasticUL'); 
+	/*			var $obj = $(this);
+				if($obj.data('slider') == 'rendered') {
+					//do nothing. list has aready been generated.
+				}
+				else {
+					$obj.data('slider','rendered'); //used to determine if the ul contents have already been added.
+					app.u.dump($obj);
+				}
+	*/		},
 
 			//obj is going to be the container around the img. probably a div.
 			//the internal img tag gets nuked in favor of an ordered list.
-			addPicSlider2UL : function(){
+			addPicSlider2UL : function($tag, info){
 //				app.u.dump("BEGIN store_bmo.u.addPicSlider2UL");
 				
 				var $obj = $(this);
+		
 				if($obj.data('slider') == 'rendered') {
 					//do nothing. list has aready been generated.
-//					app.u.dump("the slideshow has already been rendered. re-init");
-				//	window.slider.kill(); //make sure it was nuked.
-				//	window.slider = new imgSlider($('ul',$obj))
 				}
 				else {
 					$obj.data('slider','rendered'); //used to determine if the ul contents have already been added.
 					var pid = $obj.attr('data-pid');
-//					app.u.dump(" -> pid: "+pid);
-					var data = app.data['appProductGet|'+pid]['%attribs'];
+//					app.u.dump(" -> pid: "+pid);					
 					var $img = $obj.find('img')
 					var width = $img.attr('width'); //using width() and height() here caused unusual results in the makeImage function below.
 					var height = $img.attr('height');
 					$obj.width(width).height(height).css({'overflow':'hidden','position':'relative'});
 					var $ul = $('<ul>').addClass('slideMe'); //.css({'height':height+'px','width':'20000px'}); /* inline width to override inheretance */
-					
+
 					var $li; //recycled.
-					for(var i = 2; i <= 10; i += 1)	{
-						if(data['zoovy:prod_image'+i])	{
-							$li = $('<li>').append(app.u.makeImage({"name":data['zoovy:prod_image'+i],"w":width,"h":height,"b":"FFFFFF","tag":1}));
-							$li.appendTo($ul);
-						}
+					if($obj.attr('data-lastic')){
+						var data = $obj.attr('data-images').split(',');
+						
+						for(var i = 2; i <= 10; i += 1)	{
+							if(data[i])	{
+								$li = $('<li>').append(app.u.makeImage({"name":data[i],"w":width,"h":height,"b":"FFFFFF","tag":1}));
+								$li.appendTo($ul);
+							}
+							else	{break} //end loop at first empty image spot.
+							}
+					} 
+					else { 
+						var data = app.data['appProductGet|'+pid]['%attribs'];
+						for(var i = 2; i <= 10; i += 1)	{
+							if(data['zoovy:prod_image'+i])	{
+								$li = $('<li>').append(app.u.makeImage({"name":data['zoovy:prod_image'+i],"w":width,"h":height,"b":"FFFFFF","tag":1}));
+								$li.appendTo($ul);
+							}
 						else	{break} //end loop at first empty image spot.
+						}
 					}
+					
 					$li = $("<li>").append($img);
 					$ul.prepend($li); //move the original image to the front of the list instead of re-requesting it. prevents a 'flicker' from happening
 					$obj.append($ul); //kill existing image. will b replaced w/ imagery in ul.
@@ -539,9 +571,9 @@ var store_bmo = function() {
 							transitionSpeed		: 3000,
 							displayProgressRing	: false,
 							imagePath			: "images/",
-							productID			: ''+pid
-						//	showControls		: false,	controls hidden w/ css, removing from plugin produced un-desired effects
-						//	autoPilot			: true
+							productID			: ''+pid,
+						//	showControls		: false,	//controls hidden w/ css, removing from plugin produced un-desired effects
+						//	autoPilot			: true		//turn on to make prod images party all night long!
 						}
 					);
 

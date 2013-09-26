@@ -8,6 +8,7 @@
  * @license CC Attribution-Share Alike 3.0 - http://creativecommons.org/licenses/by-sa/3.0/
  */
 (function($){
+
 	$.fn.extend({ 
 		infiniteCarousel: function(options)
 		{
@@ -42,6 +43,7 @@
 			var options = $.extend(defaults, options);
 	
     			return this.each(function() {
+//				app.u.dump('infiniteCarousel3 Started');
 				var o=options;
 				var obj = $(this);
 				var randID = Math.round(Math.random()*100000000);
@@ -249,12 +251,13 @@
 				{
 					$(obj).append('<div id="ic_controls_'+randID+'" class="ic_controls" style="background:url('+o.imagePath+'controls.png) no-repeat -12px 0;opacity:.5;cursor:pointer;height:10px;position:absolute;right:9px;top:10px;width:10px;z-index:1">');
 					if(!o.autoPilot) $('#ic_controls_'+randID).css('background-position','1px 0');
-					var $context = $('.prodThumbContainer',$("div").find("[data-pid = '"+o.productID+"']"));
 
-					$context.on('mouseenter', function(){
+					$(obj).off('mouseenter');
+					$(obj).on('mouseenter', function(){
 						play();
 					});
-					$context.on('mouseleave', function(){
+					$(obj).off('mouseleave');
+					$(obj).on('mouseleave', function(){
 						pause();
 					}); 
 					

@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"201318.20130923164700",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201318.20130925173300",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
@@ -520,13 +520,13 @@ SANITY -> if you change the height and width of this image, change the .minimalM
     
 		<li id='productListTemplateResults' class='loadingBG searchResultsProduct ' >
 			<div class='pointer' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')}); app.ext.store_bmo.a.pauseFred($(this).parent().parent());">
-				<div class='prodThumbContainer floatLeft'  data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'> 
+	<!--			<div class='prodThumbContainer floatLeft'  data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'> 
 					<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='150' height='210' /> 
 				</div>
-	<!-- 			<div class='prodThumbContainer floatLeft' data-bind='var:product(pid); format:addInfiniteSlider; extension:store_bmo;'> 
-					<img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='150' height='210' /> 
+	--> 			<div class='prodThumbContainer floatLeft' data-bind='var:product(images); format:addInfiniteSlider; extension:store_bmo; isElastic:true;'> 
+					<img src='blank.gif' alt='' data-bind='var: product(images); format:imageURL; isElastic:1; bgcolor:ffffff;' width='150' height='210' /> 
 				</div>
-	-->			<h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:truncText; numCharacters: 38;' style="min-height:15px; padding-top:5px; text-align:left;"></h5>
+				<h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:truncText; numCharacters: 38;' style="min-height:15px; padding-top:5px; text-align:left;"></h5>
 				<h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
 			</div>
 			<div class='hideInMinimalMode pointer moreDetails reltabmore' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});" style="display:none;"><img src="images/more_details.jpg"/></div>
