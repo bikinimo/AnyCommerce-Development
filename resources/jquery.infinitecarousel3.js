@@ -14,7 +14,6 @@
 		{
 			var defaults = 
 			{
-				productID: NaN,
 				transitionSpeed: 800,
 				displayTime: 6000,
 				displayProgressRing: true,

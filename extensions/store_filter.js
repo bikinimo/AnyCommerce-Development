@@ -87,9 +87,9 @@ var store_filter = function() {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				
-				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
-					app.u.dump('Store_filter started');
-				}]);
+			//	app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
+			//		app.u.dump('Store_filter started');
+			//	}]);
 				
 				
 				//Filter Search:

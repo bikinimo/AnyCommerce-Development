@@ -428,10 +428,11 @@ var store_bmo = function() {
 				
 				if(data.bindData.isElastic) { 
 					//app.u.dump(data.value);
-					$tag.bind('mouseenter.myslider',app.ext.store_bmo.u.addPicSlider2UL);
-					$tag.attr('data-images',data.value);
-					$tag.attr('data-lastic',true);
-					$tag.attr('data-pid','j381st');
+					if(data.value[1] && data.value[2]) { 
+						$tag.attr('data-images',data.value);
+						$tag.attr('data-lastic',true);
+						$tag.on('mouseenter.myslider',app.ext.store_bmo.u.addPicSlider2UL);
+					}
 				}
 				
 				else if(typeof data.value == 'object') {
@@ -441,9 +442,9 @@ var store_bmo = function() {
 						$tag.attr('data-pid',data.value.pid); //no params are passed into picSlider function, so pid is added to tag for easy ref.
 //						app.u.dump(" -> image1 ["+pdata['zoovy:prod_image1']+"] and image2 ["+pdata['zoovy:prod_image2']+"] both are set.");
 //adding this as part of mouseenter means pics won't be downloaded till/unless needed.
-// no anonymous function in mouseenter. We'll need this fixed to ensure no double add (most likely) if template re-rendered.
+//no anonymous function in mouseenter. We'll need this fixed to ensure no double add (most likely) if template re-rendered.
 //							$tag.unbind('mouseenter.myslider'); // ensure event is only binded once.
-							$tag.bind('mouseenter.myslider',app.ext.store_bmo.u.addPicSlider2UL);//.bind('mouseleave',function(){window.slider.kill()})
+							$tag.on('mouseenter.myslider',app.ext.store_bmo.u.addPicSlider2UL);//.bind('mouseleave',function(){window.slider.kill()})
 						}
 					}
 				},
@@ -530,7 +531,7 @@ var store_bmo = function() {
 				else {
 					$obj.data('slider','rendered'); //used to determine if the ul contents have already been added.
 					var pid = $obj.attr('data-pid');
-//					app.u.dump(" -> pid: "+pid);					
+					//app.u.dump(" -> pid: "+pid);					
 					var $img = $obj.find('img')
 					var width = $img.attr('width'); //using width() and height() here caused unusual results in the makeImage function below.
 					var height = $img.attr('height');
@@ -571,7 +572,6 @@ var store_bmo = function() {
 							transitionSpeed		: 3000,
 							displayProgressRing	: false,
 							imagePath			: "images/",
-							productID			: ''+pid,
 						//	showControls		: false,	//controls hidden w/ css, removing from plugin produced un-desired effects
 						//	autoPilot			: true		//turn on to make prod images party all night long!
 						}
