@@ -23,7 +23,7 @@ var store_bmo_lto = function() {
 
 		vars : {
 			params : {
-			}
+			},
 		},
 
 	
@@ -41,57 +41,64 @@ var store_bmo_lto = function() {
 				
 				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj){
 					var $context = $(app.u.jqSelector('#', infoObj.parentID));
+					var failSafeProd = '2654S';
+					var failSafeDate = '2012101910';
 					
 					if(!$context.data('hasLTO')) {
-							//get the sku/data product array from products.json
+						//get the sku/data product array from products.json
 						$.getJSON("extensions/limited_time_offer/products/products.json?_="+(new Date().getTime()))
 							.done(function(data){
-								//app.u.dump(data);
-								//app.u.dump(data.product.length)
-								var faultyProducts = data.product[data.product.length-1];
-						//		var failSafe = 'L253S';
-								var a = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
-								var endTime = app.ext.store_bmo.u.millisecondsToYYMMDDHH(a); //current time in Florida
-									//loop through and make sure that products exist and end dates are not in the past
-								for(var i = 0; i < data.product.length; i++) {
-									var tprod = data.product[i];
-									//app.u.dump(tprod.date);
-									if(tprod.date <= endTime) {
-										app.u.dump('Ending date for'); app.u.dump(data.product[i]); app.u.dump('has already passed. Enter a later date in products.json.');
-										data.product[i] = "";
-										//app.u.dump(data.product[i]);
-									}
-	// uncomment when				else if(!app.data['appProductGet|'+tprod.pid]) {
-	// appProductGet| issue				app.u.dump('SKU for '); app.u.dump(data.product[i]); app.u.dump('does not pass validation. Enter a new SKU in products.json');
-	// is resolved						data.product[i] = "";
-	//								}
+							//app.u.dump(data);
+							//app.u.dump(data.product.length)
+							var faultyProducts = data.product[data.product.length-1];
+							var a = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
+							var endTime = app.ext.store_bmo.u.millisecondsToYYMMDDHH(a); //current time in Florida
+								//loop through and make sure that products exist and end dates are not in the past
+							for(var i = 0; i < data.product.length; i++) {
+								var tprod = data.product[i];
+								//app.u.dump(tprod.date);
+								if(tprod.date <= endTime) {
+									app.u.dump('Ending date for'); app.u.dump(data.product[i]); app.u.dump('has already passed. Enter a later date in products.json.');
+									data.product[i] = "";
+									//app.u.dump(data.product[i]);
 								}
+// uncomment when				else if(!app.data['appProductGet|'+tprod.pid]) {
+// appProductGet| issue				app.u.dump('SKU for '); app.u.dump(data.product[i]); app.u.dump('does not pass validation. Enter a new SKU in products.json');
+// is resolved						data.product[i] = "";
+//								}
+							}
 
-									//records for products that do not exist or have past dates will be set to ""
-									//check for the first non "" index and use its record for anyContent
-								for (var j = 0; j < data.product.length; j++) {
-									if(data.product[j] != "") {
-										app.ext.store_bmo_lto.vars.params = data.product[j];
-										break;
-									}
-									else {
-										//default to last item in the list and this "deal has ended" text will be shown
-										if(faultyProducts != 'undefined') {app.ext.store_bmo_lto.vars.params = faultyProducts;}
-									}
-									
+								//records for products that do not exist or have past dates will be set to ""
+								//check for the first non "" index and use its record for anyContent
+							for (var j = 0; j < data.product.length; j++) {
+								if(data.product[j] != "") {
+									app.ext.store_bmo_lto.vars.params = data.product[j];
+									break;
 								}
-								//app.u.dump('the beat goes on'); app.u.dump(app.ext.store_bmo_lto.vars.params);
-								//app.ext.store_bmo_lto.vars.params = $.extend(true, [], data.product);
-								//app.u.dump('data:'); app.u.dump(data.product);
-								//app.u.dump('params:'); app.u.dump(app.ext.store_bmo_lto.vars.params);
-								
-									//set event date to that of the chosen record
-								app.ext.store_bmo.vars.eventdate = app.ext.store_bmo_lto.vars.params.date;
-									//start any content for LTO section
-								app.ext.store_bmo_lto.u.loadLTOProduct();
-								
-							});
-						$context.data('hasLTO',true);
+								else {
+									//default to last item in the list and this "deal has ended" text will be shown
+									if(faultyProducts != 'undefined') {app.ext.store_bmo_lto.vars.params = faultyProducts;}
+								}
+							}
+							//app.u.dump('the beat goes on'); app.u.dump(app.ext.store_bmo_lto.vars.params);
+							//app.ext.store_bmo_lto.vars.params = $.extend(true, [], data.product);
+							//app.u.dump('data:'); app.u.dump(data.product);
+							//app.u.dump('params:'); app.u.dump(app.ext.store_bmo_lto.vars.params);
+							
+								//set event date to that of the chosen record
+							app.ext.store_bmo.vars.eventdate = app.ext.store_bmo_lto.vars.params.date;
+								//start any content for LTO section
+							app.ext.store_bmo_lto.u.loadLTOProduct();
+							$context.data('hasLTO',true);
+							
+						}).fail(function() {
+								//reading the product record in products.json has failed message in console,
+								//display some product to fill space, set the date to past so it just looks like the deal is over until problem is fixed. 
+							app.u.dump('*** In store_bmo_lto and products.json was not read. Failsafe product is being displayed. Please correct the error in products.json');
+							app.ext.store_bmo_lto.vars.params.sku = failSafeProd;	//set default prod
+							app.ext.store_bmo.vars.eventdate = failSafeDate;		//set past date
+							app.ext.store_bmo_lto.u.loadLTOProduct();				//load this default info. w/ anyContent
+						}); //getJSON
 					}
 				}]);
 				
@@ -155,8 +162,8 @@ var store_bmo_lto = function() {
 				};
 					//console.debug(obj);					// see what was returned in console
 				var _tag = {								// create holder for call back
-					"callback":"renderLTOProduct",		// call back function (in callbacks above)
-					"extension":"store_bmo_lto"					// extension that holds call back (this extension you're in)
+					"callback":"renderLTOProduct",			// call back function (in callbacks above)
+					"extension":"store_bmo_lto"				// extension that holds call back (this extension you're in)
 				};
 				app.calls.appProductGet.init(obj, _tag);	// call appProductGet.init on the product id with the callback and callback location
 				
