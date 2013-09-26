@@ -373,7 +373,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<span>Regularly: $5,000,000</span> 
 
 			<!-- <a href="#."><img src="images/add_cart.gif" alt="Add To Cart" border="0" class="addcart" title="Add To Cart" /></a><br clear="left" /></a> -->
-			<div data-bind='var: product(pid); format:addToCartButton;'>
+			<div data-bind='var: product(pid); format:addToCartButton; extension:store_product;'>
 				<button class='addCart' data-bind='var:product(pid); format:assignAttribute; attribute:data-pid;' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).attr('data-pid')});">Get This Offer!</button>
 			</div>
 	

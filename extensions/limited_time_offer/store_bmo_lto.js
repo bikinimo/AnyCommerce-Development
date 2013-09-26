@@ -41,12 +41,15 @@ var store_bmo_lto = function() {
 				
 				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj){
 					var $context = $(app.u.jqSelector('#', infoObj.parentID));
+					
 					if(!$context.data('hasLTO')) {
 							//get the sku/data product array from products.json
 						$.getJSON("extensions/limited_time_offer/products/products.json?_="+(new Date().getTime()))
 							.done(function(data){
 								//app.u.dump(data);
 								//app.u.dump(data.product.length)
+								var faultyProducts = data.product[data.product.length-1];
+						//		var failSafe = 'L253S';
 								var a = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
 								var endTime = app.ext.store_bmo.u.millisecondsToYYMMDDHH(a); //current time in Florida
 									//loop through and make sure that products exist and end dates are not in the past
@@ -71,7 +74,11 @@ var store_bmo_lto = function() {
 										app.ext.store_bmo_lto.vars.params = data.product[j];
 										break;
 									}
-									// !!!DEFAULT TO SHOW HERE IF LIST END IS REACHED?
+									else {
+										//default to last item in the list and this "deal has ended" text will be shown
+										if(faultyProducts != 'undefined') {app.ext.store_bmo_lto.vars.params = faultyProducts;}
+									}
+									
 								}
 								//app.u.dump('the beat goes on'); app.u.dump(app.ext.store_bmo_lto.vars.params);
 								//app.ext.store_bmo_lto.vars.params = $.extend(true, [], data.product);
@@ -82,6 +89,7 @@ var store_bmo_lto = function() {
 								app.ext.store_bmo.vars.eventdate = app.ext.store_bmo_lto.vars.params.date;
 									//start any content for LTO section
 								app.ext.store_bmo_lto.u.loadLTOProduct();
+								
 							});
 						$context.data('hasLTO',true);
 					}

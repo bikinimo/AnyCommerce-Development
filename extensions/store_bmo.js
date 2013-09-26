@@ -656,6 +656,7 @@ var store_bmo = function() {
 					$('input[name=secs]', cl).val('00');
 					
 					$('#deal',$context).removeClass('visibilityHidden');
+					$('button','.perboxright',$context).addClass('visibilityHidden');
 					//document.getElementById("deal").style.display = 'block';
 				}
 				else {
