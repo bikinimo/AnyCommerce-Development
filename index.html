@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"201318.20130925173300",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201318.20130926174600",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
@@ -35,7 +35,7 @@ all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
 <link rel="stylesheet" href="js/jquery.countdown.css" />
-<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" />
 <link rel="stylesheet" type="text/css" href="_quickstart.css" />
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu">
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Abel">
@@ -103,15 +103,15 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
     <div id='globalMessaging' class='appMessaging'></div>
     <div class="header">
       <div class="headerone">
-        <div class="headerleft"><a href="#." ><img src="images/bikinimo_app_logo.png"  onClick="return showContent('category',{navcat: '.'});" alt="Bikinimo Swimwear" border="0" title="Bikinimo Swimwear" /></a></div>
+        <div class="headerleft"><a href="#!category?navcat=." data-onclick="#!category?navcat=."><img src="images/bikinimo_app_logo.png" alt="Bikinimo Swimwear" border="0" title="Bikinimo Swimwear" /></a></div>
         <div class="headerright">
           <div class="headerright1">
             <div class="topsecmenu">
-              <div class="contactsec"> <a href="#" onClick="return showContent('company',{'show':'contact'});">Contact</a><span>|</span><a href="#" onClick="return showContent('company',{'show':'faq'});">FAQ</a><span>|</span><a href="#" onClick="return showContent('customer',{'show':'myaccount'});">My Account</a><span>|</span><span class="loginShow username" onClick="return showContent('customer',{'show':'myaccount'});" ></span> <span class="loginShow"> <a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></span> <a href="#" onClick="return showContent('customer',{'show':'myaccount'});" class="loginHide">Login</a> <br />
-                <a href="#" onClick="return showContent('product',{pid: 'GC1000'});">Gift Cards</a><span>|</span><a href="#" onClick="app.ext.store_bmo.a.showSizeChart()">Sizing Guide</a> </div>
-              <div class="cartsec"><a href='#!cart?show=cart' class='bindByAnchor' style="text-decoration:none;"><img src="images/cartimg.gif" align="top" alt="" /><span class="cartItemCount"></span><span class="shopingbag">Items in Your Shopping Bag</span></a></div>
+              <div class="contactsec"> <a href="#!company?show=contact" data-onclick="#!company?show=contact">Contact</a><span>|</span><a href="#!company?show=faq" data-onclick="#!company?show=faq">FAQ</a><span>|</span><a href="#!customer?show=myaccount" data-onclick="#!customer?show=myaccount">My Account</a><span>|</span><a href="#!customer?show=myaccount" data-onclick="#!customer?show=myaccount"><span class="loginShow username"></span></a> <span class="loginShow"> <a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></span> <a href="#!customer?show=myaccount" data-onclick="#!customer?show=myaccount" class="loginHide">Login</a> <br />
+                <a href="#!product?pid=GC1000" data-onclick="#!product?pid=GC1000">Gift Cards</a><span>|</span><a href="#" onClick="app.ext.store_bmo.a.showSizeChart()">Sizing Guide</a> </div>
+              <div class="cartsec"><a href="#!cart?show=cart" data-onclick="#!cart?show=cart" style="text-decoration:none;"><img src="images/cartimg.gif" align="top" alt="" /><span class="cartItemCount"></span><span class="shopingbag">Items in Your Shopping Bag</span></a></div>
             </div>
-            <div class="gryimgright"><img src="http://placehold.it/57x57"></div>
+            <div class="gryimgright"><img src="https://placehold.it/57x57"></div>
           </div>
           <div class="headerright2">
             <label class="fl">Advanced Search</label>
@@ -171,26 +171,27 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
         <div class="custmser">
           <h1>Customer Service</h1>
           <ul>
-            <li><a href="#" onClick="return showContent('company',{'show':'contact'});">Contact Us</a></li>
-            <li><a href="#" onClick="return showContent('company',{'show':'privacy'});">Policies</a></li>
-            <li><a href="#" onClick="return showContent('company',{'show':'faq'});">FAQ</a></li>
-            <li><a href="#" onClick="return showContent('company',{'show':'size'});">Sizing Guide</a></li>
+            <!-- <li><a href="#" onClick="return showContent('company',{'show':'contact'});">Contact Us</a></li> -->
+            <li><a href="#!company?show=contact" data-onclick="#!company?show=contact">Contact Us</a></li>
+            <li><a href="#!company?show=privacy" data-onclick="#!company?show=privacy">Policies</a></li>
+            <li><a href="#!company?show=faq" data-onclick="#!company?show=faq">FAQ</a></li>
+            <li><a href="#!" onClick="app.ext.store_bmo.a.showSizeChart(); return false">Sizing Guide</a></li>
           </ul>
           <ul>
-            <li><a href="#" onClick="return showContent('customer',{'show':'myaccount'});">My Account</a></li>
-            <li><a href="#" onClick="return showContent('customer',{'show':'orders'});">Order Status</a></li>
-            <li><a href="#" onClick="return showContent('customer',{'show':'myaccount'});">Email Preferences</a></li>
-            <li><a href="#.">Style Guide</a></li>
+            <li><a href="#!customer?show=myaccount" data-onclick="#!customer?show=myaccount">My Account</a></li>
+            <li><a href="#!customer?show=orders" data-onclick="#!customer?show=orders">Order Status</a></li>
+            <li><a href="#!customer?show=myaccount" data-onclick="#!customer?show=myaccount">Email Preferences</a></li>
+            <li><a href="#!" onClick="app.ext.store_bmo.a.showStyleChart(); return false">Style Guide</a></li>
           </ul>
           <ul style="margin:0PX;">
-            <li><a href="#" onClick="return showContent('cart',{'show':'cart'});">View Cart</a></li>
-            <li><a href="#" onClick="return showContent('cart',{'show':'cart'});">Checkout</a></li>
-            <li><a href="#" onClick="return showContent('company',{'show':'privacy'});">Privacy Policy</a></li>
+            <li><a href="#!cart?show=cart" data-onclick="#!cart?show=cart">View Cart</a></li>
+            <li><a href="#!cart?show=cart" data-onclick="#!cart?show=cart">Checkout</a></li>
+            <li><a href="#!company?show=privacy" data-onclick="#!company?show=privacy">Privacy Policy</a></li>
           </ul>
         </div>
         <div class="socialmedia">
           <h1>Social Media</h1>
-          <div><a href="http://www.facebook.com/pages/Bikinimo-Swimwear/212444625437604" target="_blank"><img src="images/facebook_fot.gif" alt="Facebook" border="0" title="Facebook" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://twitter.com" target="_blank"><img src="images/twitter_fot.gif" alt="Twitter" border="0" title="Twitter" /></a></div>
+          <div><a href="https://www.facebook.com/pages/Bikinimo-Swimwear/212444625437604" target="_blank"><img src="images/facebook_fot.gif" alt="Facebook" border="0" title="Facebook" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://twitter.com" target="_blank"><img src="images/twitter_fot.gif" alt="Twitter" border="0" title="Twitter" /></a></div>
         </div>
         <div class="coupons">
           <h1>Coupons & Dicsounts</h1>
@@ -220,7 +221,7 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
       </div>
       <div class="footerbot">
         <div class="foticon"><img src="images/icon1.gif" alt="" /><img src="images/icon2.gif" alt="" /><img src="images/icon3.gif" alt="" /><img src="images/icon4.gif" alt="" /><img src="images/icon5.gif" alt="" /><img src="images/icon6.gif" alt="" /></div>
-        <p class="copright">Copyright &copy; 2013. All Rights Reserved.  E-Commerce solution provided by <a href="http://www.zoovy.com/" alt="http://www.zoovy.com/" target="_blank">Zoovy</a>.</p>
+        <p class="copright">Copyright &copy; 2013. All Rights Reserved.  E-Commerce solution provided by <a href="https://www.zoovy.com/" alt="https://www.zoovy.com/" target="_blank">Zoovy</a>.</p>
       </div>
     </div>
     <!--Middle Close-->
@@ -306,6 +307,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				<img src="images/scroll_left.gif" class="pointer caroPrev1" alt="" /> 
 				<img src="images/scroll_right.gif" class="pointer caroNext1" alt="" /> 
 				<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'IS_NEWARRIVAL'})">Click Here to browse more new releases</a></div>
+				<!-- <div class="clickab"><a href="#!search?TAG=IS_NEWARRIVAL" data-onclick="#!search?query=new arrivals">Click Here to browse more new releases</a></div> -->
 			</div>
 			<div data-anytab-content='whatshot'>
 				<div class="carouselCont2">
@@ -348,7 +350,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				<h1>Gift Cards</h1>
 				<p>Not sure what to get her?</p>
 				<p>Let her decide with one of our gift cards.</p>
-				<a href="#." onClick="return showContent('product',{'pid':'GC1000'})">Learn More</a>
+				<a href="#!product?pid=GC1000" data-onclick="#!product?pid=GC1000">Learn More</a>
 			</div>
 		</div>
 		<!--<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
@@ -2682,7 +2684,7 @@ put all filters into the appFilters container.
 		
         <fieldset data-elastic-key="pogs" data-filtertype="checkboxes">
             <legend>Sizes</legend>
-            <label class='break'><input type='checkbox' value='00' /> XS</label>
+            <label class='break'><input type='checkbox' value='A800' /> XS</label>
             <label class='break'><input type='checkbox' value='01' /> S</label>
             <label class='break'><input type='checkbox' value='02' /> M</label>
             <label class='break'><input type='checkbox' value='03' /> L</label>   
@@ -2708,7 +2710,7 @@ put all filters into the appFilters container.
         <fieldset class="umbrellaOptions" data-elastic-key="pogs" data-filtertype="checkboxes">
             <legend>Colors</legend>
             <label class='break'><input type='checkbox' value='' /> Beiges</label>
-            <label class='break'><input type='checkbox' value='' /> Blacks</label>
+            <label class='break'><input type='checkbox' value='A52W' /> Blacks</label>
             <label class='break'><input type='checkbox' value='' /> Blues</label>
             <label class='break'><input type='checkbox' value='' /> Browns</label>
             <label class='break'><input type='checkbox' value='' /> Gold</label>

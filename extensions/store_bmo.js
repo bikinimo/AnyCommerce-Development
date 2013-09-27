@@ -39,6 +39,8 @@ var store_bmo = function() {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				
+				app.ext.store_bmo.u.bindOnclick();
+				
 				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
 					var $context = $(app.u.jqSelector('#'+infoObj.parentID));
 					if(!$context.data('countingdown')) {
@@ -472,6 +474,15 @@ var store_bmo = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+		
+			//replacement for bindByAnchor href to make crawlable links. (works everywhere)
+			bindOnclick : function() {
+				$('body').off('click', 'a[data-onclick]').on('click', 'a[data-onclick]', function(event){
+					 var $this = $(this);
+					 var P = app.ext.myRIA.u.parseAnchor($this.data('onclick'));
+					 return app.ext.myRIA.a.showContent('',P);
+				});
+			},
 				
 			//anyContent to add matching top or bottom to a top or bottom prod page
 			loadMatchingProduct : function(pid) {
