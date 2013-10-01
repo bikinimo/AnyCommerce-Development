@@ -123,6 +123,11 @@ var store_bmo_lto = function() {
 				},
 				onError:function(responseData){	
 					app.u.dump('Error in extension: store_bmo_lto renderLTOProduct'); // error response goes here if needed
+					app.u.dump(responseData);
+					if(responseData.errmsg) {
+						app.u.throwMessage('Uh Oh! An error occured. error: '+responseData.errmsg);
+						$('.errorLTO','.homeTemplate').text(''+responseData.errmsg);
+					}
 				}
 			}
 			

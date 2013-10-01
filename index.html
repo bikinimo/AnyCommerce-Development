@@ -269,6 +269,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				<div class="bannerright2">
 					<h1>Limited Time Offers</h1>
 					<div class="perbox limitedOffer"> <!-- limitedTimeOffersTemplate is loaded here -->	
+					<div class='errorLTO'></div>
 		<!--				
 						<div class="perboxleft"><img src="images/limiitpic1.jpg" /></div>
 						
@@ -384,6 +385,15 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<div class="countmain">
 				<p>Time Remaining</p>
 				<FORM name="clock">
+					<div>
+						<span class='countDesc'>Days</span>
+						<div class='colon colon2'>:</div>
+						<span class='countDesc'>Hrs</span>
+						<div class='colon colon2'>:</div>
+						<span class='countDesc'>Mins</span>
+						<div class='colon'></div>
+						<span class='countDesc'>Secs</span>
+					</div>
 					<div><INPUT name="days" size=2 class="counttext" readonly/><div class="colon">:</div><INPUT name="hours" class="counttext" size=2 readonly/><div class="colon">:</div><INPUT name="mins" class="counttext" size=2 readonly/><div class="colon">:</div><INPUT name="secs" class="counttext" size=2 readonly/></div>
 				</FORM>
 			</div>

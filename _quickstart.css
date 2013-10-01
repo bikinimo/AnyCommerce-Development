@@ -61,6 +61,8 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 .perboxright h2, .perboxright span.cents {margin:0px; padding:6px 0 0 0; font-size:18px; color:#ec1c24; font-family:'Ubuntu', serif; font-weight:bold;}
 .perboxright span{ color:#000000; font-size:10px; }
 .perboxright span.notAvailableForPurchase {display:block; margin:8px 0;}
+.perboxright .countDesc {color:#ffffff; text-align:center; padding:0 0 0 3px;}
+.perboxright .colon.colon2 {color:#000000;}
 .perboxright .addCart{margin:11px auto 7px auto; padding:1px; background:url('images/tabonbg.gif') repeat-x scroll 0 0 transparent; border:1px solid #276B98; border-radius:5px; color:#ffffff; display:block; font-family:source sans pro;}
 .timerem{margin:12px 0 0 0; padding:0px;}
 .bannerright3{margin:0px; padding:0px; float:left; width:346px;}
@@ -979,7 +981,7 @@ z-index:1002; overflow: auto; /*box-shadow: 1px 1px 3px 3px #000000;*/ font-fami
 .zform_textarea.styleHelp {min-height:130px; width:400px;}
 
 /*Count Css*/
-.counttext{color:#00FF00; background:none; border:none; font-family:'Electrolize',serif; padding:5px 0 0 3px; text-align:center; font-weight:bold; font-size:16px; width:25px;}
+.counttext{color:#00FF00; background:none; border:none; font-family:'Electrolize',serif; padding:0 0 0 3px; text-align:center; font-weight:bold; font-size:16px; width:25px;}
 .colon{color:#00ff00; font-family:'Electrolize',serif; font-size:12px; font-weight:bold; display:inline;}
 /*Count Css*/
 .popupshado{box-shadow:0 3px 3px 1px #cdcdcd;  padding:10px 0 0 10px; margin:5px 0 0 0; /*box-shadow:inset 5px 0 5px -5px #333, inset -5px 0 5px -5px #333;*/  /*position:relative; top:-7px;*/ }
