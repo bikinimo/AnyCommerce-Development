@@ -641,14 +641,14 @@ var store_bmo = function() {
 				return homeTime; 
 			},
 			
-			millisecondsToYYMMDDHH : function(dateObj) {
+			millisecondsToYYYYMMDDHH : function(dateObj) {
 				var year = dateObj.getFullYear();
-				var month = dateObj.getMonth()+1;
+				var month = dateObj.getMonth()+1; 
 				var day = dateObj.getDate();
 				var hours = dateObj.getHours();
 				if (month < 10){month = '0'+month};
 				if (day < 10){day = '0'+day};
-				return year+month+day+hours;
+				return ""+year+month+day+hours;
 			},
 			
 			countdown : function($context) {				

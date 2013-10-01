@@ -52,7 +52,7 @@ var store_bmo_lto = function() {
 							//app.u.dump(data.product.length)
 							var faultyProducts = data.product[data.product.length-1];
 							var a = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
-							var endTime = app.ext.store_bmo.u.millisecondsToYYMMDDHH(a); //current time in Florida
+							var endTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(a); //current time in Florida
 								//loop through and make sure that products exist and end dates are not in the past
 							for(var i = 0; i < data.product.length; i++) {
 								var tprod = data.product[i];
