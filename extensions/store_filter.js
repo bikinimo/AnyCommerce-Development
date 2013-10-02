@@ -34,7 +34,7 @@ var store_filter = function() {
 	//key is safe id. value is name of the filter form.
 	filterMap : {
 	
-		".70-g-string-thong-bikini":{ //category for filter
+		".01-new-2012-bikinis":{ //category for filter
 			"filter": "bikiniSetsForm",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:500});}
 		},

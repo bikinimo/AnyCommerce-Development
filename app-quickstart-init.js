@@ -162,7 +162,7 @@ app.u.initMVC = function(attempts){
 	//		app.u.dump('hasAccount cookie read')
 	//	} 
 		app.preferenceSelected = !(typeof localStorage.appPreferences==="undefined");
-app.u.dump('type of appPreferences'); app.u.dump(typeof localStorage.appPreferences);
+
 			if(app.preferenceSelected){
 			//	$(".showWithPreferences").removeClass('displayNone');
 			} else {
@@ -196,27 +196,26 @@ app.u.dump('type of appPreferences'); app.u.dump(typeof localStorage.appPreferen
 	}
 	
 	app.u.selectPreference = function(preference, save){
-app.u.dump('selectPreference'); app.u.dump(app.preferenceSelected);
-	if(!app.preferenceSelected){
-		app.preferenceSelected = true;
-		if(typeof preference !== "undefined"){
-			app.u.dump("Preference Selected: " + preference);
-			if(save){
-				localStorage.appPreferences = preference;
-			} else {
-				//don't save the preference to localStorage
+		if(!app.preferenceSelected){
+			app.preferenceSelected = true;
+			if(typeof preference !== "undefined"){
+				app.u.dump("Preference Selected: " + preference);
+				if(save){
+					localStorage.appPreferences = preference;
+				} else {
+					//don't save the preference to localStorage
+				}
 			}
+		//	$(".showWithPreferences").removeClass('displayNone');
+		//	$(".showSansPreferences").addClass('displayNone');
+			if(app.loadOnSelect){
+				app.u.loadApp();
+			}
+		} else {
+			//app preference is already set, don't do it again! (might screw with the loading process)
 		}
-	//	$(".showWithPreferences").removeClass('displayNone');
-	//	$(".showSansPreferences").addClass('displayNone');
-		if(app.loadOnSelect){
-			app.u.loadApp();
-		}
-	} else {
-		//app preference is already set, don't do it again! (might screw with the loading process)
+		
 	}
-	
-}
 
 app.u.skipPreference = function(){
 	app.u.selectPreference(undefined);
@@ -236,7 +235,6 @@ app.u.loadApp = function() {
 //Any code that needs to be executed after the app init has occured can go here.
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
 app.u.appInitComplete = function(P)	{
-app.u.dump('InitComplete'); //app.u.dump();
 	if(app.preferenceSelected = true) {
 		if(localStorage.appPreferences == "signedUp") {
 			//app.storageFunctions.writeCookie('hasAccount','signedUp');
