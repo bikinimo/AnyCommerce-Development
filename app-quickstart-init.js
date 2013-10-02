@@ -157,13 +157,19 @@ app.u.initMVC = function(attempts){
 			}
 		*/
 		
+	//	if(app.storageFunctions.readCookie('hasAccount') == 'signedUp') {
+	//		localStorage.appPreferences = 'signedUp';
+	//		app.u.dump('hasAccount cookie read')
+	//	} 
 		app.preferenceSelected = !(typeof localStorage.appPreferences==="undefined");
+app.u.dump('type of appPreferences'); app.u.dump(typeof localStorage.appPreferences);
 			if(app.preferenceSelected){
-				$(".showWithPreferences").removeClass('displayNone');
+			//	$(".showWithPreferences").removeClass('displayNone');
 			} else {
 				$(".showSansPreferences").removeClass('displayNone');
 				$(".previewButtonCont").hide();
-				$("#previewContent").hide().delay(200).fadeIn(800);
+				//$("#previewContent").hide().delay(200).fadeIn(800);
+				$('#progressBarContainer').fadeOut(1000);
 				setTimeout( function() {
 					$(".previewButtonCont").delay(300).fadeIn({duration: 500});
 				}, 1000);
@@ -190,6 +196,7 @@ app.u.initMVC = function(attempts){
 	}
 	
 	app.u.selectPreference = function(preference, save){
+app.u.dump('selectPreference'); app.u.dump(app.preferenceSelected);
 	if(!app.preferenceSelected){
 		app.preferenceSelected = true;
 		if(typeof preference !== "undefined"){
@@ -229,15 +236,23 @@ app.u.loadApp = function() {
 //Any code that needs to be executed after the app init has occured can go here.
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
 app.u.appInitComplete = function(P)	{
+app.u.dump('InitComplete'); //app.u.dump();
 	if(app.preferenceSelected = true) {
 		if(localStorage.appPreferences == "signedUp") {
+			//app.storageFunctions.writeCookie('hasAccount','signedUp');
 			return showContent('customer',{'show':'myaccount'});
 		}
-		else if(localStorage.appPreferences == 'signMeUp') {		
+		else if(localStorage.appPreferences == 'signMeUp') {
+			localStorage.removeItem('appPreferences');
 			return app.ext.store_bmo.a.showAccountCreate();
+		}
+		else if(localStorage.appPreferences == 'logMeIn') {
+			localStorage.removeItem('appPreferences');
+			return showContent('customer',{'show':'myaccount'});
 		}
 	}
 	else {app.u.dump("Executing myAppIsLoaded code...");}
+app.u.dump('InitComplete localStorage'); app.u.dump(localStorage.appPreferences);
 	}
 
 //don't execute script till both jquery AND the dom are ready.
