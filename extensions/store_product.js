@@ -620,9 +620,10 @@ NOTES
 					else	{
 						$parent = $("<div \/>").attr({"id":'product-modal',"title":""}).appendTo('body');
 /*bmo*/					$parent.dialog({
-/*bmo*/						modal: true,width:'auto',
+/*bmo*/						modal: true,
+/*bmo*/						width:'680px',
 /*bmo*/						height:'auto',
-/*bmo*/						position:{my:"left top", at:"left+15% top+10%", of:window},
+/*bmo*/						position:{my:"center top", at:"center top+10%", of:window},
 /*bmo*/						autoOpen:false,
 /*bmo*/						open : function(event, ui){ $('.ui-widget-overlay').on('click.closeModal', function(){$parent.dialog('close')});},
 /*bmo*/						close : function(event, ui){ 

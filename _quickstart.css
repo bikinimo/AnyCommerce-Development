@@ -985,6 +985,7 @@ z-index:1002; overflow: auto; /*box-shadow: 1px 1px 3px 3px #000000;*/ font-fami
 .colon{color:#00ff00; font-family:'Electrolize',serif; font-size:12px; font-weight:bold; display:inline;}
 /*Count Css*/
 .popupshado{box-shadow:0 3px 3px 1px #cdcdcd;  padding:10px 0 0 10px; margin:5px 0 0 0; /*box-shadow:inset 5px 0 5px -5px #333, inset -5px 0 5px -5px #333;*/  /*position:relative; top:-7px;*/ }
+.centerDialog {margin:0 auto;}
 
 .galladdtocarti{margin:0px; padding:0px; font-size:0px !important; border:0px !important; background:none
  !important; height:31px !important; width:112px !important; cursor:pointer; background-image:url(images/gallery_cart.gif) !important; background-repeat:no-repeat;}
