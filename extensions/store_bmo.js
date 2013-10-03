@@ -106,6 +106,10 @@ var store_bmo = function() {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
+		
+			justText : function() {
+				return $(this).clone().children().remove().end().text();
+			},
 			
 			handleLocalStorage : function() {
 				if(localStorage.appPreferences == 'signedUp') { //user has an account lets keep that info intact
@@ -419,13 +423,18 @@ var store_bmo = function() {
 							//		IF IT'S NOT THERE, ADD IT AND ADD THIS FORM'S PRICE TO PRICE FIELD
 							//
 							//		ELSE: THE PRICE HAS ALREADY BEEN MODIFIED, LEAVE IT
-							
-							//$('.basePrice',$tag.parent().parent().parent().parent()).attr('data-price'+formDesignator,0);
-							//if($displayPrice).attr('data-price'+formDesignator) != 1) {
-							//	var price = $('.formPrice',$tag.parent()).attr('data-price');
-							//	$displayPrice.attr('data-price'+formDesignator,1);	//indicate this form modified price
-								
-							//}
+							app.u.dump(formDesignator);
+							$('.customBasePrice',$tag.parent().parent().parent().parent()).css('color','blue');//.attr('data-price'+formDesignator,0);
+							if($('.customBasePrice',$tag.parent().parent().parent().parent()).attr('data-price'+formDesignator) != 1) {
+								var priceShown = $('.customBasePrice',$tag.parent().parent().parent().parent()).clone().children().remove().end().text().split("$");
+								priceShown = Number(priceShown[1]);
+								var price = Number($('.formPrice',$tag.parent()).attr('data-price'));
+								app.u.dump('priceShown'); app.u.dump(priceShown);
+								app.u.dump('price'); app.u.dump(price);
+								price = app.u.formatMoney(priceShown - price,'$',2,true);
+								app.u.dump('price'); app.u.dump(price);
+								$('.customBasePrice',$tag.parent().parent().parent().parent()).attr('data-price'+formDesignator,1);	//indicate this form's price is included in displayed price
+							}
 						}
 					});
 				});
