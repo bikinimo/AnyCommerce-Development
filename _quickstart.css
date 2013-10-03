@@ -714,8 +714,8 @@ ul#topnav li span ul li a:hover{color:#34719e; text-decoration:none;}
 .ztitle2 {color: #666666; font-size: 14px;  font-weight: bold; margin:10px 0 0 0; font-family:'Ubuntu',serif;}
 .price, .perboxright span.cents {color:#f05a24; font-size:13.5px !important;}
 
-.basePrice{color:#f05a24; font-size:15.5px !important;}
-.basePrice h5{color:#000; font-size:12px; padding:2px 6px 0 0 ;}
+.basePrice, .customBasePrice {color:#f05a24; font-size:15.5px !important;}
+.basePrice h5, .customBasePrice h5 {color:#000; font-size:12px; padding:2px 6px 0 0 ;}
 
 .ui-widget .ui-widget{font-size:12px;}
 

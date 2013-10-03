@@ -363,6 +363,75 @@ var store_bmo = function() {
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
+		
+				//reads prices for both top and bottom pieces and adds them for a total preliminary price
+				// !!	WILL NEED SUPPORT FOR DISCOUNTED COST OF TWO ITEMS TOGETHER !!
+			customBasePrice : function($tag, data) {
+				var displayPrice = 0;
+				setTimeout(function(){
+						//get price of each item from it's form, and add them for total
+					$('form','.customATCForm',$tag.parent().parent()).each(function(){
+						displayPrice += Number($('.formPrice',$(this)).attr('data-price'));
+					});
+					
+						//convert to money and replace original content w/ total value
+					displayPrice = app.u.formatMoney(displayPrice,'$',2,true);
+					var parent = $tag.parent();
+					var preText = "<h5>Only :</h5>";
+					var newElem = "<h3 class='customBasePrice marginBottom' data-priceA='1' data-priceB='1' data-bind='useParentData:true; format:customBasePrice; extension:store_bmo;'>"+displayPrice+"</h3>";
+					$tag.replaceWith(newElem);
+					$('h3',parent).append(preText);
+				},250);
+			},
+			
+				//gets and adds pricing for top & bottom pieces to hidden element, which are then read onChange of form select list
+				//to alter the displayed price according to the selected pieces. 
+			setHiddenPrice : function($tag, data) {
+				var formDesignator = $tag.attr('data-formDesig'); //used to tell if a form has modified the displayed price
+				var $displayPrice = $('.customBasePrice',$tag.parent().parent().parent().parent());
+				app.u.dump(data.value['%attribs']['zoovy:base_price']); app.u.dump(data.value.pid);
+				
+				//add base price value to hidden element in each form
+				if(data.value['%attribs'] && data.value['%attribs']['zoovy:base_price']) {
+					$tag.attr('data-price',data.value['%attribs']['zoovy:base_price']); 
+				}
+				
+				//onChange of select, modify price displayed, if necessary
+				$('select',$tag.parent()).each(function(){
+					$(this).change(function(){
+						var selected = 0; //will be returned with a value if any options selected
+						$('select',$tag.parent()).each(function() {
+							app.u.dump($(this).val());
+							if($(this).val()){selected += 1;}
+						});
+							//if no options selected, check if price needs to be decremented by this form's price
+						if(selected == 0) {  
+			app.u.dump('selected was 0');
+							//TODO: CHECK PRICE FIELD FOR THIS FORM'S DATA-PRICE ATTRIB
+							//		REMOVE AND SUBTRACT THIS FORM'S PRICE IF PRESENT
+							//
+							//		ELSE: NOTHING TO DO, THE PRICE HASN'T BEEN MODIFIED YET, LEAVE IT
+						}
+							//if options are selected, check if price needs to be incremented by this form's price
+						else {
+			app.u.dump('WAS NOT 0');
+							//TODO: CHECK PRICE FIELD FOR THIS FORM'S DATA-PRICE ATTRIB
+							//		IF IT'S NOT THERE, ADD IT AND ADD THIS FORM'S PRICE TO PRICE FIELD
+							//
+							//		ELSE: THE PRICE HAS ALREADY BEEN MODIFIED, LEAVE IT
+							
+							//$('.basePrice',$tag.parent().parent().parent().parent()).attr('data-price'+formDesignator,0);
+							//if($displayPrice).attr('data-price'+formDesignator) != 1) {
+							//	var price = $('.formPrice',$tag.parent()).attr('data-price');
+							//	$displayPrice.attr('data-price'+formDesignator,1);	//indicate this form modified price
+								
+							//}
+						}
+					});
+				});
+				//$tag.text(""+data.value.pid)
+				//$tag.attr(data-cost, 
+			},
 			
 			loadProd : function($tag, data){
 				var obj = {									// object to hold product id for product

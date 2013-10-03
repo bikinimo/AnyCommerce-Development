@@ -692,7 +692,15 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 		</td>
 		<td class='prodSummaryContainer marginBottom no_underline' style="width:340px; margin:0 0 0 25px;">
 			<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
-			<h3 class='basePrice marginBottom' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: <h5>Only :</h5> ;' style="text-align:left;"></h3>
+			
+			<div data-bind='var:product(user:matching_piece); format:hideIfSet;'>
+				<h3 class='basePrice marginBottom' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: <h5>Only :</h5> ;' style="text-align:left;"></h3>
+			</div>
+			<div class='displayNone' data-bind='var:product(user:matching_piece); format:showIfSet;'>	
+				<!-- <h3 class='customBasePrice marginBottom' data-priceA='0' data-priceB='0' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: <h5>Only :</h5> ;' style="text-align:left;"></h3> -->
+				<h3 class='customBasePrice marginBottom' data-priceA='1' data-priceB='0' data-bind='useParentData:true; format:customBasePrice; extension:store_bmo;'></h3>
+			</div>
+			
 			<hgroup class='marginBottom'>
 				<h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
 				<h5 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Mfg: ;'></h5>
@@ -732,11 +740,13 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 					<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.store_bmo.a.addToCart($(this)); return false;"> 
 						<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 						<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'></fieldset>
+						<div class='formPrice' data-formDesig='A' data-bind="useParentData:true; format:setHiddenPrice; extension:store_bmo;"></div>
 					</form>
 					
 					<form data-bind='var: product(pid); format:matchATCFormPID; extension:store_bmo;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.store_bmo.a.addToCart($(this)); return false;"> 
 						<span data-bind='var: product(user:matching_piece); format: loadProd; extension: store_bmo; loadsTemplate:matchingProductTemplate;'></span>
 						<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'></fieldset>
+						<div class='formPrice' data-formDesig='B' data-bind="useParentData:true; format:setHiddenPrice; extension:store_bmo;"></div>
 					</form>
 					<button onClick='app.ext.store_bmo.a.addToCart($(this).parent());' class='galladdtocarti ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'></button> 
 				</div>
