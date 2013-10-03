@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"201318.20131001133600",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201318.20131003144200",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
@@ -698,7 +698,8 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 			</div>
 			<div class='displayNone' data-bind='var:product(user:matching_piece); format:showIfSet;'>	
 				<!-- <h3 class='customBasePrice marginBottom' data-priceA='0' data-priceB='0' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: <h5>Only :</h5> ;' style="text-align:left;"></h3> -->
-				<h3 class='customBasePrice marginBottom' data-priceA='1' data-priceB='0' data-bind='useParentData:true; format:customBasePrice; extension:store_bmo;'></h3>
+				<h5>Only:</h5>
+				<h3 class='customBasePrice marginBottom' data-priceA='1' data-priceB='1' data-bind='useParentData:true; format:customBasePrice; extension:store_bmo;'></h3>
 			</div>
 			
 			<hgroup class='marginBottom'>

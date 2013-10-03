@@ -380,11 +380,7 @@ var store_bmo = function() {
 					
 						//convert to money and replace original content w/ total value
 					displayPrice = app.u.formatMoney(displayPrice,'$',2,true);
-					var parent = $tag.parent();
-					var preText = "<h5>Only :</h5>";
-					var newElem = "<h3 class='customBasePrice marginBottom' data-priceA='1' data-priceB='1' data-bind='useParentData:true; format:customBasePrice; extension:store_bmo;'>"+displayPrice+"</h3>";
-					$tag.replaceWith(newElem);
-					$('h3',parent).append(preText);
+					$tag.empty().text(displayPrice);
 				},250);
 			},
 			
@@ -392,7 +388,7 @@ var store_bmo = function() {
 				//to alter the displayed price according to the selected pieces. 
 			setHiddenPrice : function($tag, data) {
 				var formDesignator = $tag.attr('data-formDesig'); //used to tell if a form has modified the displayed price
-				var $displayPrice = $('.customBasePrice',$tag.parent().parent().parent().parent());
+				var $summaryContainer = $tag.parent().parent().parent().parent();
 				app.u.dump(data.value['%attribs']['zoovy:base_price']); app.u.dump(data.value.pid);
 				
 				//add base price value to hidden element in each form
@@ -403,44 +399,36 @@ var store_bmo = function() {
 				//onChange of select, modify price displayed, if necessary
 				$('select',$tag.parent()).each(function(){
 					$(this).change(function(){
-						var selected = 0; //will be returned with a value if any options selected
-						$('select',$tag.parent()).each(function() {
-							app.u.dump($(this).val());
-							if($(this).val()){selected += 1;}
-						});
-							//if no options selected, check if price needs to be decremented by this form's price
-						if(selected == 0) {  
-			app.u.dump('selected was 0');
-							//TODO: CHECK PRICE FIELD FOR THIS FORM'S DATA-PRICE ATTRIB
-							//		REMOVE AND SUBTRACT THIS FORM'S PRICE IF PRESENT
-							//
-							//		ELSE: NOTHING TO DO, THE PRICE HASN'T BEEN MODIFIED YET, LEAVE IT
-						}
-							//if options are selected, check if price needs to be incremented by this form's price
-						else {
-			app.u.dump('WAS NOT 0');
-							//TODO: CHECK PRICE FIELD FOR THIS FORM'S DATA-PRICE ATTRIB
-							//		IF IT'S NOT THERE, ADD IT AND ADD THIS FORM'S PRICE TO PRICE FIELD
-							//
-							//		ELSE: THE PRICE HAS ALREADY BEEN MODIFIED, LEAVE IT
-							app.u.dump(formDesignator);
-							$('.customBasePrice',$tag.parent().parent().parent().parent()).css('color','blue');//.attr('data-price'+formDesignator,0);
-							if($('.customBasePrice',$tag.parent().parent().parent().parent()).attr('data-price'+formDesignator) != 1) {
-								var priceShown = $('.customBasePrice',$tag.parent().parent().parent().parent()).clone().children().remove().end().text().split("$");
-								priceShown = Number(priceShown[1]);
-								var price = Number($('.formPrice',$tag.parent()).attr('data-price'));
-								app.u.dump('priceShown'); app.u.dump(priceShown);
-								app.u.dump('price'); app.u.dump(price);
-								price = app.u.formatMoney(priceShown - price,'$',2,true);
-								app.u.dump('price'); app.u.dump(price);
-								$('.customBasePrice',$tag.parent().parent().parent().parent()).attr('data-price'+formDesignator,1);	//indicate this form's price is included in displayed price
+						
+						var everythingPrice = 0;	//will hold total cost of all items to display when no items selected
+						var price = 0;	//will hold the price to display if any items are selected
+							//check each form to see if an item is selected, add form cost to total if yes
+						$('form',$tag.parent().parent()).each(function(){
+							everythingPrice += Number($tag.attr('data-price'));
+							
+							var count = 0;	//keeps track of whether or not form has a selection
+							$('select',$(this)).each(function(){
+								if($(this).val()){
+									count++;
+								}
+							}); //select each value
+
+							if(count != 0) {
+								price += Number($tag.attr('data-price'));
 							}
+						}); //each form
+						
+							//if there is a price an item is selected change the displayed price to what was calculated
+						if(price != 0) {
+							$('.customBasePrice',$summaryContainer).empty().text(app.u.formatMoney(price,'$',2,true));
+							
+						} else {
+								//otherwise nothing is selected, display the total cost for all pieces 
+							$('.customBasePrice',$summaryContainer).empty().text(app.u.formatMoney(everythingPrice,'$',2,true));
 						}
-					});
-				});
-				//$tag.text(""+data.value.pid)
-				//$tag.attr(data-cost, 
-			},
+					}); //change function
+				}); //each select add change function
+			}, //setHiddenPrice
 			
 			loadProd : function($tag, data){
 				var obj = {									// object to hold product id for product
