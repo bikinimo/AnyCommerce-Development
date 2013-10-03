@@ -732,12 +732,12 @@ var store_bmo = function() {
 					$('input[name=mins]', cl).val('00');
 					$('input[name=secs]', cl).val('00');
 					
-					$('#deal',$context).removeClass('visibilityHidden');
-					$('button','.perboxright',$context).addClass('visibilityHidden');
+					$('#deal',$context).removeClass('displayNone');
+					$('button','.perboxright',$context).addClass('displayNone');
 					//document.getElementById("deal").style.display = 'block';
 				}
 				else {
-					$('#deal',$context).addClass('visibilityHidden');
+					$('#deal',$context).addClass('displayNone');
 					//document.getElementById("deal").style.display = 'none';
 				
 					$('input[name=secs]', cl).val(''+app.ext.store_bmo.u.toSt(count%60));

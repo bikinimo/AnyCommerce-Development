@@ -59,11 +59,12 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 .perboxright{margin:0 0 0 10px; padding:0px; width:155px; float:left; display:inline-block;}
 .perboxright h1{margin:0px; padding:0px; font-size:17px; color:#000000; font-family:'Ubuntu', serif;}
 .perboxright h2, .perboxright span.cents {margin:0px; padding:6px 0 0 0; font-size:18px; color:#ec1c24; font-family:'Ubuntu', serif; font-weight:bold;}
-.perboxright span{ color:#000000; font-size:10px; }
+.perboxright span{ color:#000000; font-size:10px;}
+.perboxright span#deal{color:#54A7E1; font-size:10px; font-weight:bold; margin:20px auto; text-align:center;}
 .perboxright span.notAvailableForPurchase {display:block; margin:8px 0;}
 .perboxright .countDesc {color:#ffffff; text-align:center; padding:0 0 0 3px;}
 .perboxright .colon.colon2 {color:#000000;}
-.perboxright .addCart{margin:11px auto 7px auto; padding:1px; background:url('images/tabonbg.gif') repeat-x scroll 0 0 transparent; border:1px solid #276B98; border-radius:5px; color:#ffffff; display:block; font-family:source sans pro;}
+.perboxright .addCart{margin:20px auto; padding:1px; background:url('images/tabonbg.gif') repeat-x scroll 0 0 transparent; border:1px solid #276B98; border-radius:5px; color:#ffffff; display:block; font-family:source sans pro;}
 .timerem{margin:12px 0 0 0; padding:0px;}
 .bannerright3{margin:0px; padding:0px; float:left; width:346px;}
 .tabbingstatic{margin:11px 0 0 0; padding:0px; float:left;}

@@ -250,7 +250,6 @@ app.u.appInitComplete = function(P)	{
 		}
 	}
 	else {app.u.dump("Executing myAppIsLoaded code...");}
-app.u.dump('InitComplete localStorage'); app.u.dump(localStorage.appPreferences);
 	}
 
 //don't execute script till both jquery AND the dom are ready.
