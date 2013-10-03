@@ -847,9 +847,8 @@ border-top-left-radius: 0;}
 }
 
 #progressBarOutline {
-	/*background: rgba(150,60,4,.25);
-	height: 40px;
-	width: 600px;*/
+	background: #999999;
+	border-radius:5px;
 	margin: 0px auto;
 }
 
