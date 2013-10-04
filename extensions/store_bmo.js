@@ -1093,7 +1093,7 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 
 			//if the option is 'optional' AND has more than one option, add blank prompt. If required, add a please choose prompt first.
 				if(len > 0)	{
-					optionTxt = (pog['optional'] == 1) ?  "" :  "Please choose (one required)";
+					optionTxt = (pog['optional'] == 1) ?  "" :  "Select";
 					selOption = "<option value='' disable='disabled' selected='selected'>"+optionTxt+"<\/option>";
 					$selectList.append(selOption);
 					}
