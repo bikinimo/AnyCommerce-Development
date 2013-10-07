@@ -659,6 +659,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
   
 	<!-- a template used for a quickview link off of a category page -->
 	<div id='productTemplateQuickView' class="popupshado" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+		<div class="sizebg pointer"><a href="#." onClick="app.ext.store_bmo.a.showSizeChart(); return false">SIZING GUIDE</a><span>|</span><a href="#." onClick="app.ext.store_bmo.a.showStyleChart(); return false">STYLE GUIDE</a></div>
 		<table class='prodViewerContainer'>
 		<tr>
 		<td class='imageContainer' style="width:305px;" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
