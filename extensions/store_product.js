@@ -628,11 +628,13 @@ NOTES
 /*bmo*/						open : function(event, ui){ $('.ui-widget-overlay').on('click.closeModal', function(){$parent.dialog('close')});},
 /*bmo*/						close : function(event, ui){ 
 /*bmo*/							$('.ui-widget-overlay').off('click.closeModal');
+/*bmo*/							$('.quickVModal').css({'width':'680px','margin':'0'});
 /*bmo*/							$('.productList1').trigger('play',true);
 /*bmo*/							$('.productList2').trigger('play',true);
 /*bmo*/							$('.productList3').trigger('play',true);
 /*bmo*/							$('.productList4').trigger('play',true);
-/*bmo*/						}
+/*bmo*/						},
+/*bmo*/						dialogClass : 'quickVModal'
 /*bmo*/					});
 					}
 					

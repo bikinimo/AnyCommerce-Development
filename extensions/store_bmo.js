@@ -273,8 +273,8 @@ var store_bmo = function() {
 				var _pid = app.u.makeSafeHTMLId(pid);
 				$this.hide();
 				$('.anotherElement_'+_pid).show();
-				$('.ui-dialog.ui-widget.ui-widget-content.ui-corner-all.ui-front.ui-draggable.ui-resizable').width('820px').css({'margin':'0 50%','left':'-410px'});
-				$('.sizebg',$this.parent().parent().parent().parent().parent()).css({'width':'774px','background-image':'url(images/sizebg-774x30.png)'});
+				$('.quickVModal').width('820px').css({'margin':'0 50%','left':'-410px'});
+				$('.sizebg','.quickVModal').css({'width':'774px','background-image':'url(images/sizebg-774x30.png)'});
 			},
 			
 			showAccountCreate : function() {
