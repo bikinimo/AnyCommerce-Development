@@ -298,7 +298,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				<li class='homeTab1'><a href='#newrelease'>New Releases</a></li>
 				<li class='homeTab2'><a href='#whatshot'>What's Hot</a></li>
 				<li class='homeTab3'><a href='#comparissons'>Comparissons</a></li>
-				<li class='homeTab4'><a href='#like'>You May Also Like</a></li>
+				<li class='homeTab4'><a href='#accessories'>Accessories</a></li>
 			</ul>
 			<div data-anytab-content='newrelease'>
 				<div class="carouselCont1">
@@ -328,14 +328,15 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				<img src="images/scroll_right.gif" class="pointer caroNext3" alt="" />
 				<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'IS_OPENBOX'})">Click Here to browse more Comparissons</a></div>
 			</div>
-			<div data-anytab-content='like'>
+			<div data-anytab-content='accessories'>
 				<div class="carouselCont4">
-					<ul id="carCat6" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"you may also like"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList4'></ul>
+					<!-- <ul id="carCat6" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"you may also like"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList4'></ul> -->
+					<div id="carCat6"></div>
 					<div class="clear"></div> 
 				</div>
 				<img src="images/scroll_left.gif" class="pointer caroPrev4" alt="" /> 
 				<img src="images/scroll_right.gif" class="pointer caroNext4" alt="" />
-				<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'IS_REFURB'})">Click Here to browse more Like</a></div>
+				<div class="clickab"><a href="#." onClick="return showContent('category',{'navcat':'.99-fashion-accessories'})">Click Here to browse more accessories</a></div>
 			</div>
 		</div>
 		<div class="madebox">
@@ -361,9 +362,12 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		<!--<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
 		<!--<a href="#" onClick="return showContent('search',{'TAG':'IS_BESTSELLER'});">See all Best Sellers</a>-->
 		<!-- a sample of how to get a 'list' src onto the page. -->
-		<ul data-bind="var: list($models.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+		<!-- <ul data-bind="var: list($models.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul> -->
 	</div>
 	
+	<div id="tab4Template">
+		<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList4'></ul>
+	</div>
 	
 	<div id='limitedTimeOffersTemplate' class="perbox">
 		<div class="perboxleft" data-bind='useParentData:true; format:addInfiniteSlider; extension:store_bmo;'>

@@ -41,6 +41,10 @@ var store_bmo = function() {
 				
 				app.ext.store_bmo.u.bindOnclick();
 				
+				app.rq.push(['templateFunction','homepageTemplate','onInits',function(infoObj) {
+					app.ext.store_bmo.u.loadProductsAsList('.99-fashion-accessories');
+				}]);
+				
 				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
 					var $context = $(app.u.jqSelector('#'+infoObj.parentID));
 					if(!$context.data('countingdown')) {
@@ -50,7 +54,6 @@ var store_bmo = function() {
 					app.ext.store_bmo.u.runHomeCarouselTab1($context);
 					app.ext.store_bmo.u.runHomeCarouselTab2($context);
 					app.ext.store_bmo.u.runHomeCarouselTab3($context);
-					app.ext.store_bmo.u.runHomeCarouselTab4($context);
 				}]);
 				
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
@@ -94,6 +97,17 @@ var store_bmo = function() {
 				},
 				onError:function(responseData){	
 					app.u.dump('Error in extension: store_bmo renderMatchingProduct'); // error response goes here if needed
+				}
+			},
+			
+			renderProductsAsList : {
+				onSuccess : function(responseData) {
+					app.u.dump(app.data[responseData.datapointer]);
+					$('#carCat6','.homeTemplate').anycontent({"templateID":"tab4Template","datapointer":responseData.datapointer});
+				},
+				onError : function(responseData){
+					app.u.dump('Error in extension: store_bmo_ renderProductsAsList');
+					app.u.dump(responseData);
 				}
 			}
 			
@@ -506,15 +520,17 @@ var store_bmo = function() {
 				}
 				
 				else if(typeof data.value == 'object') {
-					var pdata = data.value['%attribs'];
-					//if image 1 or 2 isn't set, likely there are no secondary images. stop.
-					if(app.u.isSet(pdata['zoovy:prod_image1']) && app.u.isSet(pdata['zoovy:prod_image2']))	{
-						$tag.attr('data-pid',data.value.pid); //no params are passed into picSlider function, so pid is added to tag for easy ref.
-//						app.u.dump(" -> image1 ["+pdata['zoovy:prod_image1']+"] and image2 ["+pdata['zoovy:prod_image2']+"] both are set.");
-//adding this as part of mouseenter means pics won't be downloaded till/unless needed.
-//no anonymous function in mouseenter. We'll need this fixed to ensure no double add (most likely) if template re-rendered.
-//							$tag.unbind('mouseenter.myslider'); // ensure event is only binded once.
-							$tag.on('mouseenter.myslider',app.ext.store_bmo.u.addPicSlider2UL);//.bind('mouseleave',function(){window.slider.kill()})
+					if(data.value['%attribs']) { 
+						var pdata = data.value['%attribs']; 
+						//if image 1 or 2 isn't set, likely there are no secondary images. stop.
+						if(app.u.isSet(pdata['zoovy:prod_image1']) && app.u.isSet(pdata['zoovy:prod_image2']))	{
+							$tag.attr('data-pid',data.value.pid); //no params are passed into picSlider function, so pid is added to tag for easy ref.
+	//						app.u.dump(" -> image1 ["+pdata['zoovy:prod_image1']+"] and image2 ["+pdata['zoovy:prod_image2']+"] both are set.");
+	//adding this as part of mouseenter means pics won't be downloaded till/unless needed.
+	//no anonymous function in mouseenter. We'll need this fixed to ensure no double add (most likely) if template re-rendered.
+	//							$tag.unbind('mouseenter.myslider'); // ensure event is only binded once.
+								$tag.on('mouseenter.myslider',app.ext.store_bmo.u.addPicSlider2UL);//.bind('mouseleave',function(){window.slider.kill()})
+							}
 						}
 					}
 				},
@@ -542,6 +558,22 @@ var store_bmo = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+		
+			loadProductsAsList :function(passedCat) {
+				
+				var obj = {
+					'path' : passedCat
+				};
+					//console.debug(obj);
+				var _tag = {
+					"callback":"renderProductsAsList",
+					"extension":"store_bmo"
+				}
+				app.ext.store_navcats.calls.appNavcatDetail.init(obj, _tag,'immutable');
+	
+				app.model.dispatchThis('immutable');
+			
+			}, //loadProductsAsList
 		
 			//replacement for bindByAnchor href to make crawlable links. (works everywhere)
 			bindOnclick : function() {
