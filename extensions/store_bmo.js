@@ -99,7 +99,7 @@ var store_bmo = function() {
 			
 			renderProductsAsList : {
 				onSuccess : function(responseData) {
-					app.u.dump(app.data[responseData.datapointer]);
+			//		app.u.dump(app.data[responseData.datapointer]);
 					$('#carCat6','.homeTemplate').anycontent({"templateID":"tab4Template","datapointer":responseData.datapointer});
 				},
 				onError : function(responseData){
@@ -381,6 +381,33 @@ var store_bmo = function() {
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 		
+				//will combine features list in tab section on prod page for top and bottom products if they are both being added to the page
+			combineFeaturesList : function($tag, data) {
+				setTimeout(function(){
+				//	app.u.dump('input:'); app.u.dump($('input[type=hidden]',$tag.parent()).val());
+					var pid = $('input[type=hidden]',$tag.parent()).val(); 
+					var $destination = $('.tabOfFeatures',$tag.parent().parent().parent().parent()); //append new content to container w/ default content
+					
+						//get the matching product's feature info
+					if(typeof app.data['appProductGet|'+pid] == 'object') {
+						var pdata = app.data['appProductGet|'+pid]
+						if(pdata['%attribs'] && pdata['%attribs']['zoovy:prod_features']) {
+							pdata = pdata['%attribs']['zoovy:prod_features'];
+							
+								//create DOM element for wiki parser, then add new content to page and remove temp element from DOM
+								//most of this part from "wiki :" in controller
+							var $tmp = $('<div \/>').attr('id','TEMP_'+$tag.attr('id')).hide().appendTo('body');
+							var target = document.getElementById('TEMP_'+$tag.attr('id')); //### creole parser doesn't like dealing w/ a jquery object. fix at some point.
+							myCreole.parse(target, pdata,{},data.bindData.wikiFormats);
+							$destination.append($("<div class='clear'></div>"));
+							$destination.append($tmp.html());
+							$tmp.empty().remove();
+						}
+						else {app.u.dump('%attribs or zoovy:prod_features were not set for '+pid);}
+					}else {app.u.dump('appProductGet for '+pid+' did not return as an object');}
+				},500);
+			}, //combineFeaturesList
+			
 				//reads prices for both top and bottom pieces and adds them for a total preliminary price
 				// !!	WILL NEED SUPPORT FOR DISCOUNTED COST OF TWO ITEMS TOGETHER !!
 			customBasePrice : function($tag, data) {
@@ -402,7 +429,7 @@ var store_bmo = function() {
 			setHiddenPrice : function($tag, data) {
 				var formDesignator = $tag.attr('data-formDesig'); //used to tell if a form has modified the displayed price
 				var $summaryContainer = $tag.parent().parent().parent().parent();
-				app.u.dump(data.value['%attribs']['zoovy:base_price']); app.u.dump(data.value.pid);
+		//		app.u.dump(data.value['%attribs']['zoovy:base_price']); app.u.dump(data.value.pid);
 				
 				//add base price value to hidden element in each form
 				if(data.value['%attribs'] && data.value['%attribs']['zoovy:base_price']) {
