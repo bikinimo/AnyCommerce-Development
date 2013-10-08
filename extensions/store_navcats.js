@@ -200,7 +200,7 @@ obj.PATH = .cat.safe.id
 
 		appNavcatDetail : {
 			init : function(path,tagObj,Q)	{
-				app.u.dump('BEGIN app.ext.store_navcats.calls.appNavcatDetail.init ('+path+')');
+	//			app.u.dump('BEGIN app.ext.store_navcats.calls.appNavcatDetail.init ('+path+')');
 				Q = Q || 'mutable';
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
 				tagObj = typeof tagObj !== 'object' ? {} : tagObj;

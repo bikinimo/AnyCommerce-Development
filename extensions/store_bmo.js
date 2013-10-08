@@ -41,10 +41,6 @@ var store_bmo = function() {
 				
 				app.ext.store_bmo.u.bindOnclick();
 				
-			//	app.rq.push(['templateFunction','homepageTemplate','onInits',function(infoObj) {
-			//		app.ext.store_bmo.u.loadProductsAsList('.99-fashion-accessories');
-			//	}]);
-				
 				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
 					var $context = $(app.u.jqSelector('#'+infoObj.parentID));
 					if(!$context.data('countingdown')) {
@@ -561,16 +557,12 @@ var store_bmo = function() {
 		u : {
 		
 			loadProductsAsList :function(passedCat) {
-				
-				var obj = {
-					'path' : passedCat
-				};
-					//console.debug(obj);
+			
 				var _tag = {
 					"callback":"renderProductsAsList",
 					"extension":"store_bmo"
 				}
-				app.ext.store_navcats.calls.appNavcatDetail.init(obj, _tag,'immutable');
+				app.ext.store_navcats.calls.appNavcatDetail.init(passedCat, _tag,'immutable');
 	
 				app.model.dispatchThis('immutable');
 			

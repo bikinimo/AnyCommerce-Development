@@ -118,7 +118,7 @@ var store_bmo_lto = function() {
 				onSuccess:function(responseData){		
 					// call anycontent (from anyplugins) on class to put content in ** '.limitedOffer','.homeTemplate' **, 
 					//using the template you want to render with ** "limitedTimeOffersTemplate" **, using a pointer to the data that was returned ** "datapointer":responseData.datapointer **. 
-					app.u.dump('ResponseData pointer'); app.u.dump(responseData.datapointer);// app.u.dump($('.prodViewerAddToCartForm ','.match_'+app.data[responseData.datapointer].pid));
+			//		app.u.dump('ResponseData pointer'); app.u.dump(responseData.datapointer);// app.u.dump($('.prodViewerAddToCartForm ','.match_'+app.data[responseData.datapointer].pid));
 					$('.limitedOffer','.homeTemplate').anycontent({"templateID":"limitedTimeOffersTemplate","datapointer":responseData.datapointer}); 
 				},
 				onError:function(responseData){	
