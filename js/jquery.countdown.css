@@ -1,4 +1,4 @@
-.countmain{background:#000000; border-radius:5px; width:135px; height:60px; font-family:'Electrolize', serif; margin:9px 4px 0 0; padding-left:15px;}
+.countmain{background:#000000; border-radius:5px; width:138px; height:60px; font-family:'Electrolize', serif; padding-left:15px; position:absolute; bottom:0; right:0;}
 .countmain p{ padding:4px 0 0 7px; color:#00FF00; font-size:15px; margin:0px;}
 
 .countdownHolder{margin:-2px 0 0 6px; padding:0px;}
