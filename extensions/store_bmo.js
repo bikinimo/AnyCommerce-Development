@@ -41,9 +41,9 @@ var store_bmo = function() {
 				
 				app.ext.store_bmo.u.bindOnclick();
 				
-				app.rq.push(['templateFunction','homepageTemplate','onInits',function(infoObj) {
-					app.ext.store_bmo.u.loadProductsAsList('.99-fashion-accessories');
-				}]);
+			//	app.rq.push(['templateFunction','homepageTemplate','onInits',function(infoObj) {
+			//		app.ext.store_bmo.u.loadProductsAsList('.99-fashion-accessories');
+			//	}]);
 				
 				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
 					var $context = $(app.u.jqSelector('#'+infoObj.parentID));
@@ -54,6 +54,7 @@ var store_bmo = function() {
 					app.ext.store_bmo.u.runHomeCarouselTab1($context);
 					app.ext.store_bmo.u.runHomeCarouselTab2($context);
 					app.ext.store_bmo.u.runHomeCarouselTab3($context);
+					app.ext.store_bmo.u.loadProductsAsList('.99-fashion-accessories');
 				}]);
 				
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
