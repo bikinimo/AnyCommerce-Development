@@ -34,10 +34,10 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 
 .navsection{margin:6px 0 0 0; padding:0px; width:964px; float:left; background:url(images/nav_bg.png) no-repeat; height:27px;}
 .navsection ul{margin:0px; padding:0px;}
-.navsection ul li{margin:0px; padding:6px 10px; list-style-type:none; float:left;}
+.navsection ul li{margin:0px; padding:5px 10px; list-style-type:none; float:left;}
 /*.navsection ul li:hover{margin:0px; padding:4px 15px 5px 15px; list-style-type:none; float:left; border-radius:5px 5px 0 0 ;  color:#221f1f !important; background:#EAE8E5 !important;}
 */
-.navsection ul li a{color:#FFFFFF; font-size:14px; text-decoration:none; padding: 4px;}
+.navsection ul li a{color:#FFFFFF; font-size:14px; text-decoration:none; padding:4px 10px;}
 .navsection ul li a:hover{color:#fe7a00;}
 
 .sizebg{margin:5px 0px; padding:4px 0 0 0; width:964px; float:left; background:url(images/sizebg-964x30.png) no-repeat; height:30px; text-align:center; font-size:20.5px; font-weight:bold;}
