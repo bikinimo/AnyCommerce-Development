@@ -880,6 +880,9 @@ return false;
 				</div>
 				<table class='fullWidth gridTable recentlybox'>
 					<tbody data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplatePopout;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;"></tbody>
+					<div id='recentlyViewedItemsContainer' class='displayNone'>
+						<ul data-bind="var: session(recentlyViewedItems); format:productList; extension:store_prodlist; loadsTemplate:productListTemplatePopout; hide_summary:1; hide_pagination:1;"></ul>
+					</div>
 				</table>
 			</div>
 		</td>

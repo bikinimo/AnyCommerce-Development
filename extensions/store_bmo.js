@@ -52,6 +52,7 @@ var store_bmo = function() {
 					app.ext.store_bmo.u.runHomeCarouselTab3($context);
 					app.ext.store_bmo.u.loadProductsAsList('.99-fashion-accessories');
 				}]);
+
 				
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
@@ -590,6 +591,17 @@ var store_bmo = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+
+			recentlyViewedItems : function() {
+				app.u.dump('store_bmo recentlyViewedItems has been run');
+				var $container = $('#recentlyViewedItemsContainer');
+				//app.u.dump($container);
+				//$container.css({'height':'100px','width':'100px','background':'black'});
+				$container.show();
+				$('ul',$container).empty(); //empty product list
+				//app.u.dump(app.ext.myRIA.vars.session);
+				$($container.anycontent({data:app.ext.myRIA.vars.session})); //build product list
+			},
 		
 			loadProductsAsList :function(passedCat) {
 			
