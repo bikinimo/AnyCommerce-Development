@@ -127,7 +127,7 @@ var store_bmo = function() {
 				$('.accessoriesList','.quickVModal').hide();
 				$('.comparisonsList','.quickVModal').hide();
 				$container.show();
-				$('.comparissonsbox ul li a','.quickVModal').removeClass('selectedList');
+				$('.comparissonsbox ul li','.quickVModal').removeClass('selectedList');
 				$('.rec','.quickVModal').addClass('selectedList');
 				
 					//if no recently viewed items, tell them the sky is blue
@@ -149,7 +149,7 @@ var store_bmo = function() {
 				$('#recentlyViewedItemsContainer','.quickVModal').hide();
 				$('.comparisonsList','.quickVModal').hide();
 				$('.accessoriesList','.quickVModal').show();
-				$('.comparissonsbox ul li a','.quickVModal').removeClass('selectedList');
+				$('.comparissonsbox ul li','.quickVModal').removeClass('selectedList');
 				$('.acc','.quickVModal').addClass('selectedList');
 			},
 			
@@ -159,7 +159,7 @@ var store_bmo = function() {
 				$('#recentlyViewedItemsContainer','.quickVModal').hide();
 				$('.accessoriesList','.quickVModal').hide();
 				$('.comparisonsList','.quickVModal').show();
-				$('.comparissonsbox ul li a','.quickVModal').removeClass('selectedList');
+				$('.comparissonsbox ul li','.quickVModal').removeClass('selectedList');
 				$('.comp','.quickVModal').addClass('selectedList');
 			},
 		

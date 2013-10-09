@@ -876,9 +876,9 @@ return false;
 			<div style="width:140px;">
 				<div class="comparissonsbox">
 					<ul>
-						<li class='displayNone' data-bind="var: product(zoovy:accessory_products); format:showIfSet;"><a class='acc selectedList' href="#" onClick='app.ext.store_bmo.a.showAccessories();'>You may also like</a></li>
-						<li><a class='rec' href="#" onClick='app.ext.store_bmo.a.showRecentlyViewedItems();'>Recently viewed</a></li>
-						<li><a class='comp' href="#" onClick='app.ext.store_bmo.a.showComparisons();'>Comparisons</a></li>
+						<li class='displayNone acc selectedList pointer' data-bind="var: product(zoovy:accessory_products); format:showIfSet;" onClick='app.ext.store_bmo.a.showAccessories();'>You may also like</li>
+						<li class='rec pointer' onClick='app.ext.store_bmo.a.showRecentlyViewedItems();'>Recently viewed</li>
+						<li class='comp pointer' href="#" onClick='app.ext.store_bmo.a.showComparisons();'>Comparisons</li>
 					</ul>
 				</div>
 				<div class='fullWidth gridTable recentlybox'>

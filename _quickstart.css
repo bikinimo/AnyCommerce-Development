@@ -957,10 +957,9 @@ z-index:1002; overflow: auto; /*box-shadow: 1px 1px 3px 3px #000000;*/ font-fami
 .comparissonsbox{margin:0px; padding:0px; text-align:center; clear:both;}
 .quickVModal .popoutButton {height:20px; width:21px;}
 .comparissonsbox ul{margin:0px; padding:0px;}
-.comparissonsbox ul li{margin:0px; padding:0px; list-style-type:none; font-family:'Abel', serif; font-size:20px;}
-.comparissonsbox ul li a{color:#276b98; text-decoration:underline;}
-.comparissonsbox ul li a:hover{color:#333; text-decoration:underline;}
-.comparissonsbox ul li a.selectedList {color:#54A7E1; text-decoration:none;}
+.comparissonsbox ul li{margin:0px; padding:0px; list-style-type:none; font-family:'Abel', serif; font-size:20px; color:#276b98; text-decoration:underline;}
+.comparissonsbox ul li:hover{color:#333; text-decoration:underline;}
+.comparissonsbox ul li.selectedList {color:#54A7E1; text-decoration:none; cursor:auto;}
 
 .recentlybox{margin:10px 0 0 0; padding:0px;}
 .recentlybox .prodThumbContainer{margin:0px; padding:0 0 5px 0; float:left; width:100%;}
