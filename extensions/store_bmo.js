@@ -119,6 +119,50 @@ var store_bmo = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 		
+				//populates and shows list of recently viewed items in prod page popout on link click
+			showRecentlyViewedItems : function() {
+				var $container = $('#recentlyViewedItemsContainer'); //where the list goes
+
+					//you can only look at one list at a time
+				$('.accessoriesList','.quickVModal').hide();
+				$('.comparisonsList','.quickVModal').hide();
+				$container.show();
+				$('.comparissonsbox ul li a','.quickVModal').removeClass('selectedList');
+				$('.rec','.quickVModal').addClass('selectedList');
+				
+					//if no recently viewed items, tell them the sky is blue
+				if(app.ext.myRIA.vars.session.recentlyViewedItems.length == 0) {
+					$('.recentEmpty',$container).show();
+				}
+					//otherwise, show them what they've seen
+				else {
+					$('.recentEmpty',$container).hide();
+					$('ul',$container).empty(); //empty product list;
+					$($container.anycontent({data:app.ext.myRIA.vars.session})); //build product list
+				}
+			},
+			
+				//shows list of accessory_products in prod page popout on link click
+			showAccessories : function() {
+			
+					//you can only look at one list at a time
+				$('#recentlyViewedItemsContainer','.quickVModal').hide();
+				$('.comparisonsList','.quickVModal').hide();
+				$('.accessoriesList','.quickVModal').show();
+				$('.comparissonsbox ul li a','.quickVModal').removeClass('selectedList');
+				$('.acc','.quickVModal').addClass('selectedList');
+			},
+			
+			showComparisons : function() {
+			
+					//you can only look at one list at a time
+				$('#recentlyViewedItemsContainer','.quickVModal').hide();
+				$('.accessoriesList','.quickVModal').hide();
+				$('.comparisonsList','.quickVModal').show();
+				$('.comparissonsbox ul li a','.quickVModal').removeClass('selectedList');
+				$('.comp','.quickVModal').addClass('selectedList');
+			},
+		
 			justText : function() {
 				return $(this).clone().children().remove().end().text();
 			},
@@ -284,17 +328,40 @@ var store_bmo = function() {
 				//opens tab on product modal with recent, you may like, etc. lists
 			showMoreOptions : function($this, pid) {
 				var _pid = app.u.makeSafeHTMLId(pid);
+				
 				$this.hide();	//hide the "more options" button
 					//slide tab out, when done add a border
 				$('.anotherElement_'+_pid).width('0px').show().addClass('anotherElement').animate({
 					'left'	: '712px',
 					'width'	: '150px'
-				},500, function(){$(this).css({'border-top':'1px solid #b1b1b1','border-right':'1px solid #b1b1b1','border-bottom':'1px solid #b1b1b1', 'top':'26px'})});
+				},500);
 					//reposition modal so that it is in center of screen accounting for new tab in width
 				$('.quickVModal').addClass('anotherElement').animate({
 					'margin':'0 50%',
 					'left'	:'-430px',
 				},500);
+			},
+			
+			hideMoreOptions : function($this, pid) {
+				var _pid = app.u.makeSafeHTMLId(pid);
+				
+			//	$('.anotherElement_'+_pid).animate({'width':'0px'},2000);
+				
+				$('.anotherElement_'+_pid).animate({
+					'width':'0px'
+					},500, function() {
+						$(this).hide();
+					});
+				
+				$('.quickVModal').animate({
+					'margin':'0 50%',
+					'left'	:'-360px',
+				},500,function(){$('.myelement','.quickVModal').show().css('opacity','0').animate({'opacity':'1'},500);});
+				
+				setTimeout(function(){
+					$('.quickVModal').removeClass('anotherElement');
+					$('.anotherElement_'+_pid).removeClass('anotherElement');
+				},1000);
 			},
 			
 			showAccountCreate : function() {
@@ -592,17 +659,25 @@ var store_bmo = function() {
 //any functions that are recycled should be here.
 		u : {
 
-			recentlyViewedItems : function() {
-				app.u.dump('store_bmo recentlyViewedItems has been run');
-				var $container = $('#recentlyViewedItemsContainer');
-				//app.u.dump($container);
-				//$container.css({'height':'100px','width':'100px','background':'black'});
-				$container.show();
-				$('ul',$container).empty(); //empty product list
-				//app.u.dump(app.ext.myRIA.vars.session);
-				$($container.anycontent({data:app.ext.myRIA.vars.session})); //build product list
-			},
-		
+			addRecentlyViewedItems : function() {
+			//	app.u.dump('store_bmo recentlyViewedItems has been run');
+				
+					//get pid of product modal when it closes
+				var pid = app.u.makeSafeHTMLId($('.popupshado','.quickVModal').attr('data-pid'));
+				
+					//add item to session var
+				if($.inArray(pid,app.ext.myRIA.vars.session.recentlyViewedItems) < 0)	{
+					app.ext.myRIA.vars.session.recentlyViewedItems.unshift(pid);
+					}
+				else	{
+					//the item is already in the list. move it to the front.
+					app.ext.myRIA.vars.session.recentlyViewedItems.splice(0, 0, app.ext.myRIA.vars.session.recentlyViewedItems.splice(app.ext.myRIA.vars.session.recentlyViewedItems.indexOf(pid), 1)[0]);
+					}
+			//	app.u.dump(app.ext.myRIA.vars.session);
+			//	app.u.dump('modal pid:'); app.u.dump(pid);
+			}, //addRecentlyViewedItems
+				
+				//loads product in hompage accessories tab	
 			loadProductsAsList :function(passedCat) {
 			
 				var _tag = {

@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"201318.20131008140600",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201318.20131009142200",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
@@ -870,20 +870,25 @@ return false;
 		</td>
 		
 		<td align="left" valign="top" class='displayNone' data-bind="useParentData:true; format:classyId; extension:store_bmo;">
+			<button class='popoutButton floatRight ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only' onClick='app.ext.store_bmo.a.hideMoreOptions($(this), $(this).attr("data-pid"))'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+				<span class='ui-button-icon-primary ui-icon ui-icon-closethick'></span>
+			</button>
 			<div style="width:140px;">
 				<div class="comparissonsbox">
 					<ul>
-						<li><a href="#like">You may also like</a></li>
-						<li><a href="#">Recently viewed</a></li>
-						<li><a href="#">Comparissons</a></li>
+						<li class='displayNone' data-bind="var: product(zoovy:accessory_products); format:showIfSet;"><a class='acc selectedList' href="#" onClick='app.ext.store_bmo.a.showAccessories();'>You may also like</a></li>
+						<li><a class='rec' href="#" onClick='app.ext.store_bmo.a.showRecentlyViewedItems();'>Recently viewed</a></li>
+						<li><a class='comp' href="#" onClick='app.ext.store_bmo.a.showComparisons();'>Comparisons</a></li>
 					</ul>
 				</div>
-				<table class='fullWidth gridTable recentlybox'>
-					<tbody data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplatePopout;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;"></tbody>
+				<div class='fullWidth gridTable recentlybox'>
+					<div class='accessoriesList' data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplatePopout;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;"></div>
 					<div id='recentlyViewedItemsContainer' class='displayNone'>
-						<ul data-bind="var: session(recentlyViewedItems); format:productList; extension:store_prodlist; loadsTemplate:productListTemplatePopout; hide_summary:1; hide_pagination:1;"></ul>
+						<div class='displayNone recentEmpty'>Hmm, this must be the first item you've viewed...</div>
+						<ul data-bind="var: session(recentlyViewedItems); format:productList; extension:store_prodlist; loadsTemplate:productListTemplatePopout; hide_summary:1; hide_pagination:1;" class='listStyleNone noPadOrMargin'></ul>
 					</div>
-				</table>
+					<div class='displayNone comparisonsList'>Check back later to see comparisons</div>
+				</div>
 			</div>
 		</td>
 		</tr>

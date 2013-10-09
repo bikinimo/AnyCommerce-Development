@@ -946,7 +946,7 @@ z-index:1002; overflow: auto; /*box-shadow: 1px 1px 3px 3px #000000;*/ font-fami
 /*.ui-resizable .ui-dialog-titlebar{background:#FFFFFF !important; border:0px !important;}
 .ui-resizable .ui-dialog-titlebar > .ui-dialog-title{visibility:hidden;}*/
 
-.quickVModal .anotherElement {background:#ffffff; border-radius:0 5px 5px 0; top:27px; position:absolute;}
+.quickVModal .anotherElement {background:#ffffff; border-radius:0 5px 5px 0; top:27px; position:absolute; border-top:1px solid #b1b1b1; border-right:1px solid #b1b1b1; border-bottom:1px solid #b1b1b1;}
 .quickVModal.anotherElement #product-modal.ui-dialog-content {overflow:visible;}
 
 .productListTemplatePopout {height:auto; width:120px; padding:0 10px;}
@@ -954,11 +954,13 @@ z-index:1002; overflow: auto; /*box-shadow: 1px 1px 3px 3px #000000;*/ font-fami
 .productListTemplatePopout h5 {text-align:center;}
 .productListTemplatePopout h6 {border-bottom:1px solid #b1b1b1; margin:0 0 10px 0; padding:0 0 10px 0; text-align:center;}
 
-.comparissonsbox{margin:0px; padding:0px; text-align:center;}
+.comparissonsbox{margin:0px; padding:0px; text-align:center; clear:both;}
+.quickVModal .popoutButton {height:20px; width:21px;}
 .comparissonsbox ul{margin:0px; padding:0px;}
 .comparissonsbox ul li{margin:0px; padding:0px; list-style-type:none; font-family:'Abel', serif; font-size:20px;}
 .comparissonsbox ul li a{color:#276b98; text-decoration:underline;}
 .comparissonsbox ul li a:hover{color:#333; text-decoration:underline;}
+.comparissonsbox ul li a.selectedList {color:#54A7E1; text-decoration:none;}
 
 .recentlybox{margin:10px 0 0 0; padding:0px;}
 .recentlybox .prodThumbContainer{margin:0px; padding:0 0 5px 0; float:left; width:100%;}
@@ -967,6 +969,8 @@ z-index:1002; overflow: auto; /*box-shadow: 1px 1px 3px 3px #000000;*/ font-fami
 .recentlybox .variation .label_select{float:left;}
 .recentlybox .variation_A2{margin:6px 0 0 0; padding:0px; display:inline-block;}
 .recentlybox .variation span > select{margin:0px; padding:0px; width:100px; float:left;}
+
+.recentEmpty, .comparisonsList {font-family:electrolize; font-size:21px; text-align:center; margin:20px 10px;}
 
 .tellb{margin:10px 0 0 0; padding:0px; float:left; width:100%;}
 .tellb label{margin:0px; padding:3px 0 0 0; width:150px; float:left; font-weight:normal;}

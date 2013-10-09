@@ -633,7 +633,7 @@ NOTES
 /*bmo*/							$('.productList2').trigger('play',true);
 /*bmo*/							$('.productList3').trigger('play',true);
 /*bmo*/							$('.productList4').trigger('play',true);
-								app.ext.store_bmo.u.recentlyViewedItems();
+								app.ext.store_bmo.u.addRecentlyViewedItems();
 /*bmo*/						},
 /*bmo*/						dialogClass : 'quickVModal'
 /*bmo*/					});
