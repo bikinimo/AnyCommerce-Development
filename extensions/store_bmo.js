@@ -283,9 +283,17 @@ var store_bmo = function() {
 			showMoreOptions : function($this, pid) {
 				var _pid = app.u.makeSafeHTMLId(pid);
 				$this.hide();
-				$('.anotherElement_'+_pid).show();
-				$('.quickVModal').width('820px').css({'margin':'0 50%','left':'-410px'});
-				$('.sizebg','.quickVModal').css({'width':'774px','background-image':'url(images/sizebg-774x30.png)'});
+				$('.anotherElement_'+_pid).width('0px').show().addClass('anotherElement').animate({
+					'left'		: '713px',
+					'width'	: '150px'
+				},500, function(){$(this).css({'border-top':'1px solid #b1b1b1','border-right':'1px solid #b1b1b1','border-bottom':'1px solid #b1b1b1', 'top':'26px'})});
+				//$('.quickVModal').width('820px').css({'margin':'0 50%','left':'-410px'});
+				//$('.quickVModal').addClass('anotherElement').css({'margin':'0 50%','left':'-410px'});
+				$('.quickVModal').addClass('anotherElement').animate({
+					'margin':'0 50%',
+					'left'	:'-410px',
+				},500);
+				//$('.sizebg','.quickVModal').css({'width':'774px','background-image':'url(images/sizebg-774x30.png)'});
 			},
 			
 			showAccountCreate : function() {

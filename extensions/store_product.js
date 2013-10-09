@@ -621,14 +621,14 @@ NOTES
 						$parent = $("<div \/>").attr({"id":'product-modal',"title":""}).appendTo('body');
 /*bmo*/					$parent.dialog({
 /*bmo*/						modal: true,
-/*bmo*/						width:'680px',
+/*bmo*/						width:'710px',
 /*bmo*/						height:'auto',
 /*bmo*/						position:{my:"center top", at:"center top+10%", of:window},
 /*bmo*/						autoOpen:false,
 /*bmo*/						open : function(event, ui){ $('.ui-widget-overlay').on('click.closeModal', function(){$parent.dialog('close')});},
 /*bmo*/						close : function(event, ui){ 
 /*bmo*/							$('.ui-widget-overlay').off('click.closeModal');
-/*bmo*/							$('.quickVModal').css({'width':'680px','margin':'0'});
+/*bmo*/							$('.quickVModal').css({'width':'710px','margin':'0'});
 /*bmo*/							$('.productList1').trigger('play',true);
 /*bmo*/							$('.productList2').trigger('play',true);
 /*bmo*/							$('.productList3').trigger('play',true);
