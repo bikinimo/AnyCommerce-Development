@@ -27,6 +27,8 @@ var myRIA = function() {
 //a list of the templates used by this extension.
 //if this is a custom extension and you are loading system extensions (prodlist, etc), then load ALL templates you'll need here.
 		"templates" : [
+//custom templates that have been added to the list
+			'productListTemplatePopout',
 //the list of templates that are commonly edited (same order as they appear in appTemplates
 			'homepageTemplate',	'categoryTemplate',
 			'categoryListTemplate',
@@ -3063,7 +3065,7 @@ else	{
 			createTemplateFunctions : function()	{
 
 				app.ext.myRIA.template = {};
-				var pageTemplates = new Array('categoryTemplate','productTemplate','companyTemplate','customerTemplate','homepageTemplate','searchTemplate','cartTemplate','checkoutTemplate','pageNotFoundTemplate');
+				var pageTemplates = new Array('productListTemplatePopout','categoryTemplate','productTemplate','companyTemplate','customerTemplate','homepageTemplate','searchTemplate','cartTemplate','checkoutTemplate','pageNotFoundTemplate');
 				var L = pageTemplates.length;
 				for(var i = 0; i < L; i += 1)	{
 					app.ext.myRIA.template[pageTemplates[i]] = {"onCompletes":[],"onInits":[],"onDeparts":[]};
