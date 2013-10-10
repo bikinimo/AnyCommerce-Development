@@ -118,13 +118,14 @@ var store_bmo = function() {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
-		
-			optionsQuickView : function($this, pid) {
 			
+				//opens items from prod page pop out into modal, also adds them to recently viewed session var
+			optionsQuickView : function($this, pid) {
+				
+				app.ext.store_bmo.u.addRecentlyViewedItems();
 				var sourcePID = app.u.makeSafeHTMLId($('.popupshado','.quickVModal').attr('data-pid'));
 				app.ext.store_bmo.a.hideMoreOptions($this, sourcePID);
 				setTimeout(function(){quickView('product',{'templateID':'productTemplateQuickView','pid':pid});},550);
-				
 			},
 		
 				//populates and shows list of recently viewed items in prod page popout on link click
