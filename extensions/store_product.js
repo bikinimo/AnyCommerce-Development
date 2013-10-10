@@ -649,6 +649,7 @@ NOTES
 							
 							$parent.dialog( "option", "title", app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'] );
 							$parent.anycontent({'templateID':P.templateID,'datapointer':"appProductGet|"+P.pid});
+/*bmo*/						$('.prodViewerContainer','.quickVModal').animate({'opacity':'1'},500);  //fade product into view
 							//app.ext.store_bmo.u.loadMatchingProduct(P.pid, $('.match_'+app.data["appProductGet|"+P.pid].pid) );
 							}
 						}});

@@ -359,7 +359,7 @@ PRODUCT DETAIL PAGE (productTemplate)
 
 ***************************************************/
 
-.prodViewerContainer	{width:100%;}
+.prodViewerContainer	{width:100%; opacity:0;}
 
 .breadAndAddThisContainer	{margin-bottom:8px; padding-bottom:8px; border-bottom:1px dotted #b6b6b6;}
 

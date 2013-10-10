@@ -121,11 +121,15 @@ var store_bmo = function() {
 			
 				//opens items from prod page pop out into modal, also adds them to recently viewed session var
 			optionsQuickView : function($this, pid) {
+				var $modal = $('.popupshado','.quickVModal');
+				var $product = $('.prodViewerContainer','.quickVModal');
+				var sourcePID = app.u.makeSafeHTMLId($modal.attr('data-pid'));
 				
-				app.ext.store_bmo.u.addRecentlyViewedItems();
-				var sourcePID = app.u.makeSafeHTMLId($('.popupshado','.quickVModal').attr('data-pid'));
-				app.ext.store_bmo.a.hideMoreOptions($this, sourcePID);
-				setTimeout(function(){quickView('product',{'templateID':'productTemplateQuickView','pid':pid});},550);
+				app.ext.store_bmo.u.addRecentlyViewedItems();	//record pop out item as viewed
+				app.ext.store_bmo.a.hideMoreOptions($this, sourcePID);	//close pop out
+
+				$product.animate({'opacity':'0'},550);	//make removal of shown product pretty
+				setTimeout(function(){quickView('product',{'templateID':'productTemplateQuickView','pid':pid});},550);	//open new product
 			},
 		
 				//populates and shows list of recently viewed items in prod page popout on link click
