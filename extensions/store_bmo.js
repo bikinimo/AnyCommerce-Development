@@ -119,6 +119,14 @@ var store_bmo = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 		
+			optionsQuickView : function($this, pid) {
+			
+				var sourcePID = app.u.makeSafeHTMLId($('.popupshado','.quickVModal').attr('data-pid'));
+				app.ext.store_bmo.a.hideMoreOptions($this, sourcePID);
+				setTimeout(function(){quickView('product',{'templateID':'productTemplateQuickView','pid':pid});},550);
+				
+			},
+		
 				//populates and shows list of recently viewed items in prod page popout on link click
 			showRecentlyViewedItems : function() {
 				var $container = $('#recentlyViewedItemsContainer'); //where the list goes
@@ -344,9 +352,7 @@ var store_bmo = function() {
 			
 			hideMoreOptions : function($this, pid) {
 				var _pid = app.u.makeSafeHTMLId(pid);
-				
-			//	$('.anotherElement_'+_pid).animate({'width':'0px'},2000);
-				
+		
 				$('.anotherElement_'+_pid).animate({
 					'width':'0px'
 					},500, function() {

@@ -479,7 +479,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 		
 			<!-- used for popout tab on product page/modal -->
 		<li id='productListTemplatePopout' class='loadingBG productListTemplatePopout'>
-			<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+			<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' onClick="app.ext.store_bmo.a.optionsQuickView($(this), $(this).attr('data-pid'));";>
 				<div class='prodThumbContainer floatLeft' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'> 
 					<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
 				</div>

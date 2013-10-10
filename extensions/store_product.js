@@ -625,6 +625,7 @@ NOTES
 /*bmo*/						height:'auto',
 /*bmo*/						position:{my:"center top", at:"center top+10%", of:window},
 /*bmo*/						autoOpen:false,
+/*bmo*/						dialogClass : 'quickVModal',
 /*bmo*/						open : function(event, ui){ $('.ui-widget-overlay').on('click.closeModal', function(){$parent.dialog('close')});},
 /*bmo*/						close : function(event, ui){ 
 /*bmo*/							$('.ui-widget-overlay').off('click.closeModal');
@@ -633,9 +634,8 @@ NOTES
 /*bmo*/							$('.productList2').trigger('play',true);
 /*bmo*/							$('.productList3').trigger('play',true);
 /*bmo*/							$('.productList4').trigger('play',true);
-								app.ext.store_bmo.u.addRecentlyViewedItems();
+/*bmo*/							app.ext.store_bmo.u.addRecentlyViewedItems();
 /*bmo*/						},
-/*bmo*/						dialogClass : 'quickVModal'
 /*bmo*/					});
 					}
 					
