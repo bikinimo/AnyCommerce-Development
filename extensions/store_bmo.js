@@ -134,7 +134,7 @@ var store_bmo = function() {
 
 					//you can only look at one list at a time
 				$('.accessoriesList','.quickVModal').hide();
-				$('.comparisonsList','.quickVModal').hide();
+				$('.relatedList','.quickVModal').hide();
 				$container.show();
 				$('.comparissonsbox ul li','.quickVModal').removeClass('selectedList');
 				$('.rec','.quickVModal').addClass('selectedList');
@@ -156,18 +156,18 @@ var store_bmo = function() {
 			
 					//you can only look at one list at a time
 				$('#recentlyViewedItemsContainer','.quickVModal').hide();
-				$('.comparisonsList','.quickVModal').hide();
+				$('.relatedList','.quickVModal').hide();
 				$('.accessoriesList','.quickVModal').show();
 				$('.comparissonsbox ul li','.quickVModal').removeClass('selectedList');
 				$('.acc','.quickVModal').addClass('selectedList');
 			},
 			
-			showComparisons : function() {
+			showRelated : function() {
 			
 					//you can only look at one list at a time
 				$('#recentlyViewedItemsContainer','.quickVModal').hide();
 				$('.accessoriesList','.quickVModal').hide();
-				$('.comparisonsList','.quickVModal').show();
+				$('.relatedList','.quickVModal').show();
 				$('.comparissonsbox ul li','.quickVModal').removeClass('selectedList');
 				$('.comp','.quickVModal').addClass('selectedList');
 			},

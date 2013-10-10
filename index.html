@@ -878,7 +878,7 @@ return false;
 					<ul>
 						<li class='displayNone acc selectedList pointer' data-bind="var: product(zoovy:accessory_products); format:showIfSet;" onClick='app.ext.store_bmo.a.showAccessories();'>You may also like</li>
 						<li class='rec pointer' onClick='app.ext.store_bmo.a.showRecentlyViewedItems();'>Recently viewed</li>
-						<li class='comp pointer' href="#" onClick='app.ext.store_bmo.a.showComparisons();'>Comparisons</li>
+						<li class='displayNone comp pointer' data-bind="var: product(zoovy:related_products); format:showIfSet;" onClick='app.ext.store_bmo.a.showRelated();'>Related products</li>
 					</ul>
 				</div>
 				<div class='fullWidth gridTable recentlybox'>
@@ -887,7 +887,7 @@ return false;
 						<div class='displayNone recentEmpty'>Hmm, this must be the first item you've viewed...</div>
 						<ul data-bind="var: session(recentlyViewedItems); format:productList; extension:store_prodlist; loadsTemplate:productListTemplatePopout; hide_summary:1; hide_pagination:1;" class='listStyleNone noPadOrMargin'></ul>
 					</div>
-					<div class='displayNone comparisonsList'>Check back later to see comparisons</div>
+					<div class='relatedList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplatePopout;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;"></div>
 				</div>
 			</div>
 		</td>
