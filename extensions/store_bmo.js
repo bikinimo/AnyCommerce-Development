@@ -482,7 +482,7 @@ var store_bmo = function() {
 						var MFG = data.value['%attribs']['zoovy:prod_mfg'];
 						var price = data.value['%attribs']['zoovy:prod_msrp'];
 						$tag.on("click", function() {
-							var eWindow = window.open("mailto:?subject=Check%20out%20the%20"+name+"%20I%20found%20on%20bikinimo.com&body="+name+",%20by%20"+MFG+",%20for%20only%20"+price+""); //+window.location
+							var eWindow = window.open("mailto:?subject=Check%20out%20the%20"+name+"%20I%20found%20on%20bikinimo.com&body="+name+",%20by%20"+MFG+",%20for%20only%20"+price+"%20"+window.location+""); //+window.location
 						
 								//window object has an array of content if something loaded in it.
 								//the timeout was necessary to access the data to determine whether or not to close.
@@ -503,14 +503,14 @@ var store_bmo = function() {
 	//TODO!! SET .on() FOR THE OTHER TWO WINDOW CASES AND TEST.
 					else {
 						$tag.on("click", function() {
-							var eWindow = window.open("mailto:?subject=Check%20out%20the%20"+name+"%20I%20found%20on%20bikinimo.com");
+							var eWindow = window.open("mailto:?subject=Check%20out%20the%20"+name+"%20I%20found%20on%20bikinimo.com&body=%20"+window.location+"");
 							setTimeout(function(){if(eWindow[0]) {} else {eWindow.close();}	},5000);
 						});
 					}
 				}
 				else {
 					$tag.on("click", function() {
-						var eWindow = window.open("mailto:?");
+						var eWindow = window.open("mailto:?body="+window.location+"");
 						setTimeout(function(){if(eWindow[0]) {} else {eWindow.close();}	},5000);
 					});
 				}

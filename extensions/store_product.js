@@ -626,6 +626,11 @@ NOTES
 /*bmo*/						position:{my:"center top", at:"center top+10%", of:window},
 /*bmo*/						autoOpen:false,
 /*bmo*/						dialogClass : 'quickVModal',
+							show : {
+								'effect' : 'scale',
+								'duration' : 1000,
+								'easing' : 'easeInExpo'
+							},
 /*bmo*/						open : function(event, ui){ $('.ui-widget-overlay').on('click.closeModal', function(){$parent.dialog('close')});},
 /*bmo*/						close : function(event, ui){ 
 /*bmo*/							$('.ui-widget-overlay').off('click.closeModal');
