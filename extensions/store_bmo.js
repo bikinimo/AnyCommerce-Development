@@ -468,6 +468,50 @@ var store_bmo = function() {
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 		
+				//opens e-mail in default mail provider (new window if web-based)
+				//if info is available will populate subject and body w/ prod name, mfg, & price
+				//if only name, subject will have name, body will be empty. If no content, no subject or body
+			bindMailto : function($tag, data){
+				app.u.dump('data.value:'); app.u.dump(data.value);
+				if(data.value['%attribs'] && data.value['%attribs']['zoovy:prod_name']) {
+					
+					var name = data.value['%attribs']['zoovy:prod_name'];
+					
+						//if all the info is present, add it all to the message
+					if(data.value['%attribs']['zoovy:prod_mfg'] && data.value['%attribs']['zoovy:prod_msrp']) {
+						var MFG = data.value['%attribs']['zoovy:prod_mfg'];
+						var price = data.value['%attribs']['zoovy:prod_msrp'];
+						$tag.on("click", function() {
+							var eWindow = window.open("mailto:?subject=Check%20out%20the%20"+name+"%20I%20found%20on%20bikinimo.com&body="+name+",%20by%20"+MFG+",%20for%20only%20"+price+""); //+window.location
+						
+								//window object has an array of content if something loaded in it.
+								//the timeout was necessary to access the data to determine whether or not to close.
+								//test thoroughly to determine the reliability of this method!!
+								
+								//the window is set, check if it's filled, and kill it if not
+							setTimeout(function(){
+								//app.u.dump('WindowObjectReference'); app.u.dump(eWindow.WindowObjectReference); //Security issues? check for later possibility of cleaner implementation 
+								if(eWindow[0]) {//app.u.dump('Webmail, window has content don't close');
+								}
+								else {
+									//app.u.dump('Outlook-esq, window has no content'); 
+									eWindow.close();
+								}
+							},5000);
+						});
+					}
+	//TODO!! SET .on() FOR THE OTHER TWO WINDOW CASES AND TEST.
+					else {
+						var eWindow = window.open("mailto:?subject=Check%20out%20the%20"+name+"%20I%20found%20on%20bikinimo.com");
+						setTimeout(function(){if(eWindow[0]) {} else {eWindow.close();}	},5000);
+					}
+				}
+				else {
+					var eWindow = window.open("mailto:?");
+					setTimeout(function(){if(eWindow[0]) {} else {eWindow.close();}	},5000);
+				}
+			}, //bindMailto
+		
 				//will combine features list in tab section on prod page for top and bottom products if they are both being added to the page
 			combineFeaturesList : function($tag, data) {
 				setTimeout(function(){
@@ -709,7 +753,7 @@ var store_bmo = function() {
 					 return app.ext.myRIA.a.showContent('',P);
 				});
 			},
-				
+			
 			//anyContent to add matching top or bottom to a top or bottom prod page
 			loadMatchingProduct : function(pid) {
 				//app.u.dump('PID:'); app.u.dump(pid);

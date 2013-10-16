@@ -22,8 +22,8 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 .headerright1{margin:0px; padding:0px; width:445px; float:left;}
 .topsecmenu{margin:0px; padding:0px; width:372px; float:left;}
 .contactsec{margin:0px; padding:0px; text-align:right; line-height:20px;}
-.contactsec a{color:#808080; text-decoration:none;}
-.contactsec a:hover{color:#000000; text-decoration:none;}
+.contactsec a, .contactsec .giftCardLink {color:#808080; text-decoration:none; display:inline}
+.contactsec a:hover, .contactsec .giftCardLink:hover {color:#000000; text-decoration:none;}
 .contactsec span{padding:0 10px; color: #808080;}
 .cartsec{margin:0px; padding:6px 0 0 0; text-align:right;}
 .cartsec img{margin:-3px 10px 0 0; padding:0;}
@@ -72,8 +72,8 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 .madebox1{margin:12px 0 0 65px; padding:0px; width:235px; float:left;}
 .madebox1 h1{margin:0px; padding:0px; font-size:23px; font-family:'Abel', serif; color:#54a7e1; font-weight:normal; text-align:center;}
 .madebox1 p{text-align:center; margin:0px; padding:0px; color:#2e5f80; line-height:15px;}
-.madebox1 a{text-align:center; color:#ec1c24; display:block; text-decoration:underline;} 
-.madebox1 a:hover{text-decoration:none;}
+.madebox1 .giftCardLink{text-align:center; color:#ec1c24; display:block; text-decoration:underline;} 
+.madebox1 .giftCardLink:hover{text-decoration:none;}
 /*Middle Close*/
 
 /*Footer Start*/
@@ -391,6 +391,7 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 
 .CRMButtonMenu	{margin:0; padding:0; margin-bottom:12px;}
 .ui-widget-content .CRMButtonMenu a {color:#286C99;}
+.CRMButtonMenu .tellFriend {text-decoration:underline;}
 
 .pogType_attribs	{display:none;} /* don't show finder attributes */
 

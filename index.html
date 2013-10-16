@@ -112,7 +112,7 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
                 <div class='giftCardLink pointer' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':'GC1000'});">Gift Cards</div><span>|</span><a href="#" onClick="app.ext.store_bmo.a.showSizeChart()">Sizing Guide</a> </div>
 			  <div class="cartsec"><a href="#!cart?show=cart" data-onclick="#!cart?show=cart" style="text-decoration:none;"><img src="images/cartimg.gif" align="top" alt="" /><span class="cartItemCount"></span><span class="shopingbag">Items in Your Shopping Bag</span></a></div>
             </div>
-            <div class="gryimgright"><img src="https://placehold.it/57x57"></div>
+            <div class="gryimgright"><script type="text/javascript" src="http://image.providesupport.com/js/bikinimo/safe-standard.js?ps_h=YLWk&amp;ps_t=1381856738259"></script></div>
           </div>
           <div class="headerright2">
             <label class="fl">Advanced Search</label>
@@ -832,7 +832,8 @@ return false;
 				<span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span> 
 			</section>
 			<menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'>
-				<a href = "javascript:void(0)" onclick = "document.getElementById('light1').style.display='block';document.getElementById('fade').style.display='block'">Tell a Friend</a> 
+				<!-- <a href = "javascript:void(0)" onclick = "document.getElementById('light1').style.display='block';document.getElementById('fade').style.display='block'">Tell a Friend</a>  -->
+				<a class='tellFriend pointer' target='_blank' data-bind='useParentData:true; format:bindMailto; extension:store_bmo;'>Tell a Friend</a> 
 				| <a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>Write Review</a>
 				| <a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;">Add to Wishlist</a> 
 			</menu>
