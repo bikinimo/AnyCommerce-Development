@@ -502,13 +502,17 @@ var store_bmo = function() {
 					}
 	//TODO!! SET .on() FOR THE OTHER TWO WINDOW CASES AND TEST.
 					else {
-						var eWindow = window.open("mailto:?subject=Check%20out%20the%20"+name+"%20I%20found%20on%20bikinimo.com");
-						setTimeout(function(){if(eWindow[0]) {} else {eWindow.close();}	},5000);
+						$tag.on("click", function() {
+							var eWindow = window.open("mailto:?subject=Check%20out%20the%20"+name+"%20I%20found%20on%20bikinimo.com");
+							setTimeout(function(){if(eWindow[0]) {} else {eWindow.close();}	},5000);
+						});
 					}
 				}
 				else {
-					var eWindow = window.open("mailto:?");
-					setTimeout(function(){if(eWindow[0]) {} else {eWindow.close();}	},5000);
+					$tag.on("click", function() {
+						var eWindow = window.open("mailto:?");
+						setTimeout(function(){if(eWindow[0]) {} else {eWindow.close();}	},5000);
+					});
 				}
 			}, //bindMailto
 		
