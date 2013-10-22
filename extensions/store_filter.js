@@ -209,7 +209,7 @@ var store_filter = function() {
 						"filter" : app.ext.store_filter.u.buildElasticFilters($form)
 					}//query
 					
-					//app.u.dump(" -> Query: "); app.u.dump(query);
+					app.u.dump(" -> Query: "); app.u.dump(query);
 					if(query.filter.and.length > 0)	{
 						$prodlist.addClass('loadingBG');
 						app.ext.store_search.calls.appPublicProductSearch.init(query,{'callback':function(rd){
@@ -325,8 +325,9 @@ var store_filter = function() {
 			//pass in a jquery object or series of objects for form inputs (ex: $('input:hidden')) and a single term or a terms object will be returned.
 			//false is returned in nothing is checked/selected.
 			//can be used on a series of inputs, such as hidden or checkbox 
+//return app.ext.store_filter.u.buildElasticTerms($(':checked',$fieldset),$fieldset.attr('data-elastic-key'));
 			buildElasticTerms : function($obj,attr)	{
-	app.u.dump('Filter Attribute:'); app.u.dump(attr);
+app.u.dump('Filter Attribute:'); app.u.dump(attr);
 				var r = false; //what is returned. will be term or terms object if valid.
 				if($obj.length == 1) {
 					r = {term:{}};

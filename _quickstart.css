@@ -1091,8 +1091,7 @@ Layered search styles
 label.break	{display:block; margin:0 0 4px 6px; color:#276B98; padding:0 0 0 23px; text-indent:-23px;}
 .layeredSearch	{height:auto; width:148px; margin:16px 0 16px 37px; color:#000000;}
 .layeredSearch legend	{font-size:1.0em; font-family:electrolize;  font-weight:normal; text-align:center; border:none; margin:0 0 4px 0; padding:0 5px; color:#F05A24;}
-.layeredSearch fieldset {border:1px solid #b1b1b1; border-radius:5px; margin-bottom:12px;} 
-.layeredSearch fieldset.wrapperFieldset fieldset {border:none; margin:0 0 5px 0;}
+.layeredSearch fieldset {border:1px solid #b1b1b1; border-radius:5px; margin-bottom:12px;}
 .layeredSearch .sliderValue {height:auto; width:95%; text-align:center; margin:0 0 15px 0;}
 .layeredSearch .slider-range {width:90%; margin:auto;}
 .layeredSearch .resetButton {height:auto; width:100%; color:#ffffff; background-color:#276B98; border:none; border-radius:5px; box-shadow:2px 2px 1px 1px #b1b1b1; font-family:electrolize;  font-weight:bold; padding:5px; margin:10px auto; display:block;}
