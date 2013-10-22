@@ -326,7 +326,7 @@ var store_filter = function() {
 			//false is returned in nothing is checked/selected.
 			//can be used on a series of inputs, such as hidden or checkbox 
 			buildElasticTerms : function($obj,attr)	{
-
+	app.u.dump('Filter Attribute:'); app.u.dump(attr);
 				var r = false; //what is returned. will be term or terms object if valid.
 				if($obj.length == 1) {
 					r = {term:{}};
