@@ -181,7 +181,11 @@ var store_filter = function() {
 			
 			checkboxes : function($fieldset) {
 				return app.ext.store_filter.u.buildElasticTerms($(':checked',$fieldset),$fieldset.attr('data-elastic-key'));
-			} //checkboxes
+			}, //checkboxes
+			
+			multi_key_checkboxes : function($fieldset, multiElasticKey) {
+				return app.ext.store_filter.u.buildElasticTerms($(':checked',$fieldset),multiElasticKey);
+			} //multi_key_checkboxes
 
 		}, //getFilterObj
 
@@ -209,7 +213,7 @@ var store_filter = function() {
 						"filter" : app.ext.store_filter.u.buildElasticFilters($form)
 					}//query
 					
-					app.u.dump(" -> Query: "); app.u.dump(query);
+			//		app.u.dump(" -> Query: "); app.u.dump(query);
 					if(query.filter.and.length > 0)	{
 						$prodlist.addClass('loadingBG');
 						app.ext.store_search.calls.appPublicProductSearch.init(query,{'callback':function(rd){
@@ -298,14 +302,26 @@ var store_filter = function() {
 			buildElasticFilters : function($form) {
 
 				var filters = {
-					"and" : [] //push on to this the values from each fieldset.
+					"and" : [], //push on to this the values from each fieldset.
 				}//query
 
 				$('fieldset',$form).each(function() {
-					var $fieldset = $(this),
-					filter = app.ext.store_filter.getElasticFilter[$fieldset.attr('data-filtertype')]($fieldset);
-					if(filter) {
-						filters.and.push(filter);
+					var $fieldset = $(this);
+					if($fieldset.attr('data-elastic-key').split(" ").length > 1) {
+						var multiElasticKey = $fieldset.attr('data-elastic-key').split(" ");
+						var splitLength = multiElasticKey.length;
+						for(i = 0; i < splitLength; i++) {
+							filter = app.ext.store_filter.getElasticFilter[$fieldset.attr('data-filtertype')]($fieldset, multiElasticKey[i]);
+							if(filter) {
+								filters.and.push(filter);
+							}
+						}
+					}
+					else {
+						filter = app.ext.store_filter.getElasticFilter[$fieldset.attr('data-filtertype')]($fieldset);
+						if(filter) {
+							filters.and.push(filter);
+						}
 					}
 				});
 				
@@ -317,7 +333,6 @@ var store_filter = function() {
 				if(filters.and.length == 1)	{
 					filters.and.push({match_all:{}})
 				}
-				
 				return filters;				
 			},
 			
@@ -327,7 +342,6 @@ var store_filter = function() {
 			//can be used on a series of inputs, such as hidden or checkbox 
 //return app.ext.store_filter.u.buildElasticTerms($(':checked',$fieldset),$fieldset.attr('data-elastic-key'));
 			buildElasticTerms : function($obj,attr)	{
-app.u.dump('Filter Attribute:'); app.u.dump(attr);
 				var r = false; //what is returned. will be term or terms object if valid.
 				if($obj.length == 1) {
 					r = {term:{}};
@@ -337,7 +351,7 @@ app.u.dump('Filter Attribute:'); app.u.dump(attr);
 					r = {terms:{}};
 					r.terms[attr] = new Array();
 					$obj.each(function() {
-						r.terms[attr].push((attr == pogs) ? $(this).val() : $(this).val().toLowerCase());
+						r.terms[attr].push((attr == 'pogs') ? $(this).val() : $(this).val().toLowerCase());
 					});
 				}
 				else {
