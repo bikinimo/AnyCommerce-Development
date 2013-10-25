@@ -113,6 +113,9 @@ var store_filter = function() {
 								event.preventDefault()
 								app.u.dump(" -> Filter form submitted.");
 								app.ext.store_filter.a.execFilter($form,$page);
+									//put a hold on infinite product list and hide loadingBG for it
+								$page.find("[data-app-role='productList']").data('filtered',true);
+								$page.find("[data-app-role='infiniteProdlistLoadIndicator']").hide();
 							});
 
 							if(typeof app.ext.store_filter.filterMap[infoObj.navcat].exec == 'function') {
