@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"201318.20131010142200",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201318.20131025103300",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
@@ -2753,10 +2753,15 @@ put all filters into the appFilters container.
 
 		<fieldset data-elastic-key="suit_style2 suit_style3" data-filtertype="checkboxes">
             <legend>Test</legend>
-			<label class='break'><input type='checkbox' value='calypso' /> Calypso</label>
 			<label class='break'><input type='checkbox' value='butterfly' /> Butterfly</label>
+			<label class='break'><input type='checkbox' value='calypso' /> Calypso</label>
 	    </fieldset>
-        
+		
+		<fieldset data-elastic-key="suit_style5 suit_style8" data-filtertype="checkboxes">
+            <legend>Test 2</legend>
+			<label class='break'><input type='checkbox' value='crochet' /> Crochet</label>
+			<label class='break'><input type='checkbox' value='gauze' /> Gauze</label>
+	    </fieldset>        
 		
         <fieldset data-elastic-key="pogs" data-filtertype="checkboxes">
             <legend>Sizes</legend>

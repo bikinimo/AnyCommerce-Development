@@ -158,7 +158,7 @@ var store_filter = function() {
 
 		getElasticFilter : {
 
-			slider : function($fieldset, q) {
+			slider : function($fieldset, mKey) {
 				var r = false; //what is returned. Will be set to an object if valid.
 				var $slider = $('.slider-range',$fieldset);
 				if($slider.length > 0) {
@@ -175,12 +175,12 @@ var store_filter = function() {
 				return r;
 			}, //slider
 
-			hidden : function($fieldset, q) {
+			hidden : function($fieldset, mKey) {
 				return app.ext.store_filter.u.buildElasticTerms($("input:hidden",$fieldset),$fieldset.attr('data-elastic-key'));
 			},
 			
-			checkboxes : function($fieldset, q) {
-				if (q == 0) {
+			checkboxes : function($fieldset, mKey) {
+				if (mKey == 0) {
 					return app.ext.store_filter.u.buildElasticTerms($(':checked',$fieldset),$fieldset.attr('data-elastic-key'));
 				}
 				else {
@@ -209,21 +209,13 @@ var store_filter = function() {
 
 				$('.categoryList',$page).hide(); //hide any subcategory lists in the main area so customer can focus on results
 				$('.categoryText',$page).hide(); //hide any text blocks.
-app.u.dump('app.ext.store_filter.u.buildElasticFilters($form)'); app.u.dump(app.ext.store_filter.u.buildElasticFilters($form));
+//				app.u.dump('app.ext.store_filter.u.buildElasticFilters($form)'); app.u.dump(app.ext.store_filter.u.buildElasticFilters($form));
 				if(app.ext.store_filter.u.validateFilterProperties($form)) {
 					app.u.dump(" -> validated Filter Properties.")
 					var query = {
 						"mode":"elastic-native",
 						"size":50,
-		//				"query":{
-		//						"filtered":{
-		//							"query":{
-		//								"query_string":"calypso",
-		//								"fields":["suit_style1","suit_style2","suit_style3"]
-		//								},
-									"filter" : app.ext.store_filter.u.buildElasticFilters($form)
-		//							}
-		//						}
+						"filter" : app.ext.store_filter.u.buildElasticFilters($form)
 					}//query
 					
 					app.u.dump(" -> Query: "); app.u.dump(query);
@@ -278,26 +270,30 @@ app.u.dump('app.ext.store_filter.u.buildElasticFilters($form)'); app.u.dump(app.
 //any functions that are recycled should be here.
 		u : {
 		
+				//pre-checks the entire form before filters are built to indicate whether or not to use OR query 
+				//returns true if OR structure is needed, false if not.
 			checkElasticForm : function($form) {
+			
 					//check each fieldset in the form to see if it's elastic key has more than one attribute
-					var count = 0;
+				var count = 0;
 				$('fieldset',$form).each(function() {
 					var $fieldset = $(this);
 					var multipleKey = $fieldset.attr('data-elastic-key').split(" ").length;
 						//if a multiple elastic key is found increment the count for later examination under oath
-app.u.dump('checkElasticForm var multipleKey'); app.u.dump(multipleKey);					
+//					app.u.dump('checkElasticForm var multipleKey'); app.u.dump(multipleKey);					
 					if($("input[type='checkbox']",$fieldset).is(":checked") && multipleKey > 1) {
 						count++;
 					}	
 				});
-app.u.dump('checkElasticForm var count'); app.u.dump(count);
+				
+//				app.u.dump('checkElasticForm var count'); app.u.dump(count);
 					//if the count has been incremented, there is a multiple key and the filter will be constructed accordingly
 				if(count != 0) { 
-				app.u.dump('returned true');
+//				app.u.dump('returned true');
 					return true;
 				}
 				else {
-				app.u.dump('returned false');
+//				app.u.dump('returned false');
 					return false;
 				}
 			},
@@ -344,50 +340,39 @@ app.u.dump('checkElasticForm var count'); app.u.dump(count);
 							"filters" : []  //push on to this the values from each fieldset.
 						}
 					}//query
-					var q = 1; //passed w/ fieldsets to indicate type of query to build
+					var mKey = 1; //passed w/ fieldsets to indicate query will have OR structure
 				}
 				else {
 					var filters = {
 						"and" : [], //push on to this the values from each fieldset.
 					}//query
-					var q = 0; //passed w/ fieldsets to indicate type of query to build
+					var mKey = 0; //passed w/ fieldsets to indicate query will just have and structure, no OR
 				}
-app.u.dump('buildElasticFilters var q'); app.u.dump(q); 
+//				app.u.dump('buildElasticFilters var mKey'); app.u.dump(mKey); 
+				
 				$('fieldset',$form).each(function() {
 					var $fieldset = $(this);
-	/*				if($fieldset.attr('data-elastic-key').split(" ").length > 1) {
-						var multiElasticKey = $fieldset.attr('data-elastic-key').split(" ");
-		app.u.dump('buildElasticFilters var: multiElasticKey'); app.u.dump(multiElasticKey);
-						var splitLength = multiElasticKey.length;
-						for(i = 0; i < splitLength; i++) {
-							filter = app.ext.store_filter.getElasticFilter[$fieldset.attr('data-filtertype')]($fieldset, multiElasticKey[i]);
-		app.u.dump('buildElasticFilters var: filter'); app.u.dump(filter);
-							if(filter) {
-								filters.and.push(filter);
-							}
-						}
+					filter = app.ext.store_filter.getElasticFilter[$fieldset.attr('data-filtertype')]($fieldset, mKey);
+					if(filter && mKey == 0) {
+						filters.and.push(filter);
 					}
-					else {
-	*/					filter = app.ext.store_filter.getElasticFilter[$fieldset.attr('data-filtertype')]($fieldset, q);
-						if(filter && q == 0) {
-							filters.and.push(filter);
-						}
-						else if (filter && q == 1) {
-							filters.and.filters.push(filter);
-						}
-	//				}
+					else if (filter && mKey == 1) {
+						filters.and.filters.push(filter);
+					}
 				});
 				
 				// 20120701 -> do not want discontinued items in the layered search results. JT.
-				if(q == 0) {
+				//add based on whether multiple keys are used or not
+				if(mKey == 0) {
 					filters.and.push({"not" : {"term" : {"tags":"IS_DISCONTINUED"}}});
 				}
 				else {
 					filters.and.filters.push({"not" : {"term" : {"tags":"IS_DISCONTINUED"}}});
 				}
-				//and requires at least 2 inputs, so add a match_all.
+				//and requires at least 2 inputs, so add a match_all
 				//if there are no filters, don't add it. the return is also used to determine if any filters are present
-				if(q == 0) {
+				//add based on whether multiple keys are used or not
+				if(mKey == 0) {
 					if(filters.and.length == 1)	{
 						filters.and.push({match_all:{}})
 					}
@@ -397,28 +382,6 @@ app.u.dump('buildElasticFilters var q'); app.u.dump(q);
 						filters.and.filters.push({match_all:{}})
 					}
 				}
-		/*		filters = {
-							"and" : {
-								"filters" :[{
-									"or" : {
-										"filters" : [
-											{"term": {"suit_style2":"calypso"}},
-											{"term": {"suit_style3":"calypso"}}
-										]
-									}
-								},
-								{"not":
-									{"term":{"tags":"IS_DISCONTINUED"}}
-								},
-								{"range":
-									{"base_price":
-										{"from":0,"to":100}
-									}
-								}
-								]
-							}
-						}
-		*/	
 				
 				return filters;				
 			},
@@ -427,26 +390,10 @@ app.u.dump('buildElasticFilters var q'); app.u.dump(q);
 			//pass in a jquery object or series of objects for form inputs (ex: $('input:hidden')) and a single term or a terms object will be returned.
 			//false is returned in nothing is checked/selected.
 			//can be used on a series of inputs, such as hidden or checkbox 
-//return app.ext.store_filter.u.buildElasticTerms($(':checked',$fieldset),$fieldset.attr('data-elastic-key'));
 			buildElasticTerms : function($obj,attr)	{
-	app.u.dump('buildElasticTerms attr'); app.u.dump(attr);	
-	//app.u.dump('buildElasticTerms $obj'); app.u.dump($obj);
+			
 				var r = false; //what is returned. will be term or terms object if valid.
-				if (attr.split(" ").length > 1) {
 		
-					var multiAttr = attr.split(" ");
-					var count = attr.split(" ").length;
-					if($obj.length == 1) {
-						r = {terms:{}};
-					}
-					r.terms[attr] = new Array();
-					for (i = 0; i < count; i++) {
-						$obj.each(function() {
-							r.terms[attr].push((multiAttr[i] == 'pogs') ? $(this).val() : $(this).val().toLowerCase());
-						});
-					}
-				}
-				else {
 					if($obj.length == 1) {
 						r = {term:{}};
 						r.term[attr] = (attr == 'pogs') ? $obj.val() : $obj.val().toLowerCase(); //pog searching is case sensitive.
@@ -461,40 +408,42 @@ app.u.dump('buildElasticFilters var q'); app.u.dump(q);
 					else {
 						//nothing is checked.
 					}
-				}
-	//app.u.dump('buildElasticTerms var: r$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'); app.u.dump(r); 
+
 				return r;
 			},
 			
-			
+				//works similarly to the buildElasticTerms function above but checks for multiple elastic keys
+				//the return and inputs are the same as buildElasticTerms
 			buildMultiElasticTerms : function($obj,attr)	{
-	app.u.dump('buildElasticTerms attr'); app.u.dump(attr);	
-	//app.u.dump('buildElasticTerms $obj'); app.u.dump($obj);
+//			app.u.dump('buildElasticTerms attr'); app.u.dump(attr);	
+
 				var r = false; //what is returned. will be term or terms object if valid.
-				if (attr.split(" ").length > 1) {
+				
+					//if multiple attribs in elastic key, and something is checked build filter into terms
+				if (attr.split(" ").length > 1 && $obj.length > 0) {
 					var filterOR = {
 						"or" : {
 							"filters" : [] 
 						},
 					}; //filterOR
 					
-					app.u.dump('buildElasticTerms var filterOR'); app.u.dump(filterOR);
-					var multiAttr = attr.split(" ");
-					var count = attr.split(" ").length;
-					if($obj.length == 1) {
-						r = {terms:{}};
-					}
+//					app.u.dump('buildElasticTerms var filterOR'); app.u.dump(filterOR);
+					var multiAttr = attr.split(" "); 	//array of the terms to add
+					var count = attr.split(" ").length; //count of attribs in said array
+					r = {terms:{}};
+						//build a term for each attrib in multiAttr with the same checked value in each
 					for (i = 0; i < count; i++) {
 						r.terms[multiAttr[i]] = new Array();
 						$obj.each(function() {
 							r.terms[multiAttr[i]].push((multiAttr[i] == 'pogs') ? $(this).val() : $(this).val().toLowerCase());
 						});
 					}
-app.u.dump('buildElasticTerms r befor push'); app.u.dump(r);
+						//add terms to the filter and make it what's returned
 					filterOR.or.filters.push(r);
 					r = filterOR;
-app.u.dump('buildElasticTerms r after push'); app.u.dump(r);
-				}
+				} //multiple attribs build
+				
+					//otherwise build term or terms the standard way
 				else {
 					if($obj.length == 1) {
 						r = {term:{}};
@@ -510,8 +459,8 @@ app.u.dump('buildElasticTerms r after push'); app.u.dump(r);
 					else {
 						//nothing is checked.
 					}
-				}
-//app.u.dump('buildElasticTerms var: r$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'); app.u.dump(r); 
+				} //standard terms build
+
 				return r;
 			},
 			
