@@ -414,6 +414,8 @@ var store_filter = function() {
 			
 				//works similarly to the buildElasticTerms function above but checks for multiple elastic keys
 				//the return and inputs are the same as buildElasticTerms
+				//investigate using query over multiple fields:
+				// http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#_multi_field_2
 			buildMultiElasticTerms : function($obj,attr)	{
 //			app.u.dump('buildElasticTerms attr'); app.u.dump(attr);	
 
@@ -430,16 +432,17 @@ var store_filter = function() {
 //					app.u.dump('buildElasticTerms var filterOR'); app.u.dump(filterOR);
 					var multiAttr = attr.split(" "); 	//array of the terms to add
 					var count = attr.split(" ").length; //count of attribs in said array
-					r = {terms:{}};
+					
 						//build a term for each attrib in multiAttr with the same checked value in each
 					for (i = 0; i < count; i++) {
+						r = {terms:{}};
 						r.terms[multiAttr[i]] = new Array();
 						$obj.each(function() {
 							r.terms[multiAttr[i]].push((multiAttr[i] == 'pogs') ? $(this).val() : $(this).val().toLowerCase());
 						});
+						filterOR.or.filters.push(r); //add terms to the filter
 					}
-						//add terms to the filter and make it what's returned
-					filterOR.or.filters.push(r);
+						//and make filter what's returned
 					r = filterOR;
 				} //multiple attribs build
 				
