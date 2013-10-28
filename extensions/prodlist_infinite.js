@@ -148,6 +148,7 @@ It is run once, executed by the renderFormat.
 			addProductToPage : function($tag)	{
 				app.u.dump("BEGIN prodlist_infinite.u.addProductToPage");
 				
+					//filtered search adds this tag and no additional results should be appended when it is present
 				if($tag.data('filtered')) {
 					return;
 				}
