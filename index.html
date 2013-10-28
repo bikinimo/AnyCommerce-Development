@@ -323,12 +323,16 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			</ul>
 			<div data-anytab-content='newrelease'>
 				<div class="carouselCont1">
-					<ul id="carCat3" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"new  arrivals"}},"filter":{"not":{"term":{"tags":"IS_NEWARRIVAL"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList1 spangtsta'></ul>
+					<ul id="carCat3" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"new  arrivals"}},"filter":{"not":{"term":{"tags":"IS_NEWARRIVAL"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList1 spangtsta'></ul> 
+					<!-- NEED TO CHECK W/ MOE ON CONTENT BEING PULLED HERE... NOT IS_NEWARRIVAL IN CAROUSEL, BUT NEW ARRIVAL FOR LINK DOESN'T MAKE SENSE.
+					<ul id="carCat3" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"new  arrivals"}},"filter":{"and":{"filters":[{"term":{"is_app":"1"}},{"not":{"term":{"tags":"IS_NEWARRIVAL"}}}]}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList1 spangtsta'></ul> -->
 					<div class="clear"></div>
 				</div>
 				<img src="images/scroll_left.gif" class="pointer caroPrev1" alt="" /> 
 				<img src="images/scroll_right.gif" class="pointer caroNext1" alt="" /> 
-				<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'IS_NEWARRIVAL'})">Click Here to browse more New Releases</a></div>
+				<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'IS_NEWARRIVAL'})">Click Here to browse more New Releases</a></div> 
+				<!-- CHANGE THIS OVER WHEN ABOVE UL CONTENT IS CORRECT
+				<div class="clickab"><a href="#." onClick="return showContent('search',{'elasticsearch':{'filter':{'and':{'filters':[{'term':{'TAG':'IS_NEWARRIVAL'}},{'term':{'is_app':'1'}}]}}}})">Click Here to browse more New Releases</a></div> -->
 				<!-- <div class="clickab"><a href="#!search?TAG=IS_NEWARRIVAL" data-onclick="#!search?query=new arrivals">Click Here to browse more new releases</a></div> -->
 			</div>
 			<div data-anytab-content='whatshot'>
@@ -343,14 +347,14 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<div data-anytab-content='supersexy'>
 				<div class="carouselCont3">
 					<!-- !! CHANGE SEARCH TO LOOK FOR "SUPERSEXY" ATTRIB ONCE IT HAS BEEN CREATED !! 
+					<ul id="carCat4" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","filter":{"term":{"super_sexy":"1"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList3'></ul> -->
 					<ul id="carCat4" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"comparissons items"}},"filter":{"not":{"term":{"tags":"IS_CLEARANCE"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList3'></ul> -->
-					<ul id="carCat4" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","filter":{"term":{"super_sexy":"1"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList3'></ul>
 					<div class="clear"></div>
 				</div>
 				<img src="images/scroll_left.gif" class="pointer caroPrev3" alt="" /> 
 				<img src="images/scroll_right.gif" class="pointer caroNext3" alt="" />
-				<!-- <div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'IS_OPENBOX'})">Click Here to browse more Super Sexy Selections</a></div> -->
-				<div class="clickab"><a href="#." onClick="return showContent('search',{'elasticsearch':{'filter':{'term':{'super_sexy':'1'}}}})">Click Here to browse more Super Sexy Selections</a></div>
+				<div class="clickab"><a href="#." onClick="return showContent('search',{'TAG':'IS_OPENBOX'})">Click Here to browse more Super Sexy Selections</a></div> 
+				<!-- <div class="clickab"><a href="#." onClick="return showContent('search',{'elasticsearch':{'filter':{'term':{'super_sexy':'1'}}}})">Click Here to browse more Super Sexy Selections</a></div> -->
 			</div>
 			<div data-anytab-content='accessories'>
 				<div class="carouselCont4">
