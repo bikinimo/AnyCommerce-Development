@@ -478,12 +478,12 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 					query.type = 'product';
 					query.mode = 'elastic-native';
 					query.size = 250;
-					query.query =  {
+					query.query =  {"query_string" : obj};/*{ Filters out all non-app items replace {"query_string" : obj}; w/ this when items have attrib populated
 						"filtered" : {
 							"query" : {"query_string" : obj},
 							"filter" : {"term" : {"is_app":1}}
 						}
-					};
+					};*/
 				}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In store_search.u.buildElasticSimpleQuery, obj.query was empty. ',gMessage:true});
