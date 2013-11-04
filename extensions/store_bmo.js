@@ -118,6 +118,39 @@ var store_bmo = function() {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
+		
+				//reads prices for each form set by setHiddenPrice renderFormat and changes the displayed price
+				//to the total for each piece selected. (price for top only if only top is selected, etc.)
+			changePriceDisplayed : function() {
+//				app.u.dump('start change function');
+
+				var everythingPrice = 0;	//will hold total cost of all items to display when no items selected
+				var price = 0;	//will hold the price to display if any items are selected
+					//check each form to see if an item is selected, add form cost to total if yes
+				$('form','.customATCForm').each(function(){
+					everythingPrice += Number($('.formPrice',$(this)).attr('data-price'));
+					
+					var count = 0;	//keeps track of whether or not form has a selection
+					$('select',$(this)).each(function(){
+						if($(this).val()){
+							count++;
+						}
+					}); //select each value
+
+					if(count != 0) {
+						price += Number($('.formPrice',$(this)).attr('data-price'));
+					}
+				}); //each form
+				
+					//if there is a price, an item is selected, change the displayed price to what was calculated
+				if(price != 0) {
+					$('.customBasePrice','.prodSummaryContainer').empty().text(app.u.formatMoney(price,'$',2,true));
+					
+				} else {
+						//otherwise nothing is selected, display the total cost for all pieces 
+					$('.customBasePrice','.prodSummaryContainer').empty().text(app.u.formatMoney(everythingPrice,'$',2,true));
+				}
+			}, //changePriceDisplayed
 			
 				//opens items from prod page pop out into modal, also adds them to recently viewed session var
 			optionsQuickView : function($this, pid) {
@@ -560,7 +593,7 @@ var store_bmo = function() {
 			},
 			
 				//gets and adds pricing for top & bottom pieces to hidden element, which are then read onChange of form select list
-				//to alter the displayed price according to the selected pieces. 
+				//by changePriceDisplayed util function to alter the displayed price according to the selected pieces. 
 			setHiddenPrice : function($tag, data) {
 				var formDesignator = $tag.attr('data-formDesig'); //used to tell if a form has modified the displayed price
 				var $summaryContainer = $tag.parent().parent().parent().parent();
@@ -570,39 +603,6 @@ var store_bmo = function() {
 				if(data.value['%attribs'] && data.value['%attribs']['zoovy:base_price']) {
 					$tag.attr('data-price',data.value['%attribs']['zoovy:base_price']); 
 				}
-				
-				//onChange of select, modify price displayed, if necessary
-				$('select',$tag.parent()).each(function(){
-					$(this).change(function(){
-						
-						var everythingPrice = 0;	//will hold total cost of all items to display when no items selected
-						var price = 0;	//will hold the price to display if any items are selected
-							//check each form to see if an item is selected, add form cost to total if yes
-						$('form',$tag.parent().parent()).each(function(){
-							everythingPrice += Number($tag.attr('data-price'));
-							
-							var count = 0;	//keeps track of whether or not form has a selection
-							$('select',$(this)).each(function(){
-								if($(this).val()){
-									count++;
-								}
-							}); //select each value
-
-							if(count != 0) {
-								price += Number($tag.attr('data-price'));
-							}
-						}); //each form
-						
-							//if there is a price an item is selected change the displayed price to what was calculated
-						if(price != 0) {
-							$('.customBasePrice',$summaryContainer).empty().text(app.u.formatMoney(price,'$',2,true));
-							
-						} else {
-								//otherwise nothing is selected, display the total cost for all pieces 
-							$('.customBasePrice',$summaryContainer).empty().text(app.u.formatMoney(everythingPrice,'$',2,true));
-						}
-					}); //change function
-				}); //each select add change function
 			}, //setHiddenPrice
 			
 			loadProd : function($tag, data){
@@ -717,7 +717,7 @@ var store_bmo = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
-
+		
 			addRecentlyViewedItems : function() {
 			//	app.u.dump('store_bmo recentlyViewedItems has been run');
 				
@@ -1291,7 +1291,7 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 			//	app.u.dump('BEGIN renderOptionSELECT for pog '+pog.id+' and safe id = '+safeid);
 				var pogid = pog.id;
 				var $parentDiv = $("<span \/>");
-				var $selectList = $("<select  class='prodOpt'>").attr({"name":pogid});
+				var $selectList = $("<select  class='prodOpt' onChange='app.ext.store_bmo.a.changePriceDisplayed($(this))'>").attr({"name":pogid});
 				var i = 0;
 				var len = pog.options.length;
 
