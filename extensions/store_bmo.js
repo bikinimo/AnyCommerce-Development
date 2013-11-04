@@ -122,7 +122,7 @@ var store_bmo = function() {
 				//reads prices for each form set by setHiddenPrice renderFormat and changes the displayed price
 				//to the total for each piece selected. (price for top only if only top is selected, etc.)
 			changePriceDisplayed : function() {
-//				app.u.dump('start change function');
+//				app.u.dump('start change function'); 
 
 				var everythingPrice = 0;	//will hold total cost of all items to display when no items selected
 				var price = 0;	//will hold the price to display if any items are selected
