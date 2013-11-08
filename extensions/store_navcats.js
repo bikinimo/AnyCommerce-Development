@@ -352,7 +352,8 @@ templateID - the template id used (from app.templates)
 							app.u.dump("WARNING! invalid value for 'detail' in categoryList renderFunction");
 							}
 						for(var i = 0; i < L; i += 1)	{
-							if(data.value[i].pretty[0] != '!')	{
+// *** 201344 null pretty name is NOT a hidden category. But we have to check to avoid a null ptr error. -mc
+							if(!data.value[i].pretty || data.value[i].pretty[0] != '!')  {
 								var parentID = data.value[i].id+"_catgid+"+(app.u.guidGenerator().substring(10));
 								$tag.append(app.renderFunctions.createTemplateInstance(data.bindData.loadsTemplate,{'id':parentID,'catsafeid':data.value[i].id}));
 								numRequests += app.ext.store_navcats.calls[call].init(data.value[i].id,{'parentID':parentID,'callback':'translateTemplate'});
