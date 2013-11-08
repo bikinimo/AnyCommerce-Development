@@ -69,11 +69,6 @@ var store_filter = function() {
 			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
 		},
 		
-		".96-sexy-pajamas":{ //category for filter
-			"filter": "tankinisForm",	//name of filter form to use for this category
-			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
-		},
-		
 		".95-swim-dress-swimwear":{ //category for filter
 			"filter": "tankinisForm",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
