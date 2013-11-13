@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"201318.20131108143400",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201318.20131113101300",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
@@ -353,7 +353,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				<div class="carouselCont3">
 					<!-- !! CHANGE SEARCH TO LOOK FOR "SUPERSEXY" ATTRIB ONCE IT HAS BEEN CREATED !! 
 					<ul id="carCat4" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","filter":{"term":{"super_sexy":"1"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList3'></ul> -->
-					<ul id="carCat4" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"comparissons items"}},"filter":{"not":{"term":{"tags":"IS_CLEARANCE"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList3'></ul> -->
+					<ul id="carCat4" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"comparissons items"}},"filter":{"not":{"term":{"tags":"IS_CLEARANCE"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList3'></ul>
 					<div class="clear"></div>
 				</div>
 				<img src="images/scroll_left.gif" class="pointer caroPrev3" alt="" /> 
