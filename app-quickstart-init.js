@@ -186,7 +186,7 @@ app.u.initMVC = function(attempts){
 	else if(attempts > 100)	{
 		app.u.dump("WARNING! something went wrong in init.js");
 		//this is 10 seconds of trying. something isn't going well.
-		$('#appPreView').empty().append("<h2>Uh Oh. Something seems to have gone wrong. </h2><p>Several attempts were made to load the store but some necessary files were not found or could not load. We apologize for the inconvenience. Please try 'refresh' and see if that helps.<br><b>If the error persists, please contact the site administrator</b><br> - dev: see console.</p>");
+		$('#appPreView').empty().append("<div class='uhOh'><h2>Uh Oh. Something seems to have gone wrong. </h2><p>Several attempts were made to load the store but some necessary files were not found <br> or could not load. We apologize for the inconvenience.</p><p>Please try 'refresh' and see if that helps.<br><b>If the error persists, please contact the site administrator</b><br> - dev: see console.</p></div>");
 		app.u.howManyPassZeroResourcesAreLoaded(true);
 		}
 	else	{

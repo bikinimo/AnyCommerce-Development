@@ -3,6 +3,7 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 #appTemplates {display:none;} /* container for all templates. should be hidden */
 
 #appPreView	{height:100%; width:100%; background:rgba(0,0,0,0.5); margin:0; position:absolute; z-index:10;}
+.uhOh {height:auto; width:50%; background:#ffffff; border:3px inset #276b98; border-radius:5px; text-align:center; margin:20px auto; padding:15px;}
 
 .sprite {background-image:url(images/sprites-500x500.png);}
 
