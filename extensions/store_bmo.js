@@ -523,6 +523,27 @@ var store_bmo = function() {
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 		
+				//hides products in a product list that do not have the is_app attrib,
+				//or that have a matching_piece attrib that ends in SB (is a matching bottom).
+			hideFromList: function($tag, data) {
+				if(data.value && data.value['%attribs']) {
+					var attribs = data.value['%attribs'];
+				
+						//check if it's an app product, hide if not
+					if(!attribs['user:is_app']) $tag.parent().parent().hide();
+					else if(attribs['user:is_app'] && attribs['users:is_app'] == 0) $tag.parent().parent().hide();
+					else {} //must be an app product
+					
+						//check if it's a matching bottom, hide if is, it will be purchasable through the matching top piece
+					if(attribs['user:matching_piece']) {
+						var piece = attribs['user:matching_piece'];
+						var L = piece.length;
+						var suffix = piece[L-2] + piece[L-1];
+						if(suffix = 'SB') $tag.parent().parent().hide();
+					}
+				}
+			}, //hideFromList
+		
 				//opens e-mail in default mail provider (new window if web-based)
 				//if info is available will populate subject and body w/ prod name, mfg, & price
 				//if only name, subject will have name, body will be empty. If no content, no subject or body
