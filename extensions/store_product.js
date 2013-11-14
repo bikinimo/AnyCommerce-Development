@@ -623,7 +623,7 @@ NOTES
 /*bmo*/						modal: true,
 /*bmo*/						width:'710px',
 /*bmo*/						height:'auto',
-/*bmo*/						position:{my:"center top", at:"center top+10%", of:window},
+/*bmo*/						position:{my:"center top", at:"center top", of:window},
 /*bmo*/						autoOpen:false,
 /*bmo*/						dialogClass : 'quickVModal',
 							show : {
