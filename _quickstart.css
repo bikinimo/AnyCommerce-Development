@@ -939,7 +939,10 @@ z-index:1002; overflow: auto; /*box-shadow: 1px 1px 3px 3px #000000;*/ font-fami
 .ui-tabs .ui-tabs-nav li{border-bottom: 0 none; float:left; list-style:none outside none;  margin:1px 0 0 0 !important;  padding:0; position:relative; top:0; white-space:nowrap;}
 
 .ui-tabs .ui-tabs-nav li.ui-tabs-active{margin-bottom:-1px; padding-bottom:0 !important;}
-.viimgta{margin:14px 0 14px 0; padding:0px;}
+.viimgta{height:20px; width:100%; margin:14px 0 14px 0; padding:0px; overflow:hidden; box-shadow:0 4px 4px -1px #999999;}
+.openVideo, .closeVideo {height:20px; width:100%; display:block; background-color:#54A7E1; font-family:Ubuntu,Arial,sans-serif; color:#ffffff; text-align:center; border-radius:5px 5px 0 0; border:none;}
+.closeVideo {display:none;}
+.closeVideo span {opacity:0;}
 .anytabs .ui-corner-tr{border-top-right-radius:0px !important;} 
 .mpControlContainer{display:none;}
 .gallpagebor{border:1px solid #b1b1b1; margin:0px; padding:0px; border-radius:10px;}

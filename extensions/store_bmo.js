@@ -119,6 +119,28 @@ var store_bmo = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 		
+				//animates height of parent element to reveal additional contents, while hiding action container
+			revealParent : function($tag) {			
+				app.u.dump('open ----------------------------');
+				var oHeight = $tag.data('openheight');
+				$tag.css('display','none');
+				$('span',$tag).css('opacity','0');
+				$('.closeVideo',$tag.parent()).css({'display':'block','background-color':'#F05A24'});
+				$('.closeVideo span',$tag.parent()).animate({opacity:1},500)
+				$tag.parent().animate({height:oHeight + 'px'},1000);
+			},
+			
+				//animates height of parent element to hide additional contents, while hiding action container
+			compressParent : function($tag) {
+			app.u.dump('-> close');
+				var cHeight = $tag.data('closeheight');
+				$tag.css('display','none');
+				$('span',$tag).css('opacity','0');
+				$('.openVideo',$tag.parent()).css({'display':'block','background-color':'#54A7E1'});
+				$('.openVideo span',$tag.parent()).animate({opacity:1},500)
+				$tag.parent().animate({height:cHeight + 'px'},1000);
+			},
+		
 				//reads prices for each form set by setHiddenPrice renderFormat and changes the displayed price
 				//to the total for each piece selected. (price for top only if only top is selected, etc.)
 			changePriceDisplayed : function() {
