@@ -24,9 +24,12 @@ var tools_youtube = function() {
 	var theseTemplates = new Array('');
 	var r = {
 
-
+	vars : {
+		players : {}
+		},
+	
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
+	
 
 
 	callbacks : {
@@ -73,14 +76,15 @@ var tools_youtube = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
-		
-			youtubeIframe : function(context) {
-				setTimeout(function(){ 
-				
-					ytVideoID = app.ext.tools_youtube.u.getYoutubeID(context);
+			test : function(ytVideoID){
+				app.ext.tools_youtube.vars.players[ytVideoID].playVideo();
+				},
+			youtubeIframe : function($context) {
+				$('[data-youtubeid]', $context).each(function(){
+					var ytVideoID = $(this).attr('data-youtubeid');
 					app.u.dump(ytVideoID);
 					if(ytVideoID) {
-						var player = new YT.Player('youTubeContainer', {
+						app.ext.tools_youtube.vars.players[ytVideoID] = new YT.Player(this, {
 							height	: '200',
 							width	: '305',
 							videoId	: ytVideoID
@@ -90,23 +94,11 @@ var tools_youtube = function() {
 					else {
 						app.u.dump('tools_youtube did not find a video for this item')
 					}
-				},1000);
+				});
 			},
 			playVideo : function(event){
 				event.target.playVideo();
-				},
-			getYoutubeID : function(context) {
-				var r = false;
-
-				var videoID = ($('#youTubeContainer',context).attr('data-youtubeid'));
-				//app.u.dump(videoID);
-				
-				if (videoID != 'undefined') {
-					r = videoID;
-					return r;
 				}
-				return r;
-			}
 		
 		}, //u [utilities]
 

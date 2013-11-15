@@ -633,7 +633,6 @@ NOTES
 							},
 /*bmo*/						open : function(event, ui){ 
 /*bmo*/							$('.ui-widget-overlay').on('click.closeModal', function(){$parent.dialog('close')});
-/*bmo*/							app.ext.tools_youtube.u.youtubeIframe('.popupshado');
 /*bmo*/						},
 /*bmo*/						close : function(event, ui){ 
 /*bmo*/							$('.ui-widget-overlay').off('click.closeModal');
@@ -657,6 +656,7 @@ NOTES
 							
 							$parent.dialog( "option", "title", app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'] );
 							$parent.anycontent({'templateID':P.templateID,'datapointer':"appProductGet|"+P.pid});
+							app.ext.tools_youtube.u.youtubeIframe($parent);
 /*bmo*/						$('.prodViewerContainer','.quickVModal').animate({'opacity':'1'},500);  //fade product into view
 							//app.ext.store_bmo.u.loadMatchingProduct(P.pid, $('.match_'+app.data["appProductGet|"+P.pid].pid) );
 							}

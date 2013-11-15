@@ -725,7 +725,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 			<div class="viimgta">
 				<button class='openVideo pointer' onClick="app.ext.store_bmo.a.revealParent($(this));" data-openheight='192'><span>Click here to see product video!</span></button>
 				<button class='closeVideo pointer' onClick="app.ext.store_bmo.a.compressParent($(this));" data-closeheight='20'><span>Click here to hide product video!</span></button>
-				<div id='youTubeContainer' data-bind="var: product(youtube:videoid); format: assignAttribute; attribute: data-youtubeid;">
+				<div data-bind="var: product(youtube:videoid); format: assignAttribute; attribute: data-youtubeid;">
 					<!-- <img class="pointer" src="blank.gif" data-bind="var: product(user:prod_videoid); format:youtubeThumbnail; extension:myRIA;" onClick="app.ext.myRIA.a.showYoutubeInModal($(this).parent().data('youtubeid')); return false;" alt="" /> 
 					<div class='pointer' data-bind="var: product(youtube:videoid); format:youtubeIframe; extension:store_bmo;"></div> -->
 				</div> 
