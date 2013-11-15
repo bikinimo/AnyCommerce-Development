@@ -80,29 +80,21 @@ var tools_youtube = function() {
 					ytVideoID = app.ext.tools_youtube.u.getYoutubeID(context);
 					app.u.dump(ytVideoID);
 					if(ytVideoID) {
-						var player;
-						function onYouTubeIframeAPIReady() {
-						//	player = new YT.Player($ele.get(0), {
-							player = new YT.Player('youTubeContainer', {
-								height	: '200',
-								width	: '305',
-								videoId	: ytVideoID,
-								events	: {
-									'onReady'	: onPlayerReady
-								}
+						var player = new YT.Player('youTubeContainer', {
+							height	: '200',
+							width	: '305',
+							videoId	: ytVideoID
 							});
 						}
-						
-						function onPlayerReady(event) {
-							event.target.playVideo();
-						}
-					}
+					
 					else {
 						app.u.dump('tools_youtube did not find a video for this item')
 					}
 				},1000);
 			},
-			
+			playVideo : function(event){
+				event.target.playVideo();
+				},
 			getYoutubeID : function(context) {
 				var r = false;
 
