@@ -701,11 +701,38 @@ var store_bmo = function() {
 							
 			//embeds youtube video directly into $tag (built for product modal, but should work elsewhere)
 			youtubeIframe : function($tag,data)	{
+			
+		//		var scr = document.createElement('script');
+		//		scr.src = "https://www.youtube.com/iframe_api";
+		//		var firstScriptTag = document.getElementsByTagName('script')[0];
+		//		firstScriptTag.parentNode.insertBefore(scr, firstScriptTag);
+				
 				var $ele = $('.youtubeVideoContainer');
 				if ($ele.length == 0) {
 					$ele = $('<div />').attr('class','youtubeVideoContainer').appendTo($tag);
 				}
-				$ele.empty().append("<iframe width='305' height='172' src='https://www.youtube.com/embed/"+data.value+"?modestbranding=1&rel=0&showinfo=0&iv_load_policy=3' frameborder='0' allowfullscreen></iframe>"); //clear any past videos.
+		/*		
+				setTimeout(function(){
+				var player;
+				function onYouTubeIframeAPIReady() {
+					$('.openVideo').css('color','green')
+					player = new YT.Player($ele, {
+						height	: '200',
+						width	: '305',
+						videoId	: data.value,
+						events	: {
+							'onReady'	: onPlayerReady
+						}
+					});
+				}
+				
+				function onPlayerReady(event) {
+					event.target.playVideo();
+				}
+				},1000);
+		*/		
+				
+				$ele.empty().append("<iframe id='YT' width='305' height='172' src='https://www.youtube.com/embed/"+data.value+"?modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&enablejsapi=1' frameborder='0' allowfullscreen></iframe>"); //clear any past videos.
 				return false;
 			}, //youtubeIframe
 					
