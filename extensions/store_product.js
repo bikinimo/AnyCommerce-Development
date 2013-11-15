@@ -631,7 +631,10 @@ NOTES
 								'duration' : 1000,
 								'easing' : 'easeInExpo'
 							},
-/*bmo*/						open : function(event, ui){ $('.ui-widget-overlay').on('click.closeModal', function(){$parent.dialog('close')});},
+/*bmo*/						open : function(event, ui){ 
+/*bmo*/							$('.ui-widget-overlay').on('click.closeModal', function(){$parent.dialog('close')});
+/*bmo*/							app.ext.tools_youtube.u.youtubeIframe('.popupshado');
+/*bmo*/						},
 /*bmo*/						close : function(event, ui){ 
 /*bmo*/							$('.ui-widget-overlay').off('click.closeModal');
 /*bmo*/							$('.quickVModal').css({'width':'710px','margin':'0'});
