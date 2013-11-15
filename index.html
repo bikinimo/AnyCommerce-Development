@@ -586,7 +586,12 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 					<img src='blank.gif' alt='' data-bind='var: product(images); format:imageURL; isElastic:1; bgcolor:ffffff;' width='150' height='210' /> 
 				</div>
 				<h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:truncText; numCharacters: 38;' style="min-height:15px; padding-top:5px; text-align:left;"></h5>
-				<h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
+				<div data-bind="var:product(matching_piece); format:hideIfSet;">
+					<h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
+				</div>
+				<div class="displayNone" data-bind="var:product(matching_piece); format:showIfSet;">
+					<h6 class='hideInMinimalMode' data-bind='useParentData:true; format:matchingBasePrice; extension:store_bmo; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
+				</div>
 			</div>
 			<div class='hideInMinimalMode pointer moreDetails reltabmore' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});" style="display:none;"><img src="images/more_details.jpg"/></div>
 		</li>

@@ -523,6 +523,14 @@ var store_bmo = function() {
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 		
+			matchingBasePrice : function($tag, data) {
+				app.u.dump("bmoMoney--------------------->"); app.u.dump(data.value);
+				var basePrice = (data.bindData.isElastic) ? data.value.base_price : data.value['%attribs']['zoovy:base_price'];
+				var match = app.u.makeSafeHTMLId((data.bindData.isElastic) ? data.value.matching_piece : data.value['%attribs']['user:matching_piece']);
+				
+				//$tag.append(app.u.formatMoney(matching_piece));
+			},
+		
 				//hides products in a product list that do not have the is_app attrib,
 				//or that have a matching_piece attrib that ends in SB (is a matching bottom).
 			hideFromList: function($tag, data) {
