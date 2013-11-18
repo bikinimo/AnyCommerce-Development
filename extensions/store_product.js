@@ -642,6 +642,7 @@ NOTES
 /*bmo*/							$('.productList3').trigger('play',true);
 /*bmo*/							$('.productList4').trigger('play',true);
 /*bmo*/							app.ext.store_bmo.u.addRecentlyViewedItems();
+/*bmo*/							$(this).empty(); //removed everything (mainly to kill youtube video in case it's still playing).
 /*bmo*/						},
 /*bmo*/					});
 					}
@@ -656,7 +657,7 @@ NOTES
 							
 							$parent.dialog( "option", "title", app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'] );
 							$parent.anycontent({'templateID':P.templateID,'datapointer':"appProductGet|"+P.pid});
-							app.ext.tools_youtube.u.youtubeIframe($parent);
+/*bmo*/						app.ext.tools_youtube.u.youtubeIframe($parent);
 /*bmo*/						$('.prodViewerContainer','.quickVModal').animate({'opacity':'1'},500);  //fade product into view
 							//app.ext.store_bmo.u.loadMatchingProduct(P.pid, $('.match_'+app.data["appProductGet|"+P.pid].pid) );
 							}
