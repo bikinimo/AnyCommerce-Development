@@ -60,6 +60,31 @@ var tools_youtube = function() {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
+		
+				//animates height of parent element to reveal additional contents, while hiding action container
+			revealParent : function($tag) {			
+				app.u.dump('open ----------------------------');
+				var oHeight = $tag.data('openheight');
+				$tag.css('display','none');
+				$('span',$tag).css('opacity','0');
+				$('.closeVideo',$tag.parent()).css({'display':'block','background-color':'#F05A24'});
+				$('.closeVideo span',$tag.parent()).animate({opacity:1},500)
+				$tag.parent().animate({height:oHeight + 'px'},1000);
+			},
+			
+				//animates height of parent element to hide additional contents, while hiding action container
+			compressParent : function($tag) {
+			app.u.dump('-> close');
+				var cHeight = $tag.data('closeheight');
+				var ytVideoID = $tag.parent().children('[data-youtubeid]').attr('data-youtubeid');
+				app.u.dump(ytVideoID);
+				$tag.css('display','none');
+				$('span',$tag).css('opacity','0');
+				$('.openVideo',$tag.parent()).css({'display':'block','background-color':'#54A7E1'});
+				$('.openVideo span',$tag.parent()).animate({opacity:1},500)
+				$tag.parent().animate({height:cHeight + 'px'},1000);
+				app.ext.tools_youtube.vars.players[ytVideoID].pauseVideo();
+			},
 
 			}, //Actions
 
@@ -79,15 +104,24 @@ var tools_youtube = function() {
 			test : function(ytVideoID){
 				app.ext.tools_youtube.vars.players[ytVideoID].playVideo();
 				},
+				
 			youtubeIframe : function($context) {
 				$('[data-youtubeid]', $context).each(function(){
 					var ytVideoID = $(this).attr('data-youtubeid');
 					app.u.dump(ytVideoID);
 					if(ytVideoID) {
 						app.ext.tools_youtube.vars.players[ytVideoID] = new YT.Player(this, {
-							height	: '200',
-							width	: '305',
-							videoId	: ytVideoID
+							height		: '171',
+							width		: '305',
+							videoId		: ytVideoID,
+							playerVars	: {
+								modestbranding	: 1,
+								rel				: 0,
+								showinfo		: 0,
+								iv_load_policy	: 3,
+								frameborder		: 0,
+								alowfullscreen	: 1
+							}
 							});
 						}
 					
