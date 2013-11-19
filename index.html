@@ -614,7 +614,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 	</ul>
 	
 	<div id='matchingPriceTemplate'>
-		<span data-bind='var:product(combinedTotal); format:money;'></span>
+		<span data-bind='var:product(combinedTotal); format:money; currencySign: $;  hideZero:true; className:price; pretext:;'></span>
 	</div>
 	
 	
