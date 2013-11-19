@@ -108,7 +108,7 @@ var store_bmo = function() {
 //					app.u.dump('--> response data:'); app.u.dump(rd);
 //					app.u.dump('--> the matching price:'); app.u.dump(matchPrice); 
 //					app.u.dump('--> the original price:'); app.u.dump(origPrice); 
-//					app.u.dump('--> the final price:'); app.u.dump(dataObj.combindedTotal); 
+//					app.u.dump('--> the final price:'); app.u.dump(dataObj.combinedTotal); 
 				},
 				onError : function(rd) {
 					app.u.dump('Error in extenstion: store_bmo rendermatchingBasePrice');
