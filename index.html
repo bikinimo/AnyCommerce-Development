@@ -732,7 +732,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 				<img src='blank.gif' class='prodBigImage' data-bind="var:product(zoovy:prod_image1); format:imageURL;" width='305' height='458' />
 			</a>
 
-			<div class="viimgta">
+			<div class="viimgta displayNone" data-bind="var:product(youtube:videoid); format:showIfSet;">
 				<button class='openVideo pointer' onClick="app.ext.tools_youtube.a.revealParent($(this));" data-openheight='191'><span>Click here to see product video!</span></button>
 				<button class='closeVideo pointer' onClick="app.ext.tools_youtube.a.compressParent($(this));" data-closeheight='20'><span>Click here to hide product video!</span></button>
 				<div data-bind="var: product(youtube:videoid); format: assignAttribute; attribute: data-youtubeid;">
