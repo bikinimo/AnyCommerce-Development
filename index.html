@@ -146,7 +146,8 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
       </div>
       <div class="navsection">
         <ul id="topnav">
-          <li><a href="#" onClick="return showContent('category',{navcat: '.app-categories.bikini_sets'});">Bikini Sets</a> <span>
+          <li><a href="#" onClick="return showContent('category',{navcat: '.app-categories.bikini_sets'});">Bikini Sets</a> 
+		  <span>
             <ul>
               <li><a href="#" onClick="return showContent('category',{navcat: '.app-categories.bikini_sets.top_shelf'});">Top Shelf</a></li>
               <li><a href="#" onClick="return showContent('category',{navcat: '.app-categories.bikini_sets.prints'});">Prints</a></li>
@@ -167,7 +168,14 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
               <li><a href="#" onClick="return showContent('category',{navcat: '.app-categories.bikini_sets.underwire'});">Underwire</a></li>
             </ul>
             </span> </li>
-          <li><a href="#." onClick="return showContent('category',{navcat: '.app-categories.seperates'});">Separates</a></li>
+          <li><a href="#." onClick="return showContent('category',{navcat: '.app-categories.separates'});">Separates</a>
+			<span class='separatesDrop'>
+			  <ul>
+				<li><a href="#" onClick="return showContent('category',{navcat: '.app-categories.separates.tops'});">Tops</a></li>
+				<li><a href="#" onClick="return showContent('category',{navcat: '.app-categories.separates.bottoms'});">Bottoms</a></li>
+			  </ul>
+			</span>
+		  </li>
           <li><a href="#." onClick="return showContent('category',{navcat: '.app-categories.tankinis'});">Tankinis</a></li>
           <li><a href="#." onClick="return showContent('category',{navcat: '.app-categories.swim_dresses'});">Swim Dresses</a></li>
           <li><a href="#." onClick="return showContent('category',{navcat: '.app-categories.one_pieces'});">One Pieces</a></li>
