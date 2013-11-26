@@ -34,42 +34,47 @@ var store_filter = function() {
 	//key is safe id. value is name of the filter form.
 	filterMap : {
 	
-		".01-new-2012-bikinis":{ //category for filter
+		".app-categories.bikini_sets":{ //category for filter
 			"filter": "bikiniSetsForm",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
 		},
 		
-		".96-sexy-pajamas":{ //category for filter
+		".app-categories.separates":{ //category for filter
 			"filter": "separatesForm",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
 		},
 		
-		".02-tankinis":{ //category for filter
+		".app-categories.tankinis":{ //category for filter
 			"filter": "tankinisForm",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
 		},
 		
-		".015-swimdress":{ //category for filter
+		".app-categories.swim_dresses":{ //category for filter
 			"filter": "tankinisForm",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
 		},
 		
-		".85-one-piece-swimwear":{ //category for filter
+		".app-categories.one_pieces":{ //category for filter
 			"filter": "onePiecesForm",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
 		},
 		
-		".45-solid-color-swimsuits":{ //category for filter
-			"filter": "solidColorsForm",	//name of filter form to use for this category
-			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
-		},
+	//	".45-solid-color-swimsuits":{ //category for filter
+	//		"filter": "solidColorsForm",	//name of filter form to use for this category
+	//		"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
+	//	},
 		
-		".90-cover-up-swimwear":{ //category for filter
+		".app-categories.cover_ups":{ //category for filter
 			"filter": "tankinisForm",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
 		},
 		
-		".95-swim-dress-swimwear":{ //category for filter
+		".app-categories.dresses":{ //category for filter
+			"filter": "tankinisForm",	//name of filter form to use for this category
+			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
+		},
+		
+		".app-categories.sleepwear":{ //category for filter
 			"filter": "tankinisForm",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
 		},
