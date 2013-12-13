@@ -1,0 +1,117 @@
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Electrolize">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Abel">
+<script type="text/javascript">
+
+var modal = {};
+modal.jQuery = jQuery.noConflict(true);
+
+/**
+ * Loads a CSS file from the supplied URL
+ * @param {String} url    The URL of the CSS file, if its relative
+                          it will be to the current page's url
+ * @return {HTMLElement}  The <link> which was appended to the <head>
+ */
+ function loadcss(url) {
+   var head = document.getElementsByTagName('head')[0],
+   link = document.createElement('link');
+   link.type = 'text/css';
+   link.rel = 'stylesheet';
+   link.href = url;
+   head.appendChild(link);
+   return link;
+ }
+ 
+ //loadcss('http://app.bikinimo.com/redirectmodal.css');  //MARK
+ loadcss('redirectmodal.css');
+ </script>
+ 
+ <!--BEGIN MODAL FUNCTION SCRIPT-->
+<script type="text/javascript">
+
+//FUNCTIONS
+function handleRedirect() {
+ window.location = "http://app.bikinimo.com";	//MARK
+ console.log("var Function was added");
+}
+function bugLater(){
+ sessionStorage.redirectToAppSessionNoCheck = true;
+ modal.jQuery('.redirectToSiteApp').dialog('close');
+ console.log("sessionStorage = " + sessionStorage.redirectToAppSessionNoCheck);
+ console.log("localStorage = " + localStorage.redirectToAppVar);
+}
+function autoRedirect(){
+ localStorage.redirectToAppVar = true;
+ modal.jQuery('.redirectToSiteApp').dialog('close');
+ window.location = "http://app.bikinimo.com";	//MARK
+}
+function resetRedirectPreferences(){
+ localStorage.redirectToAppVar = false;
+ modal.jQuery(".stopFutureRedirectMessage").css("display", "block");
+ console.log("sessionStorage have now been set to: " + sessionStorage.redirectToAppSessionNoCheck);
+ console.log("localStorage have now been set to: " + localStorage.redirectToAppVar);
+}
+
+
+//SCRIPT BEGINS WHEN THE PAGE IS FULLY LOADED
+modal.jQuery(document).ready(function() {
+ //RESET FOR THE SESSION VARIABLE
+ //sessionStorage.redirectToAppSessionNoCheck = false;
+ 
+ 
+ if(typeof(Storage)!=="undefined"){
+  if(localStorage.redirectToAppVar){
+  }
+  else{
+   localStorage.redirectToAppVar = false;
+  }
+  if(sessionStorage.redirectToAppSessionNoCheck){
+  }
+  else{
+   sessionStorage.redirectToAppSessionNoCheck = false;
+  }
+  modal.jQuery(
+	'<div class="redirectToSiteApp"> '+
+		'<h3>Try our new site for a superior shopping experience&#63;</h3>' +											//MARK
+		'<button class="autoRedirectButton" onclick="autoRedirect()">Always redirect to new site when visiting www.bikinimo.com</button>' +
+		'<button class="redirectToSiteAppButton" onclick="handleRedirect(); return false;">Try it now!</button>' +
+		'<a class="bugLaterButton" onclick="bugLater()">Next time</a>' +
+		//'<button onclick="resetRedirectPreferences()">Reset Preferences</button>' +
+	'</div>').appendTo('head');
+  
+  if(typeof(Storage)!=="undefined"){
+   console.log("storage exists check passed");
+   if(localStorage.redirectToAppVar == "true"){
+    modal.jQuery('<div class="autoRedirectToSiteApp"> '+
+    '<h3>Redirecting to app site. Please wait a few Seconds....</h3>' +
+    '<div>' +
+    '</div>' +
+    '<p class="stopFutureRedirectMessage">Done!</p>' +
+    '<button onclick="resetRedirectPreferences()">Prompt me next time instead of auto-redirecting</button>' +
+    '</div>').appendTo('head');
+    modal.jQuery('.autoRedirectToSiteApp').dialog({'modal':'true', 'width':400, height:230});
+    function foo1(){
+     window.location = "http://app.bikinimo.com";	//MARK
+    }
+    var autoRedirectTimer;
+    redirectTimer = foo1;
+    autoRedirectTimer = setTimeout(redirectTimer, 5000);
+   }
+   else if (sessionStorage.redirectToAppSessionNoCheck == "true"){
+    console.log("One of the two storage values was true, redirect modal is not displaying.");
+   }
+    else{
+     modal.jQuery('.redirectToSiteApp').dialog({'modal':'true', 'width':450, height:240});
+     console.log("Neither storage value was true, displaying redirect modal");
+     console.log("sessionStorage = " + sessionStorage.redirectToAppSessionNoCheck);
+     console.log("localStorage = " + localStorage.redirectToAppVar);
+    }
+  }
+ }
+ else{
+  console.log("Storage is not supported");
+ }
+});
+</script>
