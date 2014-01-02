@@ -111,7 +111,7 @@ var store_bmo = function() {
 //					app.u.dump('--> the final price:'); app.u.dump(dataObj.combinedTotal); 
 				},
 				onError : function(rd) {
-					app.u.dump('Error in extenstion: store_bmo rendermatchingBasePrice');
+					app.u.dump('Error in extenstion: store_bmo rendermatchingBasePrice. Response data follows:'); app.u.dump(rd);
 				}
 			}, //rendermatchingBasePrice
 			
@@ -518,6 +518,7 @@ var store_bmo = function() {
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 		
+				//checks for matching piece attrib in prod list item and sets sum of prices on list item if found. 
 			matchingBasePrice : function($tag, data) {
 				
 				var basePrice = (data.bindData.isElastic) ? data.value.base_price/100 : data.value['%attribs']['zoovy:base_price'];
@@ -542,22 +543,24 @@ var store_bmo = function() {
 			}, //matchingBasePrice
 		
 				//hides products in a product list that do not have the is_app attrib,
-				//or that have a matching_piece attrib that ends in SB (is a matching bottom).
+				//or that have a matching_piece attrib that ends in ST (is a matching bottom).
 			hideFromList: function($tag, data) {
-				if(data.value && data.value['%attribs']) {
-					var attribs = data.value['%attribs'];
+				var attribs = data.bindData.isElastic ? data.value.matching_piece : data.value['%attribs'];
+				if(attribs) {
 				
-						//check if it's an app product, hide if not
-					if(!attribs['user:is_app']) $tag.parent().parent().hide();
-					else if(attribs['user:is_app'] && attribs['users:is_app'] == 0) $tag.parent().parent().hide();
-					else {} //must be an app product
+						//if not elastic list check if it's an app product, hide if not (elastic does this by default no need to duplicate)
+					if(!data.bindData.isElastic) {
+						if(!attribs['user:is_app']) $tag.parent().parent().hide();
+						else if(attribs['user:is_app'] && attribs['users:is_app'] == 0) $tag.parent().parent().hide();
+						else {attribs = attribs['user:matching_piece']} //must be an app product and not-elastic, set attribs to be used to hide matching piece next
+					}
 					
 						//check if it's a matching bottom, hide if is, it will be purchasable through the matching top piece
-					if(attribs['user:matching_piece']) {
-						var piece = attribs['user:matching_piece'];
+					if(attribs) {
+						var piece = attribs;
 						var L = piece.length;
 						var suffix = piece[L-2] + piece[L-1];
-						if(suffix = 'SB') $tag.parent().parent().hide();
+						if(suffix == 'ST') $tag.parent().parent().hide(); //if match is top, this item is a bottom so hide it.
 					}
 				}
 			}, //hideFromList

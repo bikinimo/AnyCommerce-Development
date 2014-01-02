@@ -601,6 +601,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
     
 		<li id='productListTemplateResults' class='loadingBG searchResultsProduct ' >
 			<div class='pointer' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')}); app.ext.store_bmo.a.pauseFred($(this).parent().parent());">
+				<div data-bind="useParentData:true; format:hideFromList; extension:store_bmo; isElastic:1;"></div>
 	<!--			<div class='prodThumbContainer floatLeft'  data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'> 
 					<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='150' height='210' /> 
 				</div>
