@@ -120,7 +120,8 @@ var tools_youtube = function() {
 								showinfo		: 0,
 								iv_load_policy	: 3,
 								frameborder		: 0,
-								alowfullscreen	: 1
+								alowfullscreen	: 1,
+								vq				: 'hd1080'
 							}
 							});
 						}
