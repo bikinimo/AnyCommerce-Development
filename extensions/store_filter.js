@@ -36,7 +36,10 @@ var store_filter = function() {
 	
 		".app-categories.bikini_sets":{ //category for filter
 			"filter": "bikiniSetsForm",	//name of filter form to use for this category
-			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
+			"exec" : function($form,infoObj){
+				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
+				//app.ext.store_filter.u.triggerBox($form);
+			}
 		},
 		
 		".app-categories.separates":{ //category for filter
@@ -300,6 +303,13 @@ var store_filter = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+		
+				//a checkbox that is triggered to initially submit the form and load the filter search 
+				//w/ all item_category items for attrib. indicated on input.
+			triggerBox : function($form) {
+					//no timeout triggered check to early
+				setTimeout(function(){$('.triggerBox input', $form).trigger('click');},250);
+			},
 		
 				//adds hidden field to limit filter results to category filter is in
 				//allows a different app_category value to be passed for use w/ different forms.
