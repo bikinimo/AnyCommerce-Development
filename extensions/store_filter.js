@@ -45,7 +45,7 @@ var store_filter = function() {
 		},
 		
 		".app-categories.tankinis":{ //category for filter
-			"filter": "sizesOnlyForm",	//name of filter form to use for this category
+			"filter": "sizesFormAY00",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){
 				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
 				app.ext.store_filter.u.renderHiddenField($form, 'tankini');
@@ -53,7 +53,7 @@ var store_filter = function() {
 		},
 		
 		".app-categories.swim_dresses":{ //category for filter
-			"filter": "sizesOnlyForm",	//name of filter form to use for this category
+			"filter": "sizesFormAY00",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){
 				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
 				app.ext.store_filter.u.renderHiddenField($form, 'swim+dresse');
@@ -71,7 +71,7 @@ var store_filter = function() {
 	//	},
 		
 		".app-categories.cover_ups":{ //category for filter
-			"filter": "sizesOnlyForm",	//name of filter form to use for this category
+			"filter": "sizesFormA814",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){
 				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
 				app.ext.store_filter.u.renderHiddenField($form, 'coverup');
@@ -79,7 +79,7 @@ var store_filter = function() {
 		},
 		
 		".app-categories.dresses":{ //category for filter
-			"filter": "sizesOnlyForm",	//name of filter form to use for this category
+			"filter": "sizesFormA814",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){
 				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
 				app.ext.store_filter.u.renderHiddenField($form, 'dress');
@@ -87,7 +87,7 @@ var store_filter = function() {
 		},
 		
 		".app-categories.sleepwear":{ //category for filter
-			"filter": "sizesOnlyForm",	//name of filter form to use for this category
+			"filter": "sizesFormA814",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){
 				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
 				app.ext.store_filter.u.renderHiddenField($form, 'sleepwear');
@@ -95,7 +95,7 @@ var store_filter = function() {
 		},
 		
 		".app-categories.accessories":{ //category for filter
-			"filter": "sizesOnlyForm",	//name of filter form to use for this category
+			"filter": "sizesFormA814",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){
 				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
 				app.ext.store_filter.u.renderHiddenField($form, 'accessorie');

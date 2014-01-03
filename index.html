@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"201318.20140102174100",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201318.20140103111100",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
@@ -2809,14 +2809,14 @@ put all filters into the appFilters container.
 -->		
         <fieldset data-elastic-key="pogs" data-filtertype="checkboxes">
             <legend>Sizes</legend>
-            <label class='break'><input type='checkbox' value='AR00' /> XS</label>
-            <label class='break'><input type='checkbox' value='AR01' /> S</label>
-            <label class='break'><input type='checkbox' value='AR02' /> M</label>
-            <label class='break'><input type='checkbox' value='AR03' /> L</label>   
-            <label class='break'><input type='checkbox' value='AR04' /> XL</label>   
-            <label class='break'><input type='checkbox' value='AR05' /> 1X</label>
-			<label class='break'><input type='checkbox' value='AR06' /> 2X</label>
-            <label class='break'><input type='checkbox' value='AR07' /> 3X</label>
+            <label class='break'><input type='checkbox' value='AY00' /> XS</label>
+            <label class='break'><input type='checkbox' value='AY01' /> S</label>
+            <label class='break'><input type='checkbox' value='AY02' /> M</label>
+            <label class='break'><input type='checkbox' value='AY03' /> L</label>   
+            <label class='break'><input type='checkbox' value='AY04' /> XL</label>   
+            <label class='break'><input type='checkbox' value='AY05' /> 1X</label>
+			<label class='break'><input type='checkbox' value='AY06' /> 2X</label>
+            <label class='break'><input type='checkbox' value='AY07' /> 3X</label>
         </fieldset>
          
         <fieldset data-elastic-key="suit_style1 suit_style2 suit_style3 suit_style4 suit_style5 suit_style6 suit_style7 suit_style8" data-filtertype="checkboxes">
@@ -2892,14 +2892,14 @@ put all filters into the appFilters container.
         
         <fieldset data-elastic-key="pogs" data-filtertype="checkboxes">
             <legend>Sizes</legend>
-			<label class='break'><input type='checkbox' value='AR00' /> XS</label>
-            <label class='break'><input type='checkbox' value='AR01' /> S</label>
-            <label class='break'><input type='checkbox' value='AR02' /> M</label>
-            <label class='break'><input type='checkbox' value='AR03' /> L</label>   
-            <label class='break'><input type='checkbox' value='AR04' /> XL</label>   
-            <label class='break'><input type='checkbox' value='AR05' /> 1X</label>
-			<label class='break'><input type='checkbox' value='AR06' /> 2X</label>
-            <label class='break'><input type='checkbox' value='AR07' /> 3X</label>
+			<label class='break'><input type='checkbox' value='AY00' /> XS</label>
+            <label class='break'><input type='checkbox' value='AY01' /> S</label>
+            <label class='break'><input type='checkbox' value='AY02' /> M</label>
+            <label class='break'><input type='checkbox' value='AY03' /> L</label>   
+            <label class='break'><input type='checkbox' value='AY04' /> XL</label>   
+            <label class='break'><input type='checkbox' value='AY05' /> 1X</label>
+			<label class='break'><input type='checkbox' value='AY06' /> 2X</label>
+            <label class='break'><input type='checkbox' value='AY07' /> 3X</label>
         </fieldset>
         
         <fieldset data-elastic-key="suit_style1 suit_style2 suit_style3 suit_style4 suit_style5 suit_style6 suit_style7 suit_style8" data-filtertype="checkboxes">
@@ -2940,8 +2940,8 @@ put all filters into the appFilters container.
     </form> <!-- //BIKINI SEPERATES FILTERS -->
 	
 	
-<!-- TANKINI FILTERS -->
-	<form action='#' name='sizesOnlyForm' id='tankinisForm' class='layeredSearch'>
+<!-- TANKINI, SWIM-DRESSES, FILTERS -->
+	<form action='#' name='sizesFormAY00' id='tankinisForm' class='layeredSearch'>
     
         <fieldset data-elastic-key="base_price" data-filtertype="slider">
             <legend>Price</legend>
@@ -2955,14 +2955,14 @@ put all filters into the appFilters container.
         
         <fieldset data-elastic-key="pogs" data-filtertype="checkboxes">
             <legend>Sizes</legend>
-            <label class='break'><input type='checkbox' value='AR00' /> XS</label>
-            <label class='break'><input type='checkbox' value='AR01' /> S</label>
-            <label class='break'><input type='checkbox' value='AR02' /> M</label>
-            <label class='break'><input type='checkbox' value='AR03' /> L</label>   
-            <label class='break'><input type='checkbox' value='AR04' /> XL</label>   
-            <label class='break'><input type='checkbox' value='AR05' /> 1X</label>
-			<label class='break'><input type='checkbox' value='AR06' /> 2X</label>
-            <label class='break'><input type='checkbox' value='AR07' /> 3X</label>
+            <label class='break'><input type='checkbox' value='AY00' /> XS</label>
+            <label class='break'><input type='checkbox' value='AY01' /> S</label>
+            <label class='break'><input type='checkbox' value='AY02' /> M</label>
+            <label class='break'><input type='checkbox' value='AY03' /> L</label>   
+            <label class='break'><input type='checkbox' value='AY04' /> XL</label>   
+            <label class='break'><input type='checkbox' value='AY05' /> 1X</label>
+			<label class='break'><input type='checkbox' value='AY06' /> 2X</label>
+            <label class='break'><input type='checkbox' value='AY07' /> 3X</label>
         </fieldset>
 
     </form> <!-- //TANKINI FILTERS -->
@@ -2985,16 +2985,16 @@ put all filters into the appFilters container.
         <fieldset data-elastic-key="pogs" data-filtertype="checkboxes">
             <legend>Sizes</legend>
             <!-- <label class='break'><input type='checkbox' value='A80V' /> 2</label> -->
-            <label class='break'><input type='checkbox' value='AS00' /> 2</label>
-            <label class='break'><input type='checkbox' value='AS01' /> 4</label>
-            <label class='break'><input type='checkbox' value='AS02' /> 6</label>
-            <label class='break'><input type='checkbox' value='AS03' /> 8</label>   
-            <label class='break'><input type='checkbox' value='AS04' /> 10</label>   
-            <label class='break'><input type='checkbox' value='AS05' /> 12</label>
-            <label class='break'><input type='checkbox' value='AS06' /> 14</label>
-            <label class='break'><input type='checkbox' value='AS07' /> 16</label>
-            <label class='break'><input type='checkbox' value='AS08' /> 18</label>
-            <label class='break'><input type='checkbox' value='AS09' /> 20</label>
+            <label class='break'><input type='checkbox' value='A80U' /> 2</label>
+            <label class='break'><input type='checkbox' value='A80V' /> 4</label>
+            <label class='break'><input type='checkbox' value='A80W' /> 6</label>
+            <label class='break'><input type='checkbox' value='A80X' /> 8</label>   
+            <label class='break'><input type='checkbox' value='A80Y' /> 10</label>   
+            <label class='break'><input type='checkbox' value='A80Z' /> 12</label>
+            <label class='break'><input type='checkbox' value='A810' /> 14</label>
+            <label class='break'><input type='checkbox' value='A811' /> 16</label>
+            <label class='break'><input type='checkbox' value='A812' /> 18</label>
+            <label class='break'><input type='checkbox' value='A813' /> 20</label>
         </fieldset>
 		
 		<fieldset data-elastic-key="app_color1 app_color2 app_color3 app_color4 app_color5 app_color6 app_color7 app_color8 app_color9 app_color10" data-filtertype="checkboxes">
@@ -3019,6 +3019,32 @@ put all filters into the appFilters container.
 
     </form> <!-- //ONE PIECE FILTERS -->
 	
+<!-- COVER-UPS, DRESSES, SLEEPWEAR FILTERS -->
+	<form action='#' name='sizesFormA814' id='tankinisForm' class='layeredSearch'>
+    
+        <fieldset data-elastic-key="base_price" data-filtertype="slider">
+            <legend>Price</legend>
+            <input type="text"  class='sliderValue' />
+            <div class="slider-range"></div>
+        </fieldset>
+		
+		<!-- hidden fieldset added in store_filter with renderHiddenField() function -->
+        
+		<button class='resetButton floatRight'>RESET OPTIONS</button>
+        
+        <fieldset data-elastic-key="pogs" data-filtertype="checkboxes">
+            <legend>Sizes</legend>
+            <label class='break'><input type='checkbox' value='A815' /> XS</label>
+            <label class='break'><input type='checkbox' value='A814' /> S</label>
+            <label class='break'><input type='checkbox' value='A816' /> M</label>
+            <label class='break'><input type='checkbox' value='A817' /> L</label>   
+            <label class='break'><input type='checkbox' value='A818' /> XL</label>   
+            <label class='break'><input type='checkbox' value='A819' /> 1X</label>
+			<label class='break'><input type='checkbox' value='A820' /> 2X</label>
+            <label class='break'><input type='checkbox' value='A821' /> 3X</label>
+        </fieldset>
+
+    </form> <!-- //COVER-UPS, DRESSES, SLEEPWEAR FILTERS -->
 	
 <!-- COLORS FILTERS -->
 	<form action='#' name='solidColorsForm' id='solidColorsForm' class='layeredSearch'>
