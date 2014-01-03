@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"201318.20140102130300",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201318.20140102174100",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
@@ -2789,12 +2789,12 @@ put all filters into the appFilters container.
             <div class="slider-range"></div>
         </fieldset>
         
-   <!-- <fieldset data-elastic-key="prod_type" data-filtertype="hidden">
-            <input type='hidden' name="prod_type" value="beach-umbrellas-shelter" /> 
-   <!-- </fieldset>  -->
+		<fieldset class='displayNone' data-elastic-key="item_category1 item_category2 item_category3 item_category4 item_category5 item_category6 item_category7 item_category8" data-filtertype="hidden">
+            <input type='hidden' name="h-bikiniset" value="bikini+set" />
+		</fieldset>
         
 		<button class='resetButton floatRight'>RESET OPTIONS</button>
-
+<!--
 		<fieldset data-elastic-key="suit_style2 suit_style3" data-filtertype="checkboxes">
             <legend>Test</legend>
 			<label class='break'><input type='checkbox' value='butterfly' /> Butterfly</label>
@@ -2806,7 +2806,7 @@ put all filters into the appFilters container.
 			<label class='break'><input type='checkbox' value='crochet' /> Crochet</label>
 			<label class='break'><input type='checkbox' value='gauze' /> Gauze</label>
 	    </fieldset>        
-		
+-->		
         <fieldset data-elastic-key="pogs" data-filtertype="checkboxes">
             <legend>Sizes</legend>
             <label class='break'><input type='checkbox' value='AR00' /> XS</label>
@@ -2846,7 +2846,7 @@ put all filters into the appFilters container.
             <label class='break'><input type='checkbox' value='underwire' /> Underwire</label>
         </fieldset>
         
-        <fieldset data-elastic-key="app_color" data-filtertype="checkboxes">
+        <fieldset data-elastic-key="app_color1 app_color2 app_color3 app_color4 app_color5 app_color6 app_color7 app_color8 app_color9 app_color10" data-filtertype="checkboxes">
             <legend>Colors</legend>
             <label class='break'><input type='checkbox' value='beige' /> Beige</label>
             <label class='break'><input type='checkbox' value='black' /> Black</label>
@@ -2876,6 +2876,11 @@ put all filters into the appFilters container.
             <input type="text"  class='sliderValue' />
             <div class="slider-range"></div>
         </fieldset>
+		
+		<fieldset class='displayNone' data-elastic-key="item_category1 item_category2 item_category3 item_category4 item_category5 item_category6 item_category7 item_category8" data-filtertype="hidden">
+            <input type='hidden' name="h-top" value="top" />
+            <input type='hidden' name="h-bottom" value="bottom" />
+		</fieldset>
         
 		<button class='resetButton floatRight'>RESET OPTIONS</button>
 		
@@ -2920,7 +2925,7 @@ put all filters into the appFilters container.
             <label class='break'><input type='checkbox' value='thong' /> Thong</label>
         </fieldset>
         
-        <fieldset data-elastic-key="pogs" data-filtertype="checkboxes">
+        <fieldset data-elastic-key="app_color1 app_color2 app_color3 app_color4 app_color5 app_color6 app_color7 app_color8 app_color9 app_color10" data-filtertype="checkboxes">
             <legend>Colors</legend>
             <label class='break'><input type='checkbox' value='black' /> Black</label>
             <label class='break'><input type='checkbox' value='blue' /> Blue</label>
@@ -2936,13 +2941,15 @@ put all filters into the appFilters container.
 	
 	
 <!-- TANKINI FILTERS -->
-	<form action='#' name='tankinisForm' id='tankinisForm' class='layeredSearch'>
+	<form action='#' name='sizesOnlyForm' id='tankinisForm' class='layeredSearch'>
     
         <fieldset data-elastic-key="base_price" data-filtertype="slider">
             <legend>Price</legend>
             <input type="text"  class='sliderValue' />
             <div class="slider-range"></div>
         </fieldset>
+		
+		<!-- hidden fieldset added in store_filter with renderHiddenField() function -->
         
 		<button class='resetButton floatRight'>RESET OPTIONS</button>
         
@@ -2990,7 +2997,7 @@ put all filters into the appFilters container.
             <label class='break'><input type='checkbox' value='AS09' /> 20</label>
         </fieldset>
 		
-		<fieldset data-elastic-key="app_color" data-filtertype="checkboxes">
+		<fieldset data-elastic-key="app_color1 app_color2 app_color3 app_color4 app_color5 app_color6 app_color7 app_color8 app_color9 app_color10" data-filtertype="checkboxes">
             <legend>Colors</legend>
             <label class='break'><input type='checkbox' value='beige' /> Beige</label>
             <label class='break'><input type='checkbox' value='black' /> Black</label>
@@ -3021,10 +3028,15 @@ put all filters into the appFilters container.
             <input type="text"  class='sliderValue' />
             <div class="slider-range"></div>
         </fieldset>
-        
+	
+<!--	NEEDS IT'S OWN ATTRIB IF THERE WILL BE A SOLID FILTER USED... (user:app_color will allow for non-solids the way it's used)
+		<fieldset class='displayNone' data-elastic-key="" data-filtertype="hidden">
+            <input type='hidden' name="h-solidcolor" value="" />
+		</fieldset>
+-->        
 		<button class='resetButton floatRight'>RESET OPTIONS</button>
 	
-	 <fieldset data-elastic-key="app_color" data-filtertype="checkboxes">
+	 <fieldset data-elastic-key="app_color1 app_color2 app_color3 app_color4 app_color5 app_color6 app_color7 app_color8 app_color9 app_color10" data-filtertype="checkboxes">
             <legend>Colors</legend>
             <label class='break'><input type='checkbox' value='beige' /> Beige</label>
             <label class='break'><input type='checkbox' value='black' /> Black</label>

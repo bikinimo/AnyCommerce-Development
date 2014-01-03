@@ -45,13 +45,19 @@ var store_filter = function() {
 		},
 		
 		".app-categories.tankinis":{ //category for filter
-			"filter": "tankinisForm",	//name of filter form to use for this category
-			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
+			"filter": "sizesOnlyForm",	//name of filter form to use for this category
+			"exec" : function($form,infoObj){
+				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
+				app.ext.store_filter.u.renderHiddenField($form, 'tankini');
+			}
 		},
 		
 		".app-categories.swim_dresses":{ //category for filter
-			"filter": "tankinisForm",	//name of filter form to use for this category
-			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
+			"filter": "sizesOnlyForm",	//name of filter form to use for this category
+			"exec" : function($form,infoObj){
+				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
+				app.ext.store_filter.u.renderHiddenField($form, 'swim+dresse');
+			}
 		},
 		
 		".app-categories.one_pieces":{ //category for filter
@@ -65,18 +71,35 @@ var store_filter = function() {
 	//	},
 		
 		".app-categories.cover_ups":{ //category for filter
-			"filter": "tankinisForm",	//name of filter form to use for this category
-			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
+			"filter": "sizesOnlyForm",	//name of filter form to use for this category
+			"exec" : function($form,infoObj){
+				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
+				app.ext.store_filter.u.renderHiddenField($form, 'coverup');
+			}
 		},
 		
 		".app-categories.dresses":{ //category for filter
-			"filter": "tankinisForm",	//name of filter form to use for this category
-			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
+			"filter": "sizesOnlyForm",	//name of filter form to use for this category
+			"exec" : function($form,infoObj){
+				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
+				app.ext.store_filter.u.renderHiddenField($form, 'dress');
+			}
 		},
 		
 		".app-categories.sleepwear":{ //category for filter
-			"filter": "tankinisForm",	//name of filter form to use for this category
-			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
+			"filter": "sizesOnlyForm",	//name of filter form to use for this category
+			"exec" : function($form,infoObj){
+				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
+				app.ext.store_filter.u.renderHiddenField($form, 'sleepwear');
+			}
+		},
+		
+		".app-categories.accessories":{ //category for filter
+			"filter": "sizesOnlyForm",	//name of filter form to use for this category
+			"exec" : function($form,infoObj){
+				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
+				app.ext.store_filter.u.renderHiddenField($form, 'accessorie');
+			}
 		},
 	
 	},//
@@ -277,6 +300,16 @@ var store_filter = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+		
+				//adds hidden field to limit filter results to category filter is in
+				//allows a different app_category value to be passed for use w/ different forms.
+			renderHiddenField : function($form, app_categoryValue) {
+				if($form) {
+					//app.u.dump('--> Hidden field navcat'); app.u.dump(app_categoryValue);
+					var $fieldset = "<fieldset class='displayNone' data-elastic-key='item_category1 item_category2 item_category3 item_category4 item_category5 item_category6 item_category7 item_category8' data-filtertype='hidden'><input type='hidden' name='h-' value='"+app_categoryValue+"' /></fieldset>";
+					$form.append($fieldset);
+				}
+			},
 		
 				//pre-checks the entire form before filters are built to indicate whether or not to use OR query 
 				//returns true if OR structure is needed, false if not.
