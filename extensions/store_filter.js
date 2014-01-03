@@ -179,8 +179,13 @@ var store_filter = function() {
 			}, //slider
 
 			hidden : function($fieldset, mKey) {
-				return app.ext.store_filter.u.buildElasticTerms($("input:hidden",$fieldset),$fieldset.attr('data-elastic-key'));
-			},
+				if(mKey == 0) {	
+					return app.ext.store_filter.u.buildElasticTerms($("input:hidden",$fieldset),$fieldset.attr('data-elastic-key'));
+				}
+				else {
+					return app.ext.store_filter.u.buildMultiElasticTerms($("input:hidden",$fieldset),$fieldset.attr('data-elastic-key'));
+				}
+			}, //hidden
 			
 			checkboxes : function($fieldset, mKey) {
 				if (mKey == 0) {
@@ -217,7 +222,7 @@ var store_filter = function() {
 					app.u.dump(" -> validated Filter Properties.")
 					var query = {
 						"mode":"elastic-native",
-						"size":50,
+						"size":68,
 						"filter" : app.ext.store_filter.u.buildElasticFilters($form)
 					}//query
 					
@@ -287,6 +292,9 @@ var store_filter = function() {
 					if($("input[type='checkbox']",$fieldset).is(":checked") && multipleKey > 1) {
 						count++;
 					}	
+					else if ($("input[type='hidden']",$fieldset) && multipleKey > 1) {
+						count++
+					}
 				});
 				
 //				app.u.dump('checkElasticForm var count'); app.u.dump(count);
