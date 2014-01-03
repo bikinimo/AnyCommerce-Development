@@ -42,6 +42,7 @@ var store_filter = function() {
 			}
 		},
 		
+			//display for bottoms in this category is allowed through css override of hideFromList() function
 		".app-categories.separates":{ //category for filter
 			"filter": "separatesForm",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}

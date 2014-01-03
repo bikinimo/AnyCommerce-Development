@@ -523,6 +523,8 @@ SEARCH RESULTS PAGE
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
 	box-sizing: border-box;
 	}
+#categoryTemplate_appcategoriesseparates .searchResultsProduct {display:block !important;}
+#categoryTemplate_appcategoriesseparatesbottoms .searchResultsProduct {display:block !important;}
 
 /***************************************************
 
