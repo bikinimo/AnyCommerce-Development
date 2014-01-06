@@ -648,6 +648,7 @@ var store_bmo = function() {
 						//get price of each item from it's form, and add them for total
 					$('form','.customATCForm',$tag.parent().parent()).each(function(){
 						displayPrice += Number($('.formPrice',$(this)).attr('data-price'));
+	//app.u.dump('--> price'); app.u.dump(displayPrice); 
 					});
 					
 						//convert to money and replace original content w/ total value
@@ -661,12 +662,15 @@ var store_bmo = function() {
 			setHiddenPrice : function($tag, data) {
 				var formDesignator = $tag.attr('data-formDesig'); //used to tell if a form has modified the displayed price
 				var $summaryContainer = $tag.parent().parent().parent().parent();
-		//		app.u.dump(data.value['%attribs']['zoovy:base_price']); app.u.dump(data.value.pid);
+				var pid = app.u.makeSafeHTMLId($('input[type="hidden"]',$tag.parent()).val()); //get pid for this form
+				var prod = app.data['appProductGet|'+pid]; //get product for this form
+//				app.u.dump('--> prod'); app.u.dump(prod);
 				
-				//add base price value to hidden element in each form
-				if(data.value['%attribs'] && data.value['%attribs']['zoovy:base_price']) {
-					$tag.attr('data-price',data.value['%attribs']['zoovy:base_price']); 
+					//add base price value to hidden element in each form
+				if(prod && prod['%attribs'] && prod['%attribs']['zoovy:base_price']) {
+					$tag.attr('data-price',prod['%attribs']['zoovy:base_price']); 
 				}
+				else {app.u.dump('!! app.ext.store_bmo.renderformats.setHiddenPrice() failed !!');}
 			}, //setHiddenPrice
 			
 			loadProd : function($tag, data){
