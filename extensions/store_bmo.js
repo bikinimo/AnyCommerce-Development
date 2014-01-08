@@ -43,10 +43,10 @@ var store_bmo = function() {
 				
 				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
 					var $context = $(app.u.jqSelector('#'+infoObj.parentID));
-					if(!$context.data('countingdown')) {
-						app.ext.store_bmo.u.countdown($context);
-						$context.data('countingdown',true);
-					}
+			//		if(!$context.data('countingdown')) {
+			//			app.ext.store_bmo.u.countdown($context);
+			//			$context.data('countingdown',true);	
+			//		}
 					app.ext.store_bmo.u.runHomeCarouselTab1($context);
 					app.ext.store_bmo.u.runHomeCarouselTab2($context);
 					app.ext.store_bmo.u.runHomeCarouselTab3($context);
@@ -520,7 +520,6 @@ var store_bmo = function() {
 		
 				//checks for matching piece attrib in prod list item and sets sum of prices on list item if found. 
 			matchingBasePrice : function($tag, data) {
-				
 				var basePrice = (data.bindData.isElastic) ? data.value.base_price/100 : data.value['%attribs']['zoovy:base_price'];
 				var match = app.u.makeSafeHTMLId((data.bindData.isElastic) ? data.value.matching_piece : data.value['%attribs']['user:matching_piece']);
 			
@@ -981,41 +980,6 @@ var store_bmo = function() {
 				if (month < 10){month = '0'+month};
 				if (day < 10){day = '0'+day};
 				return ""+year+month+day+hours;
-			},
-			
-			countdown : function($context) {				
-				var endTime = new Date(app.ext.store_bmo.u.yyyymmdd2Pretty(app.ext.store_bmo.vars.eventdate));
-			//	app.u.dump('End Time is: '); app.u.dump(endTime);
-				//app.u.dump(app.ext.store_bmo.u.makeHomeTime() - 1);
-				var cl = $('form[name="clock"]', $context);
-			//	var d = new Date();
-			//	var count=Math.floor((endTime.getTime()-d.getTime())/1000);
-				var count=Math.floor((endTime.getTime()-app.ext.store_bmo.u.makeUTCFloridaTimeMS())/1000);
-
-				if(count<=0) {
-					$('input[name=days]', cl).val('00');
-					$('input[name=hours]', cl).val('00');
-					$('input[name=mins]', cl).val('00');
-					$('input[name=secs]', cl).val('00');
-					
-					$('#deal',$context).removeClass('displayNone');
-					$('button','.perboxright',$context).addClass('displayNone');
-					//document.getElementById("deal").style.display = 'block';
-				}
-				else {
-					$('#deal',$context).addClass('displayNone');
-					//document.getElementById("deal").style.display = 'none';
-				
-					$('input[name=secs]', cl).val(''+app.ext.store_bmo.u.toSt(count%60));
-					count=Math.floor(count/60);
-					$('input[name=mins]', cl).val(''+app.ext.store_bmo.u.toSt(count%60));
-					count=Math.floor(count/60);
-					$('input[name=hours]', cl).val(''+app.ext.store_bmo.u.toSt(count%24));
-					count=Math.floor(count/24);
-					$('input[name=days]', cl).val(''+count);    
-				
-					setTimeout(function(){app.ext.store_bmo.u.countdown($context);},1000);
-				}
 			},
 			
 			//returns text format of day of the week based on date object value passed in

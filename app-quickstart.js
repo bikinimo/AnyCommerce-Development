@@ -28,6 +28,7 @@ var myRIA = function() {
 //if this is a custom extension and you are loading system extensions (prodlist, etc), then load ALL templates you'll need here.
 		"templates" : [
 //custom templates that have been added to the list
+			'limitedTimeOffersTemplate',
 			'productListTemplatePopout',
 //the list of templates that are commonly edited (same order as they appear in appTemplates
 			'homepageTemplate',	'categoryTemplate',

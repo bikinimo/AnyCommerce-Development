@@ -23,6 +23,8 @@ var store_bmo_lto = function() {
 
 		vars : {
 			params : {
+				list 	: [],
+				count 	: 0
 			},
 		},
 
@@ -38,7 +40,7 @@ var store_bmo_lto = function() {
 				
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
-				
+		/*		
 				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj){
 					var $context = $(app.u.jqSelector('#', infoObj.parentID));
 					var failSafeProd = '2654S';
@@ -56,7 +58,7 @@ var store_bmo_lto = function() {
 								//loop through and make sure that products exist and end dates are not in the past
 							for(var i = 0; i < data.product.length; i++) {
 								var tprod = data.product[i];
-								//app.u.dump(tprod.date);
+								app.u.dump('--> date'); app.u.dump(tprod.date);
 								if(tprod.date <= endTime) {
 									app.u.dump('Ending date for'); app.u.dump(data.product[i]); app.u.dump('has already passed. Enter a later date in products.json.');
 									data.product[i] = "";
@@ -101,7 +103,8 @@ var store_bmo_lto = function() {
 						}); //getJSON
 					}
 				}]);
-				
+		*/		
+		
 				return r;
 				},
 			onError : function()	{
@@ -150,7 +153,106 @@ var store_bmo_lto = function() {
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
+		
+				//gets the list of limited offer items and passes it to a function to process them
+			getLimitedList : function($tag, data) {
+				app.u.dump('--> listeses'); app.u.dump(data.value);
+				app.ext.store_bmo_lto.vars.params.list = ['C237T','G246S']//data.value;
+				app.ext.store_bmo_lto.u.limitedOffer();
+			},
 			
+				//gets the offer end date for the item in question 
+				//then calls countdown, or recalls limitedOffer() on the next product if date is past.
+			countdownCheck : function($tag, data) {
+				app.u.dump('==> countdownCheck'); app.u.dump(data.value);
+				var prod = data.value['%attribs'];
+				
+				if(prod && prod['user:limited_time_offer']) {
+					var prodTime = prod['user:limited_time_offer'];
+		app.u.dump('--> lto:'); app.u.dump(prodTime);			
+					var d = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
+					var nowTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d); //current time in Florida
+		app.u.dump('--> app var countdownCheck:'); app.u.dump(app.ext.store_bmo_lto.vars.params.count);			
+						//check if end of promotion has been reached, remove if it has.
+					if(prodTime <= nowTime) {
+						app.u.dump('Ending date for'); app.u.dump(data.value.pid); app.u.dump('has already passed. Enter a later date in product record.');
+						$tag.parent().remove();
+					}
+					else {
+							//promotion is still good load countdown with it
+						app.ext.store_bmo_lto.u.countdown($tag.parent(),prodTime);
+					}
+				}
+				else {
+					$tag.parent().remove();
+				}
+			}
+	/*	
+			limitedOffer : function($tag, data) {
+					var $context = $(app.u.jqSelector('#homepageTemplate_'));
+		//app.u.dump('--> jqSelector'); app.u.dump(data.value); app.u.dump($context);
+					var failSafeProd = '2654S';
+					var failSafeDate = '2012101910';
+					
+					if(!$context.data('hasLTO')) {
+					
+						//get the product array from $limited-time-offer list
+						if(data.value) {
+							app.u.dump(data.value);
+							app.u.dump(data.value.length)
+							var faultyProducts = data.value[data.value.length-1];
+							var a = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
+							var endTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(a); //current time in Florida
+								//loop through and make sure that products exist and end dates are not in the past
+							for(var i = 0; i < data.value.length; i++) {
+								var tprod = data.value[i];
+								app.u.dump('--> date'); app.u.dump('2014022010'); app.u.dump(tprod);
+								if(tprod.date <= endTime) {
+									app.u.dump('Ending date for'); app.u.dump(data.value[i]); app.u.dump('has already passed. Enter a later date in products.json.');
+									data.value[i] = "";
+									//app.u.dump(data.product[i]);
+								}
+// uncomment when				else if(!app.data['appProductGet|'+tprod.pid]) {
+// appProductGet| issue				app.u.dump('SKU for '); app.u.dump(data.product[i]); app.u.dump('does not pass validation. Enter a new SKU in products.json');
+// is resolved						data.product[i] = "";
+//								}
+							}
+
+								//records for products that do not exist or have past dates will be set to ""
+								//check for the first non "" index and use its record for anyContent
+							for (var j = 0; j < data.value.length; j++) {
+								if(data.value[j] != "") {
+									app.ext.store_bmo_lto.vars.params.date = data.value[j];
+									break;
+								}
+								else {
+									//default to last item in the list and this "deal has ended" text will be shown
+									if(faultyProducts != 'undefined') {app.ext.store_bmo_lto.vars.params = faultyProducts;}
+								}
+							}
+							//app.u.dump('the beat goes on'); app.u.dump(app.ext.store_bmo_lto.vars.params);
+							//app.ext.store_bmo_lto.vars.params = $.extend(true, [], data.product);
+							//app.u.dump('data:'); app.u.dump(data.product);
+							//app.u.dump('params:'); app.u.dump(app.ext.store_bmo_lto.vars.params);
+							
+								//set event date to that of the chosen record
+							app.ext.store_bmo.vars.eventdate = app.ext.store_bmo_lto.vars.params.date;
+								//start any content for LTO section
+							app.ext.store_bmo_lto.u.loadLTOProduct();
+							$context.data('hasLTO',true);
+							
+						}
+						else {
+								//reading the product record in products.json has failed message in console,
+								//display some product to fill space, set the date to past so it just looks like the deal is over until problem is fixed. 
+							app.u.dump('*** In store_bmo_lto and products.json was not read. Failsafe product is being displayed. Please correct the error in products.json');
+							app.ext.store_bmo_lto.vars.params.sku = failSafeProd;	//set default prod
+							app.ext.store_bmo.vars.eventdate = failSafeDate;		//set past date
+							app.ext.store_bmo_lto.u.loadLTOProduct();				//load this default info. w/ anyContent
+						} 
+					}
+				}
+		*/		
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -158,12 +260,63 @@ var store_bmo_lto = function() {
 //any functions that are recycled should be here.
 		u : {
 		
-			loadLTOProduct : function() {
+			countdown : function($context, prodTime) {app.u.dump('--> started countdown');
+				var endTime = new Date(app.ext.store_bmo.u.yyyymmdd2Pretty(prodTime));
+				app.u.dump('End Time is: '); app.u.dump(endTime.getTime());
+				//app.u.dump(app.ext.store_bmo.u.makeHomeTime() - 1);
+				var cl = $('form[name="clock"]', $context);
+			//	var d = new Date();
+			//	var count=Math.floor((endTime.getTime()-d.getTime())/1000);
+				var count=Math.floor((endTime.getTime()-app.ext.store_bmo.u.makeUTCFloridaTimeMS())/1000);
+app.u.dump('--> count='); app.u.dump(count); 
+				if(count<=0) {
+					$('input[name=days]', cl).val('00');
+					$('input[name=hours]', cl).val('00');
+					$('input[name=mins]', cl).val('00');
+					$('input[name=secs]', cl).val('00');
+					
+					$('#deal',$context).removeClass('displayNone');
+					$('button','.perboxright',$context).addClass('displayNone');
+					//document.getElementById("deal").style.display = 'block';
+				}
+				else {
+					$('#deal',$context).addClass('displayNone');
+					//document.getElementById("deal").style.display = 'none';
+				
+					$('input[name=secs]', cl).val(''+app.ext.store_bmo.u.toSt(count%60));
+					count=Math.floor(count/60);
+					$('input[name=mins]', cl).val(''+app.ext.store_bmo.u.toSt(count%60));
+					count=Math.floor(count/60);
+					$('input[name=hours]', cl).val(''+app.ext.store_bmo.u.toSt(count%24));
+					count=Math.floor(count/24);
+					$('input[name=days]', cl).val(''+count);    
+				
+					setTimeout(function(){app.ext.store_bmo_lto.u.countdown($context,prodTime);},1000);
+				}
+			}, //countdown
+		
+				//calls load function on iteration of the list array. 
+				//Is recalled w/ incremented iteration if needed. 
+			limitedOffer : function(iteration) {
+				var iteration = iteration ? iteration : 0; 
+				app.u.dump('--> iteration'); app.u.dump(iteration); app.u.dump(app.ext.store_bmo_lto.vars.params.list.length);
+				if (app.ext.store_bmo_lto.vars.params.list.length > iteration) {
+					app.ext.store_bmo_lto.u.loadLTOProduct(app.ext.store_bmo_lto.vars.params.list[iteration])
+					app.ext.store_bmo_lto.vars.params.count += 1;
+					app.u.dump('--> app var limitedOffer:'); app.u.dump(app.ext.store_bmo_lto.vars.count);	
+				}
+				else {
+					//TO DO: SET UP SOME DEFAULT DISPLAY IF END OF LIST IS REACHED AND NOT ITEMS CAN BE DISPLAYED.
+				}
+			},
+		
+				//sets up object for renderfunction for limited time offer.
+			loadLTOProduct : function(pid) {
 			
-				var prodLTO = app.ext.store_bmo_lto.vars.params.sku;
+		//		var prodLTO = app.ext.store_bmo_lto.vars.params.sku;
 				
 				var obj = {									// object to hold product id for product
-					"pid" : prodLTO
+					"pid" : pid
 				};
 					//console.debug(obj);					// see what was returned in console
 				var _tag = {								// create holder for call back
