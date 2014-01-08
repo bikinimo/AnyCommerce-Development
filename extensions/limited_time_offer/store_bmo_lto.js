@@ -107,7 +107,7 @@ var store_bmo_lto = function() {
 						prod = prod['%attribs'];
 						var d = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
 						var nowTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d);
-						if(nowTime < prod['user:limited_time_offer']) {	
+						if(nowTime < prod['user:limited_time_offer']) {
 							if(prod['user:discount_15']) {
 								discount = 0.15;
 //								app.u.dump('--> DISCOUNT IS 15%')
