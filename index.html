@@ -785,7 +785,9 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 			<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
 			
 			<div data-bind='var:product(user:matching_piece); format:hideIfSet;'>
-				<h3 class='basePrice marginBottom' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: <h5>Only :</h5> ;' style="text-align:left;"></h3>
+				<div data-bind='var:product(pid); format:assignAttribute; attribute:data-pid;'>
+					<h3 class='basePrice marginBottom' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: <h5>Only :</h5> ;' style="text-align:left;"></h3>
+				</div>
 			</div>
 			<div class='displayNone' data-bind='var:product(user:matching_piece); format:showIfSet;'>	
 				<!-- <h3 class='customBasePrice marginBottom' data-priceA='0' data-priceB='0' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: <h5>Only :</h5> ;' style="text-align:left;"></h3> -->

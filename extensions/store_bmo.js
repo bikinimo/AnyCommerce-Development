@@ -642,16 +642,18 @@ var store_bmo = function() {
 			}, //combineFeaturesList
 			
 				//reads prices for both top and bottom pieces and adds them for a total preliminary price
-				// !!	WILL NEED SUPPORT FOR DISCOUNTED COST OF TWO ITEMS TOGETHER !!
 			customBasePrice : function($tag, data) {
+				var pid = app.u.makeSafeHTMLId(data.value.pid);
 				var displayPrice = 0;
 				setTimeout(function(){
 						//get price of each item from it's form, and add them for total
 					$('form','.customATCForm',$tag.parent().parent()).each(function(){
 						displayPrice += Number($('.formPrice',$(this)).attr('data-price'));
-	//app.u.dump('--> price'); app.u.dump(displayPrice); 
+//						app.u.dump('--> price'); app.u.dump(displayPrice); 
 					});
-					
+						
+						//check for Limited time offer discount
+					displayPrice = app.ext.store_bmo_lto.u.applyLTODiscount(pid,displayPrice);
 						//convert to money and replace original content w/ total value
 					displayPrice = app.u.formatMoney(displayPrice,'$',2,true);
 					$tag.empty().text(displayPrice);
