@@ -94,7 +94,7 @@ var store_bmo_lto = function() {
 //utilities are typically functions that are executed by an event or action.
 //any functions that are recycled should be here.
 		u : {
-		
+				//runs countdown timer against current time and passed argument of product lto end time
 			countdown : function($context, prodTime) {
 				var endTime = new Date(app.ext.store_bmo.u.yyyymmdd2Pretty(prodTime));
 //				app.u.dump('End Time is: '); app.u.dump(endTime.getTime());
