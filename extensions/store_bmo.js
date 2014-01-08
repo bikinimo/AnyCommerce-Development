@@ -103,10 +103,9 @@ var store_bmo = function() {
 					var dataObj = {};
 					var matchPrice = app.data[rd.datapointer]['%attribs']['zoovy:base_price'];
 					var origPrice = rd.price;
-					var discount = rd.discount;
-					
-					discount = discount * (Number(origPrice) + Number(matchPrice));
-					dataObj.combinedTotal = (Number(origPrice) + Number(matchPrice)) - discount;
+
+					dataObj.combinedTotal = Number(origPrice) + Number(matchPrice);
+					dataObj.pid = app.u.makeSafeHTMLId(rd.datapointer.split('|')[1]);
 					rd.$container.anycontent({"templateID":rd.loadsTemplate,"data":dataObj});
 //					app.u.dump('--> response data:'); app.u.dump(rd);
 //					app.u.dump('--> the matching price:'); app.u.dump(matchPrice); 
@@ -525,33 +524,7 @@ var store_bmo = function() {
 			matchingBasePrice : function($tag, data) {
 				var basePrice = (data.bindData.isElastic) ? data.value.base_price/100 : data.value['%attribs']['zoovy:base_price'];
 				var match = app.u.makeSafeHTMLId((data.bindData.isElastic) ? data.value.matching_piece : data.value['%attribs']['user:matching_piece']);
-				var prod = data.value['%attribs'];
-				var discount = 0; //if no discount, multiply by 0 will keep price the same
-				
-					//if the product has a limited time offer and any discount the displayed price needs to be changed
-				if(prod && prod['user:limited_time_offer'] && (prod['user:discount_15'] || prod['user:discount_20'] || prod['user:discount_25'])) {
-					var d = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
-					var nowTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d);
-					
-					if(nowTime < prod['user:limited_time_offer']) {
-						if(prod['user:discount_15']) {
-							discount = 0.15;
-//							app.u.dump('--> DISCOUNT IS 15%')
-						}
-						else if(prod['user:discount_20']) {
-							discount = 0.2;
-//							app.u.dump('--> DISCOUNT IS 20%')
-						}
-						else if(prod['user:discount_25']) {
-							discount = 0.25;
-//							app.u.dump('--> DISCOUNT IS 25%')
-						}
-						else {
-//							app.u.dump('--> DISCOUNT IS 0%')
-						}
-					}
-				} //end discount if
-			
+							
 				if(match) {
 					var obj = {
 						pid	: match
@@ -563,7 +536,6 @@ var store_bmo = function() {
 						"$container" 	: $tag,
 						"loadsTemplate"	: "matchingPriceTemplate",
 						"price"			: basePrice,
-						"discount"		: discount
 					};
 
 					app.calls.appProductGet.init(obj, _tag, 'immutable');

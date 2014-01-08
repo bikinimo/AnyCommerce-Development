@@ -94,6 +94,44 @@ var store_bmo_lto = function() {
 //utilities are typically functions that are executed by an event or action.
 //any functions that are recycled should be here.
 		u : {
+		
+				//applies LTO discount to product price if it has one, and 
+			applyLTODiscount : function(pid, amount) {
+				if(pid) {
+					pid = app.u.makeSafeHTMLId(pid);
+					var prod = app.data['appProductGet|'+pid];
+					var discount = 0; //if no discount, multiply by 0 will keep price the same
+				
+						//if the product has a limited time offer and any discount the displayed price needs to be changed
+					if(prod && prod['%attribs']['user:limited_time_offer'] && (prod['%attribs']['user:discount_15'] || prod['%attribs']['user:discount_20'] || prod['%attribs']['user:discount_25'])) {
+						prod = prod['%attribs'];
+						var d = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
+						var nowTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d);
+						if(nowTime < prod['user:limited_time_offer']) {	
+							if(prod['user:discount_15']) {
+								discount = 0.15;
+//								app.u.dump('--> DISCOUNT IS 15%')
+							}
+							else if(prod['user:discount_20']) {
+								discount = 0.2;
+//								app.u.dump('--> DISCOUNT IS 20%')
+							}
+							else if(prod['user:discount_25']) {
+								discount = 0.25;
+//								app.u.dump('--> DISCOUNT IS 25%')
+							}
+							else {
+//								app.u.dump('--> DISCOUNT IS 0%')
+							}
+						}
+					} //end discount if
+
+					amount = amount - (amount * discount);
+				}
+				
+				return amount;
+			},
+		
 				//runs countdown timer against current time and passed argument of product lto end time
 			countdown : function($context, prodTime) {
 				var endTime = new Date(app.ext.store_bmo.u.yyyymmdd2Pretty(prodTime));

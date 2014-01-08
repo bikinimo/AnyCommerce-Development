@@ -2914,6 +2914,7 @@ $tmp.empty().remove();
 			
 //			app.u.dump('BEGIN view.formats.money');
 			var amount = data.bindData.isElastic ? (data.value / 100) : data.value;
+/*bmo*/		amount = app.ext.store_bmo_lto.u.applyLTODiscount($tag.parent().attr('data-pid'),amount);
 			if(amount)	{
 				var r,o,sr;
 				r = app.u.formatMoney(amount,data.bindData.currencySign,'',data.bindData.hideZero);
