@@ -651,9 +651,7 @@ var store_bmo = function() {
 						displayPrice += Number($('.formPrice',$(this)).attr('data-price'));
 //						app.u.dump('--> price'); app.u.dump(displayPrice); 
 					});
-						
-						//check for Limited time offer discount
-					displayPrice = app.ext.store_bmo_lto.u.applyLTODiscount(pid,displayPrice);
+
 						//convert to money and replace original content w/ total value
 					displayPrice = app.u.formatMoney(displayPrice,'$',2,true);
 					$tag.empty().text(displayPrice);
@@ -671,7 +669,8 @@ var store_bmo = function() {
 				
 					//add base price value to hidden element in each form
 				if(prod && prod['%attribs'] && prod['%attribs']['zoovy:base_price']) {
-					$tag.attr('data-price',prod['%attribs']['zoovy:base_price']); 
+					var displayPrice = app.ext.store_bmo_lto.u.applyLTODiscount(pid,prod['%attribs']['zoovy:base_price']);
+					$tag.attr('data-price',displayPrice); 
 				}
 				else {app.u.dump('!! app.ext.store_bmo.renderformats.setHiddenPrice() failed !!');}
 			}, //setHiddenPrice
