@@ -106,7 +106,8 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 .fashionclub{margin:38px 0 0 28px; padding:0px; width:338px; text-align:center; color:#2e5f80; font-family:'Source Sans Pro', serif; font-weight:bold;}
 .fashionclub h2{margin:0px; padding:0px; font-weight:normal; font-size:22px;}
 .fashionclub h1{margin:0px; padding:0px; font-weight:bold; font-size:54px; letter-spacing:-3px; line-height:40px;}
-.fashionclub p{margin:0px; padding:15px 0 0 0; font-weight:normal; font-size:14px; line-height:20px;}
+.fashionclub p, .fashionclub div {margin:0px; padding:15px 0 0 0; font-weight:normal; font-size:14px; line-height:20px;}
+.fashionclub div {padding:5px 0 0 0;}
 .remidbutt{margin:18px 0 0 0; padding:0px; width:397px; float:left;}
 .remidbutt img{margin:0 0 0 8px;}
 .homeTemplate{margin:-17px 0 0 0; padding:0px;}
