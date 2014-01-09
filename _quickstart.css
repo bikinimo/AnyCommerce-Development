@@ -61,7 +61,7 @@ body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; 
 .perboxright h1{margin:0px; padding:0px; font-size:17px; color:#000000; font-family:'Ubuntu', serif;}
 .perboxright h2, .perboxright span.cents, .perboxright span.price {margin:0px; padding:6px 0 0 0; font-size:18px; color:#ec1c24; font-family:'Ubuntu', serif; font-weight:bold;}
 .price {color:#f05a24; font-size:13.5px;}
-.perboxright span{ color:#000000; font-size:10px;}
+.perboxright div, .perboxright div.reg .cents {color:#000000; font-size:10px; font-weight:normal;}
 .perboxright span#deal{color:#54A7E1; font-size:10px; font-weight:bold; margin:20px auto; text-align:center;}
 .perboxright span.notAvailableForPurchase {display:block; margin:8px 0;}
 .perboxright .countDesc {color:#ffffff; text-align:center; padding:0 0 0 3px;}

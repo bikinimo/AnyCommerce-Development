@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"201318.20140107203500",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201318.20140108195600",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
@@ -423,12 +423,12 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<div data-bind="var:product(user:matching_piece); format:hideIfSet;">
 				<div data-bind='var:product(pid); format:assignAttribute; attribute:data-pid;'>
 					<h2 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Only: ;'></h2>
+					<div data-bind='var:product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:reg; pretext:Regularly: ; noDiscount:1;'></div>
 				</div>
 			</div>
 			<div class="displayNone" data-bind="var:product(user:matching_piece); format:showIfSet;">
 				<h2 class='hideInMinimalMode' data-bind='useParentData:true; format:matchingBasePrice; extension:store_bmo; currencySign: $;  hideZero:true; className:price; pretext: Only: ;'></h2>
-			</div>
-			<span>Regularly: $5,000,000</span> 
+			</div> 
 
 			<!-- <a href="#."><img src="images/add_cart.gif" alt="Add To Cart" border="0" class="addcart" title="Add To Cart" /></a><br clear="left" /></a> -->
 			<div data-bind='var: product(pid); format:addToCartButton; extension:store_product;'>
@@ -639,6 +639,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 	<div id='matchingPriceTemplate'>
 		<div data-bind='var:product(pid); format:assignAttribute; attribute:data-pid;'>
 			<span data-bind='var:product(combinedTotal); format:money; currencySign: $;  hideZero:true; className:price; pretext:;'></span>
+			<div data-bind='var:product(combinedTotal); format:money; currencySign: $;  hideZero:true; className:reg; pretext:Regularly: ; noDiscount:1;'></div>
 		</div>
 	</div>
 	
