@@ -68,7 +68,7 @@ $('#profileSummary').anycontent({'templateID':'profileTemplate','dataAttribs':{i
 $('#tabs-1').append(app.ext.analyzer.u.objExplore(zGlobals));
 $('#tabs-4').append(app.ext.analyzer.u.buildTagsList({'id':'tagList'}));
 
-					app.ext.analyzer.calls.appResource.init('flexedit.json',{'callback':'handleFlexedit','extension':'analyzer'});
+					app.ext.analyzer.calls.appResource.init('product_attribs_all.json',{'callback':'handleFlexedit','extension':'analyzer'});
 //request profile data (company name, logo, policies, etc)
 					app.calls.appProfileInfo.init({'profile':zGlobals.appSettings.profile},{'callback':'handleProfile','parentID':'profileSummaryList','extension':'analyzer'});
 					if(zGlobals && zGlobals.appSettings && zGlobals.appSettings.rootcat)	{
@@ -88,7 +88,7 @@ $('#tabs-4').append(app.ext.analyzer.u.buildTagsList({'id':'tagList'}));
 
 			showRootCategories : {
 				onSuccess : function(tagObj)	{
-					app.ext.store_navcats.u.getChildDataOf('.',{'parentID':'categoryTree','callback':'addCatToDom','templateID':'catInfoTemplate','extension':'store_navcats'},'appCategoryDetailMore');  //generate left nav.
+					app.ext.store_navcats.u.getChildDataOf('.',{'parentID':'categoryTree','callback':'addCatToDom','templateID':'catInfoTemplate','extension':'store_navcats'},'appNavcatDetailMore');  //generate left nav.
 					app.model.dispatchThis();
 					},
 				onError : function(responseData,uuid)	{
@@ -135,7 +135,7 @@ $('#tabs-4').append(app.ext.analyzer.u.buildTagsList({'id':'tagList'}));
 				onError : function(responseData,uuid)	{
 	//throw some messaging at the user.  since the categories should have appeared in the left col, that's where we'll add the messaging.
 					app.u.dump("BEGIN analyzer.callbacks.handleFlexedit.onError");
-					//app.u.handleErrors(responseData,uuid);
+					app.u.handleErrors(responseData,uuid);
 					}
 				}, //handleFlexedit
 				
@@ -173,7 +173,7 @@ $('#tabs-4').append(app.ext.analyzer.u.buildTagsList({'id':'tagList'}));
 //				app.u.dump(" -> size() = "+$('#'+parentID+' li').size());
 //once the parentID has children, the subcats have already been loaded. don't load them twice.
 				if($('#'+parentID+' li').size() == 0)	{ 
-					app.ext.store_navcats.u.getChildDataOf(path,{'parentID':parentID,'callback':'addCatToDom','templateID':'catInfoTemplate','extension':'store_navcats'},'appCategoryDetailMore');
+					app.ext.store_navcats.u.getChildDataOf(path,{'parentID':parentID,'callback':'addCatToDom','templateID':'catInfoTemplate','extension':'store_navcats'},'appNavcatDetailMore');
 					app.model.dispatchThis();
 					}
 				}, //showSubcats

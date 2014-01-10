@@ -118,7 +118,7 @@ renderOptionSELECT: function(pog) {
 	var $parentDiv = $("<span \/>");
 	var $selectList = $("<select>").attr({"name":pogid});
     var i = 0;
-    var len = pog.options.length;
+    var len = pog['@options'].length;
 
 	var selOption; //used to hold each option added to the select
 	var optionTxt;
@@ -131,10 +131,10 @@ renderOptionSELECT: function(pog) {
 		}
 //adds options to the select list.
     while (i < len) {
-		optionTxt = pog['options'][i]['prompt'];
-		if(pog['options'][i]['p'])
-			optionTxt += pogs.handlePogPrice(pog['options'][i]['p']); //' '+pog['options'][i]['p'][0]+'$'+pog['options'][i]['p'].substr(1);
-		selOption = "<option value='"+pog['options'][i]['v']+"'>"+optionTxt+"<\/option>";
+		optionTxt = pog['@options'][i]['prompt'];
+		if(pog['@options'][i]['p'])
+			optionTxt += pogs.handlePogPrice(pog['@options'][i]['p']); //' '+pog['@options'][i]['p'][0]+'$'+pog['@options'][i]['p'].substr(1);
+		selOption = "<option value='"+pog['@options'][i]['v']+"'>"+optionTxt+"<\/option>";
 		$selectList.append(selOption);
 		i++;
 		}
@@ -155,7 +155,7 @@ renderOptionBIGLIST: function(pog) {
 	var selOptions = '';
 	var lastOptGrp,selValues;
 	var inc = 0;
-    var len = pog.options.length;
+    var len = pog['@options'].length;
 	var $parentDiv = $("<span \/>");
 	var $selectList = $("<select \/>").attr({"name":pogid}).addClass("zform_select zform_biglist");
 //sets the first options on both select lists.
@@ -170,14 +170,14 @@ create first optgroup.
 These are here instead of in the while loop to save a lookup during each iteration. Otherwise we need to 
 check if at iteration 1 (inc = 0) each time in the loop. this is gives us a tighter loop.
 */
-	selValues = pog['options'][inc]['prompt'].split('|');
+	selValues = pog['@options'][inc]['prompt'].split('|');
 	lastOptGrp = selValues[0];
 	selOptions += "<optgroup label='"+selValues[0]+"'>"; //add option to first dropdown list.
 	while (inc < len) {
 
 //selValues[0] = first dropdown prompt/opt group.
 //selValues[1] = second dropdown prompt.
-		selValues = pog['options'][inc]['prompt'].split('|');
+		selValues = pog['@options'][inc]['prompt'].split('|');
 		optGrp = selValues[0];
 
 //at each 'change' of grouping, add the current group to the select list.
@@ -185,7 +185,7 @@ check if at iteration 1 (inc = 0) each time in the loop. this is gives us a tigh
 			selOptions += "<\/optgroup><optgroup label='"+selValues[0]+"'>"; //add option to first dropdown list.
 			}
 		
-		selOptions += "<option value='"+pog['options'][inc]['v']+"'>"+selValues[1]+"<\/option>\n";
+		selOptions += "<option value='"+pog['@options'][inc]['v']+"'>"+selValues[1]+"<\/option>\n";
 		lastOptGrp = selValues[0]
 		inc += 1;
 		}
@@ -212,7 +212,7 @@ renderOptionIMGSELECT: function(pog) {
 		$(this).closest('.imgSelectContainer').find('img').attr('src',app.u.makeImage({"w":pog.width,"h":pog.height,"name":thumbnail,"b":"FFFFFF","tag":false,"lib":app.username}));
 		});
     var i = 0;
-    var len = pog.options.length;
+    var len = pog['@options'].length;
 
 	var selOption; //used to hold each option added to the select
 	var optionTxt;
@@ -225,10 +225,10 @@ renderOptionIMGSELECT: function(pog) {
 		}
 //adds options to the select list.
     while (i < len) {
-		optionTxt = pog['options'][i]['prompt'];
-		if(pog['options'][i]['p'])
-			optionTxt += pogs.handlePogPrice(pog['options'][i]['p']); //' '+pog['options'][i]['p'][0]+'$'+pog['options'][i]['p'].substr(1);
-		selOption = "<option value='"+pog['options'][i]['v']+"' data-thumbnail='"+pog['options'][i]['img']+"' id='option_"+pogid+""+pog['options'][i]['v']+"'>"+optionTxt+"<\/option>";
+		optionTxt = pog['@options'][i]['prompt'];
+		if(pog['@options'][i]['p'])
+			optionTxt += pogs.handlePogPrice(pog['@options'][i]['p']); //' '+pog['@options'][i]['p'][0]+'$'+pog['@options'][i]['p'].substr(1);
+		selOption = "<option value='"+pog['@options'][i]['v']+"' data-thumbnail='"+pog['@options'][i]['img']+"' id='option_"+pogid+""+pog['@options'][i]['v']+"'>"+optionTxt+"<\/option>";
 		$selectList.append(selOption);
 		i++;
 		}
@@ -248,14 +248,14 @@ renderOptionIMGSELECT: function(pog) {
 renderOptionRADIO: function(pog)	{
 	var pogid = pog.id;
 
-	var $parentDiv = $("<span \/>");
+	var $parentDiv = $("<span \/>").addClass('labelsAsBreaks');
 	
 //display ? with hint in hidden div IF ghint is set
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
     var i = 0;
-    var len = pog['options'].length;
+    var len = pog['@options'].length;
 	while (i < len) {
-		$parentDiv.append($("<label \/>").append($('<input>').attr({type: "radio", name: pogid, value: pog['options'][i]['v']}).after(pog['options'][i]['prompt'])));
+		$parentDiv.append($("<label \/>").append($('<input>').attr({type: "radio", name: pogid, value: pog['@options'][i]['v']})).append(pog['@options'][i]['prompt']));
 		i++;
 		}
 	return $parentDiv;
@@ -359,7 +359,7 @@ renderOptionNUMBER: function(pog) {
 	if(pog['max'])
 		$textbox.attr('max',pog['max']);
 	if(pog['min'])
-		$textbox.attr('max',pog['max']);
+		$textbox.attr('min',pog['min']);
 		
 	$parentDiv.append($textbox);
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
@@ -408,11 +408,11 @@ renderOptionIMGGRID: function(pog)	{
 	var radioLabel; //used to create the radio button label.
 	var thumbnail; //guess what this holds
     var i = 0;
-    var len = pog['options'].length;
+    var len = pog['@options'].length;
 	while (i < len) {
-		thumbnail = app.u.makeImage({"w":pog.width,"h":pog.height,"name":pog['options'][i]['img'],"b":"FFFFFF","tag":true,"lib":app.username});
-		radioLabel = "<label>"+pog['options'][i]['prompt']+"<\/label>";
-		$radioInput = $('<input>').attr({type: "radio", name: pogid, value: pog['options'][i]['v']});
+		thumbnail = app.u.makeImage({"w":pog.width,"h":pog.height,"name":pog['@options'][i]['img'],"b":"FFFFFF","tag":true,"lib":app.username});
+		radioLabel = "<label>"+pog['@options'][i]['prompt']+"<\/label>";
+		$radioInput = $('<input>').attr({type: "radio", name: pogid, value: pog['@options'][i]['v']});
 		$parentDiv.append(thumbnail).append($radioInput).append(radioLabel).wrap("<div class='floatLeft'><\/div>");;
 		i++
 		}
@@ -479,7 +479,7 @@ renderOption: function(pog,pid) {
 //	$displayObject.append($formFieldDiv);   /// NOTE the form ID on this should probably be auto-generated from the element ID.
 
     if (this.handlers["pogid."+pogid]) {
-      $optionObj = eval("this."+this.handlers["pogid."+pogid]+"(pog)");
+      $optionObj = eval("this."+this.handlers["pogid."+pogid]+"(pog)");  // this[this.handlers["pogid."+pogid]](pog)
       }
     else if (this.handlers["type."+pog.type]) {
       $optionObj = eval("this."+this.handlers["type."+pog.type]+"(pog)");
@@ -1136,13 +1136,65 @@ the rest of the code below that is for backward compatibility with IE7... and ma
 
 if(typeof jQuery === 'function')	{
 //will serialize a form into JSON
-	jQuery.fn.serializeJSON=function() {
+/*	jQuery.fn.serializeJSON=function() {
 		var json = {};
 		jQuery.map($(this).serializeArray(), function(n, i){
 			json[n['name']] = n['value'];
 			});
 		return json;
 		};
+*/
+//the old serializeJSON function stopped working correctly for radio buttons w/ jquery 1.9.1
+// ** 201320 -> serializeJSON now supports an options object.  set cb:true to get a more rational way of managing checkboxes.
+// 				the serialized object will have any cb set to 1 or 0 based on whether it's checked. That means unchecked items WILL get serialized.
+$.fn.serializeJSON = function(options){
+	var json = {}
+	var $form = $(this);
+	options = options || {}
+	options.cb = options.cb || false;
+	//allows for a different selector to be passed, such as :input.edited
+	options.selector = options.selector || ":input";
+
+	$(options.selector,$form).each(function(){
+		var val;
+//		app.u.dump(" -> this.type: "+this.type);
+		if(!this.name){return}; //early exit if name not set, which is required.
+
+		if ('radio' === this.type) {
+			if(json[this.name]) { return; } //value already set, exit early.
+			json[this.name] = this.checked ? this.value : '';
+			}
+		else if('select-multiple' === this.type)	{
+			if(!this.value)	{}
+			else	{
+//multiple select is saved as an array.  If you need it flattened, either write a param to change the behavior or flatten it outside.
+				var optionsArr = new Array(); // 'this' loses meaning in the option loop, so a var is created and set after.
+				$('option',$(this)).each(function(){
+					var $option = $(this);
+	//				app.u.dump(" -> $option.prop('selected'): "+$option.prop('selected'));
+					if($option.prop('selected'))	{
+						optionsArr.push($option.val());
+						}
+					})
+				json[this.name] = optionsArr;
+				}
+			}
+		else if ('checkbox' === this.type) {
+			if(options.cb)	{
+				if (this.checked) {json[this.name] = '1';}
+				else {json[this.name] = '0';}
+				}
+			else	{
+				if (this.checked) {json[this.name] = 'on';} //must be lowercase. that's the html default and what the old cgi's are looking for.
+				}
+//			else	{json[this.name] = 0;}
+			}
+		else {
+			json[this.name] = this.value;
+			}
+		})
+		return json;
+		}
 	}
 
 

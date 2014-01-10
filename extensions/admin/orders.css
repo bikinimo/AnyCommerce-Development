@@ -10,6 +10,24 @@ ORDER MANAGER
 
 */
 
+
+/*
+
+for new orders/items view feature
+
+*/
+
+
+.orderListMode .hideInOrderListMode	{display:none;}
+.itemListMode .hideInItemListMode	{display:none;}
+
+
+
+
+
+
+
+
 /*
 order list
 */
@@ -137,6 +155,9 @@ ul.paybySupplemental	{margin-top:0;}
 .orderQuickviewMenu h3	{padding:3px; margin:0;}
 .orderQuickviewMenu li	{border-top:1px solid #E4E4E4; padding: 3px;}
 .orderQuickviewContent .orderContentsTable, .orderQuickviewContent .gridTable	{width:100%;}
+
+.orderQuickviewMenu button	{border:0; background:none; padding:0; margin:0; text-align:right; cursor:pointer;}
+
 
 
 /* custom email tool */

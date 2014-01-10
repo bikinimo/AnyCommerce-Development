@@ -15,6 +15,10 @@ app.rq.push(['extension',0,'store_product','extensions/store_product.js']);
 app.rq.push(['extension',0,'store_cart','extensions/store_cart.js']);
 app.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 app.rq.push(['extension',0,'myRIA','app-quickstart.js','startMyProgram']);
+
+app.rq.push(['extension',0,'entomologist','extensions/entomologist/extension.js']);
+app.rq.push(['extension',0,'tools_animation','extensions/tools_animation.js']);
+
 app.rq.push(['extension',0,'fancybox','extensions/fancybox/extension_fancybox.js','startExtension']);
 app.rq.push(['extension',0,'tools_lightbox','extensions/tools_lightbox/tools_lightbox.js']);
 app.rq.push(['extension',0,'tools_youtube','extensions/tools_youtube.js']);
@@ -33,7 +37,7 @@ app.rq.push(['extension',0,'cart_quickadd','extensions/cart_quickadd/extension.j
 app.rq.push(['extension',0,'store_bmo_lto','extensions/limited_time_offer/store_bmo_lto.js']);
 app.rq.push(['extension',0,'store_filter','extensions/store_filter.js']);
 
-app.rq.push(['script',0,(document.location.protocol == 'file:') ? app.vars.testURL+'jquery/config.js' : app.vars.baseURL+'jquery/config.js']); //The config.js is dynamically generated.
+app.rq.push(['script',0,(document.location.protocol == 'file:') ? app.vars.testURL+'jsonapi/config.js' : app.vars.baseURL+'jquery/config.js']); //The config.js is dynamically generated.
 app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){return (typeof zoovyModel == 'function') ? true : false;}}
 app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
 
@@ -41,6 +45,7 @@ app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']); //used pretty early in process..
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']); //in zero pass in case product page is first page.
+app.rq.push(['css',1,app.vars.baseURL+'resources/anyplugins.css']);
 
 app.rq.push(['script',0,app.vars.baseURL+'resources/load-image.min.js']); //in zero pass in case product page is first page.
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.image-gallery.jt.js']); //in zero pass in case product page is first page.
@@ -52,8 +57,6 @@ app.rq.push(['script',0,app.vars.baseURL+'carouFredSel-6.1.0/jquery.carouFredSel
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.infinitecarousel3.js']); //light infinite carousel for prod pages (replaces imgSlider)
 
 
-//add tabs to product data.
-//tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
 //add tabs to product data.
 //tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
 app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
@@ -98,7 +101,6 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 */
 
 //group any third party files together (regardless of pass) to make troubleshooting easier.
-app.rq.push(['script',0,(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js']);
 
 
 /*
@@ -184,7 +186,7 @@ app.u.initMVC = function(attempts){
 			app.loadOnSelect = true;
 		}
 		}
-	else if(attempts > 100)	{
+	else if(attempts > 250)	{
 		app.u.dump("WARNING! something went wrong in init.js");
 		//this is 10 seconds of trying. something isn't going well.
 		$('#appPreView').empty().append("<div class='uhOh'><h2>Uh Oh. Something seems to have gone wrong. </h2><p>Several attempts were made to load the store but some necessary files were not found <br> or could not load. We apologize for the inconvenience.</p><p>Please try 'refresh' and see if that helps.<br><b>If the error persists, please contact the site administrator</b><br> - dev: see console.</p></div>");
@@ -253,11 +255,13 @@ app.u.appInitComplete = function(P)	{
 	else {app.u.dump("Executing myAppIsLoaded code...");}
 	}
 
+
+
+
 //don't execute script till both jquery AND the dom are ready.
 $(document).ready(function(){
 	app.u.handleRQ(0)
 	});
-
 
 
 

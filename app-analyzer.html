@@ -17,7 +17,7 @@ var $tabs, //set globally so tabs can easily be opened via click events
 myCreole;
 
 var app = {vars:{
-	"release":"201318",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201346.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc"
 	},u:{},rq:[]};
 
@@ -53,7 +53,6 @@ function getConfig4Domain()	{
 		console.log('BEGIN getConfig4Domain');
 		console.log(app.vars.testURL);
 		var url = app.vars.testURL+'jquery/config.js';
-		var url = 'http://'+$('#domain').val()+'/jquery/config.js';
 		$.getScript(url).success(function(script, textStatus) {
 //instantiate wiki parser.
 			app.u.handleRQ(0);

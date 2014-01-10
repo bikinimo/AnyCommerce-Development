@@ -83,15 +83,18 @@
             // widget (via file input selection, drag & drop or add API call).
             // See the basic file upload widget for more information:
             add: function (e, data) {
-//				app.u.dump("jquery.fileupload-ui.js data.files: "); app.u.dump(data.files);
-                var that = $(this).data('fileupload'),
+				app.u.dump(" -> a file has been selected for upload.");
+//				app.u.dump("jquery.fileupload-ui.js data.fileupload: "); app.u.dump($(this).data());
+// ** 201324 -> odd. var that = $(this).data('fileupload') stopped working. checked data and it's a different pointer.
+// when upgrading to jquery 2+, this data pointer will need to change to blueimp-fileupload.
+                var that = $(this).data('blueimpFileupload'),
                     options = that.options,
                     files = data.files;
                 $(this).fileupload('process', data).done(function () {
                     that._adjustMaxNumberOfFiles(-files.length);
                     data.maxNumberOfFilesAdjusted = true;
                     data.files.valid = data.isValidated = that._validate(files);
-                    data.context = that._renderUpload(files).data('data', data);
+                    data.context = that._renderUpload(files).data('data', data); //builds first pass of file previews (text but no image previews yet).
                     options.filesContainer[
                         options.prependFiles ? 'prepend' : 'append'
                     ](data.context);
@@ -110,7 +113,7 @@
             },
             // Callback for the start of each file upload request:
             send: function (e, data) {
-                var that = $(this).data('fileupload');
+                var that = $(this).data('blueimpFileupload');
                 if (!data.isValidated) {
                     if (!data.maxNumberOfFilesAdjusted) {
                         that._adjustMaxNumberOfFiles(-data.files.length);
@@ -140,7 +143,7 @@
             // Callback for successful uploads:
             done: function (e, data) {
 //				app.u.dump("jquery.fileupload-ui.js data.files: "); app.u.dump(data.files);
-                var that = $(this).data('fileupload'),
+                var that = $(this).data('blueimpFileupload'),
                     template;
                 if (data.context) {
                     data.context.each(function (index) {
@@ -190,7 +193,7 @@
             },
             // Callback for failed (abort or error) uploads:
             fail: function (e, data) {
-                var that = $(this).data('fileupload'),
+                var that = $(this).data('blueimpFileupload'),
                     template;
                 if (data.maxNumberOfFilesAdjusted) {
                     that._adjustMaxNumberOfFiles(data.files.length);
@@ -260,7 +263,7 @@
                         .find('.progress-extended');
                 if (extendedProgressNode.length) {
                     extendedProgressNode.html(
-                        $this.data('fileupload')._renderExtendedProgress(data)
+                        $this.data('blueimpFileupload')._renderExtendedProgress(data)
                     );
                 }
                 globalProgressNode
@@ -273,7 +276,7 @@
             },
             // Callback for uploads start, equivalent to the global ajaxStart event:
             start: function (e) {
-                var that = $(this).data('fileupload');
+                var that = $(this).data('blueimpFileupload');
                 that._transition($(this).find('.fileupload-progress')).done(
                     function () {
                         that._trigger('started', e);
@@ -283,7 +286,7 @@
             // Callback for uploads stop, equivalent to the global ajaxStop event:
             stop: function (e) {
 //				app.u.dump(" -> STOPPED! "); app.u.dump(e);
-                var that = $(this).data('fileupload');
+                var that = $(this).data('blueimpFileupload');
                 that._transition($(this).find('.fileupload-progress')).done(
                     function () {
                         $(this).find('.progress')
@@ -296,7 +299,7 @@
             },
             // Callback for file deletion:
             destroy: function (e, data) {
-                var that = $(this).data('fileupload');
+                var that = $(this).data('blueimpFileupload');
                 if (data.url) {
                     $.ajax(data);
                     that._adjustMaxNumberOfFiles(1);
@@ -433,18 +436,23 @@
             return valid;
         },
 
+
         _renderTemplate: function (func, files) {
+			app.u.dump("BEGIN _renderTemplate");
+			app.u.dump(" -> typeof func: "+typeof func);
             if (!func) {
                 return $();
-            }
+	            }
             var result = func({
                 files: files,
                 formatFileSize: this._formatFileSize,
                 options: this.options
-            });
+    	        });
+			app.u.dump(" -> result instanceof $: "+result instanceof $);
             if (result instanceof $) {
                 return result;
-            }
+    	        }
+			app.u.dump(" -> $(this.options.templatesContainer).html(result).children().length: "+$(this.options.templatesContainer).html(result).children().length);
             return $(this.options.templatesContainer).html(result).children();
         },
 
@@ -476,24 +484,31 @@
         },
 
         _renderPreviews: function (files, nodes) {
+			app.u.dump("BEGIN _renderPreviews.");
             var that = this,
                 options = this.options;
             nodes.find('.preview span').each(function (index, element) {
+				
                 var file = files[index];
-                if (options.previewSourceFileTypes.test(file.type) &&
-                        ($.type(options.previewSourceMaxFileSize) !== 'number' ||
-                        file.size < options.previewSourceMaxFileSize)) {
+				app.u.dump(" -> "+index+") file.type: "+file.type); 
+                if (1 == 2 && options.previewSourceFileTypes.test(file.type) && ($.type(options.previewSourceMaxFileSize) !== 'number' || file.size < options.previewSourceMaxFileSize)) {
+					app.u.dump(' -> into preview generate code');
                     that._processingQueue = that._processingQueue.pipe(function () {
                         var dfd = $.Deferred();
                         that._renderPreview(file, $(element)).done(
-                            function () {
-                                dfd.resolveWith(that);
-                            }
-                        );
+                            function () {dfd.resolveWith(that);}
+                        	);
                         return dfd.promise();
-                    });
-                }
-            });
+                    	});
+               		 }
+				else	{
+					app.u.dump(" -> did NOT meet the 'if' conditions for generating a preview.");
+					app.u.dump(" -> options.previewSourceFileTypes.test(file.type): "+options.previewSourceFileTypes.test(file.type));
+					app.u.dump(" -> type for options.previewSourceMaxFileSize: "+$.type(options.previewSourceMaxFileSize) !== 'number');
+					app.u.dump(" -> file.size < options.previewSourceMaxFileSize: "+(file.size < options.previewSourceMaxFileSize));
+					return "unable to generate preview for file: "+file.name+"."+file.type+" - upload should still work fine.";
+					}
+           		 });
             return this._processingQueue;
         },
 

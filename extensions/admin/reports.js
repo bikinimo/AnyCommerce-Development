@@ -90,6 +90,7 @@ var admin_reports = function() {
 
 		a : {
 			
+		
 			showReportsPage : function($target)	{
 				$target.empty();
 				$target.anycontent({'templateID':'reportsPageTemplate',data:{}});
@@ -100,37 +101,86 @@ var admin_reports = function() {
 				$('.datepicker',$target).datepicker({
 					changeMonth: true,
 					changeYear: true,
-					dateFormat : "mmddyy"
+					dateFormat : "@"
 					});
-				
-				
+
+			
 				var $reportsList = $("[data-app-role='recentReportsList']",$target);
-				$reportsList.showLoading({'message':'Fetching Recent Reports'});
-				app.ext.admin.calls.adminBatchJobList.init('',{'callback':function(rd){
-					$reportsList.hideLoading();
-					if(app.model.responseHasErrors(rd)){
-						$reportsList.anymessage({'message':rd});
-						}
-					else	{
-						var reports = new Array(), //used to store a small portion of the batch list. 10 reports.
-						L = app.data[rd.datapointer]['@JOBS'].length;
-						for(var i = 0; i < L; i += 1)	{
-							if(app.data[rd.datapointer]['@JOBS'][i].BATCH_EXEC == 'REPORT')	{
-								reports.push(app.data[rd.datapointer]['@JOBS'][i]);
+				$reportsList.showLoading({'message':'Fetching Recently Run Reports'});
+				app.model.addDispatchToQ({
+					'_cmd':'adminBatchJobList',
+					'_tag':	{
+						'datapointer' : 'adminBatchJobList',
+						'callback':function(rd){
+							$reportsList.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$reportsList.anymessage({'message':rd});
 								}
-							else	{}
-							if(reports.length >= 10)	{break} //only need ten.
+							else	{
+								var reports = new Array(), //used to store a small portion of the batch list. 10 reports.
+								L = app.data[rd.datapointer]['@JOBS'].length - 1;
+		//reports are in chronological order, oldest to newest. here, we want to show the ten newest.
+								for(var i = L; i >= 0; i -= 1)	{
+									if(app.data[rd.datapointer]['@JOBS'][i].BATCH_EXEC == 'REPORT')	{
+										reports.push(app.data[rd.datapointer]['@JOBS'][i]);
+										}
+									else	{}
+									if(reports.length >= 10)	{break} //only need ten.
+									}
+								
+		//						app.u.dump("$reportsList.length: "+$reportsList.length);
+								if(reports.length)	{
+									$reportsList.anycontent({data:{'@JOBS': reports}});
+									app.u.handleAppEvents($reportsList);
+									$('table',$reportsList).anytable();
+									}
+								}
 							}
-						
-//						app.u.dump("$reportsList.length: "+$reportsList.length);
-						if(reports.length)	{
-							$reportsList.anycontent({data:{'@JOBS': reports}});
-							app.u.handleAppEvents($reportsList);
-							$('table',$reportsList).anytable();
-							}
-						
 						}
-					}},'mutable');
+					},'mutable');
+
+				//fetch a list of pre-defined jobs that the merchant can quickly re-execute.
+				app.model.addDispatchToQ({
+					'_cmd':'adminBatchJobParametersList',
+					'_tag':	{
+						'datapointer' : 'adminBatchJobParametersList',
+						'callback': function(rd)	{
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								$target.anydelegate();
+								var
+									data = app.data[rd.datapointer]['@PARAMETERS'];
+//* 201338 -> better handling if no parameters are returned.
+									if(typeof data == 'object')	{
+										var L = data.length,
+										$skuReports = $("[data-app-role='inventoryReportsCustomContainer_sku']:first",$target),
+										$invReports = $("[data-app-role='inventoryReportsCustomContainer_inventory']:first",$target);
+							
+										function display(job){
+											return "<p data-app-role='batchContainer'><a href='#' onClick=\"app.ext.admin_batchJob.a.adminBatchJobCreate({'parameters_uuid':'"+job.UUID+"','type':'"+job.BATCH_EXEC+"'}); return false;\">"+job.TITLE+"</a><br>(last run: "+job.LASTRUN_TS+")<br><a href='#' data-app-click='admin_batchJob|adminBatchJobParametersRemoveConfirm' data-uuid='"+job.UUID+"'>Remove<\/a><\/p>"
+											}
+
+										for(var i = 0; i < L; i += 1)	{
+											if(data[i].BATCH_EXEC == 'REPORT/SKU')	{
+												$skuReports.append(display(data[i]));
+												}
+											else if(data[i].BATCH_EXEC == 'REPORT/INVENTORY'){
+												$invReports.append(display(data[i]));
+												}
+											else	{}
+											}
+										}
+									else	{
+										//no @parameters/predefined jobs.  that's ok. no error message or anything of that nature is necessary.
+										}
+								}
+							},
+						'jqObj' : $("[data-anytab-content='inventoryReports']:first",$target)
+						}
+					},'mutable');
+				
 				app.model.dispatchThis('mutable');
 				
 				},
@@ -491,7 +541,7 @@ var admin_reports = function() {
 						];
 					
 					var container = document.getElementById(id);
-					google.visualization.drawToolbar(container, components);
+//					google.visualization.drawToolbar(container, components); //doens't work. need to use the google docs API !!!
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_reports.u.drawToolbar, no ID passed.','gMessage':true});
@@ -1193,7 +1243,7 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 								
 								
 								app.u.dump(graphs);
-								die();
+
 								if(mode == 'add')	{
 									sfo.uuid = app.u.guidGenerator();
 									graphs.push(sfo);
@@ -1208,7 +1258,6 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 										}
 									}
 								app.u.dump(graphs);
-								die();
 								app.model.destroy(rd.datapointer);
 								app.ext.admin.calls.adminKPIDBCollectionUpdate.init({'uuid':collection,'@GRAPHS':graphs},{'callback':function(rd){
 									$context.hideLoading();
@@ -1343,7 +1392,125 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 //show the input container desired. make all inputs within required.
 					$ele.closest('fieldset').find('.formPeriodRange-'+$(this).val()).show().effect('highlight',{},1500).find('input,select').each(function(){$(this).attr('required','required')});
 					});
-				}
+				},
+
+
+			execAdminReportCreate : function($btn)	{
+				$btn.button();
+				$btn.off('click.execAdminReportCreate').on('click.execAdminReportCreate',function(event){
+					event.preventDefault();
+					var $form = $btn.closest('form');
+					if(app.u.validateForm($form))	{
+						var sfo = {'%vars':$form.serializeJSON()}
+						sfo.type = 'REPORT/'+sfo['%vars'].REPORT;
+						sfo.guid = app.u.guidGenerator();
+						if(sfo['%vars'].PERIOD == 'BYTIMESTAMP')	{
+							sfo['%vars'].begints = (sfo['%vars'].begints / 1000)
+							sfo['%vars'].endts = (sfo['%vars'].endts / 1000) 
+							}
+						app.ext.admin_batchJob.a.adminBatchJobCreate(sfo);
+						}
+					else	{} //validateForm handles error display.
+					});
+				},
+
+
+
+			adminInventoryReportSaveExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.adminInventoryReportSaveExec').on('click.adminInventoryReportSaveExec',function(event){
+					event.preventDefault();
+					var $form = $btn.closest('form');
+					if(app.u.validateForm($form))	{
+						
+						var
+							sfo = $form.serializeJSON({cb:true}),
+							cmdObj = {
+								'_cmd':'adminBatchJobParametersCreate',
+								'UUID' : app.u.guidGenerator(),
+								'TITLE' : sfo.TITLE,
+								'BATCH_EXEC' : sfo.BATCH_EXEC,
+								'PRIVATE' : sfo.PRIVATE,
+								'%vars' : {}
+								}
+//selectors are NOT required, so no validation is done.
+						cmdObj['%vars'].product_selectors = app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form));
+						
+						if(sfo.summary == 'AVAILABLE' || sfo.summary == 'ONSHELF')	{
+							cmdObj['%vars'].where = sfo.summary+","+sfo.operand+","+sfo.operand_match;
+							}
+						else if(sfo.summary == 'SUPPLIER' || sfo.summary == 'PID' || sfo.summary == 'ORDERID' || sfo.summary == 'PICK_ROUTE')	{
+							cmdObj['%vars'].where =sfo.summary+",eq,"+sfo[sfo.summary];
+							}
+						else if(sfo.summary == 'MODIFIED_TS' || sfo.summary == 'TS')	{
+							cmdObj['%vars'].where = sfo.summary+",gt,"+sfo.TS;
+							}
+						else	{} //either an unrecognized summary or a summary that requires no additional data.
+
+						if(sfo.TYPE == 'SKU')	{
+							cmdObj['%vars'].headers = "sku:title,sku:upc,sku:mfgid,sku:amz_asin,sku:condition,sku:price,sku:cost,sku:weight,inv:available,inv:markets,inv:onshelf,inv:saleable"
+							}
+						else	{
+							cmdObj['%vars'].headers = sfo.headers;
+							//use whatever is set in the report generator.
+							}
+
+						
+//						app.u.dump(" -> cmdObj: "); app.u.dump(cmdObj);
+
+app.model.addDispatchToQ(cmdObj,'immutable');
+app.model.dispatchThis('immutable');
+
+						}
+					else	{} //validateForm handles error display.
+					});
+				},
+
+			showReportBuilderDialog : function($ele)	{
+
+				$ele.off('click.showReportBuilderDialog').on('click.showReportBuilderDialog',function(event){
+					event.preventDefault();
+				
+					if($ele.data('batchexec') == 'SKU' || $ele.data('batchexec') == 'INVENTORY')	{
+						var $D = app.ext.admin.i.dialogCreate({
+							'title' : $ele.data('batchexec')+' Report Builder',
+							'templateID' : 'reportBuilderTemplate',
+							'data' : {
+								'BATCH_EXEC':"REPORT/"+$ele.data('batchexec'),
+								SKU : $ele.data('batchexec') == 'SKU' ? 1 : 0, //used to toggle on/off fields that are related just to the sku report type.
+								DETAIL : $ele.data('batchexec') == 'INVENTORY' ? 1 : 0, //used to toggle on/off fields that are related just to the detail report type.
+								}
+							});
+
+						app.u.handleButtons($D);
+						app.u.handleCommonPlugins($D);
+						app.u.handleEventDelegation($D);
+						app.ext.admin.u.handleFormConditionalDelegation($('form',$D));
+
+						$('.datepicker',$D).datepicker({
+							changeMonth: true,
+							changeYear: true,
+							dateFormat : "@"
+							});
+
+						$D.dialog('open');
+		
+						var $picker = $("[data-app-role='pickerContainer']:first",$D);
+						$picker.append(app.ext.admin.a.getPicker({'templateID':'pickerTemplate','mode':'product'}));
+						$('.applyDatepicker',$picker).datepicker({
+							changeMonth: true,
+							changeYear: true,
+							maxDate : 0,
+							dateFormat : 'yymmdd'
+							});
+
+						}
+					else	{
+						// )
+						$('#globalMessaging').anymessage({"message":"In admin_reports.e.showReportBuilderDialog, data-batchexec not set or invalid ["+$ele.data('batchexec')+"] on trigger element.","gMessage":true});
+						}
+					});
+				},
 			
 			
 			} //E / Events

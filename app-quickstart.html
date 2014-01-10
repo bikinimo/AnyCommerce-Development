@@ -20,10 +20,10 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"201318.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
-	"_clientid":"zmvc",
+	"release":"201346.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 	"baseURL":"", //used in non-local mode.
-	"checkoutAuthMode" : "required",//can be passive, active or required
+	"checkoutAuthMode" : "active",//can be passive, active or required
 	"testURL":"http://www.ylh.zoovy.com/" //used ONLY if protocol is file: (for testing)
 	},u:{},rq:[]};
 
@@ -44,10 +44,13 @@ all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
 <link rel="stylesheet" type="text/css" href="app-quickstart.css" />
-<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/ui-lightness/jquery-ui.css" />
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script src="resources/jquery.ui.widget.min.js"></script><!-- here so that plugins that may load before the jqueryui lib load without error -->
+
+<!-- ** 201338 -> jquery and jquery ui are pivotal to the functionality of the app. load them first -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+
 <script type="text/javascript" src="loadscript.js"></script>
 
 
@@ -97,6 +100,14 @@ This file is intended to go along with the 10-step tutorial at:
 
 
 <div id='appView' class='displayNone'>
+
+<!--
+ANIMATION TESTING
+<div style="background: black; float: left;">
+	<div data-animation-mouseenter="cogs?animFunc=fwd" data-animation-mouseout="cogs?animFunc=back" style="width: 55px; height: 55px;" id="cogs"></div>
+</div>
+-->
+
 
 <!-- VIEW CONTENT -->
 <!-- leave the appView div, put your your html here ...  -->
@@ -161,22 +172,21 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 -->
 <div id='homepageTemplate' class='homeTemplate'>
 	
-
-
-	
 	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
 
 	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2>Featured Items</h2>; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 
 <!-- a sample of how to format an elastic native search in a data-bind -->
+<!--
 	<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 
 	<a href="#" onClick="return showContent('search',{'TAG':'IS_BESTSELLER'});">See all Best Sellers</a>
-
+-->
 <!-- a sample of how to get a 'list' src onto the page. -->
-	<ul data-bind="var: list($models.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-
+<!--
+	<ul data-bind="var: list($somelistname.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+-->
 
 </div>
 
@@ -196,7 +206,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 -->
 <div id='categoryTemplate' class='loadingBG categoryTemplate'>
 
-	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(path); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 
 	<img data-bind="var: category(%page.banner1); format: banner; editor: banner; height:250; width:750; extension: myRIA;" src='images/blank.gif' alt='' />
 
@@ -666,18 +676,12 @@ if you change these, you should move them above this comment so that when you (o
 
 
 <!-- loadingBG needed on this for app init (content may take a moment to load) -->
-<div id='companyTemplate' class='clearfix loadingBG'>
+<div id='companyTemplate' class='clearfix'>
 
 	<div class='sideline' >
 <nav id='companyNav'>
 <ul class='listStyleNone noPadOrMargin'>
-	<li><a href='#company?show=about'>About Us</a></li>
-	<li><a href='#company?show=contact'>Contact Information</a></li>
-	<li><a href='#company?show=faq'>FAQ</a></li>
-	<li><a href='#company?show=payment'>Payment Policy</a></li>
-	<li><a href='#company?show=privacy'>Privacy Statement</a></li>
-	<li><a href='#company?show=return'>Return Policy</a></li>
-	<li><a href='#company?show=shipping'>Shipping Information</a></li>
+<!-- these are generated via javascript, based on the myRIA.pages object. -->
 </ul>
 </nav>
 	</div>
@@ -868,11 +872,11 @@ subscribeListsArticle is used for authenticated buyers
 			<h1>Change Password</h1>
 			<div id='changepasswordContainer'>
 
-<form action='#' id='changePasswordForm' name='changePasswordForm' onSubmit="app.ext.store_crm.u.handleChangePassword('changePasswordForm',{'callback':'showMessaging','message':'Thank you, your password has been changed','targetID':'changepasswordContainer'}); return false">
+<form action='#' id='changePasswordForm' name='changePasswordForm' onSubmit="app.ext.store_crm.u.handleChangePassword($(this),{'callback':'showMessaging','message':'Thank you, your password has been changed','jqObj':$(this).parent()}); return false">
 <fieldset class='borderNone'>
-
-<div class='marginBottom'><label for='changePassword'>Password</label><input type='password' name='password' id='changePassword' size='35' /></div>
-<div class='marginBottom'><label for='changePassword2'>Confirm Password</label><input type='password' name='password2' id='changePassword2' size='35' /></div>
+<div class="messaging"></div>
+<div class='marginBottom'><label for='changePassword'>Password</label><input type='password' name='password' size='35' /></div>
+<div class='marginBottom'><label for='changePassword2'>Confirm Password</label><input type='password' name='password2' size='35' /></div>
 <div class='marginBottom'><input type='submit' value='Change Password' class='loadingButton ui-button-text ui-button ui-state-default ui-corner-all'></div>
 
 </fieldset>
@@ -1000,18 +1004,17 @@ So the cart template should contain these two elements and the extension should 
 <div id='cartTemplate' class='loadingBG'>
 
 <form id='cartTemplateForm' action='#' onSubmit='return false'>
-<table class='cartContainer'>
-<tr>
-	<td class='cartStuffContainer'>
+
+<div class='cartStuffContainer'>
 	<ul id='cartStuffList' data-bind="var: cart(@ITEMS); format:stuffList; loadsTemplate:productListTemplateCart;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'></ul>
-	</td>
+</div>
 
-	<td class='cartSummaryTotalsContainer'>
+<div class='cartSummaryTotalsContainer'>
 	<div class='ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'>
-		<h2 class='ui-widget-header ui-helper-clearfix ui-corner-all ui-header'>Cart Totals</h2>
-		<div class='cartSummaryContainer'>
+		<h2 class='ui-widget-header ui-helper-clearfix ui-corner-all ui-header stdPadding'>Cart Totals</h2>
+		<div class='cartSummaryContainer stdPadding'>
 
-<section id='cartTemplateCostSummary' class='cartSummary'>
+<section id='cartTemplateCostSummary' class='cartSummary marginBottom'>
 
 	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
 
@@ -1029,48 +1032,43 @@ So the cart template should contain these two elements and the extension should 
 
 </section>
 
-<section id='cartTemplateShippingContainer'>
+<section id='cartTemplateShippingContainer' class='marginBottom'>
 	<h3>Shipping:</h3>
+
+	<div class='cartZipCodeContainer marginBottom'>
+		<label for='data-ship_zip'>Zip/Postal Code:</label>
+		<input type='text' size='6'  name='ship/postal' id='data-ship_zip' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'ship/postal':this.value, 'ship/region':''});
+			app.ext.store_cart.u.updateCartSummary();
+			app.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
+			app.model.dispatchThis('immutable');"  />
+	</div>
+
 	<ul class='noPadOrMargin listStyleNone cartShipMethods' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension:store_cart;'></ul>
 </section>
 
-<section class='stdMargin'>
+<section class='marginBottom'>
 
-	<div class='cartZipCodeContainer'>
-	<label for='data-ship_zip'>Zip/Postal Code:</label>
-	<input type='text' size='6'  name='ship/postal' id='data-ship_zip' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'ship/postal':this.value, 'ship/region':''});
-	app.ext.store_cart.u.updateCartSummary();
-	app.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
-	app.model.dispatchThis('immutable');"  />
-	</div>
-
-
-
-	<!-- some buttons that are alternatives to checkout. fewer is better -->
-	<menu class='cartAltButtonsContainer noPadOrMargin'>
-	<button class='ui-button-text ui-button ui-state-default ui-corner-all continueShoppingButton' onClick="$('#modalCart').dialog('close');">Continue Shopping</button>
-	</menu>
-
-	<div class='checkoutButtonsContainer'>
-
-		<span title='proceed to secure checkout'><button class='ui-button ui-button-text ui-state-default ui-corner-all checkoutButton' onClick="showContent('checkout',{});">Store Checkout</button></span>
-
-		<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
-
-		<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(sum/items_total); format:googleCheckoutButton;'></span>
-
-		<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:amazonCheckoutButton;'></span>
-
-	</div>
+	
 
 </section>
 
 		</div>
-	</div>
-	</td>
-</tr>
+		<div class='ui-state-default cartButtons stdPadding clearfix'>
+			<!-- spans are set around the buttons so each element has one consitent tag type around it -->
+			<span class='continueShoppingSpan'><button class='ui-button-text-only ui-button ui-state-default ui-corner-all continueShoppingButton' onClick="$('#modalCart').dialog('close');"><span class="ui-button-text">Continue Shopping</span></button></span>
+	
+			<span id='inStoreCheckoutButton' title='proceed to secure checkout'><button class='ui-button ui-button-text-only ui-state-highlight ui-corner-all checkoutButton' onClick="showContent('checkout',{});"><span class="ui-button-text">Store Checkout</span></button></span>
+	
+			<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
+	
+			<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(sum/items_total); format:googleCheckoutButton;'></span>
+	
+			<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:amazonCheckoutButton;'></span>
+	
+		</div>
 
-</table>
+	</div>
+</div>
 </form>
 </div><!-- /cartTemplate -->
 
@@ -1440,18 +1438,18 @@ The 'data-action' attribute is used to assign an onclick.
 <p id='loginMessaging' class='marginBottom appMessaging'></p>
 
 <div id='loginFormContainer'>
-<form action='#' onSubmit='app.ext.myRIA.u.loginFrmSubmit($("#modalLoginlogin").val(),$("#modalLoginpassword").val()); return false;' id='modalLoginForm'>
+<form action='#' onSubmit='app.ext.myRIA.u.loginFrmSubmit($("input[name=login]", $(this)).val(),$("input[name=password]", $(this)).val()); return false;'>
 <input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
 	<fieldset>
 
 	<div>
-	<label for='modalLoginlogin'>Login/Email</label>
-	<input type='email' class='zform_textbox zform_email'  name='login' id='modalLoginlogin' value='' size='25' />
+	<label for='login'>Login/Email</label>
+	<input type='email' class='zform_textbox zform_email'  name='login' value='' size='25' />
 	</div>
 
 	<div>
-	<label for='modalLoginpassword'>Password</label>
-	<input type='password' class='zform_textbox zform_password'   name='password' id='modalLoginpassword' value='' size='25' />
+	<label for='password'>Password</label>
+	<input type='password' class='zform_textbox zform_password'   name='password' value='' size='25' />
 	</div>
 
 	<div>
@@ -1464,8 +1462,8 @@ The 'data-action' attribute is used to assign an onclick.
 <hr />
 
 <h3 class='marginBottom'>Recover Password</h3>
-<div id='recoverPasswordMessaging'></div>
-<form action='#' onSubmit="app.calls.appBuyerPasswordRecover.init($('#passwordRecoveryLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'recoverPasswordMessaging'}); app.model.dispatchThis('immutable'); return false;">
+<div id='recoverPasswordMessaging' class='appMessaging'></div>
+<form action='#' onSubmit="app.calls.appBuyerPasswordRecover.init($('#passwordRecoveryLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','jqObj':$('.appMessaging', $(this).parent())}); app.model.dispatchThis('immutable'); return false;">
 <fieldset>
 <div class='marginBottom'><label for='passwordRecoveryLogin'>Login/Email</label> <input type='text' name='login' required='required' id='passwordRecoveryLogin' size='25' /></div>
 

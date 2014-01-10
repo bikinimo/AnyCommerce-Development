@@ -165,19 +165,23 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 
 			onSuccess : function(tagObj)	{
 				var $parent = $('#'+tagObj.parentID);
-				$parent.removeClass('loadingBG');
-				var L = app.data[tagObj.datapointer]['@topics'].length;
-				app.u.dump(" -> L = "+L);
-				var topicID;
-				if(L > 0)	{
-					for(var i = 0; i < L; i += 1)	{
-						topicID = app.data[tagObj.datapointer]['@topics'][i]['TOPIC_ID']
-						app.u.dump(" -> TOPIC ID = "+topicID);
-						$parent.append(app.renderFunctions.transmogrify({'id':topicID,'data-topicid':topicID},tagObj.templateID,app.data[tagObj.datapointer]['@topics'][i]))
+// ** 201336 This prevents FAQ's from being re-appended in the event the user revisits the FAQ page
+				if(!$parent.data('faqs-rendered')){
+					$parent.removeClass('loadingBG');
+					var L = app.data[tagObj.datapointer]['@topics'].length;
+					app.u.dump(" -> L = "+L);
+					var topicID;
+					if(L > 0)	{
+						for(var i = 0; i < L; i += 1)	{
+							topicID = app.data[tagObj.datapointer]['@topics'][i]['TOPIC_ID']
+							app.u.dump(" -> TOPIC ID = "+topicID);
+							$parent.append(app.renderFunctions.transmogrify({'id':topicID,'data-topicid':topicID},tagObj.templateID,app.data[tagObj.datapointer]['@topics'][i]))
+							}
 						}
-					}
-				else	{
-					$parent.append("There are no FAQ at this time.");
+					else	{
+						$parent.append("There are no FAQ at this time.");
+						}
+					$parent.data('faqs-rendered', true);
 					}
 				
 				}
@@ -328,13 +332,19 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 
 
 			handleReviews : function(formID)	{
-				frmObj = $('#'+formID).serializeJSON();
-				$('#'+formID+' .zMessage').empty().remove(); //clear any existing error messages.
+				var
+					$form = $('#'+formID),
+					frmObj = $form.serializeJSON();
+
+				$('.zMessage',$form).empty().remove(); //clear any existing error messages.
 				var isValid = app.ext.store_crm.validate.addReview(frmObj); //returns true or some errors.
 				if(isValid === true)	{
-					app.calls.appReviewAdd.init(frmObj,{"callback":"showMessaging","parentID":formID,"message":"Thank you for your review. Pending approval, it will be added to the store."},'mutable');
-					app.model.dispatchThis('mutable');
-					$('#'+formID).hide(); //hide existing form to avoid confusion.
+					app.calls.appReviewAdd.init(frmObj,{
+						"callback":"showMessaging",
+						"jqObj":$form,
+						"jqObjEmpty" : true,
+						"message":"Thank you for your review. Pending approval, it will be added to the store."},'immutable');
+					app.model.dispatchThis('immutable');
 					}
 				else	{
 					//report errors.
@@ -418,18 +428,17 @@ This is used to get add an array of skus, most likely for a product list.
 				return csvArray;
 				}, //getSkusFromList
 
-			handleChangePassword : function(formID,tagObj)	{
+			handleChangePassword : function($form,tagObj)	{
 				
-$('#'+formID+' .ui-widget-anymessage').empty().remove(); //clear any existing messaging
-var formObj = $('#'+formID).serializeJSON();
+$('.messaging', $form).empty(); //clear any existing messaging
+var formObj = $form.serializeJSON();
 if(app.ext.store_crm.validate.changePassword(formObj)){
 	app.calls.buyerPasswordUpdate.init(formObj.password,tagObj);
 	app.model.dispatchThis('immutable');
 	}
 else{
 	var errObj = app.u.youErrObject("The two passwords do not match.",'42');
-	errObj.parentID = formID
-	app.u.throwMessage(errObj);
+	$(".messaging",$form).anymessage(errObj);
 	}
 				
 				}, //handleChangePassword
@@ -476,7 +485,6 @@ else{
 							}
 						$editor.wrapInner('<form \/>'); //needs this for serializeJSON later.
 						
-					
 						$editor.dialog({
 							width: ($(window).width() < 500) ? ($(window).width() - 50) : 500, //check window width/height to accomodate mobile devices.
 							height: ($(window).height() < 500) ? ($(window).height() - 50) : 500,
@@ -520,6 +528,11 @@ else{
 								},
 							close : function(event, ui) {$(this).dialog('destroy').remove()}
 							});
+//* 201342 -> used in checkout (or potentailly any editor) to immediately highlight any invalid fields (useful in 'edit' as opposed to 'create' address)
+							if(vars.validateForm)	{
+								app.u.validateForm($editor);
+								}
+
 						
 						}
 					else	{
@@ -540,17 +553,39 @@ else{
 
 					r = true;
 					var $editor = $("<div \/>");
-					$editor.append("<input type='text' maxlength='6' data-minlength='6' name='shortcut' placeholder='address id (6 characters)' \/>");
+					
 					$editor.append("<input type='hidden' name='type' value='"+vars.addressType.toUpperCase()+"' \/>");
 					$editor.anycontent({'templateID':(vars.addressType == 'ship') ? 'chkoutAddressShipTemplate' : 'chkoutAddressBillTemplate','data':{},'showLoading':false});
+//* 201338 -> the address id should be at the bottom of the form, not the top. isn't that important or required.
+					$editor.append("<input type='text' maxlength='6' data-minlength='6' name='shortcut' placeholder='address id (6 characters)' \/>");
 					$editor.wrapInner('<form \/>'); //needs this for serializeJSON later.
-					
+
+//** 201338 -> if the placeholder attribute on an input is not supported (thx IE8), then add labels.
+					if(app.ext.orderCreate)	{
+						app.ext.orderCreate.u.handlePlaceholder($editor);
+						}
+					$(":input",$editor).each(function(index){
+						var $input = $(this);
+						if($input.attr('placeholder') && !$input.attr('title'))	{
+							$(this).attr('title',$input.attr('placeholder'))
+							}
+						$input.tooltip({
+							position: {
+								my: "left top",
+								at: "right top",
+								using: function( position, feedback ) {
+									$( this ).css( position );
+									}
+								}
+							});
+
+						});
 				
 					$editor.dialog({
 						width: ($(window).width() < 500) ? ($(window).width() - 50) : 500, //check window width/height to accomodate mobile devices.
 						height: ($(window).height() < 500) ? ($(window).height() - 50) : 500,
 						modal: true,
-						title: 'edit address',
+						title: 'Add a new '+vars.addressType+' address',
 						buttons : {
 							'cancel' : function(event){
 								event.preventDefault();

@@ -57,23 +57,25 @@ var orderCreate = function() {
 			onSuccess : function()	{
 //				app.u.dump('BEGIN app.ext.orderCreate.init.onSuccess');
 //1PC can't load the templates remotely. causes XSS issue.
-				if(app.vars._clientid == '1pc')	{
+//				if(app.vars._clientid == '1pc')	{
 //					app.u.dump(" -> _cliendID = 1pc. load templates from TOXML file");
-					app.model.loadTemplates(theseTemplates); //loaded from local file (main.xml)
-					}
-				else {
+//					app.model.loadTemplates(theseTemplates); //loaded from local file (main.xml)
+//					}
+//				else {
+					app.u.loadCSSFile(app.vars.baseURL+"extensions/checkout/styles.css","checkoutCSS");
 					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout/'+app.vars.checkoutAuthMode+'.html',theseTemplates);
-					}
-				var r; //returns false if checkout can't load due to account config conflict.
+//					}
+				var r = true; //returns false if checkout can't load due to account config conflict.
 
 //update jQuery.support with whether or not placeholder is supported.
-
 				$.support.placeholder = false;
-				var test = document.createElement('input');
+				var test = document.createElement('input')
+				
 				if('placeholder' in test) {$.support.placeholder = true};
+				app.u.dump(" -> document.compatMode: "+document.compatMode);
+				app.u.dump(" -> document.documentMode: "+document.documentMode);
 
-
-				if(typeof _gaq === 'undefined')	{
+				if(typeof _gaq === 'undefined' && !app.vars.thisSessionIsAdmin)	{
 //					app.u.dump(" -> _gaq is undefined");
 					$('#globalMessaging').anymessage({'message':'It appears you are not using the Asynchronous version of Google Analytics. It is required to use this checkout.','uiClass':'error','uiIcon':'alert'});
 					r = false;					
@@ -116,6 +118,18 @@ var orderCreate = function() {
 			},
 
 
+		adminCustomerDetail : {
+			onSuccess : function(tagObj)	{
+				//used for one page checkout only.
+				app.u.dump("BEGIN adminCustomerDetail callback for 1PC");
+				app.ext.orderCreate.u.handlePanel(tagObj.jqObj,'chkoutPreflight',['empty','translate','handleDisplayLogic','handleAppEvents']);
+				app.ext.orderCreate.u.handlePanel(tagObj.jqObj,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
+				app.ext.orderCreate.u.handlePanel(tagObj.jqObj,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+				}
+			},
+
+
+
 //Rather than a call to see if transaction is authorized, then another call to add to q, we go straight into adding to the paymentQ
 //if the transaction failed, then we remove the transaction from the payment q.
 //this gives us a 1 call model for success and 2 calls for failure (instead of 2 and 2).
@@ -133,8 +147,9 @@ var orderCreate = function() {
 				app.ext.cco.u.nukePayPalEC({'callback':function(rd){
 //suppress errors but unlock all the panels.
 $('body').hideLoading();
-var $context = $(app.u.jqSelector('#',app.u.getParameterByName('parentID')));
+var $context = responseData._rtag.jqObj;
 app.u.dump(" -> $context.length: "+$context.length);
+
 app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
 app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsPay',['empty','translate','handleDisplayLogic','handleAppEvents']);
 app.ext.orderCreate.u.handlePanel($context,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
@@ -142,6 +157,7 @@ app.ext.orderCreate.u.handlePanel($context,'chkoutAddressShip',['empty','transla
 					}});
 				app.model.destroy('cartDetail');
 				app.calls.cartDetail.init({},'immutable');
+				app.ext.cco.calls.appPaymentMethods.init({_cartid:app.vars.cartID},{},'immutable');
 				app.model.dispatchThis('immutable');
 				}
 			},		 //handlePayPalIntoPaymentQ
@@ -167,6 +183,7 @@ app.ext.orderCreate.u.handlePanel($context,'chkoutAddressShip',['empty','transla
 							$('#globalMessaging').anymessage({'message':rd});
 							}
 						else	{
+							app.u.dump(" -> inventory adjustment has occurred. update panels to reflect change.");
 							app.ext.orderCreate.u.handlePanel($form,'chkoutCartItemsList',['empty','translate','handleDisplayLogic','handleAppEvents']);
 							app.ext.orderCreate.u.handlePanel($form,'chkoutCartSummary',['empty','translate','handleDisplayLogic','handleAppEvents']);
 							app.ext.orderCreate.u.handlePanel($form,'chkoutMethodsPay',['empty','translate','handleDisplayLogic','handleAppEvents']);
@@ -226,8 +243,21 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 
 //time for some cleanup. Nuke the old cart from memory and local storage, then obtain a new cart.				
 				app.model.destroy('cartDetail');
-				app.calls.appCartCreate.init(); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid. 
-				app.calls.cartDetail.init({},'immutable');
+//***201342 cartDetail call moved into a callback to the appCartCreate call.  This is due to the fact that cartDetail call needs a cartID
+//			passed to it in order to know which cart to fetch (no longer connected to the session!).  This resulted in a bug that multiple
+//			orders placed from the same computer in multiple sessions could have the same cartID attached.  Very bad.
+				app.calls.appCartCreate.init({
+					"callback" : function(rd){
+						if(!app.model.responseHasErrors(rd)){
+							app.calls.cartDetail.init({"_cartid" : rd._cartid},'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						else {
+							app.u.throwMessage(rd);
+							}
+						}
+					}); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid. 
+				//app.calls.cartDetail.init({},'immutable'); 
 				app.model.dispatchThis('immutable'); //these are auto-dispatched because they're essential.
 
 _gaq.push(['_trackEvent','Checkout','App Event','Order created']);
@@ -240,33 +270,37 @@ _gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')'])
 						}
 					}
 
-
-
+	app.ext.orderCreate.u.scripts2iframe(checkoutData['@TRACKERS'])
 
 if(app.vars._clientid == '1pc')	{
 //add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
 //this html roi is only generated if clientid = 1PC OR model version is pre 2013. for apps, add code using checkoutCompletes.
-	setTimeout(function(){
+	
+	
+
+// *** -> new method for handling third party checkout scripts.
+/*	setTimeout(function(){
 		$checkout.append(checkoutData['html:roi']);
 		app.u.dump('wrote html:roi to DOM.');
+		},1000); 
+*/
 
 //GTS for apps is handled in google extension
-		if(typeof window.GoogleTrustedStore)	{
-			delete window.GoogleTrustedStore; //delete existing object or gts conversion won't load right.
+	if(typeof window.GoogleTrustedStore)	{
+		delete window.GoogleTrustedStore; //delete existing object or gts conversion won't load right.
 //running this will reload the script. the 'span' will be added as part of html:roi
 //if this isn't run in the time-out, the 'span' w/ order totals won't be added to DOM and this won't track as a conversion.
-			(function() {
-			var scheme = (("https:" == document.location.protocol) ? "https://" : "http://");
-			var gts = document.createElement("script");
-			gts.type = "text/javascript";
-			gts.async = true;
-			gts.src = scheme + "www.googlecommerce.com/trustedstores/gtmp_compiled.js";
-			var s = document.getElementsByTagName("script")[0];
-			s.parentNode.insertBefore(gts, s);
-			})();
-			}
+		(function() {
+		var scheme = (("https:" == document.location.protocol) ? "https://" : "http://");
+		var gts = document.createElement("script");
+		gts.type = "text/javascript";
+		gts.async = true;
+		gts.src = scheme + "www.googlecommerce.com/trustedstores/gtmp_compiled.js";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(gts, s);
+		})();
+		}
 
-		},2000); 
 
 
 	}
@@ -317,10 +351,11 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				var r = false; //what is returned. Either true or false.
 				if($form)	{
 					
-					var formObj = $form.serializeJSON(), //done here and passed into validation funcitons so serialization only occurs once. (more efficient)
-					$fieldsets = $('fieldset[data-app-role]',$form), //The number of fieldsets. must match value of sum to be valid.
-					sum = 0,
-					errors = "";
+					var
+						formObj = $form.serializeJSON(), //done here and passed into validation funcitons so serialization only occurs once. (more efficient)
+						$fieldsets = $('fieldset[data-app-role]',$form), //The number of fieldsets. must match value of sum to be valid.
+						sum = 0,
+						errors = "";
 
 //nuke any exising anymessage errors within the form. otherwise, a report of "you didn't select..." would stay present and be confusing.
 					$(".ui-widget-anymessage",$form).each(function(){
@@ -449,8 +484,13 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				var valid = 0;
 
 				if($fieldset && formObj)	{
+// *** 201338 -> some paypal orders not passing validation due to address wonkyness returned from paypal.
+//paypal address gets returned with as much as paypal needs/wants. trust what we already have (which may not be enough for OUR validation)
+					if(app.ext.cco.u.thisSessionIsPayPal())	{
+						valid = 1;
+						}
 //if the buyer is logged in AND has pre-existing billing addresses, make sure one is selected.
-					if(app.u.buyerIsAuthenticated() && app.data.buyerAddressList && app.data.buyerAddressList['@bill'] && app.data.buyerAddressList['@bill'].length)	{
+					else if(app.u.buyerIsAuthenticated() && app.data.buyerAddressList && app.data.buyerAddressList['@bill'] && app.data.buyerAddressList['@bill'].length)	{
 						if(formObj['bill/shortcut'])	{valid = 1}
 						else	{
 							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
@@ -473,8 +513,11 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 							$("input[name='bill/region']",$fieldset).attr('required','required');
 							}
 						else	{
-							$("input[name='bill/postal']",$fieldset).removeAttr('required').removeAttr('data-minlength');
-							$("input[name='bill/region']",$fieldset).removeAttr('required');
+//							$("input[name='bill/postal']",$fieldset).removeAttr('required').removeAttr('data-minlength');
+//							$("input[name='bill/region']",$fieldset).removeAttr('required');
+// *** 201324 -> best practice is to empty the attrib before removing it. (fixed an issue for Clinton)
+							$("input[name='bill/postal']",$fieldset).attr('required','').removeAttr('required').removeAttr('data-minlength');
+							$("input[name='bill/region']",$fieldset).attr('required','').removeAttr('required');
 							}
 						
 						if(app.u.validateForm($fieldset))	{valid = 1;} //the validateForm field takes care of highlighting necessary fields and hints.
@@ -496,6 +539,11 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				if($fieldset && formObj)	{
 					
 					if(formObj['want/bill_to_ship'])	{valid = 1}
+// *** 201338 -> some paypal orders not passing validation due to address wonkyness returned from paypal.
+//paypal address gets returned with as much as they need/want. trust what we already have (which may not be enough for OUR validation)
+					else if(app.ext.cco.u.thisSessionIsPayPal())	{
+						valid = 1;
+						}
 //if the buyer is logged in AND has pre-existing billing addresses, make sure one is selected.
 					else if(app.u.buyerIsAuthenticated() && app.data.buyerAddressList && app.data.buyerAddressList['@ship'] && app.data.buyerAddressList['@ship'].length)	{
 						if(formObj['ship/shortcut'])	{valid = 1}
@@ -512,8 +560,11 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 							$("input[name='ship/region']",$fieldset).attr('required','required');
 							}
 						else	{
-							$("input[name='ship/postal']",$fieldset).removeAttr('required').removeAttr('data-minlength');
-							$("input[name='ship/region']",$fieldset).removeAttr('required');
+//							$("input[name='bill/postal']",$fieldset).removeAttr('required').removeAttr('data-minlength');
+//							$("input[name='bill/region']",$fieldset).removeAttr('required');
+// *** 201324 -> best practice is to empty the attrib before removing it. (fixed an issue for Clinton)
+							$("input[name='bill/postal']",$fieldset).attr('required','').removeAttr('required').removeAttr('data-minlength');
+							$("input[name='bill/region']",$fieldset).attr('required','').removeAttr('required');
 							}
 						
 						if(app.u.validateForm($fieldset))	{valid = 1;} //the validateForm field takes care of highlighting necessary fields and hints.
@@ -567,10 +618,15 @@ payment options, pricing, etc
 			chkoutPreflight : function(formObj,$fieldset)	{
 //				app.u.dump("BEGIN orderCreate.panelDisplayLogic.chkoutPreflight");
 //If the user is logged in, no sense showing password or create account prompts.
+				$("[data-app-role='buyerLogout']").hide(); //make sure this is hidden. Will be shown when necessary.
 				if(app.u.buyerIsAuthenticated() || app.ext.cco.u.thisSessionIsPayPal())	{
 					app.u.dump(" -> session is authenticated OR this is an authorized paypal transaction.");
 					$("[data-app-role='login']",$fieldset).hide();
 					$("[data-app-role='username']",$fieldset).show();
+//if the user is logged in, show the 'not you?' feature. However, don't show it if this is already paypal (at that point, they are who they say they are)
+					if(!app.ext.cco.u.thisSessionIsPayPal())	{
+						$("[data-app-role='buyerLogout']").show();
+						}
 					}
 //hide the password input
 				else if(formObj['want/create_customer'] == 'on')	{
@@ -704,7 +760,7 @@ an existing user gets a list of previous addresses they've used and an option to
 				var checkoutMode = $fieldset.closest('form').data('app-checkoutmode'), //='required'
 				isAuthenticated = app.u.buyerIsAuthenticated(),
 				shipMethods = app.data.cartDetail['@SHIPMETHODS'],
-				L = shipMethods.length;
+				L = (shipMethods) ? shipMethods.length : 0;
 				
 //				app.u.dump(' -> shipMethods.length: '+L); // app.u.dump(shipMethods);
 				
@@ -745,10 +801,14 @@ an existing user gets a list of previous addresses they've used and an option to
 					}
 //no shipping methods present and buyer is logged out.
 				else {
-					if(formObj['want/bill_to_ship'] && formObj['bill/postal'])	{
+// *** 201324 -> 	correct typos. nice catch MikeC. The absence of a 'not' was causing messaging to appear at the wrong time.
+//					only impacted merchants who had 'require zip to quote shipping' enabled.
+//					if(formObj['want/bill_to_ship'] && formObj['bill/postal'])	{
+					if(formObj['want/bill_to_ship'] && !formObj['bill/postal'])	{
 						$fieldset.anymessage({"message":"<p>Please enter a billing/shipping zip code for a list of shipping options.</p>","persistent":true});
 						}
-					else if(!formObj['want/bill_to_ship'] && formObj['ship/postal'])	{
+//					else if(!formObj['want/bill_to_ship'] && formObj['ship/postal'])	{						
+					else if(!formObj['want/bill_to_ship'] && !formObj['ship/postal'])	{
 						$fieldset.anymessage({"message":"<p>Please enter a shipping zip code for a list of shipping options.</p>","persistent":true});
 						}
 					else	{
@@ -840,10 +900,11 @@ an existing user gets a list of previous addresses they've used and an option to
 
 //if a payment method has been selected, show the supplemental inputs and check the selected payment.
 //additionally, if the payment is NOT Purchase Order AND the company field is populated, show the reference # input.
-
+// !!! this doesn't work because want/payby is no longer a valid field. Either need a field to temporarily store this in OR need to start using localStorage for this.
 					if(formObj['want/payby'])	{
-						var $radio = $("input[value='"+formObj['want/payby']+"']",$fieldset),
-						$supplemental = app.ext.orderCreate.u.showSupplementalInputs($radio,app.ext.orderCreate.vars);
+						var
+							$radio = $("input[value='"+formObj['want/payby']+"']",$fieldset),
+							$supplemental = app.ext.orderCreate.u.showSupplementalInputs($radio,app.ext.orderCreate.vars);
 						
 						$radio.attr('checked','checked');
 						if($supplemental)	{
@@ -862,7 +923,7 @@ an existing user gets a list of previous addresses they've used and an option to
 				if(!isAuthenticated && checkoutMode == 'required')	{
 					//do nothing. panel is hidden by default, so no need to 'show' it.
 					}
-				else if(zGlobals.checkoutSettings.chkout_order_notes)	{$fieldset.show()}
+				else if(app.vars.thisSessionIsAdmin || zGlobals.checkoutSettings.chkout_order_notes)	{$fieldset.show()}
 				else	{$fieldset.hide()}
 				} //chkoutNotes
 
@@ -892,15 +953,17 @@ note - the order object is available at app.data['order|'+P.orderID]
 					$chkContainer.empty();
 					$chkContainer.css('min-height','300'); //set min height so loading shows up.
 					$chkContainer.showLoading({'message':'Fetching cart contents and payment options'});
-					if(Number(zGlobals.globalSettings.inv_mode) > 1)	{
+
+					if(app.vars.thisSessionIsAdmin)	{
+						}
+					else if(Number(zGlobals.globalSettings.inv_mode) > 1)	{
 						app.u.dump(" -> inventory mode set in such a way that an inventory check will occur.");
 						app.ext.cco.calls.cartItemsInventoryVerify.init({'callback':'handleInventoryUpdate','extension':'orderCreate','jqObj':$chkContainer});
 						}
+
 					if(app.u.buyerIsAuthenticated())	{
-						
 						app.calls.buyerAddressList.init({'callback':'suppressErrors'},'immutable');
 						app.calls.buyerWalletList.init({'callback':'suppressErrors'},'immutable');
-						
 						}
 
 					app.ext.orderCreate.u.handlePaypalInit($chkContainer); //handles paypal code, including paymentQ update. should be before any callbacks.
@@ -917,13 +980,13 @@ note - the order object is available at app.data['order|'+P.orderID]
 							}
 						else	{
 //							app.u.dump(" -> cartDetail callback for startCheckout reached.");
-							if(app.data.cartDetail['@ITEMS'].length)	{
-								app.u.dump(" -> cart has items. 2013-14-13e");
+							if(app.data.cartDetail['@ITEMS'].length || app.vars.thisSessionIsAdmin)	{
+								app.u.dump(" -> cart has items or this is an admin session.");
 //NOTE - this should only be done once. panels should be updated individually from there forward.
 //								$chkContainer.anycontent({'templateID':'checkoutTemplate',data: app.ext.orderCreate.u.extendedDataForCheckout()});
-								app.u.dump("NOT using anycontent plugin.");
+//								app.u.dump("NOT using anycontent plugin.");
 								var $checkoutContents = app.renderFunctions.transmogrify({},'checkoutTemplate',app.ext.orderCreate.u.extendedDataForCheckout());
-								app.u.dump("transmogrify saved to var");
+//								app.u.dump("transmogrify saved to var");
 								$chkContainer.append($checkoutContents);
 								app.u.dump(" -> checkout appended to container.");
 								$("fieldset[data-app-role]",$chkContainer).each(function(index, element) {
@@ -935,6 +998,19 @@ note - the order object is available at app.data['order|'+P.orderID]
 									app.ext.orderCreate.u.handlePanel($chkContainer,role,['handleDisplayLogic','handleAppEvents']);
 									});
 //								app.u.dump(" -> handlePanel has been run over all fieldsets.");
+
+if(document.compatMode == 'CSS1Compat')	{}
+else	{
+	app.u.dump(" -> we are in quirks mode. rerender the panels after a short delay. this is to correct an issue w/ quirks and jquery ui button()",'warn');
+	setTimeout(function(){
+		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutCartSummary',['empty','translate','handleDisplayLogic','handleAppEvents']);
+		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutMethodsPay',['empty','translate','handleDisplayLogic','handleAppEvents']);
+		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
+		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutAccountCreate',['empty','translate','handleDisplayLogic','handleAppEvents']);
+		app.ext.orderCreate.u.handlePanel($chkContainer,'chkoutPreflight',['empty','translate','handleDisplayLogic','handleAppEvents']);
+		},1000);
+	}
 								}
 							else	{
 								$chkContainer.anymessage({'message':'It appears your cart is empty. If you think you are receiving this message in error, please refresh the page or contact us.'});
@@ -943,6 +1019,12 @@ note - the order object is available at app.data['order|'+P.orderID]
 						}},'immutable');
 //					app.u.dump(" -> made it past adding calls to Q for startCheckout. now dispatch.");
 					app.model.dispatchThis('immutable');
+
+
+
+
+
+
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'in orderCreate.a.startCheckout, no $chkContainer not passed or does not exist.'});
@@ -956,6 +1038,121 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 		e : {
 
+			adminCustomerLookup : function($ele)	{
+				$ele.button();
+				$ele.off('click.adminCustomerLookup').on('click.adminCustomerLookup',function(){
+
+				var
+					$context = $ele.closest("[data-app-role='checkout']"),
+					email = $ele.closest('fieldset').find("[name='bill/email']").val(); //save to var before handleing panel or val is gone.
+				
+				app.ext.orderCreate.u.handlePanel($context,'chkoutPreflight',['empty','showLoading']);
+				app.ext.orderCreate.u.handlePanel($context,'chkoutAddressBill',['empty','showLoading']);
+				app.ext.orderCreate.u.handlePanel($context,'chkoutAddressShip',['empty','showLoading']);
+				
+				app.ext.admin.calls.adminCustomerSearch.init({'scope':'EMAIL','searchfor':email},{'callback':function(rd){
+					if(app.model.responseHasErrors(rd)){
+						$('#globalMessaging').anymessage({'message':rd});
+						}
+					else	{
+						if(app.data[rd.datapointer] && app.data[rd.datapointer].CID)	{
+							//Match FOund.
+							app.calls.cartSet.init({"customer/cid":app.data[rd.datapointer].CID});
+							app.data.cartDetail.customer.cid = app.data[rd.datapointer].CID; //updatate local copy of cart.
+							app.ext.admin.calls.adminCustomerDetail.init({'CID':app.data[rd.datapointer].CID},{'callback' : 'adminCustomerDetail','extension':'orderCreate','jqObj':$context},'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						else	{
+							$('#globalMessaging').anymessage({'message':'No matching customer record found.'});
+							}
+						}
+					}},'mutable');
+				app.model.dispatchThis('mutable');		
+					});
+				},
+
+			buyerLogout : function($ele)	{
+//				app.u.dump(" BEGIN orderCreate.e.buyerLogout");
+				$ele.off('click.buyerLogout').on('click.buyerLogout',function(event){
+//					app.u.dump(" -> orderCreate.e.buyerLogout (Click!)");
+					app.calls.buyerLogout.init({'callback':function(rt){
+						app.ext.orderCreate.u.handlePanel($ele.closest('form'),'chkoutPreflight',['empty','translate','handleDisplayLogic','handleAppEvents']);
+						app.ext.orderCreate.u.handlePanel($ele.closest('form'),'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
+						app.ext.orderCreate.u.handlePanel($ele.closest('form'),'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+						app.ext.orderCreate.u.handleCommonPanels($ele.closest('form'));
+						app.model.dispatchThis('immutable');
+						}});
+					app.model.dispatchThis('immutable');
+					});
+				},
+
+
+			cartItemAddFromForm : function($btn)	{
+				$btn.button();
+				$btn.off('click.cartItemAdd').on('click.cartItemAdd',function(event){
+					event.preventDefault();
+					app.u.dump("BEGIN orderCreate.e.cartItemAddFromForm (Click!)");
+					app.ext.store_product.u.handleAddToCart($btn.closest('form'));
+					app.model.destroy('cartDetail');
+					app.calls.cartDetail.init({
+						'callback':function(rd){
+							if(app.model.responseHasErrors(rd)){
+								$btn.closest('fieldset').anymessage({'message':rd});
+								}
+							else	{
+								app.ext.orderCreate.u.handlePanel($btn.closest('form'),'chkoutCartItemsList',['empty','translate','handleDisplayLogic','handleAppEvents']); //for toggling display of ref. # field.
+								app.ext.orderCreate.u.handlePanel($btn.closest('form'),'chkoutCartSummary',['empty','translate','handleDisplayLogic','handleAppEvents']); //for toggling display of ref. # field.
+								}
+							}
+						},'immutable'); //update cart so that if successful, the refresh on preflight panel has updated info.
+					app.model.dispatchThis('immutable');
+					});
+				}, //cartItemAddFromForm
+
+			cartItemAddWithChooser : function($btn)	{
+				
+				$btn.button();
+				$btn.off('click.cartItemAddWithChooser').on('click.cartItemAddWithChooser',function(event){
+					event.preventDefault();
+app.u.dump("BEGIN orderCreate.e.cartItemAddWithChooser (Click!)");
+//$button is passed into the showFinder function. This is the button that appears IN the chooser/finder for adding to the cart/order.					
+					var $button = $("<button>").text("Add to Order").button().on('click',function(event){
+						event.preventDefault();
+						$(this).button('disable'); //prevent doubleclick.
+						$form = $('form','#chooserResultContainer');
+						if($form && $form.length)	{
+							var sfo = $form.serializeJSON(); //Serialized Form Object.
+							var pid = sfo.sku;  //shortcut
+							sfo.product_id = pid; //
+							if(app.ext.store_product.validate.addToCart(pid,$form))	{
+								app.ext.store_product.u.handleAddToCart($form);
+								app.model.destroy('cartDetail');
+								app.calls.cartDetail.init({
+									'callback':function(rd){
+										if(app.model.responseHasErrors(rd)){
+											$('#prodFinder').anymessage({'message':rd});
+											}
+										else	{
+											$('#prodFinder').dialog('close');
+											app.ext.orderCreate.u.handlePanel($btn.closest('form'),'chkoutCartItemsList',['empty','translate','handleDisplayLogic','handleAppEvents']); //for toggling display of ref. # field.
+											app.ext.orderCreate.u.handlePanel($btn.closest('form'),'chkoutCartSummary',['empty','translate','handleDisplayLogic','handleAppEvents']); //for toggling display of ref. # field.
+											}
+										}
+									},'immutable'); //update cart so that if successful, the refresh on preflight panel has updated info.
+								app.model.dispatchThis('immutable');
+								}
+							else	{
+								$(this).button('enable'); //prevent doubleclick.
+								}
+							}
+						else	{
+							app.u.throwGMessage("WARNING! add to cart $form has no length. can not add to cart.");
+							$(this).button('enable');
+							}
+						});
+					app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $button})
+					});
+				},
 
 //applied to inputs like coupon and giftcard so that when 'enter' is pushed, it triggers a click on the corresponding button.
 			addTriggerButtonClick : function($input)	{
@@ -1018,13 +1215,16 @@ note - the order object is available at app.data['order|'+P.orderID]
 					var addressType = $btn.closest('fieldset').data('app-addresstype'), //will be ship or bill.
 					$form = $btn.closest('form'),
 					addressID = $btn.closest('address').data('_id');
-					
+//** 201342 -> update to better handle an incomplete address. edit dialog will open automatically and prompt for invalid fields. The intent to select the address will also update the cart.
 					if(addressType && addressID)	{
-						
+						//even if the address doesn't pass validation, set the shortcut to this id. checkout won't let them proceed, but this way their intent is still saved.
+						//and after the update occurs, this address will be selected.
+						$("[name='"+addressType+"/shortcut']",$form).val(addressID);
+						var cartUpdate = {};
+						cartUpdate[addressType+"/shortcut"] = addressID;
+
 						if(app.ext.cco.u.verifyAddressIsComplete(addressType,addressID))	{
-							$("[name='"+addressType+"/shortcut']",$form).val(addressID);
-							var cartUpdate = {};
-							cartUpdate[addressType+"/shortcut"] = addressID;
+							
 							
 							if(addressType == 'bill' && $btn.closest('form').find("input[name='want/bill_to_ship']").is(':checked'))	{
 	//							app.u.dump("Ship to billing address checked. set fields in billing.");
@@ -1045,10 +1245,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 							app.model.dispatchThis('immutable');
 							}
 						else	{
-							$btn.closest('fieldset').anymessage({'message':"It appears the address you've selected is missing some required information. Please edit the address (click the pencil icon) to supply the required information."});
+							app.calls.cartSet.init(cartUpdate,{},'passive');
+							app.model.dispatchThis('passive');
+							$btn.closest('fieldset').find("[data-app-event='orderCreate|showBuyerAddressUpdate']").data('validate-form',true).trigger('click');
 							}
-						
-
 						}
 					else	{
 						$btn.closest('fieldset').anymessage({'message':'In orderCreate.e.execBuyerAddressSelect, either addressType ['+addressType+'] and/or addressID ['+addressID+'] not set. Both are required.','gMessage':true});
@@ -1128,7 +1328,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				}, //execBuyerLogin
 
 			execCartOrderCreate : function($btn)	{
-				$btn.addClass('ui-state-highlight').button();
+				$btn.addClass('ui-state-highlight').button().css('display','block');
 
 				$btn.off('click.execCartOrderCreate').on('click.execCartOrderCreate',function(event){
 					event.preventDefault();
@@ -1249,6 +1449,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 							}
 
 						}});
+					
 					app.ext.orderCreate.u.handleCommonPanels($form);
 					app.model.dispatchThis('immutable');
 					})
@@ -1328,9 +1529,9 @@ note - the order object is available at app.data['order|'+P.orderID]
 					})
 				}, //showBuyerAddressAdd
 
-			showBuyerAddressUpdate : function($btn)	{
+			showBuyerAddressUpdate : function($btn,p)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-
+				p = p || {};
 				var $checkoutForm = $btn.closest('form'), //used in some callbacks later.
 				$checkoutAddrFieldset = $btn.closest('fieldset');
 
@@ -1340,7 +1541,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 					
 					app.ext.store_crm.u.showAddressEditModal({
 						'addressID' : $btn.closest("address").data('_id'),
-						'addressType' : addressType
+						'addressType' : addressType,
+						'validateForm' : $btn.data('validate-form')
 						},function(){
 //by here, the new address has been edited.
 //set appropriate address panel to loading.
@@ -1359,7 +1561,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				}, //showBuyerAddressUpdate
 
 			tagAsAccountCreate : function($cb)	{
-				$cb.anycb();
+				$cb.anycb({text : {on : 'yes',off : 'no'}});
 				$cb.off('change.tagAsAccountCreate').on('change.tagAsAccountCreate',function()	{
 					app.ext.cco.calls.cartSet.init({'want/create_customer': $cb.is(':checked') ? 1 : 0}); //val of a cb is on or off, but we want 1 or 0.
 					app.model.destroy('cartDetail');
@@ -1372,7 +1574,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				}, //tagAsAccountCreate
 			
 			tagAsBillToShip : function($cb)	{
-				$cb.anycb();
+				$cb.anycb({text : {on : 'yes',off : 'no'}});
 				$cb.off('change.tagAsBillToShip').on('change.tagAsBillToShip',function()	{
 					var $form = $cb.closest('form');
 
@@ -1410,29 +1612,42 @@ note - the order object is available at app.data['order|'+P.orderID]
 			extendedDataForCheckout : function()	{
 //				app.u.dump("BEGIN orderCreate.u.extendedDataForCheckout - 2013-04-13");
 //				app.u.dump("app.data.cartDetail:"); app.u.dump(app.data.cartDetail);
-				if(app.u.buyerIsAuthenticated())	{
-//					app.u.dump(" -> buyer is authenticated");
-					var obj = $.extend(true,app.data.appPaymentMethods,app.data.appCheckoutDestinations,app.data.buyerAddressList,app.data.buyerWalletList,app.data.cartDetail);
+				var obj;
+				if(app.vars.thisSessionIsAdmin)	{
+					//can skip all the paypal code in an admin session. it isn't a valid payment option.
+					if(app.data.cartDetail.customer.cid && app.data['adminCustomerDetail|'+app.data.cartDetail.customer.cid])	{
+						//change this so object stores the data how buyerAddressList and buyerWalletList would.
+						obj = {
+							'@wallets' : app.data['adminCustomerDetail|'+app.data.cartDetail.customer.cid]['@WALLETS'],
+							'@bill' : app.data['adminCustomerDetail|'+app.data.cartDetail.customer.cid]['@BILL'],
+							'@ship' : app.data['adminCustomerDetail|'+app.data.cartDetail.customer.cid]['@SHIP']
+							};
+						}
+					obj = $.extend(true,obj,app.data.appPaymentMethods,app.data.appCheckoutDestinations,app.data.cartDetail);
 					}
 				else	{
-//					app.u.dump(" -> buyer is not authenticated.");
-					var obj = $.extend(true,app.data.appPaymentMethods,app.data.appCheckoutDestinations,app.data.cartDetail);
-					}
-
-//				app.u.dump(" -> data object has been extended. ");
+					if(app.u.buyerIsAuthenticated())	{
+	//					app.u.dump(" -> buyer is authenticated");
+						obj = $.extend(true,app.data.appPaymentMethods,app.data.appCheckoutDestinations,app.data.buyerAddressList,app.data.buyerWalletList,app.data.cartDetail);
+						}
+					else	{
+	//					app.u.dump(" -> buyer is not authenticated.");
+						obj = $.extend(true,app.data.appPaymentMethods,app.data.appCheckoutDestinations,app.data.cartDetail);
+						}
 
 //when a buyer returns from paypal, the shipping is populated, but the billing is not always.
 //this will put the ship info into the bill fields if they're blank.
-				if(app.ext.cco.u.thisSessionIsPayPal())	{
-//					app.u.dump(" -> session is paypal. copy some data around.");
-					if(obj.bill && obj.ship)	{
-						if(!obj.bill.company)	{obj.bill.company = obj.ship.company}
-						if(!obj.bill.address1)	{obj.bill.address1 = obj.ship.address1}
-						if(!obj.bill.address2)	{obj.bill.address2 = obj.ship.address2}
-						if(!obj.bill.city)	{obj.bill.city = obj.ship.city}
-						if(!obj.bill.region)	{obj.bill.region = obj.ship.region}
-						if(!obj.bill.postal)	{obj.bill.postal = obj.ship.postal}
-						if(!obj.bill.countrycode)	{obj.bill.countrycode = obj.ship.countrycode}
+					if(app.ext.cco.u.thisSessionIsPayPal())	{
+	//					app.u.dump(" -> session is paypal. copy some data around.");
+						if(obj.bill && obj.ship)	{
+							if(!obj.bill.company)	{obj.bill.company = obj.ship.company}
+							if(!obj.bill.address1)	{obj.bill.address1 = obj.ship.address1}
+							if(!obj.bill.address2)	{obj.bill.address2 = obj.ship.address2}
+							if(!obj.bill.city)	{obj.bill.city = obj.ship.city}
+							if(!obj.bill.region)	{obj.bill.region = obj.ship.region}
+							if(!obj.bill.postal)	{obj.bill.postal = obj.ship.postal}
+							if(!obj.bill.countrycode)	{obj.bill.countrycode = obj.ship.countrycode}
+							}
 						}
 					}
 //				app.u.dump("END orderCreate.u.extendedDataForCheckout");
@@ -1541,7 +1756,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						app.u.dump("It appears we've just returned from PayPal.");
 						app.ext.orderCreate.vars['payment-pt'] = token;
 						app.ext.orderCreate.vars['payment-pi'] = payerid;
-						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"ID":token,"PI":payerid,"TN":"PAYPALEC"},{"extension":"orderCreate","callback":"handlePayPalIntoPaymentQ"});
+						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"ID":token,"PI":payerid,"TN":"PAYPALEC"},{"extension":"orderCreate","callback":"handlePayPalIntoPaymentQ",'jqObj':$context});
 						}
 					}
 //if token and/or payerid is NOT set on URI, then this is either not yet a paypal order OR is/was paypal and user left checkout and has returned.
@@ -1550,6 +1765,13 @@ note - the order object is available at app.data['order|'+P.orderID]
 					if(!app.ext.cco.u.aValidPaypalTenderIsPresent())	{
 						app.u.dump(" -> validPayalTender found. Nuke it.");
 						app.ext.cco.u.nukePayPalEC();
+						//update the panels too so that the ship/billing is 'unlocked' and payments get updated.
+						app.ext.orderCreate.u.handleCommonPanels($form);
+						app.calls.ping.init({callback:function(){
+							app.ext.orderCreate.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
+							app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+							}},'immutable');
+						app.model.dispatchThis('immutable');
 						}
 					app.u.dump(" -> paypal nuked ");
 					}
@@ -1564,9 +1786,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 //they don't happen here because this code is executed when the panel is transmogrified.
 			showSupplementalInputs : function($input)	{
 				if($input && typeof $input === 'object')	{
-					$label = $input.closest('label'),
-					$fieldset = $input.closest('fieldset'),
-					$pmc = $input.closest("[data-app-role='paymentMethodContainer']"); //payment method container. an li or div or row. who knows.
+					var
+						$label = $input.closest('label'),
+						$fieldset = $input.closest('fieldset'),
+						$pmc = $input.closest("[data-app-role='paymentMethodContainer']"); //payment method container. an li or div or row. who knows.
 	
 	//handle the previously selected payment method.
 					$('.ui-state-active',$fieldset).removeClass('ui-state-active ui-corner-top ui-corner-all');
@@ -1586,10 +1809,72 @@ note - the order object is available at app.data['order|'+P.orderID]
 					$('#globalMessaging').anymessage({'message':'In cco.u.showSupplementalInputs, $input not defined or not a jquery object.','gMessage':true});
 					}
 
-				} //showSupplementalInputs
+				}, //showSupplementalInputs
+			
+		
+// *** 201338 -> new means for executing ROI tracking codes.
+			//pass in what is returned after order create in @TRACKERS
+			scripts2iframe : function(arr)	{
+				app.u.dump('running scripts2iframe');
+				if(typeof window.scriptCallback == 'function')	{}
+				else	{
+					window.scriptCallback = app.ext.orderCreate.u.scriptCallback; //assigned global scope to reduce likely hood of any errors resulting in callback.
+					app.u.dump(" -> typeof window.scriptCallback: "+typeof window.scriptCallback);
+					}
+				if(typeof arr == 'object' && !$.isEmptyObject(arr))	{
 
+	var L = arr.length;
+	for(var i = 0; i < L; i++)	{
+//adding to iframe gives us an isolation layer
+//data-script-id added so the iframe can be removed easily later.
+		arr[i].id = 'iframe_3ps_'+i
+		$("<iframe \/>",{'id':arr[i].id}).attr({'data-script-id':arr[i].owner,'height':1,'width':1}).css({'display':'none'}).appendTo('body'); // -> commented out for testing !!!
+/*
+the timeout is added for multiple reasons.
+1.  jquery needed a moment between adding the iframe to the DOM and accessing it's contents.
+2.  by adding some time between each interation (100 * 1), if there's a catastrophic error, the next code will still run.
+*/
+  		setTimeout(function(thisArr){
+			var $iframe = $('#'+thisArr.id).contents().find("html");
+			$iframe.append(thisArr.script);
+/// hhhmmm... some potential problems with this. non-script based output. sequence needs to be preserved for includes and inline.
 
+/*			var $div = $("<div \/>").append(thisArr.script); //may contain multiple scripts.
+			var scripts = ""; //all the non 'src' based script contents, in one giant lump. it's put into a 'try' to track code errors.
+			$div.find('script').each(function(){
+				var $s = $(this);
+				if($s.attr('src'))	{
+					console.log(" -> attempting to add "+$s.attr('src'));
+					$iframe.append($s);
+					}
+				else	{
+					scripts += $s.text()+"\n\n";
+					}
+				});
+			$iframe.append("<script>try{"+scripts+"\n window.parent.scriptCallback('"+arr.owner+"','success');} catch(err){window.parent.scriptCallback('"+arr.owner+"','error: '+err);}<\/script>");
+*/			},(100 * (i + 1)),arr[i])
+		} 
+					}
+				else	{
+					//didn't get anything or what we got wasn't an array.
+					}
+				},
 
+//is executed if one of the ROI scripts contains a javascript error (fails in the 'try').
+			scriptCallback : function(owner,err)	{
+app.u.dump("The script for "+owner+" Contained an error and most likely did not execute properly. (it failed the 'try').","warn");
+app.model.addDispatchToQ({
+	'_cmd':'appAccidentDataRecorder',
+	'owner' : owner,
+	'app' : '1pc', //if the API call logs the clientid, this won't be necessary.
+	'category' : '@TRACKERS',
+	'scripterr' : err,
+	'_tag':	{
+		'callback':'suppressErrors'
+		}
+	},'passive');
+app.model.dispatchThis('passive');
+				}
 
 
 			}, // u/utilities
@@ -1662,6 +1947,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 						}
 					}
 				} //payMethodsAsRadioButtons
+			
+
 			
 			} //renderFormats
 

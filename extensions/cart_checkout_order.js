@@ -153,7 +153,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 			dispatch : function(_tag)	{
 				_tag = _tag || {};
 				_tag.datapointer = "cartOrderCreate";
-				app.model.addDispatchToQ({'_cmd':'cartOrderCreate','_tag':_tag},'immutable');
+				app.model.addDispatchToQ({'_cmd':'cartOrderCreate','_tag':_tag,'iama':app.vars.passInDispatchV},'immutable');
 				}
 			},//cartOrderCreate
 
@@ -167,9 +167,11 @@ a callback was also added which just executes this call, so that checkout COULD 
 				obj = obj || {};
 				obj._tag = _tag || {};
 				var parentID = obj._tag.parentID || '';
+				var extras = "";
+				if(window.debug1pc)	{extras = "&sender=jcheckout&fl=checkout-"+app.model.version+debug1pc} //set debug1pc to a,p or r in console to force this versions 1pc layout on return from paypal
 				obj._cmd = "cartPaypalSetExpressCheckout";
-				obj.cancelURL = (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis?parentID="+parentID : zGlobals.appSettings.https_app_url+"?_session="+app.vars._session+"parentID="+parentID+"&cartID="+app.vars.cartID+"#cart?show=inline";
-				obj.returnURL =  (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/checkout.cgis?parentID="+parentID : zGlobals.appSettings.https_app_url+"?_session="+app.vars._session+"parentID="+parentID+"&cartID="+app.vars.cartID+"#checkout?show=checkout";
+				obj.cancelURL = (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis?parentID="+parentID+extras : zGlobals.appSettings.https_app_url+"?_session="+app.vars._session+"parentID="+parentID+"&cartID="+app.vars.cartID+"#cart?show=inline";
+				obj.returnURL =  (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/checkout.cgis?parentID="+parentID+extras : zGlobals.appSettings.https_app_url+"?_session="+app.vars._session+"parentID="+parentID+"&cartID="+app.vars.cartID+"#checkout?show=checkout";
 				
 				obj._tag.datapointer = "cartPaypalSetExpressCheckout";
 				
@@ -240,8 +242,7 @@ left them be to provide guidance later.
 //no templates or significant checks should occur in this init. templates are app specific (checkout_active has different templates than checkout_passive)
 		init : {
 			onSuccess : function()	{
-				var r; //returns false if checkout can't load due to account config conflict.
-				return r;
+				return true; //returns false if checkout can't load due to account config conflict.
 				},
 			onError : function()	{
 				app.u.dump('BEGIN app.ext.orderCreate.callbacks.init.error');
@@ -450,8 +451,8 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //				app.u.dump("BEGIN cco.u.nukePayPalEC");
 				app.ext.orderCreate.vars['payment-pt'] = null;
 				app.ext.orderCreate.vars['payment-pi'] = null;
-				app.calls.cartSet.init({'want/payby':""}); //adds dispatches.
 				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){
+					//the delete cmd will reset want/payby to blank.
 					app.ext.cco.calls.cartPaymentQ.init({'cmd':'delete','ID':PQI.ID},_tag || {'callback':'suppressErrors'}); //This kill process should be silent.
 					});
 				},
@@ -539,102 +540,106 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 			getSupplementalPaymentInputs : function(paymentID,data,isAdmin)	{
 //				app.u.dump("BEGIN control.u.getSupplementalPaymentInputs ["+paymentID+"]");
 //				app.u.dump(" -> data:"); app.u.dump(data);
-				
-				var $o = $("<div />").addClass("paybySupplemental").attr('data-app-role','supplementalPaymentInputsContainer'), //what is returned. a jquery object (ul) w/ list item for each input of any supplemental data.
-				tmp = '', //tmp var used to put together string of html to append to $o
-				payStatusCB = "<div><label><input type='checkbox' name='flagAsPaid' \/>Flag as paid<\/label><\/div>"
-				
-				if(paymentID.substr(0,7) == 'WALLET:')	{
-					paymentID = 'WALLET';
-					}	
-				
-				switch(paymentID)	{
-	//for credit cards, we can't store the # or cid in local storage. Save it in memory so it is discarded on close, reload, etc
-	//expiration is less of a concern
-					case 'CREDIT':
-
-						tmp += "<div><label>Credit Card #<input type='text' size='30' name='payment/CC' class=' creditCard' value='";
-						if(data['payment/CC']){tmp += data['payment/CC']}
-						tmp += "' onKeyPress='' required='required' /><\/label><\/div>";
-						
-						tmp += "<div><label>Expiration<\/label><select name='payment/MM' class='creditCardMonthExp' required='required'><option><\/option>";
-						tmp += app.u.getCCExpMonths(data['payment/MM']);
-						tmp += "<\/select>";
-						tmp += "<select name='payment/YY' class='creditCardYearExp'  required='required'><option value=''><\/option>"+app.u.getCCExpYears(data['payment/YY'])+"<\/select><\/div>";
-						
-						tmp += "<div><label for='payment/CV'>CVV/CID<input type='text' size='4' name='payment/CV' class=' creditCardCVV' onKeyPress='return app.u.numbersOnly(event);' value='";
-						if(data['payment/CV']){tmp += data['payment/CV']}
-						tmp += "'  required='required' /><\/label> <span class='ui-icon ui-icon-help creditCardCVVIcon' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/div>";
-						
-						if(isAdmin === true)	{
-							tmp += "<div><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/div>"
-							tmp += "<div><label><input type='radio' name='VERB' value='CHARGE'>Charge<\/label><\/div>"
-							tmp += "<div><label><input type='radio' name='VERB' value='REFUND'>Refund<\/label><\/div>"
-							}
-						break;
-
-						case 'WALLET':
+				if(paymentID)	{
+					var $o = $("<div />").addClass("paybySupplemental").attr('data-app-role','supplementalPaymentInputsContainer'), //what is returned. a jquery object (ul) w/ list item for each input of any supplemental data.
+					tmp = '', //tmp var used to put together string of html to append to $o
+					payStatusCB = "<div><label><input type='checkbox' name='flagAsPaid' \/>Flag as paid<\/label><\/div>"
+					
+					if(paymentID.substr(0,7) == 'WALLET:')	{
+						paymentID = 'WALLET';
+						}	
+					
+					switch(paymentID)	{
+		//for credit cards, we can't store the # or cid in local storage. Save it in memory so it is discarded on close, reload, etc
+		//expiration is less of a concern
+						case 'CREDIT':
+	
+							tmp += "<div><label>Credit Card #<input type='text' size='30' name='payment/CC' data-input-keyup='input-format' data-input-format='numeric' class=' creditCard' value='";
+							if(data['payment/CC']){tmp += data['payment/CC']}
+							tmp += "' onKeyPress='' required='required' /><\/label><\/div>";
+							
+							tmp += "<div><label>Expiration<\/label><select name='payment/MM' class='creditCardMonthExp' required='required'><option><\/option>";
+							tmp += app.u.getCCExpMonths(data['payment/MM']);
+							tmp += "<\/select>";
+							tmp += "<select name='payment/YY' class='creditCardYearExp'  required='required'><option value=''><\/option>"+app.u.getCCExpYears(data['payment/YY'])+"<\/select><\/div>";
+							
+							tmp += "<div><label for='payment/CV'>CVV/CID<input type='text' size='4' name='payment/CV' class=' creditCardCVV' onKeyPress='return app.u.numbersOnly(event);' value='";
+							if(data['payment/CV']){tmp += data['payment/CV']}
+							tmp += "'  required='required' /><\/label> <span class='ui-icon ui-icon-help creditCardCVVIcon' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/div>";
+							
 							if(isAdmin === true)	{
 								tmp += "<div><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/div>"
-								tmp += "<div><label><input type='radio' name='VERB' value='CHARGE' checked='checked'>Charge<\/label><\/div>"
+								tmp += "<div><label><input type='radio' name='VERB' value='CHARGE'>Charge<\/label><\/div>"
+								tmp += "<div><label><input type='radio' name='VERB' value='REFUND'>Refund<\/label><\/div>"
+								}
+							break;
+	
+							case 'WALLET':
+								if(isAdmin === true)	{
+									tmp += "<div><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/div>"
+									tmp += "<div><label><input type='radio' name='VERB' value='CHARGE' checked='checked'>Charge<\/label><\/div>"
+									}
+								else	{$o = false;} //inputs are only present in admin interface.
+							break;
+		
+							case 'CASH':
+							case 'MO':
+							case 'CHECK':
+							case 'PICKUP':
+	//will output a flag as paid checkbox ONLY in the admin interface.
+	//if this param is passed in a store, it will do nothing.
+							if(isAdmin === true)	{
+								tmp += payStatusCB;
 								}
 							else	{$o = false;} //inputs are only present in admin interface.
-						break;
+							break;
+		
+						case 'PO':
+							tmp = $("<div \/>",{'title':'PO Number'});
 	
-						case 'CASH':
-						case 'MO':
-						case 'CHECK':
-						case 'PICKUP':
-//will output a flag as paid checkbox ONLY in the admin interface.
-//if this param is passed in a store, it will do nothing.
-						if(isAdmin === true)	{
-							tmp += payStatusCB;
-							}
-						else	{$o = false;} //inputs are only present in admin interface.
-						break;
-	
-					case 'PO':
-						tmp = $("<div \/>",{'title':'PO Number'});
-
-						var $input = $("<input \/>",{'type':'text','required':'required','size':30,'name':'payment/PO','placeholder':'PO Number'}).addClass('purchaseOrder');
-						if(data['payment/PO'])	{$input.val(data['payment/PO'])}
-						$input.appendTo(tmp);
-						if(isAdmin === true)	{
-							tmp.append(payStatusCB);
-							}
-						break;
-	
-					case 'ECHECK':
-						var echeckFields = {
-							"payment/EA" : "Account #",
-							"payment/ER" : "Routing #",
-							"payment/EN" : "Account Name",
-							"payment/EB" : "Bank Name",
-							"payment/ES" : "Bank State",
-							"payment/EI" : "Check #"
-							}
-						tmp = $("<div \/>");
-						for(var key in echeckFields) {
-//the info below is added to the pdq but not immediately dispatched because it is low priority. this could be changed if needed.
-//The field is required in checkout. if it needs to be optional elsewhere, remove the required attribute in that code base after this has rendered.
-							var $input = $("<input \/>",{'type':'text','required':'required','size':30,'name':key,'placeholder':echeckFields[key].toLowerCase()}).addClass('echeck');
-							if(data[key])	{$input.val(data[key])}
-							$("<div \/>",{'title':echeckFields[key]}).append($input).appendTo(tmp);
-							}
-						break;
-					default:
-//if no supplemental material is present, return false. That'll make it easy for any code executing this to know if there is additional inputs or not.
-						$o = false; //return false if there is no supplemental fields
-					}
-				if($o)	{
-					$o.append(tmp);
-//set events to save values to memory. this will ensure data repopulates as panels get reloaded in 1PC.
-					$('input, select',$o).each(function(){
-						$(this).off('change.save').on('change.save',function(){
-							data[$(this).attr('name')] = $(this).val();
+							var $input = $("<input \/>",{'type':'text','required':'required','size':30,'name':'payment/PO','placeholder':'PO Number'}).addClass('purchaseOrder');
+							if(data['payment/PO'])	{$input.val(data['payment/PO'])}
+							$input.appendTo(tmp);
+							if(isAdmin === true)	{
+								tmp.append(payStatusCB);
+								}
+							break;
+		
+						case 'ECHECK':
+							var echeckFields = {
+								"payment/EA" : "Account #",
+								"payment/ER" : "Routing #",
+								"payment/EN" : "Account Name",
+								"payment/EB" : "Bank Name",
+								"payment/ES" : "Bank State",
+								"payment/EI" : "Check #"
+								}
+							tmp = $("<div \/>");
+							for(var key in echeckFields) {
+	//the info below is added to the pdq but not immediately dispatched because it is low priority. this could be changed if needed.
+	//The field is required in checkout. if it needs to be optional elsewhere, remove the required attribute in that code base after this has rendered.
+								var $input = $("<input \/>",{'type':'text','required':'required','size':30,'name':key,'placeholder':echeckFields[key].toLowerCase()}).addClass('echeck');
+								if(data[key])	{$input.val(data[key])}
+								$("<div \/>",{'title':echeckFields[key]}).append($input).appendTo(tmp);
+								}
+							break;
+						default:
+	//if no supplemental material is present, return false. That'll make it easy for any code executing this to know if there is additional inputs or not.
+							$o = false; //return false if there is no supplemental fields
+						}
+					if($o)	{
+						$o.append(tmp);
+	//set events to save values to memory. this will ensure data repopulates as panels get reloaded in 1PC.
+						$('input, select',$o).each(function(){
+							$(this).off('change.save').on('change.save',function(){
+								data[$(this).attr('name')] = $(this).val();
+								});
 							});
-						});
-					} //put the li contents into the ul for return.
+						} //put the li contents into the ul for return.
+					}
+				else	{
+					$o = false; //no paymentID specified. intentionally doens't display an error.
+					}
 				return $o;
 //				app.u.dump(" -> $o:");
 //				app.u.dump($o);

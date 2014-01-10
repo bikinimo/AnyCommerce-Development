@@ -17,6 +17,9 @@ item list and summary are separate just to give more control over location.
 	<fieldset data-app-role='chkoutPreflight' class='marginBottom'>
 		<legend class='headerPadding' >Email / Account Login</legend>
 		<div class='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutPreflightTemplate; useParentData:true;'></div>
+		<div data-app-role='buyerLogout' class='displayNone pointer' data-app-event='orderCreate|buyerLogout'>
+			Not you? <span class='lookLikeLink zlink'>click here</span>.
+		</div>
 	</fieldset>
 
 
@@ -40,7 +43,7 @@ item list and summary are separate just to give more control over location.
 		
 		<div data-app-role='billToShipContainer' >
 		<label>
-		<input type='checkbox' name='want/bill_to_ship' data-bind="var: cart(want/bill_to_ship); format:popCheckbox; hideZero:false;" checked='checked' data-app-event='orderCreate|tagAsBillToShip' />
+		<input type='checkbox' name='want/bill_to_ship' data-bind="var: cart(want/bill_to_ship); format:popVal; hideZero:false;" checked='checked' data-app-event='orderCreate|tagAsBillToShip' />
 		ship to billing address
 		</label>
 		</div>
@@ -106,16 +109,13 @@ item list and summary are separate just to give more control over location.
 
 <div data-app-role='login'>
 
-	<div data-app-role='loginPasswordContainer' class='displayNone floatRight'>
+	<div data-app-role='loginPasswordContainer' class='displayNone floatRight passwordContainer'>
 		<div>If you have an account with us, please enter your password below to login</div>
 		<input type='password' placeholder='password' size='30' name='password' /><button data-app-event='orderCreate|execBuyerLogin'>login</button>
 	</div>
 
 	<input type='email' required='required' name='bill/email' size='30' placeholder="email address" data-bind="var:cart(bill/email); defaultVar:cart(customer/login); format:popVal;" data-app-event='orderCreate|execBuyerEmailUpdate' /><br />
 	<label class='accountCreateContainer'><input type='checkbox' name='want/create_customer' data-app-event='orderCreate|tagAsAccountCreate' />Create customer account</label>
-	
-
-
 </div>
 
 </section>
@@ -151,7 +151,7 @@ This template is also used in the myAccount page, which is why a default using _
 	<!-- postal not required for international. don't add it. -->
 	<div><input type='text'  name='bill/postal' placeholder='zip/postal code' required='required' size='14' value='' data-bind='var: cart(bill/postal); defaultVar: cart(bill/postal); format:popVal;' maxlength='10'  data-app-event='orderCreate|execAddressUpdate' /></div>
 
-	<div class='billCountry' data-app-role='billCountry'><select name='bill/countrycode' data-bind='var: cart(bill/countrycode); defaultVar: cart(bill/countrycode); defaultValue:US; format:countriesAsOptions; extension: cco;' required='required' data-app-event="orderCreate|execCountryUpdate" ></select></div>
+	<div class='billCountry' data-app-role='billCountry'><select name='bill/countrycode' placeholder='country' data-bind='var: cart(bill/countrycode); defaultVar: cart(bill/countrycode); defaultValue:US; format:countriesAsOptions; extension: cco;forceRender:1;' required='required' data-app-event="orderCreate|execCountryUpdate" ></select></div>
 
 	<div><input type='tel' name='bill/phone' placeholder='phone number' required='required' value='' data-bind='var: cart(bill/phone); defaultVar: cart(bill/phone); format:popVal;'  /> <span class='hint zhint'>in case of billing/delivery problems</span></div>
 
@@ -184,7 +184,7 @@ don't add required to any inputs because if bill to ship is checked, NONE of the
 	
 	<div><input type='text'  name='ship/postal' placeholder='zip/postal code' required='required' size='14' value='' data-bind='var: cart(ship/postal); defaultVar: cart(ship/postal); format:popVal;' maxlength='10' data-app-event='orderCreate|execAddressUpdate'/></div>
 
-	<div class='shipCountry' data-app-role='shipCountry'><select name='ship/countrycode' data-bind='var: cart(ship/countrycode); defaultVar: cart(ship/countrycode); defaultValue:US; format:countriesAsOptions; extension: cco;'  data-app-event="orderCreate|execCountryUpdate" ></select></div>
+	<div class='shipCountry' data-app-role='shipCountry'><select name='ship/countrycode' placeholder='country' data-bind='var: cart(ship/countrycode); defaultVar: cart(ship/countrycode); defaultValue:US; format:countriesAsOptions; extension: cco;forceRender:1;'  data-app-event="orderCreate|execCountryUpdate" ></select></div>
 
 </section>
 
@@ -332,6 +332,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 		<button data-app-event="orderCreate|execCouponAdd" >add</button>
 	</div>
 
+
 	<button data-app-event="orderCreate|execCartOrderCreate">
 		Place Order
 	</button>
@@ -378,7 +379,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 
 <div id='chkoutBuyerWalletListItem'>
 	<label>
-		<input type='radio' name='want/payby' value='' data-bind="var: wallet(ID); format:popVal;" />
+		<input type='radio' name='want/payby' value='' data-bind="var: wallet(ID); format:setVal;" />
 		<span data-bind="var: wallet(TD); format:text;"></span>
 		<span data-bind="var: wallet(TD); format: walletName2Icon; extension:cco;"></span>
 	</label>
@@ -411,9 +412,9 @@ do NOT change the input name or id or checkout will likely break.
 	<div class='floatRight ocmThirdParty'>
 		<h2>What next?</h2>
 <!-- the twitter and facebook actions are added post checkout. The order contents are included as part of the message -->
-		<div class='ocm ocmFacebookComment pointer zlink marginBottom'><img src='fb_comment-133x32.png' width='132' height='32' alt='Comment on Facebook' /></div>
-		<div class='ocm ocmTwitterComment pointer zlink marginBottom' ><img src='tweet-133x32.png' width='132' height='32' alt='Tweet about it!' /></div>
-		<div class='ocm ocmContinue pointer zlink marginBottom'><img src='continue_shopping-133x32.png' width='132' height='32' alt='continue shopping' /></div>
+		<div class='ocm ocmFacebookComment pointer zlink marginBottom checkoutSprite  '></div>
+		<div class='ocm ocmTwitterComment pointer zlink marginBottom checkoutSprit ' ></div>
+		<div class='ocm ocmContinue pointer zlink marginBottom checkoutSprite'></div>
 
 	</div>
 
@@ -509,9 +510,9 @@ do NOT change the input name or id or checkout will likely break.
 
 
 <div id='cvvcidHelp' class='displayNone' title='Where to find your CVV/CID and why we ask for it'>
-	<img src='sec_code-159x100.gif' alt='Visa/MC/Discover card security code' width='238' height='150'  />
-	<img src='sec_code_amex-159x100.gif' alt='AMEX card security code' width='238' height='150' />
 	<p>For higher security and more efficient processing of your payment, you must provide a card security code to make this purchase. For Visa, MasterCard and Discover the security code is the last section of numbers in the signature area on the back of the card. For American Express the security code is the 4-digit number found in small print next to your account number on the front, usually above it on the right.</p>
+	<div class='checkoutSprite secCode_vmd' title='Visa/MC/Discover card security code'></div>
+	<div class='checkoutSprite secCode_amex' title='AMEX card security code'></div>
 </div>
 
 
@@ -542,7 +543,7 @@ If this gets recycled, test in order history after making changes.
 	
 	<td>
 	<div class='prodThumbContainer marginRight'>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='55' height='55' />
+	<img src='/media/graphics/blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='55' height='55' />
 	</div>
 	</td>
 	

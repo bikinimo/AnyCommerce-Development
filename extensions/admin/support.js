@@ -16,14 +16,9 @@
 
 ************************************************************** */
 
-/*
-An extension for managing the media library in addition to ALL other file uploads,including, but not limited to: csv and zip.
-*/
-
-
 
 var admin_support = function() {
-	var theseTemplates = new Array('supportFileUploadTemplate','supportPageTemplate','supportTicketRowTemplate','supportTicketCreateTemplate','supportTicketDetailTemplate','supportTicketFollowupTemplate','helpPageTemplate','helpDocumentTemplate','helpSearchResultsTemplate');
+	var theseTemplates = new Array('supportFileUploadTemplate','supportManagerControls','supportTicketRowTemplate','supportTicketCreateTemplate','supportTicketDetailTemplate','supportTicketFollowupTemplate','helpPageTemplate','helpDocumentTemplate','helpSearchResultsTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -83,24 +78,62 @@ var admin_support = function() {
 		a : {
 			
 			showTicketManager : function($target)	{
-				app.u.dump("BEGIN admin_support.a.showTicketManager");
-				$target.css('min-height',300); //so showLoading has a little room.
-				$target.showLoading({'message':'Fetching list of open tickets'});
-				app.model.destroy('adminTicketList');
-				app.ext.admin.calls.adminTicketList.init({'detail':'open'},{callback : function(rd){
-					if(app.model.responseHasErrors(rd)){
-						$target.anymessage({'message':rd});
+//				app.u.dump("BEGIN admin_support.a.showTicketManager");
+				var $DMI = app.ext.admin.i.DMICreate($target,{
+					'header' : 'Ticket Manager',
+					'className' : 'adminTicketList', //applies a class on the DMI, which allows for css overriding for specific use cases.
+					'thead' : ['Status','Ticket #','Opened','Last Update','Subject','User','Date Closed',''], //leave blank at end if last row is buttons.
+					'tbodyDatabind' : "var: tickets(@TICKETS); format:processList; loadsTemplate:supportTicketRowTemplate;",
+					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh<\/button><button data-app-click='admin_support|adminTicketCreateShow' class='applyButton hideInDetailMode' data-text='true' data-icon-primary='ui-icon-circle-plus'>Create A New Ticket</button>"],	
+					'controls' : app.templates.supportManagerControls,
+					'cmdVars' : {
+						'_cmd' : 'adminTicketList',
+						'disposition' : 'open',
+						'limit' : '50', //not supported for every call yet.
+						'_tag' : {
+							'datapointer':'adminTicketList'
+							}
 						}
-					else	{
-						$target.anycontent({templateID:'supportPageTemplate','datapointer':rd.datapointer});
-						app.u.handleAppEvents($target);
-						$('.gridTable',$target).anytable();
-						}
-					}},'mutable');
+					});
+				app.u.handleButtons($target);
+				$DMI.closest("[data-app-role='dualModeContainer']").anydelegate();
 				app.model.dispatchThis('mutable');
-				
 				},
 
+
+
+			showPlatformInfo : function()	{
+				//if the current release has a video, give it a special pointer so that it can be loaded inline.
+				
+				var $D = app.ext.admin.i.dialogCreate({
+					'title':'Platform Information',
+					'templateID':'platformInfoTemplate',
+					'data' : app.ext.admin.vars.versionData
+					}).addClass('objectInspector');
+				$D.attr('id','platformInformation');
+//populate the video section w/ the current release data.
+				$("[data-app-role='platformInfoVideoContainer']").anycontent({
+					data : app.ext.admin.vars.versionData[0]
+					})
+				
+				var $platInfo = $("[data-app-role='platformInfoContainer']",$D);
+				$platInfo.showLoading({'message':'Fetching platform data'});
+				app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info','callback':function(rd){
+					$platInfo.hideLoading();
+					if(app.model.responseHasErrors(rd)){
+						$D.anymessage({'message':rd});
+						}
+					else	{
+						//add platform info to the top of the section.
+						$("[data-app-role='platformInfoDetailsContainer']",$platInfo).prepend(app.ext.admin_tools.u.objExplore($.extend({},app.u.getBlacklistedObject(app.data[rd.datapointer],['ts','_uuid','_rtag','_rcmd']),{'app release':app.vars.release}))).prepend("<h3>Platform Information<\/h3>");
+						
+						}
+					}}},'mutable');
+				app.model.dispatchThis('mutable');
+				$D.dialog('option','modal',false);
+				$D.anydelegate();
+				$D.dialog('open');
+				},
 
 			showHelpInterfaceInDialog : function()	{
 				var $container = $('#helpDialog');
@@ -141,18 +174,20 @@ var admin_support = function() {
 						$target.effect("highlight", {}, 1500);
 						}
 					else	{
-						$target = $("<div \/>",{'id':targetID,'title':'help doc: '+docid}).addClass('helpDoc').appendTo('body');
+						$target = $("<div \/>",{'id':targetID,'title':'help doc: '+docid}).attr('docid',docid).addClass('helpDoc').appendTo('body');
 						$target.dialog({width:500, height:500});
-						$target.anycontent({'templateID':'helpDocumentTemplate','showLoadingMessage':'Fetching help documentation...'});
+						$target.showLoading({'message':'Fetching help documentation...'});
 
 						app.ext.admin.calls.helpDocumentGet.init(docid,{'callback':function(rd){
+							app.u.dump(" -> RD: "); app.u.dump(rd);
+							$target.hideLoading();
 							if(app.model.responseHasErrors(rd)){
-								$('#globalMessaging').anymessage({'message':rd});
+								$target.anymessage({'message':rd});
 								}
 							else	{
-								$target.anycontent({'datapointer':rd.datapointer});
-								app.u.handleAppEvents($panel);
-								app.ext.admin_support.u.handleHelpDocOverwrites($panel);
+								$target.anycontent({'templateID':'helpDocumentTemplate','datapointer':rd.datapointer});
+								app.u.handleAppEvents($target);
+								app.ext.admin_support.u.handleHelpDocOverwrites($target);
 								}
 							}},'mutable');
 						app.model.dispatchThis('mutable');
@@ -196,6 +231,7 @@ var admin_support = function() {
 					}
 				
 				}
+
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -206,7 +242,7 @@ var admin_support = function() {
 				if(Number($tag.data('is_highpriority')) == 1)	{
 					$tag.addClass('alert');
 					}
-				else if($tag.data('disposition') == 'WAITING')	{
+				else if($tag.data('disposition') == 'waiting')	{
 					$tag.addClass('warning');
 					}
 				else	{}
@@ -222,42 +258,23 @@ var admin_support = function() {
 			gatherIntel : function()	{
 				var r = "" //what is returned.
 				r += "\n\n ##### The following information is for the admin interface and user computer, not necessarily what was used in the issue of the ticket\n";
-				
 				r += "MVC version: "+app.model.version;
 				r += "\nMVC release: "+app.vars.release;
 				r += "\ndevice id: "+app.vars.deviceid;
 				r += "\nuser id: "+app.vars.userid;
 				r += "\nlogged in to: "+app.vars.domain;
+				r += "\ndomain: "+location.domain;
 				r += "\nbrowser and OS: "+app.vars.passInDispatchV;
 				r += "\n\nuserAgent: "+navigator.userAgent;
 				r += "\nappVersion: "+navigator.appVersion;
 				r += "\noscpu: "+navigator.oscpu;
 				r += "\nscreen size: "+screen.width+" X "+screen.height;
 				r += "\nbrowser size: "+$('body').width()+" X "+$('body').height();
+				
+				var info = app.u.getBlacklistedObject(app.data.info,['server-time','ts','_uuid','_rtag','_rcmd']);
+				for(var index in info)	{r+= index+": "+info[index]}
+				
 				return r;
-				},
-
-			reloadTicketList : function($tbody,disposition,Q)	{
-				app.u.dump("BEGIN admin_support.u.reloadTicketList");
-				if($tbody && disposition)	{
-					app.u.dump(" -> tbody and disposition ["+disposition+"] are both set.");
-					app.u.dump(" -> Q: "+Q);
-					$tbody.showLoading({'message':'Fetching updated ticket list.'});
-					app.ext.admin.calls.adminTicketList.init({'detail':disposition},{callback : function(rd){
-						$tbody.hideLoading();
-						if(app.model.responseHasErrors(rd)){
-							$('#globalMessaging').anymessage({'message':rd});
-							}
-						else	{
-							$tbody.empty();
-							$tbody.anycontent({'datapointer':rd.datapointer});
-							app.u.handleAppEvents($tbody);
-							}
-						}},Q || 'mutable');
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':"In admin_support.u.reloadTicketList, either tbody ["+typeof $tbody+"] or disposition ["+disposition+"] not defined.",'gMessage':true});
-					}
 				},
 
 //overwrite the linkdoc links.  In the future, this will probably do more.
@@ -275,126 +292,279 @@ var admin_support = function() {
 						app.ext.admin_support.a.showHelpDocInDialog(docID);
 						});
 					});
-				}
+				},
+
+
+//is a separate function because it's called by both the ticket DMI and the media library.
+			loadTicketContent : function($context,ticketID,uuid,q)	{
+				
+				if($context instanceof jQuery)	{
+					if(ticketID && uuid)	{
+	
+						$context.showLoading({'message':'Fetching ticket details'}).data({'ticketid':ticketID, 'uuid':uuid});
+
+//Clear the follows and attachment lists, but not the rest of the panel.  That way, anything in the message input is preserved.
+						$("[data-app-role='ticketAttatchmentList']",$context).empty();
+						$("[data-app-role='ticketFollowupList']",$context).empty();
+						
+						app.model.addDispatchToQ({'_cmd':'adminTicketFileList','ticketid':ticketID,'_tag':	{'datapointer' : 'adminTicketFileList|'+ticketID}},'mutable');
+						app.model.addDispatchToQ({
+							'_cmd':'adminTicketDetail',
+							'ticketid':ticketID,
+							'_tag':	{
+								'datapointer' : 'adminTicketDetail|'+ticketID,
+								'callback': 'anycontent',
+								'translateOnly' : true,
+								'jqObj' : $context,
+								'extendByDatapointers' : ['adminTicketFileList|'+ticketID]
+								}
+							},q);
+						}
+					else	{
+						$context.anymessage({"message":"In admin_support.e.adminTicketDetailShow, unable to ascertain ticketID ["+ticketID+"] and/or UUID ["+uuid+"], both of which are required.","gMessage":true});
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_support.e.adminTicketDetailShow, $context in not a valid jquery instance.","gMessage":true});
+					}
+
+				},
+
 			
 			}, //u
 
 
 		e : {
 
-			execTicketCreate : function($btn,vars)	{
-				$btn.button({icons: {primary: "ui-icon-circle-arrow-e"}});
-//					app.u.dump("-> vars: "); app.u.dump(vars)
-				$btn.off('click.showTicketCreate').on('click.showTicketCreate',function(event){
-					event.preventDefault();
-					var $form = $btn.closest('form');
-					
-					if(app.u.validateForm($form))	{
-						$form.showLoading({'message':'Creating a new ticket'});
-						var sfo = $form.serializeJSON(),
-						uuid = $btn.closest('.ui-dialog-content').data('uuid'),
-						messageBody = sfo.description+"\n"; //NOTE -> the user inputted message body should always be first. That way it's at the top of a high priority SMS/page.
-						for(var index in sfo)	{
-							//only pass populated fields and don't pass description again (see above).
-							if(sfo[index] && index != 'description'){messageBody += "\n"+index+": "+sfo[index]}
-							}
-						messageBody += app.ext.admin_support.u.gatherIntel();
-						
-						app.ext.admin.calls.adminTicketCreate.init({
-							'body' : messageBody,
-							'subject' : sfo.subject,
-							'UUID' : uuid,
-							'phone' : sfo.phone,
-							'priority' : sfo.priority
-							},{
-							'callback' : function(rd){
-								$form.hideLoading();
-								if(app.model.responseHasErrors(rd)){
-									$('#globalMessaging').anymessage({'message':rd});
-									}
-								else	{
-									$form.empty().anymessage({'message':app.u.successMsgObject("Thank you, your ticket has been created.")});
-									$("<button \/>").text('Close Window').button({icons: {primary: "ui-icon-circle-close"}}).on('click',function(event){event.preventDefault(); $(this).closest('.ui-dialog-content').dialog('close')}).appendTo($form);
-									
-									if(app.data[rd.datapointer] && app.data[rd.datapointer].TICKETID)	{
-										$("<button \/>").text('Add File(s) To Ticket').button({icons: {primary: "ui-icon-circle-plus"}}).on('click',function(event){
-											event.preventDefault();
-											app.ext.admin_support.a.showFileUploadInModal(app.data[rd.datapointer].TICKETID,app.data[rd.datapointer].UUID);
-											}).appendTo($form);
-										}
-
-									}
-								}	
-							},'immutable');
-//if a context is passed thru the app event, then the list of tickets is updated.
-						if(vars && vars['$context'])	{
-							app.u.dump(" -> context passed. reloading ticket list.");
-							app.model.destroy('adminTicketList');
-							app.ext.admin_support.u.reloadTicketList($("[data-app-role='dualModeListContents']",vars['$context']),$("[name='disposition']",vars['$context']).val(),'immutable');
-							}
-						app.model.dispatchThis('immutable');
-						}
-					else	{} //validation handles error display
-					});
-				}, //execTicketCreate
-
-			execTicketClose : function($btn)	{
-				
-				var ticketData = $btn.closest('tr').data();
-				
-				if(ticketData.closed_gmt != '' || ticketData.disposition == 'closed')	{
-					//ticket is already closed. hide the button.
-					$btn.hide();
-					}
-				else	{
-				
-					$btn.button({icons: {primary: "ui-icon-close"},text: false});
-					$btn.off('click.execTicketClose').on('click.execTicketClose',function(event){
-						event.preventDefault();
-						
-						var $tbody = $btn.closest("[data-app-role='dualModeList']").find("[data-app-role='dualModeListContents']"),
-						ticketID = $btn.closest('tr').data('id');
-						
-						app.model.destroy('adminTicketList');
-						app.ext.admin.calls.adminTicketMacro.init(ticketID,new Array('CLOSE'),{},'immutable');
-						app.ext.admin_support.u.reloadTicketList($tbody,$btn.closest("[data-app-role='dualModeList']").find("[name='disposition']").val(),'immutable'); //handles showloading
-						app.model.dispatchThis('immutable');
+			platformInfoWatchVideo : function($ele,p)	{
+				var data = $ele.closest("[data-youtubevideoid]").data();
+				if(data.youtubevideoid)	{
+					$ele.closest("[data-app-role='platformInfoContainer']").find("[data-app-role='platformInfoVideoContainer']").empty().anycontent({
+						data : data,
+						translateOnly: true
 						});
 					}
-				}, //execTicketClose
+				else	{
+					$ele.closest("[data-app-role='platformInfoContainer']").find("[data-app-role='platformInfoVideoContainer']").empty().show().anymessage({
+						'message' : 'No video present for this release',
+						'errtype' : 'warn',
+						'showCloseButton' : false,
+						'persistent' : true
+						})
+					}
+				},
+			
+			platformInfoViewChangelog : function($ele,p)	{
+				linkOffSite('https://raw.github.com/zoovy/AnyCommerce-Development/'+$ele.closest('tr').data('branch')+'/changelog.txt','',true)
+				},
 
-			execTicketListDispositionChange : function($ele)	{
-				$ele.off('change.execDispositionChange').on('change.execDispositionChange',function(){
-					var $tbody = $ele.closest("[data-app-role='dualModeList']").find("[data-app-role='dualModeListContents']");
-					app.model.destroy('adminTicketList');
-					app.ext.admin_support.u.reloadTicketList($tbody,$ele.val(),'mutable');
-					app.model.dispatchThis('mutable');
+			adminTicketCreateShow : function($ele,p)	{
+				var $D = app.ext.admin.i.dialogCreate({
+					'title' : 'Create a New Ticket',
+					'templateID' : 'supportTicketCreateTemplate',
+					'data' : {
+						'domain' : 'http://'+app.vars.domain
+						},
 					});
-				}, //execTicketListDispositionChange
+				
+				$('form',$D).append("<input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+				$D.dialog('open');
+				$D.data({'ticketid':'0','uuid':app.u.guidGenerator()}); //necessary for file attachment.
+				$D.anydelegate();
+				app.u.handleButtons($D);
+				},
 
-			execTicketUpdate : function($btn)	{
-				$btn.button();
-				$btn.off('click.execTicketUpdate').on('click.execTicketUpdate',function(event){
-					event.preventDefault();
-					var $form = $btn.closest('form');
-					$panelContents = $btn.closest('.ui-widget-content');
-					
-					if(app.u.validateForm($form))	{
-						$panelContents.showLoading({'message':'Updateing ticket'});
-						app.ext.admin.calls.adminTicketMacro.init($panelContents.data('ticketid'),['APPEND?note='+encodeURIComponent($("[name='note']",$form).val())],{'callback':function(rd){
-							$panelContents.hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								$form.anymessage({'message':rd});
-								}
-							else	{
-								$form.empty().anymessage({'message':app.u.successMsgObject('Ticket '+$panelContents.data('ticketid')+' has been updated')})
-								}
-							}},'immutable');
-							app.model.dispatchThis('immutable');
+			adminTicketCreateExec : function($ele,p)	{
+				var $form = $ele.closest('form');
+				if(app.u.validateForm($form))	{
+					$form.showLoading({'message':'Creating a new ticket'});
+					var sfo = $form.serializeJSON();
+					$form.append("<input type='hidden' name='UUID' value='"+$ele.closest('.ui-dialog-content').data('uuid')+"' \/>");
+
+					var messagebody = sfo.description+"\n"; //NOTE -> the user inputted message body should always be first. That way it's at the top of a high priority SMS/page.
+
+					for(var index in sfo)	{
+						//only pass populated fields and don't pass description again (see above).
+						if(sfo[index] && index != 'description' && index.indexOf('_tag') < 0){messagebody += "\n"+index+": "+sfo[index]}
 						}
-					else	{} //validateForm handles displaying errors.
+					messagebody += app.ext.admin_support.u.gatherIntel();
+// ** 201346 -> w/ a hidden input, if an apostrophe is in messagebody, everything after it gets dropped.
+//					$form.append("<input type='hidden' name='body' value='"+messagebody+"' \/>");
+					$form.append($("<textarea \/>").attr('name','body').val(messagebody).hide());
+					app.ext.admin.a.processForm($form,'immutable');
+					app.model.dispatchThis('immutable');
+
+					}
+				else	{} //validation handles error display				
+				},
+			
+			
+			//this event is used both in create and edit.
+			fileAttach2TicketShow : function($ele,p)	{
+				p.preventDefault();
+				var $panelContents = $ele.closest('.ui-widget-anypanel'); //in create, the dialog body get this same class, so the selector works in both places.
+				if($panelContents instanceof jQuery && $panelContents.length && $panelContents.data('ticketid') && $panelContents.data('uuid'))	{
+					app.ext.admin_support.a.showFileUploadInModal($panelContents.data('ticketid'),$panelContents.data('uuid')); 
+					}
+				else if($panelContents)	{
+					$ele.parent().anymessage({'message':"In admin_support.e.showFileAttachmentModal, unable to determine ticketid ["+$panelContents.data('ticketid')+"] and/or uuid ["+$panelContents.data('uuid')+"]",'gMessage':true});
+					}
+				else	{
+					$ele.parent().anymessage({'message':"In admin_support.e.showFileAttachmentModal, unable to locate panelContents container",'gMessage':true});
+					}
+				}, //showFileAttachmentModal
+				
+			adminTicketMacroCloseShow : function($ele,p){
+				var ticketID = $ele.closest("[data-id]").data('id');
+				p.preventDefault();
+				var $D = app.ext.admin.i.dialogConfirmRemove({
+					'message':'Are you sure you want to close this ticket?',
+					'removeButtonText' : 'Close Ticket',
+					'removeFunction':function(rd){
+						app.ext.admin.calls.adminTicketMacro.init(ticketID,new Array('CLOSE'),{},'immutable');
+						app.model.dispatchThis('immutable');
+						$ele.closest("[data-app-role='dualModeContainer']").find("button[data-app-event='admin|refreshDMI']:first").trigger('click');
+						$D.dialog('close');
+						}
 					});
-				}, //execTicketUpdate
+				},
+
+			adminTicketMacroUpdateExec : function($ele,p)	{
+				p.preventDefault();
+				var
+					$form = $ele.closest('form'),
+					$panel = $ele.closest('.ui-widget-anypanel');
+				
+				if(app.u.validateForm($form))	{
+					$panel.showLoading({'message':'Updating ticket'});
+					app.ext.admin.calls.adminTicketMacro.init($panel.data('ticketid'),['APPEND?note='+encodeURIComponent($("[name='note']",$form).val())],{'callback':function(rd){
+						$panel.hideLoading();
+						if(app.model.responseHasErrors(rd)){
+							$form.anymessage({'message':rd});
+							}
+						else	{
+							$form.anymessage({'message':app.u.successMsgObject('Ticket '+$panel.data('ticketid')+' has been updated')});
+							$("textarea",$form).val(''); //clear the values from the text areas.
+							}
+						}},'immutable');
+					//refresh the ticket.
+					app.ext.admin_support.u.loadTicketContent($panel,$panel.data('ticketid'),$panel.data('uuid'),'immutable');
+					app.model.dispatchThis('immutable');
+					}
+				else	{} //validateForm handles displaying errors.
+				
+				},
+
+//executed when the download button for a file is clicked.
+			adminTicketFileGetExec : function($ele,p)	{
+				p.preventDefault();
+				var ticketID = $ele.closest(".ui-widget-anypanel").data('ticketid');
+				$ele.button('disable');
+				if(ticketID)	{
+					$(document.body).showLoading({'message':'Fetching file contents'});
+					app.model.addDispatchToQ({
+						'_cmd':'adminTicketFileGet',
+						'ticketid' : ticketID,
+						'remote' : $ele.closest('tr').data('remote'),
+						'base64' : 1,
+						'_tag':	{
+							'callback':'fileDownloadInModal',
+							'datapointer':'adminTicketFileGet',
+							'jqObj' : $(document.body), //used for hideLoading
+							'button' : $ele //used to re-enable the download button
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else	{
+					$ele.parent().anymessage({"message":'In admin_support.e.admiNTicketFileGetExec, unable to ascertain ticket ID.','gMessage':true});
+					}
+				},
+
+			adminTicketLastUpdateShow : function($ele,p)	{
+
+var
+	$tr = $ele.closest('tr'),
+	ticketID = $tr.data('id');
+
+$tr.closest('tbody').showLoading({'message':'Retrieving last message for ticket '+ticketID});
+app.model.addDispatchToQ({
+	'_cmd':'adminTicketDetail',
+	'ticketid':ticketID,
+	'_tag':	{
+		'datapointer' : 'adminTicketDetail|'+ticketID,
+		'callback':function(rd){
+			$tr.closest('tbody').hideLoading();
+			if(app.model.responseHasErrors(rd)){
+				$('#globalMessaging').anymessage({'message':rd});
+				}
+			else	{
+				$ele.off('click.showTicketLastUpdate').removeClass('lookLikeLink');
+				if(app.data[rd.datapointer] && app.data[rd.datapointer]['@FOLLOWUPS'] && app.data[rd.datapointer]['@FOLLOWUPS'].length)	{
+					$tr.after("<tr class='hideInMinimalMode'><td class='alignRight'><span class='ui-icon ui-icon-arrowreturnthick-1-e'><\/span><\/td><td colspan='7'><pre class='preformatted'>"+app.data[rd.datapointer]['@FOLLOWUPS'][(app.data[rd.datapointer]['@FOLLOWUPS'].length - 1)].txt+"<\/pre><\/td><\/tr>"); //responses are in chronological order, so zero is always the first post.
+					}
+				else	{} //no followups. "shouldn't" get here cuz link won't appear if there an update hasn't occured.
+				}
+			}
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
+
+				
+				},
+
+			adminTicketDetailShow : function($ele,p)	{
+
+				var
+					ticketID = $ele.closest("[data-id]").data('id'),
+					uuid = $ele.closest("[data-id]").data('uuid');
+				if(ticketID && uuid)	{
+
+					$panel = app.ext.admin.i.DMIPanelOpen($ele,{
+						'templateID' : 'supportTicketDetailTemplate',
+						'panelID' : 'ticket_'+ticketID,
+						'header' : 'Edit Ticket: '+ticketID
+						});
+
+					app.ext.admin_support.u.loadTicketContent($panel,ticketID,uuid,'mutable');
+					app.model.dispatchThis('mutable');
+
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_support.e.adminTicketDetailShow, unable to ascertain ticketID ["+ticketID+"] and/or UUID ["+uuid+"], both of which are required.","gMessage":true});
+					}
+				},
+
+
+//used in the support utilites.
+			ping : function($btn)	{
+				$btn.button();
+				$btn.off('click.ping').on('click.ping',function(){
+					var start = new Date().getTime();
+app.model.addDispatchToQ({
+	'_cmd':'ping',
+	'_tag':	{
+		'callback':function(rd){
+if(app.model.responseHasErrors(rd)){
+	$('#platformInformation').anymessage({'message':rd});
+	}
+else	{
+	var end = new Date().getTime();
+	alert("Pong! took "+(end - start) / 1000+" seconds")
+	}
+			}
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
+					});
+				},
+
+
+
+
+/***************			WEBDOC 			******************/
+
+
 
 			execHelpDetailEdit : function($btn)	{
 				$btn.button();
@@ -451,23 +621,19 @@ var admin_support = function() {
 					});
 				}, //execHelpSearch
 
-//this event is used both in create and edit.
-			showFileAttachmentModal : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-circle-plus"}});
-				$btn.off('click.showFileAttachmentModal').on('click.showFileAttachmentModal',function(event){
-					event.preventDefault();
-					var $panelContents = $(this).closest('.ui-widget-content'); //in create, the dialog body get this same class, so the selector works in both places.
-					if($panelContents && $panelContents.data('ticketid') && $panelContents.data('uuid'))	{
-						app.ext.admin_support.a.showFileUploadInModal($panelContents.data('ticketid'),$panelContents.data('uuid')); 
-						}
-					else if($panelContents)	{
-						$btn.parent().anymessage({'message':"In admin_support.e.showFileAttachmentModal, unable to determine ticketid ["+$panelContents.data('ticketid')+"] and/or uuid ["+$panelContents.data('uuid')+"]",'gMessage':true});
-						}
-					else	{
-						$btn.parent().anymessage({'message':"In admin_support.e.showFileAttachmentModal, unable to locate panelContents container",'gMessage':true});
-						}
-					});
-				}, //showFileAttachmentModal
+
+
+//uses new delegated events model.
+			showHelpDocInDialog : function($ele,p)	{
+				var docID = $ele.data('docid');
+				if(docID)	{
+					app.ext.admin_support.a.showHelpDocInDialog(docID);
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_support.e.showHelpDetailInDialog, unable to determine docID.','gMessage':true});
+					}
+				},
+
 
 //used on a button in the search interface. allows merchant to open the doc in a dialog, for portability.
 //button should be hidden when webdoc itself opened in dialog.
@@ -527,110 +693,14 @@ app.model.dispatchThis('mutable');
 						}
 					});
 				
-				},
-
-			showTicketLastUpdate : function($ele)	{
-				if($ele.text().charAt(0) == '0')	{} //value will be 00:00: etc if no update has occured.
-				else	{
-					$ele.off('click.showTicketLastUpdate').on('click.showTicketLastUpdate',function(){
-						var $tr = $ele.closest('tr'),
-						ticketID = $tr.data('id');
-						
-						$ele.addClass('lookLikeLink');
-						$tr.closest('tbody').showLoading({'message':'Retrieving last message for ticket '+ticketID});
-						app.ext.admin.calls.adminTicketDetail.init(ticketID,{'callback':function(rd){
-							$tr.closest('tbody').hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								$('#globalMessaging').anymessage({'message':rd});
-								}
-							else	{
-								$ele.off('click.showTicketLastUpdate').removeClass('lookLikeLink');
-								if(app.data[rd.datapointer] && app.data[rd.datapointer]['@FOLLOWUPS'] && app.data[rd.datapointer]['@FOLLOWUPS'].length)	{
-									$tr.after("<tr class='hideInMinimalMode'><td class='alignRight'><span class='ui-icon ui-icon-arrowreturnthick-1-e'><\/span><\/td><td colspan='7'><pre class='preformatted'>"+app.data[rd.datapointer]['@FOLLOWUPS'][(app.data[rd.datapointer]['@FOLLOWUPS'].length - 1)].txt+"<\/pre><\/td><\/tr>"); //responses are in chronological order, so zero is always the first post.
-									}
-								else	{} //no followups. "shouldn't" get here cuz link won't appear if there an update hasn't occured.
-								}
-							}},'mutable');
-						app.model.dispatchThis('mutable');
-						});
-					}
-				}, //showTicketLastUpdate
-
-			showTicketCreate : function($btn)	{
-				$btn.button();
-				$btn.off('click.showTicketCreate').on('click.showTicketCreate',function(event){
-					event.preventDefault();
-					var $target = $("<div \/>",{'title':'Create a new support ticket'}).appendTo('body');
-					$target.anycontent({data:{},'templateID':'supportTicketCreateTemplate'});
-					$target.data({'ticketid':'0','uuid':app.u.guidGenerator()}); //necessary for file attachment.
-					$target.dialog({'width':'75%','height':500});
-					app.u.handleAppEvents($target,{'$context':$btn.closest("[data-app-role='dualModeList']")});
-					});
-				}, //showTicketCreate
-
-			showTicketDetail : function($btn)	{
-
-				$btn.button({icons: {primary: "ui-icon-pencil"},text: false}); //ui-icon-pencil
-				$btn.off('click.showTicketDetail').on('click.showTicketDetail',function(event){
-					event.preventDefault();
-//					app.u.dump("BEGIN admin_user.e.bossUserUpdate click event");
-
-					var $target = $btn.closest("[data-app-role='dualModeContainer']").find("[data-app-role='dualModeDetail']").first(),
-					$tr = $btn.closest('tr'),
-					ticketID = $tr.data('id'),
-					uuid = $tr.data('uuid');
-
-//					app.u.dump(" -> user object["+index+"]: "); app.u.dump(user);
-					if(ticketID && uuid)	{
-					//see bossUserCreateUpdateSave app event to see what usermode is used for.
-
-						var panelID = app.u.jqSelector('','ticketDetail_'+ticketID),
-						$panel = $("<div\/>").data({'ticketid':ticketID, 'uuid':uuid}).hide().anypanel({
-							'header':'Ticket: '+ticketID,
-							'templateID':'supportTicketDetailTemplate',
-						//	'data':user, //data not passed because it needs req and manipulation prior to translation.
-							'dataAttribs': {'id':panelID,'ticketid':ticketID,'uuid':uuid}
-							}).prependTo($target);
-						
-						app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']"),'detail');
-						
-						app.ext.admin.calls.adminTicketDetail.init(ticketID,{
-							'callback':function(rd){
-								if(app.model.responseHasErrors(rd)){
-									app.u.throwMessage(rd);
-									}
-								else	{		
-									$panel.anycontent({'datapointer':rd.datapointer});
-									app.u.handleAppEvents($panel);
-									}
-								}
-							},'mutable');
-							$panel.slideDown('fast',function(){$panel.showLoading({'message':'Fetching Ticket Details.'});});
-							app.model.dispatchThis('mutable');
+				}
 
 
-						}
-					else	{
-						$('#globalMessaging').anymessage({'message':"In admin_support.e.showTicketDetail, unable to determine ticketid ["+ticketid+"] and/or uuid ["+uuid+"]",'gMessage':true});
-						}
-//append detail children before changing modes. descreases 'popping'.
-					app.ext.admin.u.toggleDualMode($('#userManagerContent'),'detail');
 
-					});
 
-				}, //showTicketDetail
 
-			showTopicInputs : function($select)	{
-				app.u.dump(" -> event showTopicInputs has been added.");
-				$select.off('change.showTopicInputs').on('change.showTopicInputs',function(event){
-					event.preventDefault();
-					var $form = $select.closest('form');
-					$('fieldset.topicInputs',$form).hide(); //hide all the other topic input fields.
-					$("fieldset[data-app-role='"+$select.val()+"_inputs']",$form).show();
-					});
-				
-				}, //showTopicInputs
-
+/*
+not needed in support 2
 			tagAsPriority : function($ele)	{
 
 				$ele.off('change.tagAsPriorityHigh').on('change.tagAsPriorityHigh',function(){
@@ -646,7 +716,7 @@ app.model.dispatchThis('mutable');
 						}
 					});
 				} //tagAsPriority
-			
+*/			
 			}
 
 		} //r object.
