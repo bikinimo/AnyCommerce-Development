@@ -975,6 +975,14 @@ var store_bmo = function() {
 				return homeTime; 
 			},
 			
+			makeUTCTimeMS : function() {
+				var d = new Date();
+				var localTime = d.getTime();
+				var localOffset = d.getTimezoneOffset() * 6000;
+				var UTC = localTime + localOffset;
+				return UTC; 
+			},
+			
 			millisecondsToYYYYMMDDHH : function(dateObj) {
 				var year = dateObj.getFullYear();
 				var month = dateObj.getMonth()+1; 

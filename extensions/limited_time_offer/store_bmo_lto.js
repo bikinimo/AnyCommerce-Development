@@ -70,7 +70,8 @@ var store_bmo_lto = function() {
 				
 				if(prod && prod['user:limited_time_offer']) {
 					var prodTime = prod['user:limited_time_offer'];		
-					var d = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
+			//		var d = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
+					var d = new Date(app.ext.store_bmo.u.makeUTCTimeMS());
 					var nowTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d); //current time in Florida		
 					
 						//check if end of promotion has been reached, remove if it has.
@@ -105,7 +106,8 @@ var store_bmo_lto = function() {
 						//if the product has a limited time offer and any discount the displayed price needs to be changed
 					if(prod && prod['%attribs']['user:limited_time_offer'] && (prod['%attribs']['user:discount_15'] || prod['%attribs']['user:discount_20'] || prod['%attribs']['user:discount_25'])) {
 						prod = prod['%attribs'];
-						var d = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
+				//		var d = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
+						var d = new Date(app.ext.store_bmo.u.makeUTCTimeMS());
 						var nowTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d);
 						if(nowTime < prod['user:limited_time_offer']) {
 							if(prod['user:discount_15']) {
@@ -137,7 +139,8 @@ var store_bmo_lto = function() {
 				var endTime = new Date(app.ext.store_bmo.u.yyyymmdd2Pretty(prodTime));
 //				app.u.dump('End Time is: '); app.u.dump(endTime.getTime());
 				var cl = $('form[name="clock"]', $context);
-				var count=Math.floor((endTime.getTime()-app.ext.store_bmo.u.makeUTCFloridaTimeMS())/1000);
+		//		var count=Math.floor((endTime.getTime()-app.ext.store_bmo.u.makeUTCFloridaTimeMS())/1000);
+				var count=Math.floor((endTime.getTime()-app.ext.store_bmo.u.makeUTCTimeMS())/1000);
 				
 				if(count<=0) {
 					$('input[name=days]', cl).val('00');
