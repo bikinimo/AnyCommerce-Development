@@ -138,6 +138,7 @@ var store_bmo = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 		
+				//pass a class or id name, a string "class" for type if it's a class, any other for an id, and the parent tag as a $object
 			scrollTo : function(name, type, $parent) {
 				var type = type == 'class' ? '.' : '#'; //is the element a class or an id
 					
