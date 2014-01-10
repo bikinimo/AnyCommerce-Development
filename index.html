@@ -14,7 +14,7 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 var app = {vars:{
-	"release":"201318.20140108195600",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201318.20140109185200",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
@@ -203,7 +203,7 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
           <ul>
             <!-- <li><a href="#" onClick="return showContent('company',{'show':'contact'});">Contact Us</a></li> -->
             <li><a href="#!company?show=contact" data-onclick="#!company?show=contact">Contact Us</a></li>
-            <li><a href="#!company?show=privacy" data-onclick="#!company?show=privacy">Policies</a></li>
+            <li><a href="#!company?show=privacy" data-onclick="#!company?show=return">Policies</a></li>
             <li><a href="#!company?show=faq" data-onclick="#!company?show=faq">FAQ</a></li>
             <li><a href="#!" onClick="app.ext.store_bmo.a.showSizeChart(); return false">Sizing Guide</a></li>
           </ul>
@@ -1756,8 +1756,150 @@ if you change these, you should move them above this comment so that when you (o
 		</div>
 		
 		<div class='displayNone textContentArea' id='returnArticle'>
-			<h1>Return Policy</h1>
-			<div data-bind='var: profile(zoovy:return_policy); format:wiki; wikiFormats:myRIA;' id='returnContent'></div>
+			<h1 class='floatLeft'>Return Policy</h1>
+			<span class='floatRight pointer' onclick='app.ext.store_bmo.a.scrollTo("shippingPolicy","class",$(this).parent());'>Jump to Shipping Policy</span>
+			<!-- <div data-bind='var: profile(zoovy:return_policy); format:wiki; wikiFormats:myRIA;' id='returnContent'></div> -->
+		
+			<div class='returnContent clearfix'>
+				<p>
+					Customer Service is available by phone Mon, Tues, Thurs, and Fri from 
+					3&#58;00pm EST to 9&#58;00pm EST. If lines are busy please leave a message and we 
+					will return your call within 1 business day. &#40;321&#41; 441-3484. 
+				</p>
+				<p>
+					Email Support is always available. Emails are responded to within 48 hours. Support&#64;bikinimo.com.
+				</p>
+				<p>
+					We are more than happy to offer an exchange or refund for most items. We are only able 
+					to exchange an item once so if you need assistance with sizing or style please ask. 
+					We do not refund under any circumstances after an exchange. 
+				</p>
+				<p>
+					No Returns or Exchanges for the following items&#58;
+				</p>
+				<ul>
+					<li>
+						Thongs, G&#45;Strings, and Tongas &#45; &#40;Bottoms Only&#41;. These items do not come with 
+						hygienic liners. The sanitary condition of these items cannot be guaranteed 
+						once they leave our control. State and Federal Laws prohibit us from reselling 
+						these items when they are purchased via mail order.
+					</li>
+					<li>
+						&#34;Custom&#34; and &#34;Size 3X&#34; items. These are described as such in their listings. 
+						These products are only made when you order them. We cannot accept &#34;Made to Order&#34; 
+						products for return or exchange.
+					</li>
+					<li>
+						Items that are not in &#34;New Condition&#34; with all tags, labels, and hygienic liners intact.
+					</li>
+					<li>
+						Items that show signs of wear, or that have odors other than new fabric i.e. colognes, 
+						deodorants, body, soaps&#47;fabric softeners etc...
+					</li>
+				</ul>
+				<p>
+					All returns for refund or exchange require a RA &#40;return authorization&#41;. You may obtain an RA by contacting Customer Service. 
+				</p>
+				<p>
+					Return shipping cost are the responsibility of the buyer. 
+				</p>
+				<p>
+					Items returned without a RA on the shipping label are refused and returned to sender. 
+				</p>
+				<p>
+					No Returns or Exchanges after 30 days from date of sale of the item&#40;s&#41;. NO EXCEPTIONS please do not ask.
+				</p>
+				<p>
+					We highly recommend using a shipping service that provides Signature Confirmation for your return to 
+					insure we receive it, but at the bare minimum Delivery Confirmation should be used. We cannot be 
+					responsible for returns not received. 
+				</p>
+				<p>
+					EXCHANGES 
+				</p>
+				<ul>
+					<li>
+						Exchanges for sizing &#45; You need simply obtain an RA and inform us of the required size.
+					</li>
+					<li>
+						Exchanges for a different item &#45; These are a Return for Refund&#47;New Purchase. You must 
+						return the product for refund, and purchase the item you would like. We cannot issue credits 
+						or accept differential payments.
+					</li>
+					<li>
+						Exchanges are shipped within 3 business days of receipt of the return.
+					</li>
+					<li>
+						International orders must Return for Refund&#47;New Purchase for exchanges.
+					</li>
+				</ul>
+				<p>
+					REFUNDS
+				</p>
+				<ul>
+					<li>
+						Refunds are issued the Friday following the receipt of your return.
+					</li>
+					<li>
+						All returns for refund are subject to a 20&#37; restock charge. This covers the cost of labor 
+						and supplies involved in processing a return. This charge is deducted from your refund.
+					</li>
+					<li>
+						Refunds are processed back to your method of payment. We do not issue cash refunds, 
+						please do not ask.
+					</li>
+					<li>
+						We don&#39;t refund shipping charges except as provided in our &#34;On Time Guarantee&#34;. 
+						Please see our Shipping Policy.
+					</li>
+				</ul>
+				<p>
+					NOTE&#58; Items that are returned to us in an unacceptable condition will not be refunded or exchanged.
+				</p>
+			</div>
+			
+			<h1 class='shippingPolicy'>Shipping Policy</h1>
+			<div class='returnContent'>
+				<p>
+					Bikinimo will ship via USPS or UPS except for APO&#47;FPO in which case items are shipped via USPS Priority Mail. 
+				</p>
+				<p>
+					Items are shipped within five &#40;5&#41; business days of a confirmed order. 
+				</p>
+				<p>
+					Products that are described as &#34;Custom&#34; and sizes 3X may take an additional day to ship. 
+					The reason for this is because these products are made when ordered. Please keep this in 
+					mind when selecting your shipping method if you have time constraints. 
+				</p>
+				<p>
+					<b>Questions and Answers&#58;</b>
+				</p>
+				<p>
+					Q. Can you ship to P.O. Boxes&#63;
+				</p>
+				<p>
+					A. Yes. 
+				</p>
+				<ul>
+					<li>
+						Guarantee&#58; If for any reason your package does not arrive within the time frame specified, 
+						we will refund your shipping charges plus 10&#37; of your purchase price.
+					</li>
+				</ul>
+				<br>
+				<p>
+					<b>Questions&#63;</b>
+				</p>
+				<p>
+					Please email us at: Support&#64;bikinimo.com &#45; You will receive a reply within 24 to 48 hours or... 
+				</p>
+				<p>
+					Customer service is available to take your calls Mon, Tues, Thurs, and Fri between the hours of 
+					3&#58;00pm EST and 9&#58;00pm EST. You may reach our Customer Service Line at&#58 &#40;321&#41; 441&#45;3484. If lines 
+					are busy please leave a message and someone will return you call as soon as possible but no later 
+					than next business day.
+				</p>
+			</div>
 		</div>
 		
 		<div class='displayNone textContentArea' id='shippingArticle'>

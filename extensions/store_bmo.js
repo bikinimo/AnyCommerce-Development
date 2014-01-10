@@ -138,6 +138,12 @@ var store_bmo = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 		
+			scrollTo : function(name, type, $parent) {
+				var type = type == 'class' ? '.' : '#'; //is the element a class or an id
+					
+				$('html,body').animate({ scrollTop: $(type + name,$parent).offset().top }, 'slow'); //scroll to it
+			},
+		
 				//reads prices for each form set by setHiddenPrice renderFormat and changes the displayed price
 				//to the total for each piece selected. (price for top only if only top is selected, etc.)
 			changePriceDisplayed : function() {

@@ -1106,3 +1106,16 @@ label.break	{display:block; margin:0 0 4px 6px; color:#276B98; padding:0 0 0 23p
 .layeredSearch .slider-range {width:90%; margin:auto;}
 .layeredSearch .resetButton {height:auto; width:100%; color:#ffffff; background-color:#276B98; border:none; border-radius:5px; box-shadow:2px 2px 1px 1px #b1b1b1; font-family:electrolize;  font-weight:bold; padding:5px; margin:10px auto; display:block;}
 
+
+/*************************************************************************************
+returnArticle (also contains shipping info. for now)
+*************************************************************************************/
+
+#returnArticle {margin:0 50px; font-family:electrolize;}
+#returnArticle h1 {margin:10px 0; color:#666666;}
+#returnArticle ul li {list-style-type:disc; margin:10px 0 0 0;}
+.returnContent {margin:0 50px; font-family:ubuntu;} 
+.returnContent p {color:#000000; font-weight:normal; line-height:18px;}
+
+
+
