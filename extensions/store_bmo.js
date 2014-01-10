@@ -50,7 +50,11 @@ var store_bmo = function() {
 					app.ext.store_bmo.u.runHomeCarouselTab1($context);
 					app.ext.store_bmo.u.runHomeCarouselTab2($context);
 					app.ext.store_bmo.u.runHomeCarouselTab3($context);
-					app.ext.store_bmo.u.loadProductsAsList('.99-fashion-accessories');
+					
+					if(!$context.data('tab4Templated')){
+						app.ext.store_bmo.u.loadProductsAsList('.app-categories.accessories');
+						$context.data('tab4Templated',true);
+					}
 				}]);
 
 				
