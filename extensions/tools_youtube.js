@@ -63,7 +63,7 @@ var tools_youtube = function() {
 		
 				//animates height of parent element to reveal additional contents, while hiding action container
 			revealParent : function($tag) {			
-				app.u.dump('open ----------------------------');
+//				app.u.dump('open ----------------------------');
 				var oHeight = $tag.data('openheight');
 				$tag.css('display','none');
 				$('span',$tag).css('opacity','0');
@@ -74,7 +74,7 @@ var tools_youtube = function() {
 			
 				//animates height of parent element to hide additional contents, while hiding action container
 			compressParent : function($tag) {
-			app.u.dump('-> close');
+//				app.u.dump('-> close');
 				var cHeight = $tag.data('closeheight');
 				var ytVideoID = $tag.parent().children('[data-youtubeid]').attr('data-youtubeid');
 				app.u.dump(ytVideoID);
