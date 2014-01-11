@@ -1337,7 +1337,7 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 				var $parentDiv = $("<span \/>");
 				var $selectList = $("<select  class='prodOpt' onChange='app.ext.store_bmo.a.changePriceDisplayed($(this))'>").attr({"name":pogid});
 				var i = 0;
-				var len = pog.options.length;
+				var len = pog['@options'].length;
 
 				var selOption; //used to hold each option added to the select
 				var optionTxt;
@@ -1350,10 +1350,10 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 					}
 			//adds options to the select list.
 				while (i < len) {
-					optionTxt = pog['options'][i]['prompt'];
-					if(pog['options'][i]['p'])
-						optionTxt += pogs.handlePogPrice(pog['options'][i]['p']); //' '+pog['options'][i]['p'][0]+'$'+pog['options'][i]['p'].substr(1);
-					selOption = "<option value='"+pog['options'][i]['v']+"'>"+optionTxt+"<\/option>";
+					optionTxt = pog['@options'][i]['prompt'];
+					if(pog['@options'][i]['p'])
+						optionTxt += pogs.handlePogPrice(pog['@options'][i]['p']); //' '+pog['@options'][i]['p'][0]+'$'+pog['@options'][i]['p'].substr(1);
+					selOption = "<option value='"+pog['@options'][i]['v']+"'>"+optionTxt+"<\/option>";
 					$selectList.append(selOption);
 					i++;
 					}
