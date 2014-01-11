@@ -58,7 +58,8 @@ css files should be included before any .js file to ensure they are downloaded i
  
 
 <!-- ** 201338 -> jquery and jquery ui are pivotal to the functionality of the app. load them first -->
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<!-- *** LIGHTBOX EXTENSION/PLUGIN DOESN'T LIKE JQUERY 1.10.2, AND REQUIRES 1.8.3 (AS OF 1/10/2014) *** -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
 
 <!-- here so that plugins that may load before the jqueryui lib load without error -->
