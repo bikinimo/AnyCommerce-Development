@@ -149,7 +149,7 @@ var store_bmo_lto = function() {
 					$('input[name=secs]', cl).val('00');
 					
 					$('#deal',$context).removeClass('displayNone');
-					$('button','.perboxright',$context).addClass('displayNone');
+					$('button','.perboxright',$context).css('display','none');
 					document.getElementById("deal").style.display = 'block';
 				}
 				else {
