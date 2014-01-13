@@ -747,7 +747,7 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 				event.preventDefault();
 				var oldHash = window.location.hash;
 				_ignoreHashChange = true;
-				window.location.hash = oldHash; //reset hash to what it was before tab click. the prevent default 
+		//		window.location.hash = oldHash; //reset hash to what it was before tab click. the prevent default 
 				_ignoreHashChange = false;
 				self.reveal($(this).parent());
 				if($(this).data('app-click'))	{
