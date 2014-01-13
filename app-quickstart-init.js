@@ -205,7 +205,10 @@ app.u.initMVC = function(attempts){
 				app.u.dump("Preference Selected: " + preference);
 				if(save){
 					localStorage.appPreferences = preference;
-				} 
+				} else {
+					//don't save the preference to localStorage
+				}
+
 			}
 		//	$(".showWithPreferences").removeClass('displayNone');
 		//	$(".showSansPreferences").addClass('displayNone');
@@ -238,10 +241,7 @@ app.u.loadApp = function() {
 app.u.appInitComplete = function(P)	{
 	if(app.preferenceSelected = true) {
 		if(localStorage.appPreferences == "guest") {
-		app.u.dump('--> got to guest');
-			return false;
-			//app.storageFunctions.writeCookie('hasAccount','signedUp');
-			//return showContent('customer',{'show':'myaccount'});
+			localStorage.removeItem('appPreferences');
 		}
 		else if(localStorage.appPreferences == 'signMeUp') {
 			localStorage.removeItem('appPreferences');
