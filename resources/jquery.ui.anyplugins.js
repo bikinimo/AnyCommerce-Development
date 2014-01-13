@@ -806,7 +806,7 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 				}
 			else if(typeof $tab == 'object')	{
 				var dac = $tab.find('a').attr('href').substring(1); //data-anytab-content
-				document.location.hash = dac; //set hash. triggering click doesn't do this.
+			//	document.location.hash = dac; //set hash. triggering click doesn't do this.
 				this.tabs.find('.ui-state-active').removeClass('ui-state-active ui-tabs-active');
 				$tab.addClass('ui-state-active ui-tabs-active');
 
