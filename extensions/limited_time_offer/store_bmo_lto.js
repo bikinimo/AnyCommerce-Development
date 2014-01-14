@@ -72,13 +72,14 @@ var store_bmo_lto = function() {
 				var nowTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d);
 				
 				if(ltoStart > nowTime && ltoEnd < nowTime && lto != undefinded) {
+			//	if(data.value < nowTime) { //for testing until lto format is fixed in attribs (begin.end).
 						//the product is the limited time offer item for now, show it.
 					$tag.show();
 				}
 				else {
 					//is not yet or already past it's limited time offer status, hidden by default so do nada.
 				}
-				app.u.dump('--> got here.'); app.u.dump(ltoStart); app.u.dump(ltoEnd);
+		//		app.u.dump('--> got here.'); app.u.dump(ltoStart); app.u.dump(ltoEnd);
 			},
 			
 				//checks promo end date/time against current date/time. Deletes item to show next if promo is over,
