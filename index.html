@@ -74,8 +74,6 @@ css files should be included before any .js file to ensure they are downloaded i
 app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 </script>
 
-<script type="text/javascript" src="js/tabbing.js"></script>
-
 </head>
 
 
@@ -931,33 +929,22 @@ return false;
 				| <a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;">Add to Wishlist</a> 
 			</menu>
 			<table width="97%" border="0" cellspacing="0" cellpadding="0">
-			<tr>
-				<td colspan='2' class="tabbedProductContentTD"><!--
-				the tabs are built in an onComplete.  ID's are added based on sku AND index, so the index (order) of the tabs MUST match the order of the tabContent divs
-				or the tab clicked won't open the right content.
-				It's done this way because ID's hard coded into template are bad mojo (templates are recycled) and because using data-binds to add id's caused some serious issues
-				-->
-					<div class="tabPaging">
-						<ul>
-							<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a id="href_featured" href="#prodFeatures" onClick="toggle_div('featured');" class="active" title=""><span>Features</span></a></li>
-							<li class='prodReviewsTab'><a id="href_Reviews" href="#prodReviews" onClick="toggle_div('Reviews');" class="" title=""><span>Reviews</span></a></li>
-						</ul>
-						<!-- Repeat Section Start Here -->
-						<div class="tabingcontent">
-							<div id="featured">
-								<div class='tabOfFeatures' data-bind='var: product(zoovy:prod_features); format:wiki; wikiFormats:myRIA;'></div>
-							</div>
-							<div id="Reviews">
-								<div class='clearfix alignRight'>
-									<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'><img src="images/write_review.gif" alt="Write Review" title="Write Review" /></button>
-								</div>
-								<ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;"></ul>
-							</div>
+				<tr>
+					<td colspan='2' class="tabbedProductContentTD prodPageTabs">
+						<div class="tabPaging">
+							<ul>		
+								<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href='#prodfeatures'><span>Features</span></a></li>
+								<li class='prodReviewsTab'><a href='#prodreviews'><span>Reviews</span></a></li>
+							</ul>
 						</div>
-					<!-- Repeat Section Close Here -->
-					</div>
-				</td>
-			</tr>
+						<div class="tabingcontent" data-anytab-content='prodfeatures'>
+							<div class='tabOfFeatures' data-bind='var: product(zoovy:prod_features); format:wiki; wikiFormats:myRIA;'></div>
+						</div>
+						<div class="tabingcontent" data-anytab-content='prodreviews'>
+							<button class='ui-button-text ui-button ui-state-default ui-corner-all floatRight' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'><img src="images/write_review.gif" alt="Write Review" title="Write Review" /></button>
+						</div>
+					</td>
+				</tr>
 			</table>
 		</td>
 		

@@ -658,6 +658,9 @@ NOTES
 							$parent.anycontent({'templateID':P.templateID,'translateOnly':true,'datapointer':"appProductGet|"+P.pid});
 /*bmo*/						app.ext.tools_youtube.u.youtubeIframe($parent);
 /*bmo*/						$('.prodViewerContainer','.quickVModal').animate({'opacity':'1'},500);  //fade product into view
+							if(!$('.tabbedProductContentTD','.quickVModal').hasClass('anytabs')){
+								$('.tabbedProductContentTD','.quickVModal').addClass('anytabs').anytabs();
+							}
 							//app.ext.store_bmo.u.loadMatchingProduct(P.pid, $('.match_'+app.data["appProductGet|"+P.pid].pid) );
 							}
 						}});

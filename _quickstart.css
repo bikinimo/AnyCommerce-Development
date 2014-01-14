@@ -754,18 +754,19 @@ ul#topnav li span ul li a:hover{color:#34719e; text-decoration:none;}
  	list-style-type:none;
 	margin:0px 0 0px; padding:0px;
  }
-.tabPaging ul li {
+.tabPaging ul li, .tabPaging .ui-tabs-nav li.prodFeaturesTab, .tabPaging .ui-tabs-nav li.prodReviewsTab, .tabPaging .ui-tabs-nav li.ui-tabs-active.ui-state-default {
 	float:left;
-	margin:0px;
+	margin:0 6px 0 0 !important;
 	padding:0px;
+	border:none;
 }
-.tabPaging ul li a {
+.tabPaging ul li a, .ui-tabs-nav li.prodFeaturesTab a, .ui-tabs-nav li.prodReviewsTab a {
 	float:left;
 	font:600 15px 'Source Sans Pro', serif;
 	color:#ffffff;
 	background:url(images/tab-off-bg_1x22.jpg) repeat-x;
-	padding:1px 20px;
-	margin:0 6px 0 0;
+	padding:1px 20px !important;
+	margin:0;
 	text-decoration:none;
 	cursor:pointer;
 	-webkit-border-top-left-radius: 5px;
@@ -776,11 +777,11 @@ ul#topnav li span ul li a:hover{color:#34719e; text-decoration:none;}
 	border-top-right-radius: 5px;  
  }
 
-.tabPaging ul li a:hover {
+.tabPaging ul li a:hover, .ui-tabs-nav li.ui-state-active a:hover {
 	background:url(images/taboff-bg.gif) repeat-x;
 }
-.tabPaging ul li a.active {
-	color:#fff;
+.tabPaging ul li a.active, .ui-tabs-nav li.ui-state-active a, .ui-tabs-nav li.ui-state-active a:hover {
+	color:#ffffff !important;
 	background:url(images/tabonbg.gif) repeat-x;
 	-webkit-border-top-left-radius: 5px;
 	-webkit-border-top-right-radius: 5px;
@@ -789,12 +790,16 @@ ul#topnav li span ul li a:hover{color:#34719e; text-decoration:none;}
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
 }
-.tabingcontent{ width:96%; float:left; padding:2%; border:#b2b2b2 solid 1px; -webkit-border-radius: 10px;
--webkit-border-top-left-radius: 0;
--moz-border-radius: 10px;
--moz-border-radius-topleft: 0;
-border-radius: 10px;
-border-top-left-radius: 0;}
+
+.prodPageTabs.tabbedProductContentTD .ui-widget-content {border:none;}
+.prodPageTabs.tabbedProductContentTD .ui-widget-content .tabingcontent.ui-tabs-panel {border:#b2b2b2 solid 1px;} 
+.tabingcontent.ui-tabs-panel { width:96%; float:left; padding:2%; -webkit-border-radius: 10px;
+	-webkit-border-top-left-radius: 0;
+	-moz-border-radius: 10px;
+	-moz-border-radius-topleft: 0;
+	border-radius: 10px;
+	border-top-left-radius: 0;
+}
 .tabingcontent ul{list-style-type:none; margin:0px; padding:0 0 0 20px;}
 .tabingcontent ul li{height:auto; width:90%; list-style-type:disc; clear:both;}
 .tabingcontent .tabOfFeatures .clear {height:15px; width:100%; margin:0 0 15px 0; border-bottom:1px solid #999999; clear:both;}
