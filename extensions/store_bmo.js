@@ -108,7 +108,11 @@ var store_bmo = function() {
 					var dataObj = {};
 					var matchPrice = app.data[rd.datapointer]['%attribs']['zoovy:base_price'];
 					var origPrice = rd.price;
-
+					
+					if(app.data[rd.datapointer]['%attribs']['user:limited_time_offer']) {
+						dataObj.lto = app.data[rd.datapointer]['%attribs']['user:limited_time_offer'];
+					}
+					
 					dataObj.combinedTotal = Number(origPrice) + Number(matchPrice);
 					dataObj.pid = app.u.makeSafeHTMLId(rd.datapointer.split('|')[1]);
 					rd.$container.anycontent({"templateID":rd.loadsTemplate,"data":dataObj});

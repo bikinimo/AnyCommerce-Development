@@ -653,7 +653,9 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 	<div id='matchingPriceTemplate'>
 		<div data-bind='var:product(pid); format:assignAttribute; attribute:data-pid;'>
 			<span data-bind='var:product(combinedTotal); format:money; currencySign: $;  hideZero:true; className:price; pretext:;'></span>
-			<div data-bind='var:product(combinedTotal); format:money; currencySign: $;  hideZero:true; className:reg; pretext:Regularly: ; noDiscount:1;'></div>
+			<div class='displayNone' data-bind='var:product(lto); format:isLTO; extension:store_bmo_lto;'>
+				<div data-bind='var:product(combinedTotal); format:money; currencySign: $;  hideZero:true; className:reg; pretext:Regularly: ; noDiscount:1;'></div>
+			</div>
 		</div>
 	</div>
 	

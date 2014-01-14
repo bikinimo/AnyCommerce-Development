@@ -62,6 +62,24 @@ var store_bmo_lto = function() {
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
+		
+				//Makes sure item's lto date is not before or after now.
+				//limite-time-offer attrib must be passed in, and be in the format begin.end: "yyyymmddhh.yyyymmddhh"
+			isLTO : function($tag, data) {
+				var ltoStart = data.value.split('.')[0];
+				var ltoEnd = data.value.split('.')[1];
+				var d = new Date(app.ext.store_bmo.u.makeUTCTimeMS());
+				var nowTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d);
+				
+				if(ltoStart > nowTime && ltoEnd < nowTime && lto != undefinded) {
+						//the product is the limited time offer item for now, show it.
+					$tag.show();
+				}
+				else {
+					//is not yet or already past it's limited time offer status, hidden by default so do nada.
+				}
+				app.u.dump('--> got here.'); app.u.dump(ltoStart); app.u.dump(ltoEnd);
+			},
 			
 				//checks promo end date/time against current date/time. Deletes item to show next if promo is over,
 				//calls countdown() to show timer on item if promo isn't over.
