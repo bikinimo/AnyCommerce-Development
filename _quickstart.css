@@ -390,6 +390,8 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 #prodlistChildren li	{width:75px; height:120px; overflow:hidden; margin-left:0;}
 
 .customATCForm, .standardATCForm	{margin-bottom:24px;}
+.customATCForm input[name="qty"], .standardATCForm input[name="qty"] {width:25px; text-align:center;}
+.customATCForm input[name="qty"].qtyChanged.ui-state-highlight, .standardATCForm input[name="qty"].qtyChanged.ui-state-highlight {color:#ffffff; font-weight:bold;}
 .prodViewerAddToCartForm fieldset	{margin:0 0 12px 0; padding:0;}
 .variation > label:after	{content:":"; padding-right:12px;} /* applies to first label in a group. so no impact on radio labels */
 
