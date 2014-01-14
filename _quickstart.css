@@ -779,10 +779,10 @@ ul#topnav li span ul li a:hover{color:#34719e; text-decoration:none;}
 	border-top-right-radius: 5px;  
  }
 
-.tabPaging ul li a:hover, .ui-tabs-nav li.ui-state-active a:hover {
+.prodPageTabs .tabPaging ul li a:hover, .prodPageTabs .ui-tabs-nav li.ui-state-active a:hover {
 	background:url(images/taboff-bg.gif) repeat-x;
 }
-.tabPaging ul li a.active, .ui-tabs-nav li.ui-state-active a, .ui-tabs-nav li.ui-state-active a:hover {
+.prodPageTabs .tabPaging ul li a.active, .prodPageTabs .ui-tabs-nav li.ui-state-active a, .prodPageTabs .ui-tabs-nav li.ui-state-active a:hover {
 	color:#ffffff !important;
 	background:url(images/tabonbg.gif) repeat-x;
 	-webkit-border-top-left-radius: 5px;
