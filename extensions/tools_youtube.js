@@ -122,18 +122,27 @@ var tools_youtube = function() {
 								frameborder		: 0,
 								alowfullscreen	: 1,
 								vq				: 'hd1080'
+							},
+							events		: {
+								'onStateChange'	: app.ext.tools_youtube.u.onPlayerStateChange()
 							}
-							});
-						}
+						});
+			//			app.ext.tools_youtube.vars.players[ytVideoID].addEventListener('onStateChange','app.ext.tools_youtube.u.onPlayerStateChange()');
+					}
 					
 					else {
 						app.u.dump('tools_youtube did not find a video for this item')
 					}
 				});
 			},
+			
+			onPlayerStateChange : function(event) {
+				app.u.dump('This is the state change:'); app.u.dump(event);
+			},
+			
 			playVideo : function(event){
 				event.target.playVideo();
-				}
+			}
 		
 		}, //u [utilities]
 
