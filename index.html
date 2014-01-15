@@ -316,6 +316,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<div class="bannerright">
 		<!--		<div class="bannerright1"><img src="images/limit_topcarv.gif" alt="" align="top" /></div> -->
 				<div class="bannerright2">
+					<div data-bind='var:list($limited-time-offer.@products); format:defaultLTO; extension:store_bmo_lto;'></div>
 					<h1>Limited Time Offers</h1>
 		<!--			<div class="perbox limitedOffer" data-bind="var:list($limited-time-offer.@products); format:getLimitedList; extension:store_bmo_lto;"> <!-- limitedTimeOffersTemplate is loaded here -->
 					<div class="perbox limitedOffer" data-bind="var: list($limited-time-offer.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: limitedTimeOffersTemplate; withReviews:1; items_per_page: 25;  withVariations:1; withInventory:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'> <!-- limitedTimeOffersTemplate is loaded here -->	

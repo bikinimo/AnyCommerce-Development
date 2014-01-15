@@ -20,6 +20,10 @@
 var store_bmo_lto = function() {
 	var theseTemplates = new Array('');
 	var r = {
+	
+		vars : {
+			defaultLTO : 0
+		},
 
 	
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -62,6 +66,11 @@ var store_bmo_lto = function() {
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
+				
+				//gets last item in $limited-time-offer and sets an extension var to be read in countdownCheck()
+			defaultLTO : function($tag,data) {
+				app.ext.store_bmo_lto.vars.defaultLTO = data.value[data.value.length - 1];
+			},
 		
 				//Makes sure item's lto date is not before or after now.
 				//limite-time-offer attrib must be passed in, and be in the format begin.end: "yyyymmddhh.yyyymmddhh"
@@ -86,6 +95,7 @@ var store_bmo_lto = function() {
 				//calls countdown() to show timer on item if promo isn't over.
 			countdownCheck : function($tag, data) {
 				var prod = data.value['%attribs'];
+				var pid = app.u.makeSafeHTMLId(data.value.pid);
 				
 				if(prod && prod['user:limited_time_offer']) {
 					var prodTime = prod['user:limited_time_offer'];		
@@ -93,9 +103,14 @@ var store_bmo_lto = function() {
 					var d = new Date(app.ext.store_bmo.u.makeUTCTimeMS());
 					var nowTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d); //current time in Florida		
 					
+						//all offers are past, so show the last item w/ "this offer over" message.
+					if (prodTime <= nowTime && pid == app.ext.store_bmo_lto.vars.defaultLTO) {
+						app.u.dump('All limited time offers have passed, list needs repopulating');
+						app.ext.store_bmo_lto.u.countdown($tag.parent(),prodTime);
+					}
 						//check if end of promotion has been reached, remove if it has.
-					if(prodTime <= nowTime) {
-						app.u.dump('Ending date for'); app.u.dump(data.value.pid); app.u.dump('has already passed. Enter a later date in product record.');
+					else if(prodTime <= nowTime) {
+						app.u.dump('!! LTO date for '+pid+' has ended. Remove or edit product record.'); 
 						$tag.parent().remove();
 					}
 					else {
