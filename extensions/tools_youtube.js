@@ -128,17 +128,6 @@ var tools_youtube = function() {
 								'onStateChange'	: app.ext.tools_youtube.u.onPlayerStateChange
 							}
 						});
-													
-			//			function onPlayerReady(event) {
-			//				app.u.dump('The player is ready:'); app.u.dump(event);
-			//			}
-						
-			//			function onPlayerStateChange(event) {
-			//				app.u.dump('This is the state change:'); app.u.dump(event);
-			//			}
-							
-					//	app.ext.tools_youtube.vars.players[ytVideoID].addEventListener('onStateChange','app.ext.tools_youtube.u.onPlayerStateChange()');
-					//	app.u.dump('--> Youtube events'); app.u.dump(app.ext.tools_youtube.vars.players[ytVideoID].PlayerState);
 					}
 					
 					else {
@@ -157,11 +146,11 @@ var tools_youtube = function() {
 				if(event.data == 2) {app.u.dump('Video Paused');}
 				if(event.data == 0) {
 					app.u.dump('Video Ended');
-					var $iFrame = $('iframe', '#product-modal');
-					var endedVidId = $iFrame.attri('data-youtubeid');
-					$iFrame.before('<div data-youtubeid="'+endedVidId+'"></div>');
-					$iFrame.remove();
-					app.ext.tools_youtube.u.youtubeIframe($('#product-modal'));
+			//		var $iFrame = $('iframe', '#product-modal');
+			//		var endedVidId = $iFrame.attri('data-youtubeid');
+			//		$iFrame.before('<div data-youtubeid="'+endedVidId+'"></div>');
+			//		$iFrame.remove();
+			//		app.ext.tools_youtube.u.youtubeIframe($('#product-modal'));
 				}
 			},
 						
