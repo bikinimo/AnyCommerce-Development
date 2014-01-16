@@ -124,10 +124,21 @@ var tools_youtube = function() {
 								vq				: 'hd1080'
 							},
 							events		: {
-								'onStateChange'	: app.ext.tools_youtube.u.onPlayerStateChange()
+								'onReady'		: onPlayerReady,
+								'onStateChange'	: onPlayerStateChange
 							}
 						});
-			//			app.ext.tools_youtube.vars.players[ytVideoID].addEventListener('onStateChange','app.ext.tools_youtube.u.onPlayerStateChange()');
+													
+						function onPlayerReady(event) {
+							app.u.dump('The player is ready:'); app.u.dump(event);
+						}
+						
+						function onPlayerStateChange(event) {
+							app.u.dump('This is the state change:'); app.u.dump(event);
+						}
+							
+					//	app.ext.tools_youtube.vars.players[ytVideoID].addEventListener('onStateChange','app.ext.tools_youtube.u.onPlayerStateChange()');
+					//	app.u.dump('--> Youtube events'); app.u.dump(app.ext.tools_youtube.vars.players[ytVideoID].PlayerState);
 					}
 					
 					else {
@@ -136,10 +147,14 @@ var tools_youtube = function() {
 				});
 			},
 			
-			onPlayerStateChange : function(event) {
-				app.u.dump('This is the state change:'); app.u.dump(event);
-			},
+	//		onPlayerReady : function(event) {
+	//			app.u.dump('The player is ready:'); app.u.dump(event);
+	//		},
 			
+	//		onPlayerStateChange : function(event) {
+	//			app.u.dump('This is the state change:'); app.u.dump(event);
+	//		},
+						
 			playVideo : function(event){
 				event.target.playVideo();
 			}
