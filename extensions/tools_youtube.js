@@ -153,6 +153,16 @@ var tools_youtube = function() {
 			
 			onPlayerStateChange : function(event) {
 				app.u.dump('This is the state change:'); app.u.dump(event);
+				if(event.data == 1) {app.u.dump('Video Playing');}
+				if(event.data == 2) {app.u.dump('Video Paused');}
+				if(event.data == 0) {
+					app.u.dump('Video Ended');
+					var $iFrame = $('iframe', '#product-modal');
+					var endedVidId = $iFrame.attri('data-youtubeid');
+					$iFrame.before('<div data-youtubeid="'+endedVidId+'"></div>');
+					$iFrame.remove();
+					app.ext.tools_youtube.u.youtubeIframe($('#product-modal'));
+				}
 			},
 						
 			playVideo : function(event){
