@@ -73,22 +73,21 @@ var store_bmo_lto = function() {
 			},
 		
 				//Makes sure item's lto date is not before or after now.
-				//limite-time-offer attrib must be passed in, and be in the format begin.end: "yyyymmddhh.yyyymmddhh"
+				//limited-time-offer attrib must be passed in, and be in the format begin.end: "yyyymmddhh.yyyymmddhh"
 			isLTO : function($tag, data) {
-				var ltoStart = data.value.split('.')[0];
-				var ltoEnd = data.value.split('.')[1];
+				var ltoStartTime = data.value.split('.')[0];
+				var ltoEndTime = data.value.split('.')[1];
 				var d = new Date(app.ext.store_bmo.u.makeUTCTimeMS());
 				var nowTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d);
 				
-				if(ltoStart > nowTime && ltoEnd < nowTime && lto != undefinded) {
-			//	if(data.value < nowTime) { //for testing until lto format is fixed in attribs (begin.end).
+				if(ltoStartTime < nowTime && ltoEndTime > nowTime && ltoStartTime && ltoEndTime) {
 						//the product is the limited time offer item for now, show it.
 					$tag.show();
 				}
 				else {
 					//is not yet or already past it's limited time offer status, hidden by default so do nada.
 				}
-		//		app.u.dump('--> got here.'); app.u.dump(ltoStart); app.u.dump(ltoEnd);
+		//		app.u.dump('--> got here.'); app.u.dump(ltoStartTime); app.u.dump(ltoEndTime);
 			},
 			
 				//checks promo end date/time against current date/time. Deletes item to show next if promo is over,
@@ -98,24 +97,34 @@ var store_bmo_lto = function() {
 				var pid = app.u.makeSafeHTMLId(data.value.pid);
 				
 				if(prod && prod['user:limited_time_offer']) {
-					var prodTime = prod['user:limited_time_offer'];		
-			//		var d = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
-					var d = new Date(app.ext.store_bmo.u.makeUTCTimeMS());
-					var nowTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d); //current time in Florida		
+					var prodStartTime = prod['user:limited_time_offer'].split('.')[0];
+					var prodEndTime = prod['user:limited_time_offer'].split('.')[1];
 					
-						//all offers are past, so show the last item w/ "this offer over" message.
-					if (prodTime <= nowTime && pid == app.ext.store_bmo_lto.vars.defaultLTO) {
-						app.u.dump('All limited time offers have passed, list needs repopulating');
-						app.ext.store_bmo_lto.u.countdown($tag.parent(),prodTime);
-					}
-						//check if end of promotion has been reached, remove if it has.
-					else if(prodTime <= nowTime) {
-						app.u.dump('!! LTO date for '+pid+' has ended. Remove or edit product record.'); 
-						$tag.parent().remove();
+					if(prodEndTime){		
+				//		var d = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
+						var d = new Date(app.ext.store_bmo.u.makeUTCTimeMS());
+						var nowTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d); //current UTC time	
+							//all offers are past, so show the last item w/ "this offer over" message by passing the expired date to countdown.
+						if (prodEndTime < nowTime && pid == app.ext.store_bmo_lto.vars.defaultLTO) {
+							app.u.dump('All limited time offers have passed, list needs repopulating');
+							app.ext.store_bmo_lto.u.countdown($tag.parent(),prodEndTime);
+						}
+							//check if end of promotion has been reached, remove if it has.
+						else if(prodEndTime < nowTime) {
+							app.u.dump('!! LTO date for '+pid+' has ended. Remove or edit product record.'); 
+							$tag.parent().remove();
+						}	//check if promotion has not started yet, remove if not
+						else if(prodStartTime > nowTime) {
+							app.u.dump('LTO date for '+pid+' has not occured yet.'); 
+							$tag.parent().remove();
+						}
+						else {
+								//promotion is still good load countdown with it
+							app.ext.store_bmo_lto.u.countdown($tag.parent(),prodEndTime);
+						}
 					}
 					else {
-							//promotion is still good load countdown with it
-						app.ext.store_bmo_lto.u.countdown($tag.parent(),prodTime);
+						$tag.parent().remove();
 					}
 				}
 				else {
@@ -140,24 +149,28 @@ var store_bmo_lto = function() {
 						//if the product has a limited time offer and any discount the displayed price needs to be changed
 					if(prod && prod['%attribs']['user:limited_time_offer'] && (prod['%attribs']['user:discount_15'] || prod['%attribs']['user:discount_20'] || prod['%attribs']['user:discount_25'])) {
 						prod = prod['%attribs'];
-				//		var d = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
-						var d = new Date(app.ext.store_bmo.u.makeUTCTimeMS());
-						var nowTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d);
-						if(nowTime < prod['user:limited_time_offer']) {
-							if(prod['user:discount_15']) {
-								discount = 0.15;
-//								app.u.dump('--> DISCOUNT IS 15%')
-							}
-							else if(prod['user:discount_20']) {
-								discount = 0.2;
-//								app.u.dump('--> DISCOUNT IS 20%')
-							}
-							else if(prod['user:discount_25']) {
-								discount = 0.25;
-//								app.u.dump('--> DISCOUNT IS 25%')
-							}
-							else {
-//								app.u.dump('--> DISCOUNT IS 0%')
+						var prodStartTime = prod['user:limited_time_offer'].split('.')[0];
+						var prodEndTime = prod['user:limited_time_offer'].split('.')[1];
+						if(prodStartTime && prodEndTime) {
+					//		var d = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
+							var d = new Date(app.ext.store_bmo.u.makeUTCTimeMS());
+							var nowTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d);
+							if(nowTime < prodEndTime && nowTime > prodStartTime) {
+								if(prod['user:discount_15']) {
+									discount = 0.15;
+	//								app.u.dump('--> DISCOUNT IS 15%')
+								}
+								else if(prod['user:discount_20']) {
+									discount = 0.2;
+	//								app.u.dump('--> DISCOUNT IS 20%')
+								}
+								else if(prod['user:discount_25']) {
+									discount = 0.25;
+	//								app.u.dump('--> DISCOUNT IS 25%')
+								}
+								else {
+	//								app.u.dump('--> DISCOUNT IS 0%')
+								}
 							}
 						}
 					} //end discount if

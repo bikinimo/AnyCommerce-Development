@@ -586,7 +586,7 @@ var store_bmo = function() {
 				//if info is available will populate subject and body w/ prod name, mfg, & price
 				//if only name, subject will have name, body will be empty. If no content, no subject or body
 			bindMailto : function($tag, data){
-				app.u.dump('data.value:'); app.u.dump(data.value);
+				//app.u.dump('data.value:'); app.u.dump(data.value);
 				if(data.value['%attribs'] && data.value['%attribs']['zoovy:prod_name']) {
 					
 					var name = data.value['%attribs']['zoovy:prod_name'];
