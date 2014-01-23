@@ -744,11 +744,18 @@ var store_bmo = function() {
 					
 			addInfiniteSlider : function($tag,data)	{
 //				app.u.dump("BEGIN store_bmo.renderFormats.addInfiniteSlider: "+data.value);
+				var width = data.bindData.width;
+				var height = data.bindData.height;
 				
 				if(data.bindData.isElastic) { 
-					//app.u.dump(data.value);
-					if(data.value[1] && data.value[2]) { 
-						$tag.attr('data-images',data.value);
+					//app.u.dump(data.value.images);
+		// !!!!! TODO: THIS CONDITION NEEDS TO USE THE SQUARE ATTRIB (WHICH STILL NEEDS TO BE CREATED) !!!!
+		//			1+1==2 ? height = width : height = height; //make it square if the square attrib is there
+						//after height is determined to be square or not, add image in with the dimensions found.
+					$tag.append(app.u.makeImage({"name":data.value.images[0],"w":width,"h":height,"b":"FFFFFF","tag":1}));
+					
+					if(data.value.images[0] && data.value.images[1]) { 
+						$tag.attr('data-images',data.value.images);
 						$tag.attr('data-lastic',true);
 						$tag.on('mouseenter.myslider',app.ext.store_bmo.u.addPicSlider2UL);
 					}
@@ -757,6 +764,12 @@ var store_bmo = function() {
 				else if(typeof data.value == 'object') {
 					if(data.value['%attribs']) { 
 						var pdata = data.value['%attribs']; 
+		
+		// !!!!! TODO: THIS CONDITION NEEDS TO USE THE SQUARE ATTRIB (WHICH STILL NEEDS TO BE CREATED) !!!!
+		//				1+1 == 2 ? height = width : height = height; //make it square if the square attrib is there
+							//after height is determined to be square or not, add image in with the dimensions found.
+						$tag.append(app.u.makeImage({"name":pdata['zoovy:prod_image1'],"w":width,"h":height,"b":"FFFFFF","tag":1}));
+						
 						//if image 1 or 2 isn't set, likely there are no secondary images. stop.
 						if(app.u.isSet(pdata['zoovy:prod_image1']) && app.u.isSet(pdata['zoovy:prod_image2']))	{
 							$tag.attr('data-pid',data.value.pid); //no params are passed into picSlider function, so pid is added to tag for easy ref.

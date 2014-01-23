@@ -524,8 +524,8 @@ remember to NOT put the button inside the 'onclick' container or two events will
 			<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' id="selector" class='pointer prominh' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).attr('data-pid')});";>
 				<div data-bind="useParentData:true; format:hideFromList; extension:store_bmo;"></div>
 				<!-- <div class='prodThumbContainer floatLeft' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'> -->
-				<div class='prodThumbContainer floatLeft' data-bind='useParentData:true; format:addInfiniteSlider; extension:store_bmo;'> 
-					<img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='150' height='210' /> 
+				<div class='prodThumbContainer floatLeft' data-bind='useParentData:true; format:addInfiniteSlider; extension:store_bmo; width:150; height:210; sheight:150; '> 
+	<!--				<img src='blank.gif' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='150' height='210' /> --> 
 				</div>
 				
 				<div  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' >
@@ -628,8 +628,8 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 	<!--			<div class='prodThumbContainer floatLeft'  data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'> 
 					<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='150' height='210' /> 
 				</div>
-	--> 			<div class='prodThumbContainer floatLeft' data-bind='var:product(images); format:addInfiniteSlider; extension:store_bmo; isElastic:true;'> 
-					<img src='blank.gif' alt='' data-bind='var: product(images); format:imageURL; isElastic:1; bgcolor:ffffff;' width='150' height='210' /> 
+	--> 		<div class='prodThumbContainer floatLeft' data-bind='useParentData:true; format:addInfiniteSlider; extension:store_bmo; isElastic:true; width:150; height:210;'> 
+		<!--			<img src='blank.gif' alt='' data-bind='var: product(images); format:imageURL; isElastic:1; bgcolor:ffffff;' width='150' height='210' /> -->
 				</div>
 				<h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:truncText; numCharacters: 38;' style="min-height:15px; padding-top:5px; text-align:left;"></h5>
 				<div data-bind="var:product(matching_piece); format:hideIfSet;">
