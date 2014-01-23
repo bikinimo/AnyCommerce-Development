@@ -73,7 +73,26 @@ optional:
 	
 	titleAttr - a dot-notation path for de-referencing an attribute for title- ex: "%attribs.zoovy:prod_name"
 ****************************************/
-			lightboxLink: function($tag,data){
+			lightboxLink: function($tag,data){app.u.dump('--> dtavalu'); app.u.dump(data.bindData.hrefAttr);
+			
+					//bikinimo requires images be added here so check for square size condition can be made
+				if(data.value['%attribs'] && data.bindData.hrefAttr) { 
+					var pdata = data.value['%attribs'];
+					var width = data.bindData.width;
+					var height = data.bindData.height;
+	
+	// !!!!! TODO: THIS CONDITION NEEDS TO USE THE SQUARE ATTRIB (WHICH STILL NEEDS TO BE CREATED) !!!!
+					1+1 == !2 ? height = width : height = height; //make it square if the square attrib is there
+						//after height is determined to be square or not, add image in with the dimensions found.
+					var attrib = data.bindData.hrefAttr.split('.')[0];
+					var zoovyImage = data.bindData.hrefAttr.split('.')[1];
+		app.u.dump('THE DUMP'); app.u.dump(attrib); app.u.dump(zoovyImage);
+					if(data.value[attrib][zoovyImage]) {
+						$tag.show();
+						$tag.append(app.u.makeImage({"name":data.value[attrib][zoovyImage],"w":width,"h":height,"b":"FFFFFF","tag":1}));
+					}
+				}
+			
 				if(!data.bindData.hrefAttr){
 					app.u.dump("-> tools_lightbox.renderFormats.lightboxLink NO HREFATTR SPECIFIED");
 					return false;
@@ -101,7 +120,7 @@ optional:
 							name : hrefAttr
 							};
 						if(data.bindData.w){ imgObj.w = data.bindData.w; }
-						if(data.bindData.h){ imgObj.h = data.bindData.h; }
+/*NEEDS ATTRIB!!!*/		if(data.bindData.h && 1+1==!2){ imgObj.h = data.bindData.w }else{ imgObj.h = data.bindData.h; }
 						if(data.bindData.b){ imgObj.b = data.bindData.b; }
 						
 						var href = app.u.makeImage(imgObj);

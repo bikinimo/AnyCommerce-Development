@@ -370,7 +370,8 @@ PRODUCT DETAIL PAGE (productTemplate)
 .imageContainer	{width:10%; padding-right:24px;}
 .prodViewerContainer .prodThumbs	{margin:5px 0 0 0;}
 .prodViewerContainer .prodThumbs div	{float:left; margin:12px 12px 0 0;}
-.prodSmallImage {margin:0 10px 0 0; text-decoration:none;}
+.prodSmallImage {margin:0 4px; text-decoration:none;}
+.prodSmallImage img {margin:0 0 5px 0;}
 
 .prodSummaryContainer{width:90%; font-family:Arial, Helvetica, sans-serif;}
 .prodSummaryContainer h1{color: #54A7E1;
