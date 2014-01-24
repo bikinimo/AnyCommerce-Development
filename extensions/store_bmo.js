@@ -770,7 +770,7 @@ var store_bmo = function() {
 				else if(typeof data.value == 'object') {
 					if(data.value['%attribs']) { 
 						var pdata = data.value['%attribs'];	
-!
+						
 						pdata['user:is_square'] ? height = width : height = height; //make it square if the square attrib is there
 							//after height is determined to be square or not, add image in with the dimensions found.
 						$tag.append(app.u.makeImage({"name":pdata['zoovy:prod_image1'],"w":width,"h":height,"b":"FFFFFF","tag":1}));
