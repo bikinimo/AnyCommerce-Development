@@ -73,7 +73,7 @@ optional:
 	
 	titleAttr - a dot-notation path for de-referencing an attribute for title- ex: "%attribs.zoovy:prod_name"
 ****************************************/
-			lightboxLink: function($tag,data){app.u.dump('--> dtavalu'); app.u.dump(data.bindData.hrefAttr);
+			lightboxLink: function($tag,data){
 			
 					//bikinimo requires images be added here so check for square size condition can be made
 				if(data.value['%attribs'] && data.bindData.hrefAttr) { 
