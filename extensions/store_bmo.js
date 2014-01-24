@@ -748,25 +748,30 @@ var store_bmo = function() {
 				var height = data.bindData.height;
 				
 				if(data.bindData.isElastic) { 
-					//app.u.dump(data.value.images);
-		// !!!!! TODO: THIS CONDITION NEEDS TO USE THE SQUARE ATTRIB (WHICH STILL NEEDS TO BE CREATED) !!!!
-		//			1+1==2 ? height = width : height = height; //make it square if the square attrib is there
+					//app.u.dump(data.value);
+					data.value.is_square ? height = width : height = height; //make it square if the square attrib is there
 						//after height is determined to be square or not, add image in with the dimensions found.
-					$tag.append(app.u.makeImage({"name":data.value.images[0],"w":width,"h":height,"b":"FFFFFF","tag":1}));
-					
-					if(data.value.images[0] && data.value.images[1]) { 
-						$tag.attr('data-images',data.value.images);
-						$tag.attr('data-lastic',true);
-						$tag.on('mouseenter.myslider',app.ext.store_bmo.u.addPicSlider2UL);
+					if(data.value.images && data.value.images[0]) {
+						$tag.append(app.u.makeImage({"name":data.value.images[0],"w":width,"h":height,"b":"FFFFFF","tag":1}));
+						
+							//if more than one pic assigned add image slider
+						if(data.value.images[0] && data.value.images[1]) { 
+							$tag.attr('data-images',data.value.images);
+							$tag.attr('data-lastic',true);
+							$tag.on('mouseenter.myslider',app.ext.store_bmo.u.addPicSlider2UL);
+						}
+					}
+					else {	
+							//if image is not found this blank place-holder will help keep flow consistent
+						$tag.before($('<div style="width:'+width+'px; height:'+width+'px;"></div>'));
 					}
 				}
 				
 				else if(typeof data.value == 'object') {
 					if(data.value['%attribs']) { 
-						var pdata = data.value['%attribs']; 
-		
-		// !!!!! TODO: THIS CONDITION NEEDS TO USE THE SQUARE ATTRIB (WHICH STILL NEEDS TO BE CREATED) !!!!
-		//				1+1 == 2 ? height = width : height = height; //make it square if the square attrib is there
+						var pdata = data.value['%attribs'];	
+!
+						pdata['user:is_square'] ? height = width : height = height; //make it square if the square attrib is there
 							//after height is determined to be square or not, add image in with the dimensions found.
 						$tag.append(app.u.makeImage({"name":pdata['zoovy:prod_image1'],"w":width,"h":height,"b":"FFFFFF","tag":1}));
 						
