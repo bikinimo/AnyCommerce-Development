@@ -536,6 +536,10 @@ var store_bmo = function() {
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 		
+			test : function($tag,data) {
+				app.u.dump('--> TEST'); app.u.dump(data.value); 
+			},
+		
 				//checks for matching piece attrib in prod list item and sets sum of prices on list item if found. 
 			matchingBasePrice : function($tag, data) {
 				var basePrice = (data.bindData.isElastic) ? data.value.base_price/100 : data.value['%attribs']['zoovy:base_price'];
