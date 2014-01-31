@@ -75,7 +75,7 @@ optional:
 ****************************************/
 			lightboxLink: function($tag,data){
 			
-					//bikinimo requires images be added here so check for square size condition can be made
+					//bikinimo requires images be added here so check for square size condition can be made (that is why there is no <img> in index)
 				if(data.value['%attribs'] && data.bindData.hrefAttr) { 
 					var pdata = data.value['%attribs'];
 					var width = data.bindData.width;

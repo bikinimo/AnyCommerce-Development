@@ -20,7 +20,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"201346.20140124114800",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201346.20140131082200",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
@@ -787,6 +787,9 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 				</div> 
 			</div>
 			<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs' class='prodThumbs' align="center"> 
+				<div class='squareHider displayNone' data-bind='var:product(user:is_square); format:showIfSet;'> <!-- Only wants main image in thumbnails if is square image -->
+					<a class='prodSmallImage displayNone' data-bind='useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image1; width:92; height:145;'></a>
+				</div>
 				<a class='prodSmallImage displayNone' data-bind='useParentData:true; format:lightboxLink; extension:tools_lightbox; hrefAttr:%attribs.zoovy:prod_image2; groupingPrefix:prodPage_; groupingAttr:pid; w:500; h:750; width:92; height:145;'>
 	<!--				<img src='blank.gif' data-bind="var:product(zoovy:prod_image2); format:imageURL;" width='92' height='145' /> -->
 				</a>
