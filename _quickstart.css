@@ -723,9 +723,9 @@ ul#topnav li span ul li a:hover{color:#34719e; text-decoration:none;}
 .addtocartipro span{margin:0px; padding:0px; font-size:0px; border:0px !important; background:none !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
 .addtocartipro .ui-state-default{margin:0 0 0 33px;  border:none !important;background:none !important; display:none; /*padding:0px;  height:23px !important; width:83px !important;*/}
 .prominh{min-height:205px !important; text-align:left;}
-.clickab{margin:0px; padding:0px; font-size:26px; font-family:'Abel', serif; color:#276b98; text-align:center;}
-.clickab a{color:#276b98 !important; text-decoration:none;}
-.clickab a:hover{color:#333 !important; text-decoration:none;}
+.clickab{margin:0px; padding:0px; font-size:26px; font-family:'Abel', serif; color:#F05A24; text-align:center; font-weight:bold;}
+.clickab a{color:#F05A24 !important; text-decoration:none;}
+.clickab a:hover{color:#276b98 !important; text-decoration:none;}
 .ztitle2 {color: #666666; font-size: 14px;  font-weight: bold; margin:10px 0 0 0; font-family:'Ubuntu',serif;}
 
 .basePrice, .customBasePrice {color:#f05a24; font-size:15.5px !important;}
