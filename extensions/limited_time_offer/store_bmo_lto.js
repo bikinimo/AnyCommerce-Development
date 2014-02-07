@@ -89,8 +89,8 @@ var store_bmo_lto = function() {
 										if(app.ext.store_bmo_lto.u.isTheLTO(prod['%attribs']['user:limited_time_offer'])) {
 											var discount = app.ext.store_bmo_lto.u.qtyOfDiscountLTO(prod['%attribs']);
 											if(discount) {
-												app.u.dump('%LTO'+discount);
-												discount = '%LTO'+discount;
+												app.u.dump('LTO'+discount);
+												discount = 'LTO'+discount;
 				//COUPONS STILL NEED TO BE GENERATED...
 				//TO DO: ADD LOGIC TO BE SURE COUPON GENERATES CORRECT PRICING, AND MATCHES NUMBER OF ITEMS IT SHOULD BE APPLIED TO. 
 				//TO DO: ADD LOGIC TO REMOVE COUPON IF ITEM IS REMOVED (MAY BE BUILT INTO COUPON PER ERIC). 
@@ -101,10 +101,10 @@ var store_bmo_lto = function() {
 														$('#cartMessaging').anymessage({'message':rd})
 													}
 													else {
-														app.ext.orderCreate.u.handlePanel($('#cartTemplateForm'),'chkoutCartItemsList',['empty','translate','handleDisplayLogic','handleAppEvents']);
+													//	app.ext.orderCreate.u.handlePanel($('#cartTemplateForm'),'chkoutCartItemsList',['empty','translate','handleDisplayLogic','handleAppEvents']);
 													}
 												}});
-												app.ext.orderCreate.u.handleCommonPanels($('#cartTemplateForm'));
+												//app.ext.orderCreate.u.handleCommonPanels($('#cartTemplateForm'));
 												app.model.dispatchThis('immutable');
 											}
 											else {} //discount is 0, no coupon to add.
