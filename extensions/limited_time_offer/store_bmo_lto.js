@@ -214,7 +214,7 @@ var store_bmo_lto = function() {
 				else {
 //					app.u.dump('--> DISCOUNT IS 0%')
 				}	
-				app.u.dump('--> The discount: '); app.u.dump(discount);
+				
 				return discount;
 			},
 		
@@ -243,7 +243,7 @@ var store_bmo_lto = function() {
 					var discount = 0; //if no discount, multiply by 0 will keep price the same
 				
 						//if the product has a limited time offer and any discount the displayed price needs to be changed
-					if(prod && prod['%attribs']['user:limited_time_offer'] && (prod['%attribs']['user:discount_15'] || prod['%attribs']['user:discount_20'] || prod['%attribs']['user:discount_25'])) {
+					if(prod && prod['%attribs']['user:limited_time_offer'] && (prod['%attribs']['user:discount_10'] || prod['%attribs']['user:discount_15'] || prod['%attribs']['user:discount_20'] || prod['%attribs']['user:discount_25'])) {
 						prod = prod['%attribs'];
 						var prodStartTime = prod['user:limited_time_offer'].split('.')[0];
 						var prodEndTime = prod['user:limited_time_offer'].split('.')[1];
@@ -252,21 +252,7 @@ var store_bmo_lto = function() {
 							var d = new Date(app.ext.store_bmo.u.makeUTCTimeMS());
 							var nowTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d);
 							if(nowTime < prodEndTime && nowTime > prodStartTime) {
-								if(prod['user:discount_15']) {
-									discount = 0.15;
-	//								app.u.dump('--> DISCOUNT IS 15%')
-								}
-								else if(prod['user:discount_20']) {
-									discount = 0.2;
-	//								app.u.dump('--> DISCOUNT IS 20%')
-								}
-								else if(prod['user:discount_25']) {
-									discount = 0.25;
-	//								app.u.dump('--> DISCOUNT IS 25%')
-								}
-								else {
-	//								app.u.dump('--> DISCOUNT IS 0%')
-								}
+								discount = app.ext.store_bmo_lto.u.qtyOfDiscountLTO(prod) * 0.01;
 							}
 						}
 					} //end discount if
