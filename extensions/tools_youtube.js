@@ -110,7 +110,7 @@ var tools_youtube = function() {
 					var ytVideoID = $(this).attr('data-youtubeid');
 					app.u.dump(ytVideoID);
 					if(ytVideoID) {
-						app.u.dump('--> the video is'); //app.u.dump(app.ext.tools_youtube.vars.players[ytVideoID]);
+						//app.u.dump('--> the video is'); app.u.dump(app.ext.tools_youtube.vars.players[ytVideoID]);
 						app.ext.tools_youtube.vars.players[ytVideoID] = new YT.Player(this, {
 							height		: '171',
 							width		: '305',
@@ -134,7 +134,7 @@ var tools_youtube = function() {
 								//'onStateChange' : app.ext.tools_youtube.u.onPlayerStateChange
 							  }
 						});
-						app.u.dump('--> the video is'); app.u.dump(app.ext.tools_youtube.vars.players[ytVideoID]);
+						//app.u.dump('--> the video is'); app.u.dump(app.ext.tools_youtube.vars.players[ytVideoID]);
 					}
 					
 					else {

@@ -66,8 +66,61 @@ var store_bmo_lto = function() {
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
+		
+				//checks each item in the cart and adds correct coupon for item's LTO discount if it is the current LTO
+			addCouponLTO : function($tag, data) {
+				var products = [];
+					for(var index in data.value) {
+						if(data.value[index].product[0] != '%') {
+							products.push(data.value[index].product);
+						}
+					}
+					app.u.dump('--> LTO addCouponLTO'); app.u.dump(products);
+					var numRequests = 0;
+					for(var index in products) {
+						var _tag = {
+							'callback':function(rd) {
+								if(app.model.responseHasErrors(rd)) {
+									app.u.throwMessage(rd);
+								}
+								else {
+									var prod = app.data[rd.datapointer];
+									if(prod['%attribs'] && prod['%attribs']['user:limited_time_offer'] && (prod['%attribs']['user:discount_10'] || prod['%attribs']['user:discount_15'] || prod['%attribs']['user:discount_20'] || prod['%attribs']['user:discount_25'])) {
+										if(app.ext.store_bmo_lto.u.isTheLTO(prod['%attribs']['user:limited_time_offer'])) {
+											var discount = app.ext.store_bmo_lto.u.qtyOfDiscountLTO(prod['%attribs']);
+											if(discount) {
+												app.u.dump('%LTO'+discount);
+												discount = '%LTO'+discount;
+				//COUPONS STILL NEED TO BE GENERATED...
+				//TO DO: ADD LOGIC TO BE SURE COUPON GENERATES CORRECT PRICING, AND MATCHES NUMBER OF ITEMS IT SHOULD BE APPLIED TO. 
+				//TO DO: ADD LOGIC TO REMOVE COUPON IF ITEM IS REMOVED (MAY BE BUILT INTO COUPON PER ERIC). 
+				//TO DO: CHECK ON WHETHER handelPanel AND handleCommonPanels NEED TO BE USED. 
+													//add the discount to the cart. 
+												app.ext.cco.calls.cartCouponAdd.init(discount,{'callback':function(rd) {
+													if(app.model.responseHasErrors(rd)) {
+														$('#cartMessaging').anymessage({'message':rd})
+													}
+													else {
+														app.ext.orderCreate.u.handlePanel($('#cartTemplateForm'),'chkoutCartItemsList',['empty','translate','handleDisplayLogic','handleAppEvents']);
+													}
+												}});
+												app.ext.orderCreate.u.handleCommonPanels($('#cartTemplateForm'));
+												app.model.dispatchThis('immutable');
+											}
+											else {} //discount is 0, no coupon to add.
+										}
+										else {} //this item's LTO range doesn't include "now."
+									}
+									else {} //not an LTO item, no need to do any processing.
+								}
+							}
+						};
+						numRequests += app.ext.store_prodlist.calls.appProductGet.init({'pid':products[index]},_tag,'immutable');
+					}
+					if(numRequests > 0){app.model.dispatchThis('immutable');}
+			},
 				
-				//gets last item in $limited-time-offer and sets an extension var to be read in countdownCheck()
+				//gets last item in $limited-time-offer and sets an extension var to be read in countdownCheck().
 			defaultLTO : function($tag,data) {
 				app.ext.store_bmo_lto.vars.defaultLTO = data.value[data.value.length - 1];
 			},
@@ -138,6 +191,49 @@ var store_bmo_lto = function() {
 //utilities are typically functions that are executed by an event or action.
 //any functions that are recycled should be here.
 		u : {
+		
+				//checks the discount attrib assigned and returns a value to be used for the percentage discount.
+			qtyOfDiscountLTO : function(prod) {
+				var discount = false; //what is returned, level of discount or false if no discount
+				if(prod['user:discount_10']) {
+					discount = 10;
+//					app.u.dump('--> DISCOUNT IS 15%')
+				}
+				else if(prod['user:discount_15']) {
+					discount = 15;
+//					app.u.dump('--> DISCOUNT IS 15%')
+				}
+				else if(prod['user:discount_20']) {
+					discount = 20;
+//					app.u.dump('--> DISCOUNT IS 20%')
+				}
+				else if(prod['user:discount_25']) {
+					discount = 25;
+//					app.u.dump('--> DISCOUNT IS 25%')
+				}
+				else {
+//					app.u.dump('--> DISCOUNT IS 0%')
+				}	
+				app.u.dump('--> The discount: '); app.u.dump(discount);
+				return discount;
+			},
+		
+				//checks to see if item's LTO time falls into the current time, returns true if so.
+			isTheLTO : function(limited_time_offer) {
+				var r = false;
+				var ltoStartTime = limited_time_offer.split('.')[0];
+				var ltoEndTime = limited_time_offer.split('.')[1];
+				var d = new Date(app.ext.store_bmo.u.makeUTCTimeMS());
+				var nowTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d);
+				
+				if(ltoStartTime < nowTime && ltoEndTime > nowTime && ltoStartTime && ltoEndTime) {
+						//the product is the limited time offer item for now.
+					r = true;
+				}
+				else {}  //is not yet or already past it's limited time offer status.
+				
+				return r;
+			},
 		
 				//applies LTO discount to product price if it has one, and 
 			applyLTODiscount : function(pid, amount) {
