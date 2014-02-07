@@ -24,7 +24,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"201346.20140206222900",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201346.20140207121600",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
@@ -2269,7 +2269,7 @@ So the cart template should contain these two elements and the extension should 
 
 <form id='cartTemplateForm' action='#' onSubmit='return false'>
 
-<!-- <div data-bind="var:cart(@ITEMS); format:addCouponLTO; extension:store_bmo_lto;"></div> -->
+<div data-bind="var:cart(@ITEMS); format:addCouponLTO; extension:store_bmo_lto;"></div>
 
 <div class='cartStuffContainer'>
 	<ul id='cartStuffList' data-bind="var: cart(@ITEMS); format:stuffList; loadsTemplate:productListTemplateCart;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'></ul>
