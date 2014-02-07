@@ -445,6 +445,7 @@ var store_bmo = function() {
 			
 			showAccountCreate : function() {
 				$('#createaccountTemplate').dialog({'modal':'true','title':'Create Account','width':980,'height':500});
+				app.ext.store_bmo.u.setTime();
 			},
 			
 			showSizeChart : function() {
@@ -815,6 +816,15 @@ var store_bmo = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+		
+				//sets a date 30 days from current date on hidden input in acct. creation form to use as expiration for new acct gift card.
+			setTime : function() {
+				var d = new Date();
+				d.setDate(d.getDate()+30);
+				d = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d)
+				d = d.slice(0,-2);
+				$("input[name=time]",'#createaccountTemplate').val(d).attr("disabled",true);
+			},
 		
 			addRecentlyViewedItems : function() {
 			//	app.u.dump('store_bmo recentlyViewedItems has been run');

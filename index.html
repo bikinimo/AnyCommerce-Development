@@ -24,7 +24,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"201346.20140131082200",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201346.20140206222900",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
@@ -1601,6 +1601,7 @@ return false;
 					<div class="fieldM"><span class="field">Address</span> <input name='address1' type='text' size='30' placeholder='Address' class='textfadd' required='required' /> 
 					<input name='address2' type='text' size='30' placeholder='Address (Line 2)' class='textfadd1'/></div>
 					<div class="fieldM stateFix"><span class="field">City</span> <input name='city' type='text' size='30' placeholder='City' required='required' class='textfcity' /> 	
+						<input name="time" type="hidden" required="required">
 						<b>State</b> 
 						<div class='selectWrapperS'>
 							<select name='region' class='textfstate sprite'>
