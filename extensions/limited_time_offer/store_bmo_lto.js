@@ -68,7 +68,6 @@ var store_bmo_lto = function() {
 		renderFormats : {
 		
 			hideStuffListLTO : function($tag, data) {
-				app.u.dump('--> LTO stuff:'); app.u.dump(data.value);
 				if(data.value == '%LTO10' || data.value == '%LTO15' || data.value == '%LTO20' || data.value == '%LTO25') {
 					$tag.parent().addClass('ltoItem');
 				}
@@ -183,6 +182,16 @@ var store_bmo_lto = function() {
 //utilities are typically functions that are executed by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			
+				//checks the coupon field in checkout for entry of an LTO coupon. If it is, returns true to reject the entry in orderCreate:execCouponAdd.
+			preventCouponLTO : function(input) {
+				var r = false; //what is returned, true if coupon is LTO
+				input = input.toUpperCase();
+				if(input == 'LTO10' || input == 'LTO15' || input == 'LTO20' || input == 'LTO25') {
+					r = true;
+				}
+				return r;
+			},
 		
 				//checks the discount attrib assigned and returns a value to be used for the percentage discount.
 			qtyOfDiscountLTO : function(prod) {

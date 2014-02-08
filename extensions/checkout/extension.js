@@ -1431,8 +1431,12 @@ app.u.dump("BEGIN orderCreate.e.cartItemAddWithChooser (Click!)");
 					$form = $btn.closest('form'),
 					$input = $("[name='coupon']",$fieldset);
 					
-					$btn.button('disable');
+/*bmo*/				if(app.ext.store_bmo_lto.u.preventCouponLTO($input.val())) {
+/*bmo*/					$('.couponMessaging',$input.parent()).anymessage({'message':'This coupon cannot be added here.'});
+/*bmo*/					return;
+/*bmo*/				}
 					
+					$btn.button('disable');
 
 //update the panel only on a successful add. That way, error messaging is persistent. success messaging gets nuked, but coupon will show in cart so that's okay.
 				

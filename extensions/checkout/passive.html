@@ -289,6 +289,8 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<td><img class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL; defaultVar: product(%attribs.zoovy:prod_image1);' width='50' height='50' /></td>
 	<td>
 	<div class='prodName' data-bind='var: product(prod_name); format:text; defaultVar: description;'></div>
+	<!-- This data bind adds a class (ltoItem) to the li to hide/show certain elements for the LTO coupon -->
+	<div data-bind='var:product(sku); format:hideStuffListLTO; extension:store_bmo_lto;'></div>
 	<div class='stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 	<div class='prodLatency' data-bind='var:product(%attribs.zoovy:ship_latency); format:text; pretext:Normally ships in ; posttext: day(s);'></div>
 	<div class='prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>
@@ -336,6 +338,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:cco;'></div>
 
 	<div class='couponEntryContainer' data-app-role='couponContainer'>
+		<div class='couponMessaging'></div>
 		<label for='coupon'>Coupon/Promo Code:</label>
 		<input type='text' name='coupon' size='8'  data-app-event='orderCreate|addTriggerButtonClick' />
 		<button data-app-event="orderCreate|execCouponAdd" >add</button>
