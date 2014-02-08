@@ -75,7 +75,7 @@ var store_bmo_lto = function() {
 							products.push(data.value[index].product);
 						}
 					}
-					app.u.dump('--> LTO addCouponLTO'); app.u.dump(products);
+//					app.u.dump('--> LTO addCouponLTO'); app.u.dump(products);
 					var numRequests = 0;
 					for(var index in products) {
 						var _tag = {
@@ -85,26 +85,21 @@ var store_bmo_lto = function() {
 								}
 								else {
 									var prod = app.data[rd.datapointer];
-									if(prod['%attribs'] && prod['%attribs']['user:limited_time_offer'] && (prod['%attribs']['user:discount_10'] || prod['%attribs']['user:discount_15'] || prod['%attribs']['user:discount_20'] || prod['%attribs']['user:discount_25'])) {
+									if(prod['%attribs'] && prod['%attribs']['user:limited_time_offer'] && prod['%attribs']['zoovy:prod_promoclass']) {
 										if(app.ext.store_bmo_lto.u.isTheLTO(prod['%attribs']['user:limited_time_offer'])) {
 											var discount = app.ext.store_bmo_lto.u.qtyOfDiscountLTO(prod['%attribs']);
+//												app.u.dump('LTO'+discount);
 											if(discount) {
-												app.u.dump('LTO'+discount);
 												discount = 'LTO'+discount;
-				//COUPONS STILL NEED TO BE GENERATED...
-				//TO DO: ADD LOGIC TO BE SURE COUPON GENERATES CORRECT PRICING, AND MATCHES NUMBER OF ITEMS IT SHOULD BE APPLIED TO. 
-				//TO DO: ADD LOGIC TO REMOVE COUPON IF ITEM IS REMOVED (MAY BE BUILT INTO COUPON PER ERIC). 
-				//TO DO: CHECK ON WHETHER handelPanel AND handleCommonPanels NEED TO BE USED. 
 													//add the discount to the cart. 
 												app.ext.cco.calls.cartCouponAdd.init(discount,{'callback':function(rd) {
 													if(app.model.responseHasErrors(rd)) {
 														$('#cartMessaging').anymessage({'message':rd})
 													}
 													else {
-													//	app.ext.orderCreate.u.handlePanel($('#cartTemplateForm'),'chkoutCartItemsList',['empty','translate','handleDisplayLogic','handleAppEvents']);
+														//app.ext.orderCreate.u.handlePanel($('#cartTemplateForm'),'chkoutCartItemsList',['empty','translate','handleDisplayLogic','handleAppEvents']);
 													}
 												}});
-												//app.ext.orderCreate.u.handleCommonPanels($('#cartTemplateForm'));
 												app.model.dispatchThis('immutable');
 											}
 											else {} //discount is 0, no coupon to add.
@@ -184,17 +179,14 @@ var store_bmo_lto = function() {
 		
 				//checks the discount attrib assigned and returns a value to be used for the percentage discount.
 			qtyOfDiscountLTO : function(prod) {
+			app.u.dump('--> Promoclass:'); app.u.dump(prod['zoovy:prod_promoclass']);
 				var discount = false; //what is returned, level of discount or false if no discount
-				if(prod['user:discount_10']) {
-					discount = 10; //app.u.dump('--> DISCOUNT IS 15%')
-				} else if(prod['user:discount_15']) {
-					discount = 15; //app.u.dump('--> DISCOUNT IS 15%')
-				} else if(prod['user:discount_20']) {
-					discount = 20; //app.u.dump('--> DISCOUNT IS 20%')
-				} else if(prod['user:discount_25']) {
-					discount = 25; //app.u.dump('--> DISCOUNT IS 25%')
-				} else {} //app.u.dump('--> DISCOUNT IS 0%')
-				
+				switch(prod['zoovy:prod_promoclass']) {
+					case '10': discount = '10';	break;
+					case '15': discount = '15';	break;
+					case '20': discount = '20';	break;
+					case '25': discount = '25';	break;
+				}
 				return discount;
 			},
 		
