@@ -67,6 +67,7 @@ var store_bmo_lto = function() {
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 		
+				//adds a class to $tag parent for css style changes to LTO cart/checkout items
 			hideStuffListLTO : function($tag, data) {
 				if(data.value == '%LTO10' || data.value == '%LTO15' || data.value == '%LTO20' || data.value == '%LTO25') {
 					$tag.parent().addClass('ltoItem');
