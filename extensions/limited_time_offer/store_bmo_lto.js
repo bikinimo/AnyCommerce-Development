@@ -67,6 +67,13 @@ var store_bmo_lto = function() {
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 		
+			hideStuffListLTO : function($tag, data) {
+				app.u.dump('--> LTO stuff:'); app.u.dump(data.value);
+				if(data.value.sku == '%LTO10' || data.value.sku == '%LTO15' || data.value.sku == '%LTO20' || data.value.sku == '%LTO25') {
+					$tag.parent().addClass('ltoItem');
+				}
+			},
+		
 				//checks each item in the cart and adds correct coupon for item's LTO discount if it is the current LTO
 			addCouponLTO : function($tag, data) {
 				var products = [];

@@ -570,6 +570,10 @@ CART
 
 #cartStuffList.productList > li {min-height:0;}
 
+.ltoItem .hideLTO {display:none;}
+.ltoItem .showLTO {display:block; color:red; text-align:right;}
+.ltoItem h4 {font-size:20px; text-align:right;}
+
 .cartSummaryTotalsContainer h2	{margin:0; border-top:0; border-left:0; border-right:0; padding:2px 12px; font-size:12px;} /* header */
 .cartSummaryTotalsContainer .cartSummaryContainer	{padding:12px;}
 .cartZipCodeContainer, .cartAltButtonsContainer, .cartSummaryContainer	{margin-bottom:12px; padding-bottom:12px; border-bottom:1px dotted #efefef;}
