@@ -69,7 +69,7 @@ var store_bmo_lto = function() {
 		
 			hideStuffListLTO : function($tag, data) {
 				app.u.dump('--> LTO stuff:'); app.u.dump(data.value);
-				if(data.value.sku == '%LTO10' || data.value.sku == '%LTO15' || data.value.sku == '%LTO20' || data.value.sku == '%LTO25') {
+				if(data.value == '%LTO10' || data.value == '%LTO15' || data.value == '%LTO20' || data.value == '%LTO25') {
 					$tag.parent().addClass('ltoItem');
 				}
 			},
