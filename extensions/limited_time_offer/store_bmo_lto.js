@@ -214,7 +214,7 @@ var store_bmo_lto = function() {
 					var discount = 0; //if no discount, multiply by 0 will keep price the same
 				
 						//if the product has a limited time offer and any discount the displayed price needs to be changed
-					if(prod && prod['%attribs']['user:limited_time_offer'] && (prod['%attribs']['user:discount_10'] || prod['%attribs']['user:discount_15'] || prod['%attribs']['user:discount_20'] || prod['%attribs']['user:discount_25'])) {
+					if(prod && prod['%attribs'] && prod['%attribs']['user:limited_time_offer'] && prod['%attribs']['zoovy:prod_promoclass']) {
 						prod = prod['%attribs'];
 						if(app.ext.store_bmo_lto.u.isTheLTO(prod['user:limited_time_offer'])) {
 							discount = app.ext.store_bmo_lto.u.qtyOfDiscountLTO(prod) * 0.01;
