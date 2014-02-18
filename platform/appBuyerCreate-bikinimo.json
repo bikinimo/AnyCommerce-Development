@@ -24,7 +24,7 @@
 		"PASSWORDRESET?password=$pass",
 		"ADDRCREATE?SHORTCUT=DEFAULT&TYPE=BILL&firstname=$firstname&lastname=$lastname&phone=$phone&address1=$address1&address2=$address2&email=$email&city=$city&region=$region&postal=$postal&countrycode=$country",
 		"ADDRCREATE?SHORTCUT=DEFAULT&TYPE=SHIP&firstname=$firstname&lastname=$lastname&phone=$phone&address1=$address1&address2=$address2&email=$email&city=$city&region=$region&postal=$postal&countrycode=$country",
-		"GIFTCARD-CREATE?BALANCE=10.00&CARDTYPE=1"
+		"GIFTCARD-CREATE?BALANCE=10.00&CARDTYPE=1&EXPIRES_GMT=$time"
 	]
 
 

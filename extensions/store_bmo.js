@@ -819,10 +819,8 @@ var store_bmo = function() {
 		
 				//sets a date 30 days from current date on hidden input in acct. creation form to use as expiration for new acct gift card.
 			setTime : function() {
-				var d = new Date();
-				d.setDate(d.getDate()+30);
-				d = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d)
-				d = d.slice(0,-2);
+				var d = new Date().getTime() + 2592000000;
+//				app.u.dump('--> setTime date:'); app.u.dump(d);
 				$("input[name=time]",'#createaccountTemplate').val(d).attr("disabled",true);
 			},
 		
@@ -992,7 +990,7 @@ var store_bmo = function() {
 								localStorage.removeItem('appPreferences');
 								localStorage.appPreferences = 'signedUp';
 								showContent('customer',{'show':'myaccount'});
-								app.u.throwMessage(app.u.successMsgObject("Your account has been created!"));
+								app.u.throwMessage(app.u.successMsgObject("Your account has been created! Check your welcome e-mail for a gift from Bikinimo."));
 							}
 						}
 					}
@@ -1022,7 +1020,7 @@ var store_bmo = function() {
 					"phone"			: "5555555555",
 					"postal"		: "92562",
 					"region"		: "CA",
-					"time"			: "20140301",
+					"time"			: 1395277298,
 					"vendor"		: "bikinimo"
 				}
 				app.u.dump('--> test form:'); app.u.dump(formObj);
