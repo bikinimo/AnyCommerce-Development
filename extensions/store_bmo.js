@@ -817,10 +817,10 @@ var store_bmo = function() {
 //any functions that are recycled should be here.
 		u : {
 		
-				//sets a date 30 days from current date on hidden input in acct. creation form to use as expiration for new acct gift card.
+				//sets a date X days from current date on hidden input in acct creation form to use as expiration for new acct gift card.
 			setTime : function() {
-				var d = new Date().getTime() + 2592000000;
-//				app.u.dump('--> setTime date:'); app.u.dump(d);
+				var d = new Date().getTime() + 604800000; //7 days in milliseconds
+//				app.u.dump('--> setTime date:'); app.u.dump(d); app.u.dump(app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(new Date(d)));
 				$("input[name=time]",'#createaccountTemplate').val(d).attr("disabled",true);
 			},
 		
