@@ -977,7 +977,7 @@ var store_bmo = function() {
 			handleAppLoginCreate : function($form)	{
 				if($form)	{
 					var formObj = $form.serializeJSON();
-					
+		//app.u.dump('--> Form Object'); app.u.dump(formObj); 			
 					if(formObj.pass !== formObj.pass2) {
 						app.u.throwMessage('Sorry, your passwords do not match! Please re-enter your password');
 						return;
@@ -1004,6 +1004,46 @@ var store_bmo = function() {
 				else {
 					$('#globalMessaging').anymessage({'message':'$form not passed into myRIA.u.handleBuyerAccountCreate','gMessage':true});
 				}
+			},
+			
+				//function for console testing acct. creation to debug gift card at acct. create. Can be removed once debug is complete.
+			testLogin : function(itteration) {
+				formObj = {
+					"address1"		: "123 Test"+itteration,
+					"address2"		: "",
+					"city"			: "Test"+itteration,
+					"country"		: "USA",
+					"email"			: "Test"+itteration+"@ztest.com",
+					"firstname"		: "Test"+itteration,
+					"form"			: "wholesale",
+					"lastname"		: "Test"+itteration,
+					"pass"			: "12345678P",
+					"pass2"			: "12345678P",
+					"phone"			: "5555555555",
+					"postal"		: "92562",
+					"region"		: "CA",
+					"time"			: "20140301",
+					"vendor"		: "bikinimo"
+				}
+				app.u.dump('--> test form:'); app.u.dump(formObj);
+				
+				var tagObj = {
+					'callback':function(rd) {
+						if(app.model.responseHasErrors(rd)) {
+							$('#mainContentArea').anymessage({'message':rd});
+						}
+						else {
+							localStorage.removeItem('appPreferences');
+							localStorage.appPreferences = 'signedUp';
+							showContent('customer',{'show':'myaccount'});
+							app.u.throwMessage(app.u.successMsgObject("Your account has been created!"));
+						}
+					}
+				}
+				
+				formObj._vendor = "bikinimo";
+				app.calls.appBuyerCreate.init(formObj,tagObj,'immutable');				
+				app.model.dispatchThis('immutable');
 			},
 			
 			toSt : function(n) {

@@ -24,7 +24,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"201346.20140210143800",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201346.20140217162800",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
@@ -1464,16 +1464,16 @@ return false;
 		
 <!-- END SIZING GUIDE TEMPLATE -->
   
-  
+<!--  
 	<div id='createaccountArticle' class="displayNone textContentArea">
 		<p id='loginMessagingInline' class='marginBottom appMessaging'></p>
 		<div class="creatAccount">
 			<div id="gotAccount1"> 
 				<h1 class='smallcaps'>WELCOME BACK</h1>
 				<!-- Third parameter is id of message destination -->
-				<form action='#' onSubmit='app.ext.store_bmo.a.loginFrmSubmit($("input[name=login]",$(this)).val(),$("input[name=password]",$(this)).val(),$("#loginMessagingInline")); return false;' id='modalLoginForm1'>
+<!--				<form action='#' onSubmit='app.ext.store_bmo.a.loginFrmSubmit($("input[name=login]",$(this)).val(),$("input[name=password]",$(this)).val(),$("#loginMessagingInline")); return false;' id='modalLoginForm1'>
 					<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
-					<fieldset>
+<!--					<fieldset>
 						<input type='email' class='zform_textbox zform_email' name='login' id='modalLoginLogin' value='' size='39' placeholder='E-mail address' />
 						<input type='password' class='zform_textbox zform_password' name='password' id='modalLoginpassword' value='' size='39' placeholder='Password' />
 						<input type='submit' value='SIGN IN' class='ui-button-text ui-button ui-corner-all ' />
@@ -1483,13 +1483,13 @@ return false;
 			</div>
 			<div class="Account" >
 				<!--<form action='#' class='inputsAsBreaks'  onSubmit="app.ext.myRIA.u.handleAppBuyerCreate($(this)); return false;">-->
-				<form action='#' class='inputsAsBreaks'  onSubmit="app.ext.store_bmo.u.handleAppLoginCreate($(this)); return false;">
+<!--				<form action='#' class='inputsAsBreaks'  onSubmit="app.ext.store_bmo.u.handleAppLoginCreate($(this)); return false;">
 					<input type="hidden" name="vendor" value="bikinimo"/>
 					<h1>First Time With Us?</h1><input type='hidden' name='form' value='wholesale' />
 					<div class="fieldM"><span class="field">First Name</span> <input name='firstname' type='text' size='30' class='textfname' placeholder='First Name' required='required' />
 					<b>Last Name</b> <input name='lastname' type='text' size='30' placeholder='Last Name' required='required' class='textflast'/></div>
 					<!--<div class="passwordInput"><b>Password</b><input name="password" size="30" placeholder="Password" required /></div>-->
-					<div class="fieldM"><span class="field">Address</span> <input name='address1' type='text' size='30' placeholder='Address' class='textfadd' required='required' /> 
+<!--					<div class="fieldM"><span class="field">Address</span> <input name='address1' type='text' size='30' placeholder='Address' class='textfadd' required='required' /> 
 					<input name='address2' type='text' size='30' placeholder='Address (Line 2)' class='textfadd1'/></div>
 					<div class="fieldM stateFix"><span class="field">City</span> <input name='city' type='text' size='30' placeholder='City' required='required' class='textfcity'/> 	
 						<b>State</b> 
@@ -1567,14 +1567,14 @@ return false;
 						<div class="fieldM"><input name='ein' type='text' size='30' placeholder='Company EIN/Tax ID' />
 						<input name='credit_limit' type='number' step='0.01' min='0' placeholder='Requested Credit Limit' /></div>
 					</fieldset>-->
-					<input type="submit" value="Create an Account" class="createButton pointer"></input>
+<!--					<input type="submit" value="Create an Account" class="createButton pointer"></input>
 				</form>
 			</div>
 		</div>
-		
-		
-		
-	</div><div id='createaccountTemplate' class="displayNone textContentArea">
+	</div>
+-->	
+	
+	<div id='createaccountTemplate' class="displayNone textContentArea">
 		<p id='loginMessagingInline' class='marginBottom appMessaging'></p>
 		<div class="creatAccount">
 			<div id="gotAccount1"> 
@@ -1993,16 +1993,16 @@ subscribeListsArticle is used for authenticated buyers
         </form>
       </div>
 	  
-	  
+<!--  
 	<div id='createaccountArticle' class="displayNone textContentArea">
 		<p id='loginMessagingInline' class='marginBottom appMessaging'></p>
 		<div class="creatAccount">
 			<div id="gotAccount1"> 
 				<h1 class='smallcaps'>WELCOME BACK</h1>
 				<!-- Third parameter is id of message destination -->
-				<form action='#' onSubmit='app.ext.store_bmo.a.loginFrmSubmit($("input[name=login]",$(this)).val(),$("input[name=password]",$(this)).val(),$("#loginMessagingInline")); return false;' id='modalLoginForm1'>
+<!--				<form action='#' onSubmit='app.ext.store_bmo.a.loginFrmSubmit($("input[name=login]",$(this)).val(),$("input[name=password]",$(this)).val(),$("#loginMessagingInline")); return false;' id='modalLoginForm1'>
 					<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
-					<fieldset>
+<!--					<fieldset>
 						<input type='email' class='zform_textbox zform_email' name='login' id='modalLoginLogin' value='' size='39' placeholder='E-mail address' />
 						<input type='password' class='zform_textbox zform_password' name='password' id='modalLoginpassword' value='' size='39' placeholder='Password' />
 						<input type='submit' value='SIGN IN' class='ui-button-text ui-button ui-corner-all ' />
@@ -2012,13 +2012,13 @@ subscribeListsArticle is used for authenticated buyers
 			</div>
 			<div class="Account" >
 				<!--<form action='#' class='inputsAsBreaks'  onSubmit="app.ext.myRIA.u.handleAppBuyerCreate($(this)); return false;">-->
-				<form action='#' class='inputsAsBreaks'  onSubmit="app.ext.store_bmo.u.handleAppLoginCreate($(this)); return false;">
+<!--				<form action='#' class='inputsAsBreaks'  onSubmit="app.ext.store_bmo.u.handleAppLoginCreate($(this)); return false;">
 					<input type="hidden" name="vendor" value="bikinimo"/>
 					<h1>First Time With Us?</h1><input type='hidden' name='form' value='wholesale' />
 					<div class="fieldM"><span class="field">First Name</span> <input name='firstname' type='text' size='30' class='textfname' placeholder='First Name' required='required' />
 					<b>Last Name</b> <input name='lastname' type='text' size='30' placeholder='Last Name' required='required' class='textflast'/></div>
 					<!--<div class="passwordInput"><b>Password</b><input name="password" size="30" placeholder="Password" required /></div>-->
-					<div class="fieldM"><span class="field">Address</span> <input name='address1' type='text' size='30' placeholder='Address' class='textfadd' required='required' /> 
+<!--					<div class="fieldM"><span class="field">Address</span> <input name='address1' type='text' size='30' placeholder='Address' class='textfadd' required='required' /> 
 					<input name='address2' type='text' size='30' placeholder='Address (Line 2)' class='textfadd1'/></div>
 					<div class="fieldM stateFix"><span class="field">City</span> <input name='city' type='text' size='30' placeholder='City' required='required' class='textfcity'/> 	
 						<b>State</b> 
@@ -2096,12 +2096,12 @@ subscribeListsArticle is used for authenticated buyers
 						<div class="fieldM"><input name='ein' type='text' size='30' placeholder='Company EIN/Tax ID' />
 						<input name='credit_limit' type='number' step='0.01' min='0' placeholder='Requested Credit Limit' /></div>
 					</fieldset>-->
-					<input type="submit" value="Create an Account" class="createButton pointer"></input>
+<!--					<input type="submit" value="Create an Account" class="createButton pointer"></input>
 				</form>
 			</div>
 		</div>
 	</div>
-	  
+-->  
 	  
       <div id='myaccountArticle' class='displayNone textContentArea'>
         <h1>My Account</h1>
