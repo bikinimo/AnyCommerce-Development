@@ -1,0 +1,233 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Untitled Document</title>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Electrolize"> <!-- MARK -->
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Abel"> <!-- MARK -->
+<script type="text/javascript">
+/**
+ * Loads a CSS file from the supplied URL
+ * @param {String} url    The URL of the CSS file, if its relative
+                          it will be to the current page's url
+ * @return {HTMLElement}  The <link> which was appended to the <head>
+ */
+ 
+ function loadcss(url) {
+   var head = document.getElementsByTagName('head')[0],
+   link = document.createElement('link');
+   link.type = 'text/css';
+   link.rel = 'stylesheet';
+   link.href = url;
+   head.appendChild(link);
+   return link;
+ }
+ 
+ //loadcss('http://app.bikinimo.com/redirectmodal.css'); //MARK
+ </script>
+ <!--COMMENT OUT THIS LINE BEFORE TURNING THE MODAL LIVE-->
+ <link rel="stylesheet" type="text/css" href="redirectmodal.css" />
+  
+ <!--BEGIN MODAL FUNCTION SCRIPT-->
+<script type="text/javascript">
+
+//FUNCTIONS
+function handleRedirect() {
+	var windowUrl = location.href;
+	if(windowUrl.indexOf("product")>= 0){
+		var urlString = location.href;
+		//console.log("location.href = " + location.href);
+		var urlString2 = urlString.split("/product/");
+		//console.log("urlString2 = " + urlString2);
+		var urlString3 = urlString2[1];
+		//console.log("urlString3 = " + urlString3);
+		var urlString4 = urlString3.split("/");
+		//console.log("urlString4 = " + urlString4);
+		var prodSku = urlString4[0];
+		//console.log("prodSku = " + prodSku);
+		window.location = "http://app.bikinimo.com/product/"+prodSku+"/"; //MARK
+ 	}
+	else if(windowUrl.indexOf("category")>= 0){
+		var urlString = location.href;
+		//console.log("location.href = " + location.href);
+		var urlString2 = urlString.split("/category/");
+		//console.log("urlString2 = " + urlString2);
+		var catTitle = urlString2[1];
+		//console.log("catTitle = " + catTitle);
+		window.location = "http://app.bikinimo.com/category/"+catTitle; //MARK
+	}
+	else{
+		window.location = "http://app.bikinimo.com"; //MARK
+	}
+}
+
+function bugLater(){
+ sessionStorage.redirectToAppSessionNoCheck = true;
+ $('.redirectToSiteApp').dialog('close');
+ console.log("sessionStorage = " + sessionStorage.redirectToAppSessionNoCheck);
+ console.log("localStorage = " + localStorage.redirectToAppVar);
+}
+
+function autoRedirect(){
+ localStorage.redirectToAppVar = true;
+ $('.redirectToSiteApp').dialog('close');
+ var windowUrl = location.href;
+	if(windowUrl.indexOf("product")>= 0){
+		var urlString = location.href;
+		//console.log("location.href = " + location.href);
+		var urlString2 = urlString.split("/product/");
+		//console.log("urlString2 = " + urlString2);
+		var urlString3 = urlString2[1];
+		//console.log("urlString3 = " + urlString3);
+		var urlString4 = urlString3.split("/");
+		//console.log("urlString4 = " + urlString4);
+		var prodSku = urlString4[0];
+		//console.log("prodSku = " + prodSku);
+		window.location = "http://app.bikinimo.com/product/"+prodSku+"/"; //MARK
+ 	}
+	else if(windowUrl.indexOf("category")>= 0){
+		var urlString = location.href;
+		//console.log("location.href = " + location.href);
+		var urlString2 = urlString.split("/category/");
+		//console.log("urlString2 = " + urlString2);
+		var catTitle = urlString2[1];
+		//console.log("catTitle = " + catTitle);
+		window.location = "http://app.bikinimo.com/category/"+catTitle; //MARK
+	}
+	else{
+		window.location = "http://app.bikinimo.com"; //MARK
+	}
+}
+
+function resetRedirectPreferences(){
+	localStorage.redirectToAppVar = false;
+	$(".stopFutureRedirectMessage").css("display", "block");
+	console.log("sessionStorage have now been set to: " + sessionStorage.redirectToAppSessionNoCheck);
+	console.log("localStorage have now been set to: " + localStorage.redirectToAppVar);
+}
+
+
+//SCRIPT BEGINS WHEN THE PAGE IS FULLY LOADED
+$(document).ready(function() {
+	//RESET FOR THE SESSION VARIABLE
+	//sessionStorage.redirectToAppSessionNoCheck = false;
+ 
+ 
+	if(typeof(Storage)!=="undefined"){
+		if(localStorage.redirectToAppVar) {}
+		else {
+			localStorage.redirectToAppVar = false;
+		}
+		if(sessionStorage.redirectToAppSessionNoCheck) {}
+		else {
+			sessionStorage.redirectToAppSessionNoCheck = false;
+		}
+		console.log("window.location = " + window.location);
+		var urlLocation = window.location;
+		console.log("urlLocation = " + urlLocation);
+
+		$('<div class="redirectToSiteApp"> '+
+			'<h3>For an improved shopping experience, <br>use our new site!</h3>' +
+			'<button onclick="handleRedirect(); return false;">New Site</button>' +
+			'<button class="bugLaterButton" onclick="bugLater()">Old Site</button>' +
+			'<div>' +
+				'<img onclick="handleRedirect(); return false;" src="redirect_logo-272x66.png" />' +
+			'</div>' +
+			'<button class="autoRedirectButton" onclick="autoRedirect()">Always redirect to the new site whenever visiting www.bikinimo.com</button>' + //MARK
+			//'<button onclick="resetRedirectPreferences()">Reset Preferences</button>' +
+		'</div>').appendTo('head');
+
+		if(typeof(Storage)!=="undefined") {
+			console.log("storage exists check passed");
+			if(localStorage.redirectToAppVar == "true") {
+				$('<div style="background-color:white; float:left;" class="autoRedirectToSiteApp"> '+
+					'<h3>Redirecting to app site. Please wait a few Seconds....</h3>' +
+					'<div>' +
+						'<img class="redirectLogoBody" src="http://app.bikinimo.com/V_store_app_store_redirect_modal/redirect_logo-272x66.png" />' + //MARK
+					'</div>' +
+					'<p class="stopFutureRedirectMessage">Done!</p>' +
+					'<button onclick="resetRedirectPreferences()">Prompt me next time instead of auto-redirecting</button>' +
+				'</div>').appendTo('head');
+				$('.autoRedirectToSiteApp').dialog({'modal':'true', 'width':400, height:270});
+				function foo1(){
+					var windowUrl = location.href;
+					if(windowUrl.indexOf("product")>= 0) {
+						var urlString = location.href;
+						//console.log("location.href = " + location.href);
+						var urlString2 = urlString.split("/product/");
+						//console.log("urlString2 = " + urlString2);
+						var urlString3 = urlString2[1];
+						//console.log("urlString3 = " + urlString3);
+						var urlString4 = urlString3.split("/");
+						//console.log("urlString4 = " + urlString4);
+						var prodSku = urlString4[0];
+						//console.log("prodSku = " + prodSku);
+						window.location = "http://app.bikinimo.com/product/"+prodSku+"/"; //MARK
+					}
+					else if(windowUrl.indexOf("category")>= 0){
+						var urlString = location.href;
+						//console.log("location.href = " + location.href);
+						var urlString2 = urlString.split("/category/");
+						//console.log("urlString2 = " + urlString2);
+						var catTitle = urlString2[1];
+						//console.log("catTitle = " + catTitle);
+						window.location = "http://app.bikinimo.com/category/"+catTitle; //MARK
+					}
+					else{
+						window.location = "http://app.bikinimo.com"; //MARK
+					}
+				}
+				var autoRedirectTimer;
+				redirectTimer = foo1;
+				autoRedirectTimer = setTimeout(redirectTimer, 5000);
+			}
+			else if (sessionStorage.redirectToAppSessionNoCheck == "true") {
+				console.log("One of the two storage values was true, redirect modal is not displaying.");
+			}
+			else {
+				$('.redirectToSiteApp').dialog({'modal':'true', 'width':450, height:350});
+				console.log("Neither storage value was true, displaying redirect modal");
+				console.log("sessionStorage = " + sessionStorage.redirectToAppSessionNoCheck);
+				console.log("localStorage = " + localStorage.redirectToAppVar);
+			}
+		} 
+	}
+	else {
+		console.log("Storage is not supported. Redirecting to app");
+		var windowUrl = location.href;
+		if(windowUrl.indexOf("product")>= 0) {
+			var urlString = location.href;
+			//console.log("location.href = " + location.href);
+			var urlString2 = urlString.split("/product/");
+			//console.log("urlString2 = " + urlString2);
+			var urlString3 = urlString2[1];
+			//console.log("urlString3 = " + urlString3);
+			var urlString4 = urlString3.split("/");
+			//console.log("urlString4 = " + urlString4);
+			var prodSku = urlString4[0];
+			//console.log("prodSku = " + prodSku);
+			window.location = "http://app.bikinimo.com/product/"+prodSku+"/"; //MARK
+		}
+		else if(windowUrl.indexOf("category")>= 0) {
+			var urlString = location.href;
+			//console.log("location.href = " + location.href);
+			var urlString2 = urlString.split("/category/");
+			//console.log("urlString2 = " + urlString2);
+			var catTitle = urlString2[1];
+			//console.log("catTitle = " + catTitle);
+			window.location = "http://app.bikinimo.com/category/"+catTitle; //MARK
+		}
+		else{
+			window.location = "http://app.bikinimo.com"; //MARK
+		}
+	}
+});
+</script>
+</head>
+
+<body>
+</body>
+</html>

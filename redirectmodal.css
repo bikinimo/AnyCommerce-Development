@@ -1,0 +1,29 @@
+div.ui-dialog-titlebar {display:none;}
+div.ui-dialog {border:none; background-color:transparent; background-image:none;}
+div.ui-dialog div.redirectToSiteApp { 
+	background: #ffff00; /* Old browsers */
+	background: -moz-linear-gradient(top, #ffff00 0%, #ff9a00 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffff00), color-stop(100%,#ff9a00)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ffff00 0%,#ff9a00 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ffff00 0%,#ff9a00 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #ffff00 0%,#ff9a00 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #ffff00 0%,#ff9a00 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffff00', endColorstr='#ff9a00',GradientType=0 ); /* IE6-9 */ 
+	float:left; 
+	font-family:Abel;
+	border-radius:5px;
+}
+
+.redirectToSiteApp h3 {color:#F05A24; font-weight:bold; text-align:center; margin:15px 0; font-family:Electrolize;}
+
+.redirectToSiteApp button.autoRedirectButton {color:#ffffff; background-color:#54A7E1; cursor:pointer; margin:10px 0 0 0; font-family:Abel; border-radius:5px; border:solid 2px #286C99; font-size:24px; box-shadow:2px 2px 3px 1px #999999;}
+.redirectToSiteApp button.autoRedirectButton:hover {color:#54A7E1; background-color:#286C99; border:solid 2px #ffffff;}
+
+.redirectToSiteApp button {color:#286C99; margin:10px 0 0 10%; border:solid 2px #54A7E1; padding:5px 10px; cursor:pointer; font-family:Abel; border-radius:5px;}
+.redirectToSiteAppButton {height:40px; width:150px; font-weight:bold; background-color:#ffffff; cursor:pointer; border-radius:5px;}
+.redirectToSiteApp button:hover {background-color:#286C99; color:#ffffff;}
+
+.redirectToSiteApp .bugLaterButton {color:#54A7E1; font-family:Abel; float:right; margin:10px 10% 0 0; cursor:pointer;}
+.redirectToSiteApp .bugLaterButton:hover {color:#cccccc; background-color:#54A7E1;}
+
+img	{margin:19px auto 10px auto; display:block;}
