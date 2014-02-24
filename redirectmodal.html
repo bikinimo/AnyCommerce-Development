@@ -134,7 +134,7 @@ $(document).ready(function() {
 			'<button onclick="handleRedirect(); return false;">New Site</button>' +
 			'<button class="bugLaterButton" onclick="bugLater()">Old Site</button>' +
 			'<div>' +
-				'<img onclick="handleRedirect(); return false;" src="redirect_logo-272x66.png" />' +
+				'<span class="redirectLogo" onclick="handleRedirect(); return false;"></span>' + //MARK
 			'</div>' +
 			'<button class="autoRedirectButton" onclick="autoRedirect()">Always redirect to the new site whenever visiting www.bikinimo.com</button>' + //MARK
 			//'<button onclick="resetRedirectPreferences()">Reset Preferences</button>' +
@@ -146,7 +146,7 @@ $(document).ready(function() {
 				$('<div style="background-color:white; float:left;" class="autoRedirectToSiteApp"> '+
 					'<h3>Redirecting to app site. Please wait a few Seconds....</h3>' +
 					'<div>' +
-						'<img class="redirectLogoBody" src="http://app.bikinimo.com/V_store_app_store_redirect_modal/redirect_logo-272x66.png" />' + //MARK
+						'<span class="redirectLogo" onclick="handleRedirect(); return false;"></span>' + //MARK
 					'</div>' +
 					'<p class="stopFutureRedirectMessage">Done!</p>' +
 					'<button onclick="resetRedirectPreferences()">Prompt me next time instead of auto-redirecting</button>' +

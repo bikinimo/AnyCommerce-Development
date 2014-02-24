@@ -26,4 +26,4 @@ div.ui-dialog div.redirectToSiteApp {
 .redirectToSiteApp .bugLaterButton {color:#54A7E1; font-family:Abel; float:right; margin:10px 10% 0 0; cursor:pointer;}
 .redirectToSiteApp .bugLaterButton:hover {color:#cccccc; background-color:#54A7E1;}
 
-img	{margin:19px auto 10px auto; display:block;}
+.redirectLogo	{height:66px; width:272px; background:transparent url(images/redirect_logo-272x66.png) no-repeat center center; margin:19px auto 10px auto; display:block;}
