@@ -164,7 +164,7 @@ app.u.initMVC = function(attempts){
 	//		localStorage.appPreferences = 'signedUp';
 	//		app.u.dump('hasAccount cookie read')
 	//	} 
-		app.preferenceSelected = !(typeof localStorage.appPreferences==="undefined");
+	//	app.preferenceSelected = !(typeof localStorage.appPreferences==="undefined");
 
 			if(app.preferenceSelected){
 			//	$(".showWithPreferences").removeClass('displayNone');
@@ -177,7 +177,7 @@ app.u.initMVC = function(attempts){
 					$(".previewButtonCont").delay(300).fadeIn({duration: 500});
 				}, 1000);
 			}
-		
+			
 		app.u.dump("Preference Selected? "+app.preferenceSelected);
 		if(app.preferenceSelected == true){
 			
