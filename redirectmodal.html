@@ -35,7 +35,7 @@ loadcss('http://app.bikinimo.com/redirectmodal.css'); //MARK
 	
 	var redirectModal = {
 		//Update this URL for your domain.
-		"baseURL" : "http://app.bikinimo.com/",
+		"baseURL" : "http://app.bikinimo.com/", //MARK
 		"destination" : "",
 		
 		//Any special handling for URL's that don't translate the same should be dealt with here.
@@ -90,12 +90,14 @@ loadcss('http://app.bikinimo.com/redirectmodal.css'); //MARK
 		//This is the auto redirect popup.
 		"autoHTML" : 
 				"<div class='contentContainer'>"
+			+		"<h3>Redirecting you to our new site!</h3>"
 			+		"<button onClick='redirectModal.cancelRedirect();' >Don't take me there</button>"
 			+	"</div>",
 		//Non auto-redirect popup.
 		"promptHTML" : 
 				"<div class='contentContainer'>"
 			+		"<div class='redirectLogo'></div>"
+			+		"<h3>For an improved shopping experience, <br>use our new site!</h3>"
 			+		"<button class='bugLaterButton' onClick='redirectModal.dismiss();' >Not now, thanks.</button>"
 			+		"<button class='redirectButton' onClick='redirectModal.redirect();' >Let's Go!</button>"
 			+	"</div>"

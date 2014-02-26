@@ -9,7 +9,7 @@ Absolute positioning used to center the box on the modal overlay.
 Left + top of 50%, with left and top margins set to half the box's width and height, respectively.
 Feel free to change the size, but update the margins accordingly.
 */
-#redirectModal .contentContainer {position:absolute; left:50%; top:50%; width:400px; height:185px; margin-left:-200px; margin-top:-140px; border:3px solid #286C99; border-radius:5px;
+#redirectModal .contentContainer {position:absolute; left:50%; top:50%; width:400px; height:245px; margin-left:-200px; margin-top:-130px; border:3px solid #286C99; border-radius:5px;
 	background: #ffff00; /* Old browsers */
 	background: -moz-linear-gradient(top, #ffff00 0%, #ff9a00 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffff00), color-stop(100%,#ff9a00)); /* Chrome,Safari4+ */
@@ -20,10 +20,10 @@ Feel free to change the size, but update the margins accordingly.
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffff00', endColorstr='#ff9a00',GradientType=0 ); /* IE6-9 */ 
 }
 .redirectLogo	{height:66px; width:272px; background:transparent url(images/redirect_logo-272x66.png) no-repeat center center; margin:30px auto 10px auto; display:block;}
-
-.bugLaterButton {color:#54A7E1; font-family:Abel; float:right; margin:10px 15% 0 0; cursor:pointer;}
+h3 {color:#286C99; font-weight:bold; text-align:center; margin:15px 0; font-family:Electrolize;}
+.bugLaterButton {height:auto; width:31%; color:#54A7E1; font-family:Abel; float:right; margin:10px 15% 0 0; cursor:pointer;}
 .bugLaterButton:hover {color:#cccccc; background-color:#54A7E1;}
-button, .redirectButton {color:#286C99; margin:10px 0 0 15%; border:solid 2px #54A7E1; padding:5px 10px; cursor:pointer; font-family:Abel; border-radius:5px;}
+button, .redirectButton {height:auto; width:31%; color:#286C99; margin:10px 0 0 15%; border:solid 2px #54A7E1; padding:5px 10px; cursor:pointer; font-family:Abel; border-radius:5px;}
 button:hover, .redirectButton:hover {background-color:#286C99; color:#ffffff;}
 
 
