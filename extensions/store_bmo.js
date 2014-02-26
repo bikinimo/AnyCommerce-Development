@@ -820,7 +820,7 @@ var store_bmo = function() {
 				//sets a date X days from current date on hidden input in acct creation form to use as expiration for new acct gift card.
 			setTime : function() {
 				var d = new Date().getTime() + 604800000; //7 days in milliseconds
-//				app.u.dump('--> setTime date:'); app.u.dump(d); app.u.dump(app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(new Date(d)));
+//				app.u.dump('--> setTime date:'); app.u.dump(d); app.u.dump(app.ext.store_bmo.u.millisecondsToYYYYMMDD(new Date(d)));
 				$("input[name=time]",'#createaccountTemplate').val(d).attr("disabled",true);
 			},
 		
@@ -1077,6 +1077,15 @@ var store_bmo = function() {
 				if (month < 10){month = '0'+month};
 				if (day < 10){day = '0'+day};
 				return ""+year+month+day+hours;
+			},
+			
+			millisecondsToYYYYMMDD : function(dateObj) {
+				var year = dateObj.getFullYear();
+				var month = dateObj.getMonth()+1; 
+				var day = dateObj.getDate();
+				if (month < 10){month = '0'+month};
+				if (day < 10){day = '0'+day};
+				return ""+year+month+day;
 			},
 			
 			//returns text format of day of the week based on date object value passed in

@@ -25,6 +25,7 @@ h3 {color:#286C99; font-weight:bold; text-align:center; margin:15px 0; font-fami
 .bugLaterButton:hover {color:#cccccc; background-color:#54A7E1;}
 button, .redirectButton {height:auto; width:31%; color:#286C99; margin:10px 0 0 15%; border:solid 2px #54A7E1; padding:5px 10px; cursor:pointer; font-family:Abel; border-radius:5px;}
 button:hover, .redirectButton:hover {background-color:#286C99; color:#ffffff;}
+.cancelRedirectButton {display:block; width:auto; margin:10px auto;}
 
 
 
