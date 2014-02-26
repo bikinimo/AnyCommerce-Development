@@ -1,6 +1,15 @@
-div.ui-dialog-titlebar {display:none;}
-div.ui-dialog {border:none; background-color:transparent; background-image:none;}
-div.ui-dialog div.redirectToSiteApp { 
+/* 
+Fixed Positioning used to make it the same size as the window no matter what 
+Feel free to change the background color- but try to use RGBA for non-opaque overlays.
+*/
+#redirectModal {	position: fixed; top:0px; right:0px; bottom:0px; left:0px; background: rgba(60,60,60,.4);}
+
+/*
+Absolute positioning used to center the box on the modal overlay.  
+Left + top of 50%, with left and top margins set to half the box's width and height, respectively.
+Feel free to change the size, but update the margins accordingly.
+*/
+#redirectModal .contentContainer {position:absolute; left:50%; top:50%; width:400px; height:185px; margin-left:-200px; margin-top:-140px; border:3px solid #286C99; border-radius:5px;
 	background: #ffff00; /* Old browsers */
 	background: -moz-linear-gradient(top, #ffff00 0%, #ff9a00 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffff00), color-stop(100%,#ff9a00)); /* Chrome,Safari4+ */
@@ -9,21 +18,20 @@ div.ui-dialog div.redirectToSiteApp {
 	background: -ms-linear-gradient(top, #ffff00 0%,#ff9a00 100%); /* IE10+ */
 	background: linear-gradient(to bottom, #ffff00 0%,#ff9a00 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffff00', endColorstr='#ff9a00',GradientType=0 ); /* IE6-9 */ 
-	float:left; 
-	font-family:Abel;
-	border-radius:5px;
 }
+.redirectLogo	{height:66px; width:272px; background:transparent url(images/redirect_logo-272x66.png) no-repeat center center; margin:30px auto 10px auto; display:block;}
 
-.redirectToSiteApp h3 {color:#F05A24; font-weight:bold; text-align:center; margin:15px 0; font-family:Electrolize;}
+.bugLaterButton {color:#54A7E1; font-family:Abel; float:right; margin:10px 15% 0 0; cursor:pointer;}
+.bugLaterButton:hover {color:#cccccc; background-color:#54A7E1;}
+button, .redirectButton {color:#286C99; margin:10px 0 0 15%; border:solid 2px #54A7E1; padding:5px 10px; cursor:pointer; font-family:Abel; border-radius:5px;}
+button:hover, .redirectButton:hover {background-color:#286C99; color:#ffffff;}
 
-.redirectToSiteApp button.autoRedirectButton {color:#ffffff; background-color:#54A7E1; cursor:pointer; margin:10px 0 0 0; font-family:Abel; border-radius:5px; border:solid 2px #286C99; font-size:24px; box-shadow:2px 2px 3px 1px #999999;}
-.redirectToSiteApp button.autoRedirectButton:hover {color:#54A7E1; background-color:#286C99; border:solid 2px #ffffff;}
 
-.redirectToSiteApp button {color:#286C99; margin:10px 0 0 10%; border:solid 2px #54A7E1; padding:5px 10px; cursor:pointer; font-family:Abel; border-radius:5px;}
-.redirectToSiteAppButton {height:40px; width:150px; font-weight:bold; background-color:#ffffff; cursor:pointer; border-radius:5px;}
-.redirectToSiteApp button:hover {background-color:#286C99; color:#ffffff;}
 
-.redirectToSiteApp .bugLaterButton {color:#54A7E1; font-family:Abel; float:right; margin:10px 10% 0 0; cursor:pointer;}
-.redirectToSiteApp .bugLaterButton:hover {color:#cccccc; background-color:#54A7E1;}
 
-.redirectLogo	{height:66px; width:272px; background:transparent url(images/redirect_logo-272x66.png) no-repeat center center; margin:19px auto 10px auto; display:block;}
+
+
+
+
+
+
