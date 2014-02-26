@@ -19,7 +19,7 @@ Feel free to change the size, but update the margins accordingly.
 	background: linear-gradient(to bottom, #ffff00 0%,#ff9a00 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffff00', endColorstr='#ff9a00',GradientType=0 ); /* IE6-9 */ 
 }
-.redirectLogo	{height:66px; width:272px; background:transparent url(images/redirect_logo-272x66.png) no-repeat center center; margin:30px auto 10px auto; display:block;}
+.redirectLogo	{height:66px; width:272px; background:transparent url(http://app.bikinimo.com/images/redirect_logo-272x66.png) no-repeat center center; margin:30px auto 10px auto; display:block;}
 h3 {color:#286C99; font-weight:bold; text-align:center; margin:15px 0; font-family:Electrolize;}
 .bugLaterButton {height:auto; width:31%; color:#54A7E1; font-family:Abel; float:right; margin:10px 15% 0 0; cursor:pointer;}
 .bugLaterButton:hover {color:#cccccc; background-color:#54A7E1;}
