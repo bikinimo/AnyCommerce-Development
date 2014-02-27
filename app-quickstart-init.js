@@ -166,17 +166,26 @@ app.u.initMVC = function(attempts){
 	//	} 
 		app.preferenceSelected = !(typeof localStorage.appPreferences==="undefined");
 
-			if(app.preferenceSelected){
-			//	$(".showWithPreferences").removeClass('displayNone');
-			} else {
-				$(".showSansPreferences").removeClass('displayNone');
-				$(".previewButtonCont").hide();
-				//$("#previewContent").hide().delay(200).fadeIn(800);
-				$('#progressBarContainer').fadeOut(1000);
-				setTimeout( function() {
-					$(".previewButtonCont").delay(300).fadeIn({duration: 500});
-				}, 1000);
-			}
+		if(readCookie('loadDirectly') == 'yes') {
+			app.preferenceSelected = true;
+		}
+		else {
+			writeCookie('loadDirectly','yes');
+		}
+		app.u.dump('--* New stuff check:'); app.u.dump(app.preferenceSelected); app.u.dump(readCookie('loadDirectly'));
+		
+			//if there is a preference the app is gonna load, but if not show the buttons that will let user select a preference
+		if(app.preferenceSelected){
+		//	$(".showWithPreferences").removeClass('displayNone');
+		} else {
+			$(".showSansPreferences").removeClass('displayNone');
+			$(".previewButtonCont").hide();
+			//$("#previewContent").hide().delay(200).fadeIn(800);
+			$('#progressBarContainer').fadeOut(1000);
+			setTimeout( function() {
+				$(".previewButtonCont").delay(300).fadeIn({duration: 500});
+			}, 1000);
+		}
 			
 		app.u.dump("Preference Selected? "+app.preferenceSelected);
 		if(app.preferenceSelected == true){
@@ -185,7 +194,7 @@ app.u.initMVC = function(attempts){
 		} else {
 			app.loadOnSelect = true;
 		}
-		}
+	}
 	else if(attempts > 250)	{
 		app.u.dump("WARNING! something went wrong in init.js");
 		//this is 10 seconds of trying. something isn't going well.
@@ -204,7 +213,9 @@ app.u.initMVC = function(attempts){
 			if(typeof preference !== "undefined"){
 				app.u.dump("Preference Selected: " + preference);
 				if(save){
-					localStorage.appPreferences = preference;
+					writeCookie("cookiePreference",preference,30);
+					//localStorage.setItem("appPreferences",preference);
+					app.u.dump('--* In selectPreference'); app.u.dump(readCookie("cookiePreference"));
 				} else {
 					//don't save the preference to localStorage
 				}
@@ -218,8 +229,49 @@ app.u.initMVC = function(attempts){
 		} else {
 			//app preference is already set, don't do it again! (might screw with the loading process)
 		}
-		
+
 	}
+	
+	readCookie = function getCookie(cname) {
+		var value = cname + "=";
+		var ca = document.cookie.split(';');
+		for(var i=0; i<ca.length; i++) 
+		  {
+		  var c = ca[i].trim();
+		  if (c.indexOf(value)==0) return c.substring(value.length,c.length);
+		  }
+		return "";
+	}
+	
+	
+/*	function(c_name){
+	app.u.dump('--*Read Cookie'); app.u.dump(c_name); app.u.dump(document.cookie);
+			var i,x,y,ARRcookies=document.cookie.split(";");
+			for (i=0;i<ARRcookies.length;i++)	{
+				x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+				y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+				x=x.replace(/^\s+|\s+$/g,"");
+				if (x==c_name)	{
+					return unescape(y);
+					}
+				}app.u.dump(i); app.u.dump(x); app.u.dump(y);
+ 			return false;  //return false if not set.
+			}
+*/
+		writeCookie = function setCookie(cname,cvalue,exdays) {
+			var d = new Date();
+			d.setTime(d.getTime()+(exdays*24*60*60*1000));
+			var expires = "expires="+d.toGMTString();
+			document.cookie = cname+"="+cvalue+"; "+expires;
+		}
+		
+		
+	//	function(c_name,value)	{
+	//		var myDate = new Date();app.u.dump('--* Write c_name'); app.u.dump(c_name); app.u.dump(value);
+	//		myDate.setTime(myDate.getTime()+(1*24*60*60*1000));
+	//		document.cookie = c_name +"=" + value + ";expires=" + myDate + ";domain=.zoovy.com;path=/";
+	//		document.cookie = c_name +"=" + value + ";expires=" + myDate + ";domain=www.zoovy.com;path=/";app.u.dump('--* Write cookie');app.u.dump(document.cookie);
+	//		}
 
 //app.u.skipPreference = function(){
 //	app.u.selectPreference(undefined);
@@ -239,16 +291,18 @@ app.u.loadApp = function() {
 //Any code that needs to be executed after the app init has occured can go here.
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
 app.u.appInitComplete = function(P)	{
+	app.u.dump('--* IN APPINITCOMPLETE'); app.u.dump(readCookie("cookiePreference"));
 	if(app.preferenceSelected == true) {
-		if(localStorage.appPreferences == "guest") {
-			localStorage.removeItem('appPreferences');
+		var localStorAppPref = readCookie("cookiePreference");
+		if(localStorAppPref == "guest") {
+			//localStorage.removeItem('appPreferences');
 		}
-		else if(localStorage.appPreferences == 'signMeUp') {
-			localStorage.removeItem('appPreferences');
+		else if(localStorAppPref == 'signMeUp') {
+			//localStorage.removeItem('appPreferences');
 			return app.ext.store_bmo.a.showAccountCreate();
 		}
-		else if(localStorage.appPreferences == 'logMeIn') {
-			localStorage.removeItem('appPreferences');
+		else if(localStorAppPref == 'logMeIn') {
+			//localStorage.removeItem('appPreferences');
 			return showContent('customer',{'show':'myaccount'});
 		}
 	}
