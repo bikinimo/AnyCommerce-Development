@@ -143,7 +143,7 @@ app.u.initMVC = function(attempts){
 
 	//$('#appPreViewProgressBar','#appPreView').val(percentComplete);
 	//$('#appPreViewProgressText','#appPreView').empty().append(percentComplete+"% Complete");
-   $('#progressBar').stop().animate({"width": percentComplete+"%"},100);
+    $('#progressBar').stop().animate({"width": percentComplete+"%"},100);
 	$('#progressText').empty().append("PLEASE WAIT WHILE YOUR SHOPPING EXPERIENCE LOADS");
 
 	if(resourcesLoaded == app.vars.rq.length)	{
@@ -164,7 +164,7 @@ app.u.initMVC = function(attempts){
 	//		localStorage.appPreferences = 'signedUp';
 	//		app.u.dump('hasAccount cookie read')
 	//	} 
-	//	app.preferenceSelected = !(typeof localStorage.appPreferences==="undefined");
+		app.preferenceSelected = !(typeof localStorage.appPreferences==="undefined");
 
 			if(app.preferenceSelected){
 			//	$(".showWithPreferences").removeClass('displayNone');
@@ -221,9 +221,9 @@ app.u.initMVC = function(attempts){
 		
 	}
 
-app.u.skipPreference = function(){
-	app.u.selectPreference(undefined);
-}
+//app.u.skipPreference = function(){
+//	app.u.selectPreference(undefined);
+//}
 
 app.u.loadApp = function() {
 //instantiate controller. handles all logic and communication between model and view.
@@ -239,7 +239,7 @@ app.u.loadApp = function() {
 //Any code that needs to be executed after the app init has occured can go here.
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
 app.u.appInitComplete = function(P)	{
-	if(app.preferenceSelected = true) {
+	if(app.preferenceSelected == true) {
 		if(localStorage.appPreferences == "guest") {
 			localStorage.removeItem('appPreferences');
 		}
