@@ -832,6 +832,7 @@ var store_bmo = function() {
 				//sets a date X days from current date on hidden input in acct creation form to use as expiration for new acct gift card.
 			setTime : function() {
 				var d = new Date().getTime() + 604800000; //7 days in milliseconds
+				d = d.toString().slice(0,10);
 //				app.u.dump('--> setTime date:'); app.u.dump(d); app.u.dump(app.ext.store_bmo.u.millisecondsToYYYYMMDD(new Date(d)));
 				$("input[name=time]",'#createaccountTemplate').val(d).attr("disabled",true);
 			},
