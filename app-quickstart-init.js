@@ -149,24 +149,9 @@ app.u.initMVC = function(attempts){
 
 	if(resourcesLoaded == app.vars.rq.length)	{
 
-		/*
-		var clickToLoad = false;
-		if(clickToLoad){
-			$('#loader').fadeOut(1000);
-			$('#clickToLoad').delay(1000).fadeIn(1000).click(function() {
-				app.u.loadApp();
-			});
-		} else {
-			app.u.loadApp();
-			}
-		*/
-		
-	//	if(app.storageFunctions.readCookie('hasAccount') == 'signedUp') {
-	//		localStorage.appPreferences = 'signedUp';
-	//		app.u.dump('hasAccount cookie read')
-	//	} 
 		app.preferenceSelected = !(typeof localStorage.appPreferences==="undefined");
 
+		
 			//check if the appPreview has been loaded already and bypass if so (allows switch between http & https to happen w/out seeing appPreview twice).
 		if(readCookie('loadDirectly').indexOf('yes') > -1) {
 			app.preferenceSelected = true;
@@ -174,7 +159,7 @@ app.u.initMVC = function(attempts){
 		else {
 			writeCookie('loadDirectly','yes',90);
 		}
-//		app.u.dump('--* New stuff check:'); app.u.dump(app.preferenceSelected); app.u.dump(readCookie('loadDirectly'));
+		
 		
 			//if there is a preference the app is gonna load, but if not show the buttons that will let user select a preference
 		if(app.preferenceSelected){
@@ -188,6 +173,7 @@ app.u.initMVC = function(attempts){
 				$(".previewButtonCont").delay(300).fadeIn({duration: 500});
 			}, 1000);
 		}
+			
 			
 			//wait to load app if preferenceSelected isn't true here
 		app.u.dump("Preference Selected? "+app.preferenceSelected);
@@ -206,8 +192,8 @@ app.u.initMVC = function(attempts){
 	else	{
 		setTimeout("app.u.initMVC("+(attempts+1)+")",250);
 		}
-
 	}
+	
 	
 	app.u.selectPreference = function(preference, save){
 		if(!app.preferenceSelected){
@@ -216,12 +202,9 @@ app.u.initMVC = function(attempts){
 				app.u.dump("Preference Selected: " + preference);
 				if(save){
 					writeCookie("cookiePreference",preference,90);
-					//localStorage.setItem("appPreferences",preference);
-					app.u.dump('--* In selectPreference'); app.u.dump(readCookie("cookiePreference"));
 				} else {
-					//don't save the preference to localStorage
+					//don't save the preference to cookie
 				}
-
 			}
 		//	$(".showWithPreferences").removeClass('displayNone');
 		//	$(".showSansPreferences").addClass('displayNone');
@@ -231,9 +214,9 @@ app.u.initMVC = function(attempts){
 		} else {
 			//app preference is already set, don't do it again! (might screw with the loading process)
 		}
-
 	}
 	
+		//will read cookies here so can be used before signup extension is loaded
 	readCookie = function getCookie(cname) {
 		var value = cname + "=";
 		var ca = document.cookie.split(';');
@@ -245,39 +228,18 @@ app.u.initMVC = function(attempts){
 		return "";
 	}
 	
-	
-/*	function(c_name){
-	app.u.dump('--*Read Cookie'); app.u.dump(c_name); app.u.dump(document.cookie);
-			var i,x,y,ARRcookies=document.cookie.split(";");
-			for (i=0;i<ARRcookies.length;i++)	{
-				x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
-				y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
-				x=x.replace(/^\s+|\s+$/g,"");
-				if (x==c_name)	{
-					return unescape(y);
-					}
-				}app.u.dump(i); app.u.dump(x); app.u.dump(y);
- 			return false;  //return false if not set.
-			}
-*/
-		writeCookie = function setCookie(cname,cvalue,exdays) {
-			var d = new Date();
-			d.setTime(d.getTime()+(exdays*24*60*60*1000));
-			var expires = "expires="+d.toGMTString();
-			document.cookie = cname+"="+cvalue+"; "+expires;
-		}
+	writeCookie = function setCookie(cname,cvalue,exdays) {
+		var d = new Date();
+		d.setTime(d.getTime()+(exdays*24*60*60*1000));
+		var expires = "expires="+d.toGMTString();
+		document.cookie = cname+"="+cvalue+"; "+expires;
+	}
 		
-		
-	//	function(c_name,value)	{
-	//		var myDate = new Date();app.u.dump('--* Write c_name'); app.u.dump(c_name); app.u.dump(value);
-	//		myDate.setTime(myDate.getTime()+(1*24*60*60*1000));
-	//		document.cookie = c_name +"=" + value + ";expires=" + myDate + ";domain=.zoovy.com;path=/";
-	//		document.cookie = c_name +"=" + value + ";expires=" + myDate + ";domain=www.zoovy.com;path=/";app.u.dump('--* Write cookie');app.u.dump(document.cookie);
-	//		}
 
 //app.u.skipPreference = function(){
 //	app.u.selectPreference(undefined);
 //}
+
 
 app.u.loadApp = function() {
 //instantiate controller. handles all logic and communication between model and view.
@@ -293,24 +255,21 @@ app.u.loadApp = function() {
 //Any code that needs to be executed after the app init has occured can go here.
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
 app.u.appInitComplete = function(P)	{
-	app.u.dump('--* IN APPINITCOMPLETE'); app.u.dump(readCookie("cookiePreference"));
+	//app.u.dump('--* IN APPINITCOMPLETE'); app.u.dump(readCookie("cookiePreference"));
 	if(app.preferenceSelected == true) {
 		var localStorAppPref = readCookie("cookiePreference");
-		if(localStorAppPref == "guest") {
-			//localStorage.removeItem('appPreferences');
+		if(localStorAppPref == "guest") {	//will need to see message next time
 			writeCookie('loadDirectly','no',90);
 		}
-		else if(localStorAppPref == 'signMeUp') {
-			//localStorage.removeItem('appPreferences');
+		else if(localStorAppPref == 'signMeUp') { //load direct in case transfer to secure happens
 			writeCookie('loadDirectly','yes',90);
 			return app.ext.store_bmo.a.showAccountCreate();
 		}
-		else if(localStorAppPref == 'logMeIn') {
-			//localStorage.removeItem('appPreferences');
+		else if(localStorAppPref == 'logMeIn') { //load direct in case transfer to secure happens
 			writeCookie('loadDirectly','yes',90);
 			return showContent('customer',{'show':'myaccount'});
 		}
-		else {
+		else { //must have an account already
 			writeCookie('loadDirectly','yes',90);
 		}
 	}

@@ -2669,9 +2669,9 @@ buyer to 'take with them' as they move between  pages.
 /*bmo*/				width		: ($(window).width() > 500) ? 700 : '90%',autoOpen:false,
 /*bmo*/				open		: function(event, ui) {
 /*bmo*/					$('.ui-button').off('click.closeModal').on('click.closeModal', function(){
-/*bmo*/						app.ext.store_bmo_signup.u.writeCookie('loadDirectly','no',90);
+/*bmo*/						app.ext.store_bmo_signup.u.writeCookie('loadDirectly','no',90); //if modal is closed here, no login. set cookie to show preview next time
 /*bmo*/					});
-/*bmo*/					$('.ui-button').addClass('unDirect');
+/*bmo*/					$('.ui-button').addClass('unDirect'); //this class is added so that upon successful login the cookie function is removed from the close button
 /*bmo*/				},
 					close		: function(event, ui) {
 						//$('.ui-dialog').dialog('destroy');

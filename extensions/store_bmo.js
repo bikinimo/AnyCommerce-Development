@@ -398,7 +398,7 @@ var store_bmo = function() {
 //					app.calls.buyerProductLists.init('forgetme',{'callback':'handleForgetmeList','extension':'store_prodlist'},'immutable');
 					//if(localStorage.appPreferences !== 'signedUp') {localStorage.appPreferences = 'signedUp';} //set preference to bypass loading offer in case it was nuked elsewhere
 					app.ext.store_bmo_signup.u.writeCookie('loadDirectly','yes',90); //set preference to bypass loading offer in case it was nuked elsewhere
-					app.ext.store_bmo_signup.u.writeCookie('cookiePreference','user',90);
+					app.ext.store_bmo_signup.u.writeCookie('cookiePreference','user',90); //change cookie from preview options to prevent login or acct create from showing everytime.
 					app.model.dispatchThis('immutable');
 				showContent('customer',{'show':'myaccount'})
 					}
@@ -451,7 +451,7 @@ var store_bmo = function() {
 					title	: 'Create Account',
 					width	: 980,
 					height	: 500,
-					open	: function(event, ui) {
+					open	: function(event, ui) { //if modal is closed, set cookie to show preview next time, no acct. present... yet.
 						$('.ui-button').off('click.closeModal').on('click.closeModal', function(){
 							app.ext.store_bmo_signup.u.writeCookie('loadDirectly','no',90);
 						});
@@ -999,7 +999,7 @@ var store_bmo = function() {
 								$form.anymessage({'message':rd});
 							}
 							else {
-								app.ext.store_bmo_signup.u.writeCookie('loadDirectly','yes',90);
+								app.ext.store_bmo_signup.u.writeCookie('loadDirectly','yes',90); //acct created set cookie to skip preview next time
 								//localStorage.removeItem('appPreferences');
 								//localStorage.appPreferences = 'signedUp';
 								showContent('customer',{'show':'myaccount'});
