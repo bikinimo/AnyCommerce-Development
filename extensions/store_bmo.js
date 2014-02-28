@@ -396,13 +396,15 @@ var store_bmo = function() {
 					app.calls.appBuyerLogin.init({"login":email,"password":password},{'callback':'authenticateBuyer','extension':'myRIA'});
 					app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
 //					app.calls.buyerProductLists.init('forgetme',{'callback':'handleForgetmeList','extension':'store_prodlist'},'immutable');
-					if(localStorage.appPreferences !== 'signedUp') {localStorage.appPreferences = 'signedUp';} //set preference to bypass loading offer in case it was nuked elsewhere
+					//if(localStorage.appPreferences !== 'signedUp') {localStorage.appPreferences = 'signedUp';} //set preference to bypass loading offer in case it was nuked elsewhere
+					app.ext.store_bmo_signup.u.writeCookie('loadDirectly','yes',90); //set preference to bypass loading offer in case it was nuked elsewhere
+					app.ext.store_bmo_signup.u.writeCookie('cookiePreference','user',90);
 					app.model.dispatchThis('immutable');
+				showContent('customer',{'show':'myaccount'})
 					}
 				else {
 					$errorDiv.anymessage({'message':errors});
 					}
-				showContent('customer',{'show':'myaccount'})
 				//showContent('homepage',{})
 			}, //loginFrmSubmit
 			
@@ -444,7 +446,17 @@ var store_bmo = function() {
 			},
 			
 			showAccountCreate : function() {
-				$('#createaccountTemplate').dialog({'modal':'true','title':'Create Account','width':980,'height':500});
+				$('#createaccountTemplate').dialog({
+					modal	: true,
+					title	: 'Create Account',
+					width	: 980,
+					height	: 500,
+					open	: function(event, ui) {
+						$('.ui-button').off('click.closeModal').on('click.closeModal', function(){
+							app.ext.store_bmo_signup.u.writeCookie('loadDirectly','no',90);
+						});
+					}
+				});
 				app.ext.store_bmo.u.setTime();
 			},
 			
@@ -987,8 +999,9 @@ var store_bmo = function() {
 								$form.anymessage({'message':rd});
 							}
 							else {
-								localStorage.removeItem('appPreferences');
-								localStorage.appPreferences = 'signedUp';
+								app.ext.store_bmo_signup.u.writeCookie('loadDirectly','yes',90);
+								//localStorage.removeItem('appPreferences');
+								//localStorage.appPreferences = 'signedUp';
 								showContent('customer',{'show':'myaccount'});
 								app.u.throwMessage(app.u.successMsgObject("Your account has been created! Check your welcome e-mail for a gift from Bikinimo."));
 							}
@@ -1031,8 +1044,9 @@ var store_bmo = function() {
 							$('#mainContentArea').anymessage({'message':rd});
 						}
 						else {
-							localStorage.removeItem('appPreferences');
-							localStorage.appPreferences = 'signedUp';
+							app.ext.store_bmo_signup.u.writeCookie('loadDirectly','yes',90);
+							//localStorage.removeItem('appPreferences');
+							//localStorage.appPreferences = 'signedUp';
 							showContent('customer',{'show':'myaccount'});
 							app.u.throwMessage(app.u.successMsgObject("Your account has been created!"));
 						}

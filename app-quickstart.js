@@ -480,6 +480,7 @@ else	{
 				$('#loginMessaging').empty().show().append("Thank you, you are now logged in."); //used for success and fail messaging.
 				$('#loginFormContainer').hide(); //contains actual form.
 				$('#recoverPasswordContainer').hide(); //contains password recovery form.
+/*bmo*/			app.ext.store_bmo_signup.u.unloadDirectly('unDirect'); //removes extra close function
 				app.ext.myRIA.u.handleLoginActions();
 				}
 			} //authenticateBuyer
@@ -2661,7 +2662,21 @@ buyer to 'take with them' as they move between  pages.
 				$('#loginSuccessContainer').hide(); //contains 'continue' button.
 				$('#loginMessaging, #recoverPasswordMessaging').empty(); //used for success and fail messaging.
 				$('#loginFormContainer, #recoverPasswordContainer').show(); //contains actual form and password recovery form (second id)
-/*bmo*/			$('#loginFormForModal').dialog({modal: true, height:'auto', minHeight:350, width: ($(window).width() > 500) ? 700 : '90%',autoOpen:false});
+/*bmo*/			$('#loginFormForModal').dialog({
+/*bmo*/				modal		: true, 
+/*bmo*/				height		: 'auto', 
+/*bmo*/				minHeight	: 350, 
+/*bmo*/				width		: ($(window).width() > 500) ? 700 : '90%',autoOpen:false,
+/*bmo*/				open		: function(event, ui) {
+/*bmo*/					$('.ui-button').off('click.closeModal').on('click.closeModal', function(){
+/*bmo*/						app.ext.store_bmo_signup.u.writeCookie('loadDirectly','no',90);
+/*bmo*/					});
+/*bmo*/					$('.ui-button').addClass('unDirect');
+/*bmo*/				},
+					close		: function(event, ui) {
+						//$('.ui-dialog').dialog('destroy');
+					}
+				});
 				$('#loginFormForModal').dialog('open');
 				
 		

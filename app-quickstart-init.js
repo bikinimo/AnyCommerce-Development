@@ -36,6 +36,7 @@ app.rq.push(['extension',0,'store_bmo','extensions/store_bmo.js','startExtension
 app.rq.push(['extension',0,'cart_quickadd','extensions/cart_quickadd/extension.js']);
 app.rq.push(['extension',0,'store_bmo_lto','extensions/limited_time_offer/store_bmo_lto.js']);
 app.rq.push(['extension',0,'store_filter','extensions/store_filter.js']);
+app.rq.push(['extension',0,'store_bmo_signup','extensions/store_bmo_signup.js']);
 
 app.rq.push(['script',0,(document.location.protocol == 'file:') ? app.vars.testURL+'jsonapi/config.js' : app.vars.baseURL+'jquery/config.js']); //The config.js is dynamically generated.
 app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){return (typeof zoovyModel == 'function') ? true : false;}}
@@ -166,13 +167,14 @@ app.u.initMVC = function(attempts){
 	//	} 
 		app.preferenceSelected = !(typeof localStorage.appPreferences==="undefined");
 
-		if(readCookie('loadDirectly') == 'yes') {
+			//check if the appPreview has been loaded already and bypass if so (allows switch between http & https to happen w/out seeing appPreview twice).
+		if(readCookie('loadDirectly').indexOf('yes') > -1) {
 			app.preferenceSelected = true;
 		}
 		else {
-			writeCookie('loadDirectly','yes');
+			writeCookie('loadDirectly','yes',90);
 		}
-		app.u.dump('--* New stuff check:'); app.u.dump(app.preferenceSelected); app.u.dump(readCookie('loadDirectly'));
+//		app.u.dump('--* New stuff check:'); app.u.dump(app.preferenceSelected); app.u.dump(readCookie('loadDirectly'));
 		
 			//if there is a preference the app is gonna load, but if not show the buttons that will let user select a preference
 		if(app.preferenceSelected){
@@ -187,9 +189,9 @@ app.u.initMVC = function(attempts){
 			}, 1000);
 		}
 			
+			//wait to load app if preferenceSelected isn't true here
 		app.u.dump("Preference Selected? "+app.preferenceSelected);
 		if(app.preferenceSelected == true){
-			
 			app.u.loadApp();
 		} else {
 			app.loadOnSelect = true;
@@ -213,7 +215,7 @@ app.u.initMVC = function(attempts){
 			if(typeof preference !== "undefined"){
 				app.u.dump("Preference Selected: " + preference);
 				if(save){
-					writeCookie("cookiePreference",preference,30);
+					writeCookie("cookiePreference",preference,90);
 					//localStorage.setItem("appPreferences",preference);
 					app.u.dump('--* In selectPreference'); app.u.dump(readCookie("cookiePreference"));
 				} else {
@@ -296,14 +298,20 @@ app.u.appInitComplete = function(P)	{
 		var localStorAppPref = readCookie("cookiePreference");
 		if(localStorAppPref == "guest") {
 			//localStorage.removeItem('appPreferences');
+			writeCookie('loadDirectly','no',90);
 		}
 		else if(localStorAppPref == 'signMeUp') {
 			//localStorage.removeItem('appPreferences');
+			writeCookie('loadDirectly','yes',90);
 			return app.ext.store_bmo.a.showAccountCreate();
 		}
 		else if(localStorAppPref == 'logMeIn') {
 			//localStorage.removeItem('appPreferences');
+			writeCookie('loadDirectly','yes',90);
 			return showContent('customer',{'show':'myaccount'});
+		}
+		else {
+			writeCookie('loadDirectly','yes',90);
 		}
 	}
 	else {app.u.dump("Executing myAppIsLoaded code...");}
