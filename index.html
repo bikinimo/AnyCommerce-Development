@@ -31,7 +31,7 @@ var app = {vars:{
 	"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
-	"testURL":"https://www.9a34ba.pop.zoovy.net/" //used ONLY if protocol is file: (for testing)
+	"testURL":"http://www.9a34ba.pop.zoovy.net/" //used ONLY if protocol is file: (for testing)
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -236,7 +236,7 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
           </ul>
           <ul style="margin:0PX;">
             <li><a href="#!cart?show=cart" data-onclick="#!cart?show=cart">View Cart</a></li>
-            <li><a href="#!cart?show=cart" data-onclick="#!cart?show=cart">Checkout</a></li>
+            <li><a href="#!cart?show=cart" data-onclick="#!checkout?show=checkout">Checkout</a></li>
             <li><a href="#!company?show=privacy" data-onclick="#!company?show=privacy">Privacy Policy</a></li>
           </ul>
         </div>
