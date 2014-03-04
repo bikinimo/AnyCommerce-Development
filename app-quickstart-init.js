@@ -193,9 +193,21 @@ myApp.model.dpsSet('quickstart','suppressMkt',true);
 
 */
 
+function kvp2array(pairs) {
+	var request = {};
+	for (var i = 0; i < pairs.length; i++) {
+		var pair = pairs[i].split('=');
+		request[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+		}
+	return request;
+	}
 
-
-
+if(document.location.search)	{
+	var uriParams = _app.u.kvp2Array(document.location.search);
+	if(uriParams.suppressMkt)	{
+		app.u.dump(" -> marketing suppressed due to URI param.");
+		}
+	}
 
 		//app.preferenceSelected = !(typeof localStorage.appPreferences==="undefined");
 		app.preferenceSelected = false;
