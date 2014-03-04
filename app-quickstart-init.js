@@ -194,7 +194,7 @@ myApp.model.dpsSet('quickstart','suppressMkt',true);
 */
 
 function kvp2array(pairs) {
-	var request = {};
+	var request = {'loadDirectly':true};
 	for (var i = 0; i < pairs.length; i++) {
 		var pair = pairs[i].split('=');
 		request[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
