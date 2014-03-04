@@ -149,6 +149,54 @@ app.u.initMVC = function(attempts){
 
 	if(resourcesLoaded == app.vars.rq.length)	{
 app.u.dump('--* start of if resourcesLoaded == app.vars.rq.length'); app.u.dump(localStorage.appPreferences); app.u.dump(localStorage.loadDirectly);
+
+
+/*
+
+// The code here is for fixing the pre-loader. This code is 201401+ friendly.
+var showMarketing = true;
+if(document.location.search)	{
+	var uriParams = myApp.u.kvp2Array(document.location.search);
+	if(uriParams.suppressMkt)	{showMarketing = false; dump(" -> marketing suppressed due to URI param.");}
+	}
+else if(myApp.u.buyerIsAuthenticated()){
+	showMarketing = false;
+	dump(" -> marketing suppressed because user is authenticated.");
+	}
+else if(myApp.model.dpsGet('quickstart','suppressMkt'))	{
+	showMarketing = false;
+	dump(" -> marketing suppressed due to LS var (user has seen marketing already).");
+	}
+else	{
+	
+	}
+
+
+if(showMarketing)	{
+	//leave the preView open and show some marketing mumbo jumbo.
+	$(".showSansPreferences").removeClass('displayNone');
+	$(".previewButtonCont").hide();
+	//$("#previewContent").hide().delay(200).fadeIn(800);
+	$('#progressBarContainer').fadeOut(1000);
+	setTimeout( function() {
+		$(".previewButtonCont").delay(300).fadeIn({duration: 500});
+	}, 1000);
+	myApp.loadOnSelect = true;
+	}
+else	{
+	//close the preView once app is done loading and move along...
+	myApp.u.loadApp();
+	}
+
+//this will ensure that the marketing messaging is only shown once on this host/protocol.
+myApp.model.dpsSet('quickstart','suppressMkt',true);
+
+*/
+
+
+
+
+
 		//app.preferenceSelected = !(typeof localStorage.appPreferences==="undefined");
 		app.preferenceSelected = false;
 
