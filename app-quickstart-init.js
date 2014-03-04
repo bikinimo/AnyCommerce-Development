@@ -203,7 +203,7 @@ function kvp2array(pairs) {
 	}
 
 if(document.location.search)	{
-	var uriParams = _app.u.kvp2Array(document.location.search);
+	var uriParams = kvp2Array(document.location.search);
 	if(uriParams.suppressMkt)	{
 		app.u.dump(" -> marketing suppressed due to URI param.");
 		}
