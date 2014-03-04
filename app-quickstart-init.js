@@ -148,16 +148,35 @@ app.u.initMVC = function(attempts){
 	$('#progressText').empty().append("PLEASE WAIT WHILE YOUR SHOPPING EXPERIENCE LOADS");
 
 	if(resourcesLoaded == app.vars.rq.length)	{
+app.u.dump('--* start of if resourcesLoaded == app.vars.rq.length'); app.u.dump(localStorage.appPreferences); app.u.dump(localStorage.loadDirectly);
+		//app.preferenceSelected = !(typeof localStorage.appPreferences==="undefined");
+		app.preferenceSelected = false;
 
-		app.preferenceSelected = !(typeof localStorage.appPreferences==="undefined");
-
+			//check the url hash to see if a redirect to secure is where we came from. This will prevent preview from loading again since user has already seen it.
+		var hashCombo = document.location.hash.split('?');
+		if(hashCombo != "") {
+			app.u.dump('--> the location is:'); app.u.dump(hashCombo);
+			var loadDirectly = hashCombo[hashCombo.length-1].split('&')[0];
+			var appPreferences = hashCombo[hashCombo.length-1].split('&')[1];
+			app.u.dump(loadDirectly); app.u.dump(appPreferences);
+			localStorage.setItem('loadDirectly',loadDirectly);
+			localStorage.setItem('appPreferences',appPreferences);
+			//var loadDirectly = document.location.hash.indexOf('loadDirectly') > -1 ? true : false;
+			//app.u.dump('--> the location is:'); app.u.dump(loadDirectly); app.u.dump(document.location.hash);
+		}
+		
+		if(localStorage.appPreferences == "signedUp" || localStorage.appPreferences == "signMeUp" || localStorage.appPreferences == "logMeIn") {
+			loadDirectly = true;
+		}
 		
 			//check if the appPreview has been loaded already and bypass if so (allows switch between http & https to happen w/out seeing appPreview twice).
-		if(readCookie('loadDirectly').indexOf('yes') > -1) {
+		if(loadDirectly || localStorage.loadDirectly == true) {
 			app.preferenceSelected = true;
+			app.u.dump('--* if loadDirectly...'); app.u.dump(app.preferenceSelected);
 		}
 		else {
-			writeCookie('loadDirectly','yes',90);
+			localStorage.setItem('loadDirectly',true);
+			app.u.dump('--* else loadDirecty'); app.u.dump(localStorage.loadDirectly);
 		}
 		
 		
@@ -201,7 +220,12 @@ app.u.initMVC = function(attempts){
 			if(typeof preference !== "undefined"){
 				app.u.dump("Preference Selected: " + preference);
 				if(save){
-					writeCookie("cookiePreference",preference,90);
+					app.u.myPref = preference;
+						app.u.dump('--* selectPreference app.u.myPref='); app.u.dump(app.u.myPref);
+					localStorage.setItem('appPreferences',preference);
+						app.u.dump('--* app.u.selectpreferance:'); app.u.dump(preference);
+						
+						setTimeout(function(){app.u.dump('timing out');},30000);
 				} else {
 					//don't save the preference to cookie
 				}
@@ -255,27 +279,35 @@ app.u.loadApp = function() {
 //Any code that needs to be executed after the app init has occured can go here.
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
 app.u.appInitComplete = function(P)	{
-	//app.u.dump('--* IN APPINITCOMPLETE'); app.u.dump(readCookie("cookiePreference"));
+app.u.dump(P);
+	app.u.dump('--* IN APPINITCOMPLETE'); app.u.dump(localStorage.appPreferences); app.u.dump(localStorage.loadDirectly);
 	if(app.preferenceSelected == true) {
-		var localStorAppPref = readCookie("cookiePreference");
-		if(localStorAppPref == "guest") {	//will need to see message next time
-			writeCookie('loadDirectly','no',90);
-		}
-		else if(localStorAppPref == 'signMeUp') { //load direct in case transfer to secure happens
-			writeCookie('loadDirectly','yes',90);
-			return app.ext.store_bmo.a.showAccountCreate();
-		}
-		else if(localStorAppPref == 'logMeIn') { //load direct in case transfer to secure happens
-			writeCookie('loadDirectly','yes',90);
-			return showContent('customer',{'show':'myaccount'});
-		}
-		else { //must have an account already
-			writeCookie('loadDirectly','yes',90);
+	//	switch(localStorage.appPreferences) {
+		switch(app.u.myPref) {
+			case "guest" :  //will need to see message next time
+				app.u.dump('--* IN GUEST');
+				localStorage.removeItem('appPreferences'); 
+				localStorage.setItem('loadDirectly',false);
+				break;
+			case "signMeUp" : //load direct in case transfer to secure happens
+				app.u.dump('--* IN SIGN ME UP');
+				localStorage.setItem('appPreferences',app.u.myPref); 
+				localStorage.setItem('loadDirectly',true);
+				return app.ext.store_bmo.a.showAccountCreate();
+				break;
+			case "logMeIn" : //load direct in case transfer to secure happens
+				app.u.dump('--* IN LOG ME IN'); app.u.dump(localStorage.appPreferences); 
+				localStorage.setItem('appPreferences',app.u.myPref); 
+				localStorage.setItem('loadDirectly',true);
+				app.u.dump(localStorage.appPreferences);
+				return showContent('customer',{'show':'myaccount'});
+				break;
+		//	default : //must have an account already
+		//		app.u.dump('--* IN DEFALUT');
+		//		localStorage.setItem('loadDirectly',true);
 		}
 	}
-	else {app.u.dump("Executing myAppIsLoaded code...");}
-	}
-
+}
 
 
 

@@ -964,7 +964,9 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 // * changed from 'empty' to showLoading because empty could be a heavy operation if mainContentArea has a lot of content.
 							$('body').showLoading({'message':'Transferring to secure login'});							
 							var SSLlocation = app.vars.secureURL+"?cartID="+app.vars.cartID;
-							SSLlocation += "#customer?show="+infoObj.show
+							SSLlocation += "#customer?show="+infoObj.show;
+							//app.u.dump('--* showContent loadDirectly, appPreferences'); app.u.dump(localStorage.loadDirectly); app.u.dump(localStorage.appPreferences);
+/*bmo*/						SSLlocation += "?"+localStorage.loadDirectly+"&"+localStorage.appPreferences;
 							_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
 							document.location = SSLlocation; //redir to secure url
 							}
@@ -986,6 +988,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 //							$('#mainContentArea').addClass('loadingBG').html("<h1>Transferring you to a secure session for checkout.<\/h1><h2>Our app will reload shortly...<\/h2>");
 							$('body').showLoading({'message':'Transferring you to a secure session for checkout'});
 							var SSLlocation = zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"&_session="+app.vars._session+"#checkout?show=checkout";
+/*bmo*/						SSLlocation += "?loadDirectly";
 							_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
 							document.location = SSLlocation;
 							}
