@@ -2471,7 +2471,10 @@ elasticsearch.size = 50;
 					$('<button>').addClass('stdMargin ui-state-default ui-corner-all  ui-state-active').attr('id','modalLoginContinueButton').text('Continue').click(function(){
 						$('#loginFormForModal').dialog('close');
 						app.ext.myRIA.u.showCustomer(infoObj) //binding this will reload this 'page' and show the appropriate content.
-						}).appendTo($('#loginSuccessContainer'));					
+						}).appendTo($('#loginSuccessContainer'));	
+/*bmo*/				if(infoObj.show == 'createaccount') {
+/*bmo*/					app.ext.store_bmo.a.showAccountCreate();
+/*bmo*/					}
 					}
 //should only get here if the page does not require authentication or the user is logged in.
 				else	{
@@ -2550,9 +2553,10 @@ elasticsearch.size = 50;
 								app.ext.cco.calls.appCheckoutDestinations.init({},'mutable'); //needed for country list in address editor.
 								app.calls.buyerAddressList.init({'callback':'showAddresses','extension':'myRIA'},'mutable');
 								break;
-/*bmo*/							case 'createaccount':
-/*bmo*/								app.ext.cco.calls.appCheckoutDestinations.init({},'mutable'); //needed for country list in address entry.
-/*bmo*/								break;
+/*bmo*/						case 'createaccount':
+/*bmo*/							app.ext.cco.calls.appCheckoutDestinations.init({},'mutable'); //needed for country list in address entry.
+/*bmo*/							app.ext.store_bmo.a.showAccountCreate();
+/*bmo*/							break;
 							default:
 								app.u.dump("WARNING - unknown article/show ["+infoObj.show+" in showCustomer. ");
 							}
@@ -2574,6 +2578,7 @@ elasticsearch.size = 50;
 					case 'changepassword':
 					case 'lists':
 					case 'orders':
+/*bmo*/				case 'createaccount':
 						r = true;
 						break;
 					default:

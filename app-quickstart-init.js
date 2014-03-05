@@ -148,7 +148,7 @@ app.u.initMVC = function(attempts){
 	$('#progressText').empty().append("PLEASE WAIT WHILE YOUR SHOPPING EXPERIENCE LOADS");
 
 	if(resourcesLoaded == app.vars.rq.length)	{
-app.u.dump('--* start of if resourcesLoaded == app.vars.rq.length'); app.u.dump(localStorage.appPreferences); app.u.dump(localStorage.loadDirectly);
+//app.u.dump('--* start of if resourcesLoaded == app.vars.rq.length'); app.u.dump(localStorage.appPreferences); app.u.dump(localStorage.loadDirectly);
 
 
 /*
@@ -299,25 +299,6 @@ if(document.location.search)	{
 			//app preference is already set, don't do it again! (might screw with the loading process)
 		}
 	}
-	
-		//will read cookies here so can be used before signup extension is loaded
-	readCookie = function getCookie(cname) {
-		var value = cname + "=";
-		var ca = document.cookie.split(';');
-		for(var i=0; i<ca.length; i++) 
-		  {
-		  var c = ca[i].trim();
-		  if (c.indexOf(value)==0) return c.substring(value.length,c.length);
-		  }
-		return "";
-	}
-	
-	writeCookie = function setCookie(cname,cvalue,exdays) {
-		var d = new Date();
-		d.setTime(d.getTime()+(exdays*24*60*60*1000));
-		var expires = "expires="+d.toGMTString();
-		document.cookie = cname+"="+cvalue+"; "+expires;
-	}
 		
 
 //app.u.skipPreference = function(){
@@ -353,7 +334,8 @@ app.u.dump(P);
 				app.u.dump('--* IN SIGN ME UP');
 				localStorage.setItem('appPreferences',app.u.myPref); 
 				localStorage.setItem('loadDirectly',true);
-				return app.ext.store_bmo.a.showAccountCreate();
+			//	return app.ext.store_bmo.a.showAccountCreate();
+				return showContent('customer',{'show':'createaccount'});
 				break;
 			case "logMeIn" : //load direct in case transfer to secure happens
 				app.u.dump('--* IN LOG ME IN'); app.u.dump(localStorage.appPreferences); 
