@@ -1919,10 +1919,9 @@ app.model.dispatchThis('passive');
 			payMethodsAsRadioButtons : function($tag,data)	{
 //				app.u.dump('BEGIN app.ext.orderCreate.renderFormats.payOptionsAsRadioButtons');
 //				app.u.dump(data);
-
+				$tag.empty();
 				var L = data.value.length,
-				o = "", //the output appended to $tag
-				id = ''; //recycled.
+				o = ""; //the output appended to $tag
 
 //ZERO will be in the list of payment options if customer has a zero due (giftcard or paypal) order.
 				if(data.value[0].id == 'ZERO')	{
@@ -1931,13 +1930,33 @@ app.model.dispatchThis('passive');
 					}
 				else if(L > 0)	{
 					for(var i = 0; i < L; i += 1)	{
-						id = data.value[i].id;
+						var id = data.value[i].id; //shortcut
+// ** BIKINIMO -> modified to support giftcards better.
 
+						var $o = $("<div class='headerPadding' data-app-role='paymentMethodContainer' \/>");
+						var $label = $("<label \/>");
+						if(id.indexOf("GIFTCARD") === 0)	{
+							$("<button \/>")
+								.text('add')
+								.attr({'title':'Apply this giftcard towards this purchase','data-giftcard-id':id.split(':')[1]})
+								.button({icons: {primary: "ui-icon-cart"},text: true})
+								.on('click',function(event){
+									event.preventDefault();
+									var $fieldset = $(this).closest('fieldset'); //used for context.
+									$("input[name='giftcard']",$fieldset).val($(this).attr('data-giftcard-id'));
+									$("button[data-button-id='execGiftcardAdd']",$fieldset).trigger('click');
+									})
+								.appendTo($label);
+							}
+						else	{
 //onClick event is added through an app-event. allows for app-specific events.
-						o += "<div class='headerPadding' data-app-role='paymentMethodContainer'><label><input type='radio' name='want/payby' value='"+id+"' ";
-						o += " />"+data.value[i].pretty+"<\/label></div>";
+							$label.append("<input type='radio' name='want/payby' value='"+id+"'  />");
+							}
+						$label.append(data.value[i].pretty);
+						$label.appendTo($o);
+						$tag.append($o);
 						}
-					$tag.html(o);
+					
 					if(app.data.cartDetail && app.data.cartDetail.want && app.data.cartDetail.want.payby)	{
 						$("input[value='"+app.data.cartDetail.want.payby+"']",$tag).attr('checked','checked');
 						}
