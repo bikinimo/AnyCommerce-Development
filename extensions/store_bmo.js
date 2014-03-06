@@ -1003,7 +1003,8 @@ var store_bmo = function() {
 								//localStorage.removeItem('appPreferences');
 								//localStorage.appPreferences = 'signedUp';
 								showContent('customer',{'show':'myaccount'});
-								app.u.throwMessage(app.u.successMsgObject("Your account has been created! Check your welcome e-mail for a gift from Bikinimo."));
+								app.u.throwMessage(app.u.successMsgObject("A gift card has been added to your account, look for it during checkout."));
+								//app.u.throwMessage(app.u.successMsgObject("Your account has been created! Check your welcome e-mail for a gift from Bikinimo."));
 							}
 						}
 					}
