@@ -480,7 +480,6 @@ else	{
 				$('#loginMessaging').empty().show().append("Thank you, you are now logged in."); //used for success and fail messaging.
 				$('#loginFormContainer').hide(); //contains actual form.
 				$('#recoverPasswordContainer').hide(); //contains password recovery form.
-/*bmo*/			app.ext.store_bmo_signup.u.unloadDirectly('unDirect'); //removes extra close function
 				app.ext.myRIA.u.handleLoginActions();
 				}
 			} //authenticateBuyer
@@ -2555,7 +2554,7 @@ elasticsearch.size = 50;
 								break;
 /*bmo*/						case 'createaccount':
 /*bmo*/							app.ext.cco.calls.appCheckoutDestinations.init({},'mutable'); //needed for country list in address entry.
-/*bmo*/							app.ext.store_bmo.a.showAccountCreate();
+/*bmo*/							//app.ext.store_bmo.a.showAccountCreate();
 /*bmo*/							break;
 							default:
 								app.u.dump("WARNING - unknown article/show ["+infoObj.show+" in showCustomer. ");

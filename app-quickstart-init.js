@@ -42,7 +42,6 @@ app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){
 	//includes added in index
 //app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
 
-
 app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']); //used pretty early in process..
