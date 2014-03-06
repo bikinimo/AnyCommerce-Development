@@ -999,7 +999,7 @@ var store_bmo = function() {
 								$form.anymessage({'message':rd});
 							}
 							else {
-								localStorage.setItem('loadDirectly',true); //acct created set cookie to skip preview next time
+								localStorage.setItem('loadDirectly',true); //acct created set local to skip preview next time
 								//localStorage.removeItem('appPreferences');
 								//localStorage.appPreferences = 'signedUp';
 								showContent('customer',{'show':'myaccount'});

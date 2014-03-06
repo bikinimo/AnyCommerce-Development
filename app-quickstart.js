@@ -2669,21 +2669,7 @@ buyer to 'take with them' as they move between  pages.
 				$('#loginSuccessContainer').hide(); //contains 'continue' button.
 				$('#loginMessaging, #recoverPasswordMessaging').empty(); //used for success and fail messaging.
 				$('#loginFormContainer, #recoverPasswordContainer').show(); //contains actual form and password recovery form (second id)
-/*bmo*/			$('#loginFormForModal').dialog({
-/*bmo*/				modal		: true, 
-/*bmo*/				height		: 'auto', 
-/*bmo*/				minHeight	: 350, 
-/*bmo*/				width		: ($(window).width() > 500) ? 700 : '90%',autoOpen:false,
-/*bmo*/				open		: function(event, ui) {
-/*bmo*/					$('.ui-button').off('click.closeModal').on('click.closeModal', function(){
-/*bmo*/						app.ext.store_bmo_signup.u.writeCookie('loadDirectly','no',90); //if modal is closed here, no login. set cookie to show preview next time
-/*bmo*/					});
-/*bmo*/					$('.ui-button').addClass('unDirect'); //this class is added so that upon successful login the cookie function is removed from the close button
-/*bmo*/				},
-					close		: function(event, ui) {
-						//$('.ui-dialog').dialog('destroy');
-					}
-				});
+/*bmo*/			$('#loginFormForModal').dialog({modal:true,height:'auto',minHeight:350,width:($(window).width() > 500) ? 700 : '90%',autoOpen:false,});
 				$('#loginFormForModal').dialog('open');
 				
 		

@@ -18,6 +18,12 @@
 <base href='' /><!-- leave blank so it works for a local file. updated to / if protocol is not file: -->
 
 
+<!-- ** 201338 -> jquery and jquery ui are pivotal to the functionality of the app. load them first -->
+	<!-- *** LIGHTBOX EXTENSION/PLUGIN DOESN'T LIKE JQUERY 1.10.2, AND REQUIRES 1.8.3 (AS OF 1/10/2014) *** -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+
+<script type="text/javascript" src="includes.js"></script>
 
 <script type="text/javascript">
 //var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
@@ -27,13 +33,15 @@ _gaq.push(['_trackPageview']);
 var myCreole;
 
 var app = {vars:{
-	"release":"201346.20140305152300",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201346.20140305162500",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
 	"testURL":"http://www.9a34ba.pop.zoovy.net/" //used ONLY if protocol is file: (for testing)
 	},u:{},rq:[]};
 
+	myCreole = new Parse.Simple.Creole();
+	
 //set base url so images, css, js, etc all load from appropriate location once deployed.
 //baseURL as blank lets loadScript function run off local copy when testing locally.
 if(document.location.protocol == 'file:')	{

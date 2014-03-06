@@ -36,11 +36,12 @@ app.rq.push(['extension',0,'store_bmo','extensions/store_bmo.js','startExtension
 app.rq.push(['extension',0,'cart_quickadd','extensions/cart_quickadd/extension.js']);
 app.rq.push(['extension',0,'store_bmo_lto','extensions/limited_time_offer/store_bmo_lto.js']);
 app.rq.push(['extension',0,'store_filter','extensions/store_filter.js']);
-app.rq.push(['extension',0,'store_bmo_signup','extensions/store_bmo_signup.js']);
 
 app.rq.push(['script',0,(document.location.protocol == 'file:') ? app.vars.testURL+'jsonapi/config.js' : app.vars.baseURL+'jquery/config.js']); //The config.js is dynamically generated.
 app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){return (typeof zoovyModel == 'function') ? true : false;}}
-app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
+	//includes added in index
+//app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
+
 
 app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 
