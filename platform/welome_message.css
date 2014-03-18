@@ -9,6 +9,7 @@
 
 .message {height:390px; width:922px; border:1px solid #b1b1b1; border-radius:5px; clear:both; margin:0 auto; padding:20px;}
 .graphic {height:386px; width:250px; float:left;}
+.graphic img {border-radius:5px;}
 .graphic, .text {border:1px solid #54a7e1; border-radius:5px; box-shadow:3px 3px 3px 0 #b1b1b1;}
 .text {height:376px; width:545px; float:left; margin:0 0 0 20px; padding:10px 0 0 100px; position:relative;}
 .text h1 {color:#286C99; margin-bottom:0;}
