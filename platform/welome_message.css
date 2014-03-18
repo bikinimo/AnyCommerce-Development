@@ -1,0 +1,17 @@
+.body, html {font-family:Ubuntu,serif; font-size:16px; font-weight:normal;}
+.wrapper {height:auto; width:964px; margin:0 auto;}
+
+.nav {margin:5px 0 10px 0; padding:0px; width:964px; float:left; background:url(http://app.bikinimo.com/images/nav_bg.png) no-repeat; height:27px;}
+.nav ul {margin:0px; padding:0; float:left; list-style:none;}
+.nav li {margin:0px; padding:5px 10px; list-style-type:none; float:left;}
+.nav a {color:#FFFFFF; font-size:14px; text-decoration:none; padding:4px 10px;}
+.nav a:hover {color:#fe7a00;}
+
+.message {height:390px; width:922px; border:1px solid #b1b1b1; border-radius:5px; clear:both; margin:0 auto; padding:20px;}
+.graphic {height:386px; width:250px; float:left;}
+.graphic, .text {border:1px solid #54a7e1; border-radius:5px; box-shadow:3px 3px 3px 0 #b1b1b1;}
+.text {height:376px; width:545px; float:left; margin:0 0 0 20px; padding:10px 0 0 100px; position:relative;}
+.text h1 {color:#286C99; margin-bottom:0;}
+.text p {margin:10px 0 50px 0;}
+.text a {height:auto; width:120px; background:#286C99; border:1px solid #54a7e1; border-radius:5px; color:#ffffff; display:block; font-size:18px; margin:40px 0 0 160px; padding:10px; text-align:center; text-decoration:none;}
+.text span {position:absolute; bottom:10px; left:10px; font-size:10px;}
