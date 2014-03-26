@@ -33,7 +33,7 @@ _gaq.push(['_trackPageview']);
 var myCreole;
 
 var app = {vars:{
-	"release":"201346.20140326122900",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201346.20140326132800",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
@@ -2988,9 +2988,10 @@ put all filters into the appFilters container.
 		</fieldset>
 		
 		<fieldset class='displayNone' data-elastic-key="item_category1 item_category2 item_category3 item_category4 item_category5 item_category6 item_category7 item_category8" data-filtertype="hidden">
-            <input class='triggerBox displayNone' type='checkbox' value='bikini+set'></input>
 			<input type='hidden' name="h-bikiniset" value="bikini+set" />
 		</fieldset>
+
+		<input class='triggerBox displayNone' type='checkbox' value='bikini+set'></input> <!-- triggers content to load until category products are added -->
         
 		<button class='resetButton floatRight'>RESET OPTIONS</button>
 
@@ -3068,11 +3069,12 @@ put all filters into the appFilters container.
             <input type='hidden' name="h-top" value="separate" />
 		</fieldset>
         
+		<input class='triggerBox displayNone' type='checkbox' value='separate'></input> <!-- triggers content to load until category products are added -->
+		
 		<button class='resetButton floatRight'>RESET OPTIONS</button>
 		
         <fieldset data-elastic-key="item_category1 item_category2 item_category3 item_category4 item_category5 item_category6 item_category7 item_category8" data-filtertype="checkboxes">
             <legend>Piece</legend>
-			<input class='triggerBox displayNone' type='checkbox' value='separate'></input>
             <label class='break'><input class="" type='checkbox' value='top' /> Tops</label>
             <label class='break'><input class="" type='checkbox' value='bottom' /> Bottoms</label>
         </fieldset>

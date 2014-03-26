@@ -285,7 +285,7 @@ if(document.location.search)	{
 					localStorage.setItem('appPreferences',preference);
 						app.u.dump('--* app.u.selectpreferance:'); app.u.dump(preference);
 						
-						setTimeout(function(){app.u.dump('timing out');},30000);
+						//setTimeout(function(){app.u.dump('timing out');},30000);
 				} else {
 					//don't save the preference to cookie
 				}

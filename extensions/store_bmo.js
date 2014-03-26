@@ -53,7 +53,7 @@ var store_bmo = function() {
 						//make sure tab4 only anycontents the accessories product list once. 
 					if(!$context.data('tab4Templated')){
 						app.ext.store_bmo.u.loadProductsAsList('.app-categories.accessories');
-						app.ext.store_bmo.u.runHomeCarouselTab4($context);
+						//app.ext.store_bmo.u.runHomeCarouselTab4($context); call moved to renderProductsAsList
 						$context.data('tab4Templated',true);
 						app.u.dump('data added?'); app.u.dump($context.data('tab4Templated'));
 					}
@@ -131,6 +131,7 @@ var store_bmo = function() {
 				onSuccess : function(responseData) {
 			//		app.u.dump(app.data[responseData.datapointer]);
 					$('#carCat6','.homeTemplate').anycontent({"templateID":"tab4Template","datapointer":responseData.datapointer});
+					app.ext.store_bmo.u.runHomeCarouselTab4($('.homeTemplate'));
 				},
 				onError : function(responseData){
 					app.u.dump('Error in extension: store_bmo_ renderProductsAsList');
