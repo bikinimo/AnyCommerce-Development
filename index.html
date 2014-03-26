@@ -2988,7 +2988,8 @@ put all filters into the appFilters container.
 		</fieldset>
 		
 		<fieldset class='displayNone' data-elastic-key="item_category1 item_category2 item_category3 item_category4 item_category5 item_category6 item_category7 item_category8" data-filtertype="hidden">
-            <input type='hidden' name="h-bikiniset" value="bikini+set" />
+            <input class='triggerBox displayNone' type='checkbox' value='bikini+set'></input>
+			<input type='hidden' name="h-bikiniset" value="bikini+set" />
 		</fieldset>
         
 		<button class='resetButton floatRight'>RESET OPTIONS</button>
@@ -3076,16 +3077,16 @@ put all filters into the appFilters container.
         </fieldset>
 		
 		<fieldset class='displayNone' data-elastic-key="item_category1 item_category2 item_category3 item_category4 item_category5 item_category6 item_category7 item_category8" data-filtertype="hidden">
-            <input type='hidden' name="h-top" value="top" />
-            <input type='hidden' name="h-bottom" value="bottom" />
+            <input type='hidden' name="h-top" value="separate" />
 		</fieldset>
         
 		<button class='resetButton floatRight'>RESET OPTIONS</button>
 		
-        <fieldset data-elastic-key="tops_or_bottoms" data-filtertype="checkboxes">
+        <fieldset data-elastic-key="item_category1 item_category2 item_category3 item_category4 item_category5 item_category6 item_category7 item_category8" data-filtertype="checkboxes">
             <legend>Piece</legend>
-            <label class='break'><input class="" type='checkbox' value='bikini top' /> Tops</label>
-            <label class='break'><input class="" type='checkbox' value='bikini bottom' /> Bottoms</label>
+			<input class='triggerBox displayNone' type='checkbox' value='separate'></input>
+            <label class='break'><input class="" type='checkbox' value='top' /> Tops</label>
+            <label class='break'><input class="" type='checkbox' value='bottom' /> Bottoms</label>
         </fieldset>
         
         <fieldset data-elastic-key="pogs" data-filtertype="checkboxes">

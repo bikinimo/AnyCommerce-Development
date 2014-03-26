@@ -38,14 +38,17 @@ var store_filter = function() {
 			"filter": "bikiniSetsForm",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){
 				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
-				//app.ext.store_filter.u.triggerBox($form);
+				app.ext.store_filter.u.triggerBox($form);
 			}
 		},
 		
 			//display for bottoms in this category is allowed through css override of hideFromList() function
 		".app-categories.separates":{ //category for filter
 			"filter": "separatesForm",	//name of filter form to use for this category
-			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
+			"exec" : function($form,infoObj){
+				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
+				app.ext.store_filter.u.triggerBox($form);
+			}
 		},
 		
 		".app-categories.tankinis":{ //category for filter
@@ -66,7 +69,7 @@ var store_filter = function() {
 		
 		".app-categories.one_pieces":{ //category for filter
 			"filter": "onePiecesForm",	//name of filter form to use for this category
-			"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
+			"exec" : function($form,infoObj) {app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
 		},
 		
 	//	".45-solid-color-swimsuits":{ //category for filter
@@ -249,7 +252,7 @@ var store_filter = function() {
 					app.u.dump(" -> validated Filter Properties.")
 					var query = {
 						"mode":"elastic-native",
-						"size":68,
+						"size":100,
 						"filter" : app.ext.store_filter.u.buildElasticFilters($form)
 					}//query
 					
@@ -309,7 +312,7 @@ var store_filter = function() {
 				//w/ all item_category items for attrib. indicated on input.
 			triggerBox : function($form) {
 					//no timeout triggered check to early
-				setTimeout(function(){$('.triggerBox input', $form).trigger('click');},250);
+				setTimeout(function(){$('.triggerBox', $form).trigger('click');},250);
 			},
 		
 				//adds hidden field to limit filter results to category filter is in
