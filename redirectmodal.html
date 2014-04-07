@@ -105,7 +105,9 @@ loadcss('http://app.bikinimo.com/redirectmodal.css'); //MARK
 	};
 	
 	
-	document.addEventListener('DOMContentLoaded',function(){
+	var onReady = function(){
+		console.log('here');
+		console.log(typeof Storage);
 		if(typeof Storage !== "undefined" && redirectModal.shouldRedirect()){
 			if(localStorage.getItem('redirectModal.redirect')){
 				redirectModal.open(true);
@@ -115,7 +117,18 @@ loadcss('http://app.bikinimo.com/redirectmodal.css'); //MARK
 				redirectModal.open();
 			}
 		}
-	});
+	}
+	
+	if(document.addEventListener){
+		document.addEventListener('DOMContentLoaded',onReady);
+	}
+	else {
+		document.onreadystatechange = function(){
+			if(document.readyState == 'complete'){
+				onReady();
+			}
+		}
+	}
 	
 	
 	Element.prototype.remove = function() {
