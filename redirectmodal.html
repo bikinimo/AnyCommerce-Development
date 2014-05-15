@@ -53,6 +53,8 @@ loadcss('http://app.bikinimo.com/redirectmodal.css'); //MARK
 				else if	(window.location.pathname.indexOf('shipping') >= 0){ redirectModal.destination += "#company?show=shipping";}
 				else if	(window.location.pathname.indexOf('returns') >= 0){ redirectModal.destination += "#company?show=returns";}
 				else if	(window.location.pathname.indexOf('contact_us') >= 0){ redirectModal.destination += "#company?show=contact";}
+				else if (window.location.pathname.indexOf('product') >= 0){ redirectModal.destination += "";}
+				else if (window.location.pathname.indexOf('category') >= 0){ redirectModal.destination += "";}
 				else	{ redirectModal.destination += window.location.pathname;}
 			}
 			console.log("Destination: "+redirectModal.destination);
