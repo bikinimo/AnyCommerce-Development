@@ -16,7 +16,7 @@ General tab
 .peGeneralTabContent legend,
 .peGeneralTabContent h4	{margin:0 0 12px 0; padding:0; clear:both;}
 
-
+.productTabsUL	{font-size:.85em;}
 
 .tagging	{
 	margin-left:0; padding-left:0;
@@ -33,7 +33,7 @@ General tab
 	}
 
 
-
+.productSearchInput	{width:45%; font-size:1.4em; border:0; font-weight:normal; margin:1px 6px; padding:2px 12px;}
 
 /* inventory */
 
@@ -132,5 +132,7 @@ tbody.variationGroupOptions	{
 */
 
 
-
+.skuFinder .variation	{margin-bottom:.3em;}
+.skuFinder label	{margin-right:.2em;}
+.skuFinder .ghint_qmark_container	{margin-left:.2em;}
 

@@ -4,7 +4,7 @@
 	<table>
 	<tr>
 		<td>
-		<div class='marginRight marginBottom floatLeft' data-bind='var:releaseMeta(youtubeVideoID); format:youtubeVideo;' data-app-role='platformInfoVideoContainer'></div>
+		<div class='marginRight marginBottom floatLeft' data-bind='var:releaseMeta(youtubeVideoID); format:youtubevideo;' data-app-role='platformInfoVideoContainer'></div>
 	<!-- platformInfo will automatically be appended to the bottom of this -->
 		</td>
 		<td>
@@ -181,25 +181,25 @@ Disposition: <select name='disposition'  data-app-change="admin|updateDMICmdVar"
 	</table>
 	
 	<div class='labelsAsBreaks alignedLabels alignedInputs'>
-	<button data-app-click="admin_support|fileAttach2TicketShow" class='marginBottom applyButton' data-text='true' data-icon-primary='ui-icon-arrowthickstop-1-n'>Add File(s) To Ticket</button><!-- intentionally outside the form. form is emptied on update -->
-	<table class='gridTable fullWidth marginBottom'>
-	<thead>
-	<tr>
-		<th>Filename</th>
-		<th>Added</th>
-		<th></th>
-	</tr>
-	</thead>
-	<tbody data-bind="var: ticket(@FILES); format:processList; loadsTemplate:supportTicketFilesRowTemplate;" data-app-role='ticketAttatchmentList'></tbody>
-	</table>
+		<div data-app-role='supportFileUploadContainer' class='clearfix marginBottom'></div><!-- intentionally outside the form. form is emptied on update -->
+		<table class='gridTable fullWidth marginBottom applyAnytable'>
+		<thead>
+		<tr>
+			<th>Filename</th>
+			<th>Added</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: ticket(@FILES); format:processList; loadsTemplate:supportTicketFilesRowTemplate;" data-app-role='ticketAttatchmentList'></tbody>
+		</table>
 
-	<form class='marginTop'>
-	<fieldset>
-		<legend>Provide Additional Information:</legend>
-		<label><span>Message: </span><textarea name='note' required='required'></textarea></label>
-	</fieldset>
-	<button data-app-click='admin_support|adminTicketMacroUpdateExec' class='applyButton' data-icon-secondary='ui-icon-circle-arrow-e'>Add Message To Ticket</button>
-	</form>
+		<form class='marginTop'>
+		<fieldset>
+			<legend>Provide Additional Information:</legend>
+			<label><span>Message: </span><textarea name='note' required='required'></textarea></label>
+		</fieldset>
+		<button data-app-click='admin_support|adminTicketMacroUpdateExec' class='applyButton' data-icon-secondary='ui-icon-circle-arrow-e'>Add Message To Ticket</button>
+		</form>
 	</div>
 
 
@@ -250,55 +250,15 @@ WEBDOC
 
 
 
-<div id='helpPageTemplate' class='page pageHelp' data-app-role='dualModeContainer' data-app-mode='list'>
-
-	<section class='dualModeDetailContainer' data-app-role='dualModeDetail' data-dualmode-widthpercent='70'></section>
-
-	<section class='dualModeListContainer' data-app-role='dualModeList'>
-		<div class='ui-widget-header ui-corner-top'>
-		
-			<div class='buttonSet'>
-			<form class='searchBar floatRight' action='#' data-app-role='helpSearch'>
-				<input type='text' name='keywords' class='hideInDetailMode'  />
-				<button data-app-event='admin_support|execHelpSearch' class='hideInDetailMode'>Search</button>
-				<button data-app-event='admin|toggleDualMode'>Toggle between list and detail view</button>
-			</form>
-			</div>
-			
-			
-			<h3 class='heading'>Documentation</h3>
-		</div>
-		
-		<div class='ui-widget-content ui-corner-bottom'>
-		
-		<div class='dualModeListMessaging stdPadding'>Please use the search above to find the docs you are looking for.</div>
-		
-		<table class='gridTable fullWidth displayNone marginBottom' >
-		<thead>
-		<tr>
-			<th class='alignLeft'>Title</th>
-			<th class='alignLeft hideInDetailMode'>Summary</th>
-			<th class='alignLeft hideInDetailMode'>Relevance</th>
-			<th ></th>
-		</tr>
-		</thead>
-		<tbody data-bind="var: users(@RESULTS); format:processList; loadsTemplate:helpSearchResultsTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
-		</table>
-		</div>
-	</section>
-</div>
-
-
-<!-- onClick="app.ext.admin_support.a.showHelpDocInDialog($(this).data('docid'));" -->
+<!-- onClick="adminApp.ext.admin_support.a.showHelpDocInDialog($(this).data('docid'));" -->
 <table>
 <tr id='helpSearchResultsTemplate' >
-	<td data-bind='var: help(title); format:text;' class='lookLikeLink' data-app-event="admin_support|showHelpDetail"></td>
-	<td class='hideInDetailMode' data-bind='var: help(summary); format:text;'></td>
-	<td class='hideInDetailMode' data-bind='var: help(score); format:text;'></td>
+	<td data-bind='var: help(title); format:text;' class='lookLikeLink' data-app-click="admin_support|showHelpDetail"></td>
+	<td class='hideInDetailMode' data-bind='var: help(snippet); format:text;'></td>
 	<td class='alignRight'>
 <!-- showHelpInDialog only displayed when help opened within a tabContent -->
-	<span class='hideInDetailMode'><button data-app-event="admin_support|showHelpDetailInDialog" class='showInTabContent'>Open In Dialog</button></span>
-	<button data-app-event="admin_support|showHelpDetail">View</button>
+	<span class='hideInDetailMode'><button data-app-click="admin_support|showHelpDocInDialog" class='showInTabContent applyButton' data-text='false' data-icon-primary='ui-icon-newwin'>Open In Dialog</button></span>
+	<button data-app-click="admin_support|showHelpDetail" class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowthick-1-e'>View</button>
 	</td>
 </tr>
 </table>
@@ -310,11 +270,7 @@ WEBDOC
 
 
 <div id='helpDocumentTemplate' class='helpDetail'>
-	<div data-bind="var: help(body); format:text;"></div>
-	
-	<hr />
-	<button data-app-event="admin_support|execHelpDetailEdit">Edit</button>
-	<button data-app-event="admin_support|execHelpDetailHistory">History</button>
+	<div data-bind="var: help(parse.text.*); format:text;"></div>
 </div>
 
 

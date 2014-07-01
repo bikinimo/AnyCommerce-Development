@@ -17,11 +17,13 @@
 ************************************************************** */
 
 
-var admin_batchJob = function() {
+var admin_batchjob = function(_app) {
 	var theseTemplates = new Array('batchJobStatusTemplate','batchJobRowTemplate');
 	var r = {
 
-
+		vars : {
+			dialogInterval : "" //stores the setInterval for the batchJob status dialog
+			},
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -32,14 +34,17 @@ var admin_batchJob = function() {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 
-				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/batchjob.html',theseTemplates);
+				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/batchjob.html',theseTemplates);
+
+				var $target = $("<div \/>").attr({'id':'batchJobStatusModal'}).appendTo('body');
+				$target.dialog({'modal':false,'autoOpen':false});
 
 				return r;
 				},
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				_app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			},
 		
@@ -50,51 +55,51 @@ var admin_batchJob = function() {
 
 
 var 
-	L = app.data[_rtag.datapointer]['@HEAD'].length,
-	reportElementID = 'batchReport_'+app.data[_rtag.datapointer].guid
+	L = _app.data[_rtag.datapointer]['@HEAD'].length,
+	reportElementID = 'batchReport_'+_app.data[_rtag.datapointer].guid
 	tableHeads = new Array();
 
-if(app.data[_rtag.datapointer]['@BODY'] && app.data[_rtag.datapointer]['@BODY'].length)	{
+if(_app.data[_rtag.datapointer]['@BODY'] && _app.data[_rtag.datapointer]['@BODY'].length)	{
 //google visualization will error badly if the # of columns in the each body row doesn't match the # of columns in the head.
-//								app.u.dump(" -> app.data[_rtag.datapointer]['@BODY'][0].length: "+app.data[_rtag.datapointer]['@BODY'][0].length);
-//								app.u.dump(" -> app.data[_rtag.datapointer]['@HEAD'][0].length: "+app.data[_rtag.datapointer]['@HEAD'][0].length);
-	if(app.data[_rtag.datapointer]['@BODY'][0].length == app.data[_rtag.datapointer]['@HEAD'].length)	{
+//								_app.u.dump(" -> _app.data[_rtag.datapointer]['@BODY'][0].length: "+_app.data[_rtag.datapointer]['@BODY'][0].length);
+//								_app.u.dump(" -> _app.data[_rtag.datapointer]['@HEAD'][0].length: "+_app.data[_rtag.datapointer]['@HEAD'][0].length);
+	if(_app.data[_rtag.datapointer]['@BODY'][0].length == _app.data[_rtag.datapointer]['@HEAD'].length)	{
 //@HEAD is returned with each item as an object. google visualization wants a simple array. this handles the conversion.							
 		for(var i = 0; i < L; i += 1)	{
-			tableHeads.push(app.data[_rtag.datapointer]['@HEAD'][i].name);
+			tableHeads.push(_app.data[_rtag.datapointer]['@HEAD'][i].name || _app.data[_rtag.datapointer]['@HEAD'][i].id);
 			}
 
 		var $expBtn = $("<button \/>").text('Export to CSV').button().addClass('floatRight').on('click',function(){
 //										$('.google-visualization-table-table').toCSV();  //exports just the page in focus.
-			var L = app.data[_rtag.datapointer]['@BODY'].length;
+			var L = _app.data[_rtag.datapointer]['@BODY'].length;
 			//first row of CSV is the headers.
-			var csv = $.map(app.data[_rtag.datapointer]['@HEAD'],function(val){
+			var csv = $.map(_app.data[_rtag.datapointer]['@HEAD'],function(val){
 					return '"'+val.name+'"';
 					})
 
 			for(var i = 0; i < L; i += 1)	{
-				csv += "\n"+$.map(app.data[_rtag.datapointer]['@BODY'][i],function(val){
+				csv += "\n"+$.map(_app.data[_rtag.datapointer]['@BODY'][i],function(val){
 //												return '"'+((val == null) ? '' : escape(val))+'"';
 					return '"'+((val == null) ? '' : val.replace(/"/g,'""'))+'"'; //don't return 'null' into report.
 					})
 				}
 			
-			app.u.fileDownloadInModal({
+			_app.u.fileDownloadInModal({
 				'skipDecode':true,
-				'filename':app.data[_rtag.datapointer].title+'.csv',
+				'filename':_app.data[_rtag.datapointer].title+'.csv',
 				'mime_type':'text/csv',
 				'body':csv});
 			}).appendTo(_rtag.jqObj);
 
 
-		_rtag.jqObj.append("<h1>"+(app.data[_rtag.datapointer].title || "")+"<\/h1>");
-		_rtag.jqObj.append("<h2>"+(app.data[_rtag.datapointer].subtitle || "")+"<\/h2>");
+		_rtag.jqObj.append("<h1>"+(_app.data[_rtag.datapointer].title || "")+"<\/h1>");
+		_rtag.jqObj.append("<h2>"+(_app.data[_rtag.datapointer].subtitle || "")+"<\/h2>");
 		_rtag.jqObj.append($("<div \/>",{'id':reportElementID+"_toolbar"})); //add element to dom for visualization toolbar
 		_rtag.jqObj.append($("<div \/>",{'id':reportElementID}).addClass('smallTxt')); //add element to dom for visualization table
 		
 
-		app.ext.admin_reports.u.drawTable(reportElementID,tableHeads,app.data[_rtag.datapointer]['@BODY']);
-		app.ext.admin_reports.u.drawToolbar(reportElementID+"_toolbar");
+		_app.ext.admin_reports.u.drawTable(reportElementID,tableHeads,_app.data[_rtag.datapointer]['@BODY']);
+		_app.ext.admin_reports.u.drawToolbar(reportElementID+"_toolbar");
 		
 		}
 	else	{
@@ -123,17 +128,17 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 		showBatchJobStatus : {
 			onSuccess : function(tagObj){
 				if(tagObj.parentID)	{
-					$(app.u.jqSelector('#',tagObj.parentID)).hideLoading();
+					$(_app.u.jqSelector('#',tagObj.parentID)).hideLoading();
 					}
 				else if(tagObj.jqObj && typeof tagObj.jqObj === 'object')	{
 					tagObj.jqObj.hideLoading();
 					}
 				else	{} //nothing to hideloading on.
 //error handling for no jobid is handled inside this function.
-				app.ext.admin_batchJob.a.showBatchJobStatus(app.data[tagObj.datapointer].jobid);
+				_app.ext.admin_batchjob.a.showBatchJobStatus(_app.data[tagObj.datapointer].jobid);
 				},
 			onError : function(responseData)	{
-				var $target = $(app.u.jqSelector('#',responseData._rtag.parentID));
+				var $target = $(_app.u.jqSelector('#',responseData._rtag.parentID));
 				$target.hideLoading();
 				$target.anymessage({'message':responseData,'persistent':true});
 				}
@@ -148,11 +153,11 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 		a : {
 			
 			showBatchJobManager : function($target){
-				$target.empty();
-				var $table = app.ext.admin.i.DMICreate($target,{
+
+				var $table = _app.ext.admin.i.DMICreate($target,{
 					'header' : 'Batch Jobs',
 					'className' : 'batchjobManager',
-					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh List<\/button>"],
+					'buttons' : ["<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",],
 					'thead' : ['ID','Job Name','Job Type','User','Create','Status',''],
 					'tbodyDatabind' : "var: users(@JOBS); format:processList; loadsTemplate:batchJobRowTemplate;",
 					'cmdVars' : {
@@ -165,58 +170,96 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 							'datapointer' : 'adminBatchJobList'},
 							}
 						});
-				app.model.dispatchThis('mutable');
+				_app.u.handleButtons($target);
+				_app.model.dispatchThis('mutable');
 				},
 
 //called by brian in the legacy UI. creates a batch job and then opens the job status.
-			adminBatchJobCreate : function(opts){
-				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading({'message':'Registering Batch Job'});
+			adminBatchJobCreate : function(opts,vars){
+				vars = vars || {};
+				$(_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")).showLoading({'message':'Registering Batch Job'});
 //parentID is specified for error handling purposes. That's where error messages should go and also what the hideLoading() selector should be.
-				app.model.addDispatchToQ($.extend(true,{
+				_app.model.addDispatchToQ($.extend(true,{
 					'_cmd':'adminBatchJobCreate',
 					'_tag':	{'callback':'showBatchJobStatus',
-					'extension':'admin_batchJob',
-					'parentID':app.ext.admin.vars.tab+"Content",
+					'extension':'admin_batchjob',
+					'parentID':_app.ext.admin.vars.tab+"Content",
 					datapointer : opts.guid ? "adminBatchJobCreate|"+opts.guid : "adminBatchJobCreate"}
 					},opts),'immutable');
-				app.model.dispatchThis('immutable');
+				if(vars.jobCreate)	{
+					if(vars.TITLE && vars.BATCH_EXEC && opts['%vars'])	{
+						_app.model.addDispatchToQ({
+							'_cmd':'adminBatchJobParametersCreate',
+							'UUID' : _app.u.guidGenerator(),
+							'TITLE' : vars.TITLE,
+							'BATCH_EXEC' : vars.BATCH_EXEC,
+							'PRIVATE' : vars.PRIVATE,
+							'%vars' : opts['%vars'],
+							'_tag':	{
+								'datapointer' : 'adminBatchJobParametersCreate',
+								'callback':'showMessaging',
+								'message' : 'Job saved as '+vars.TITLE
+								}
+							},'immutable');
+						}
+					else	{
+						$(_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")).anymessage({
+							'message':'In admin_batchjob.a.adminBatchJobCreate, vars.jobCreate was true, but either TITLE ['+vars.TITLE+'], BATCH_EXEC ['+vars.BATCH_EXEC+'] or %var ['+(typeof opts['%vars'])+'] was missing and all are required.'
+							});
+						}
+					}
+				_app.model.dispatchThis('immutable');
 				},
 
 			showBatchJobStatus : function(jobid,opts) {
 				if(jobid)	{
 					//get job details.
-					var $target = $('#batchJobStatusModal'); //modal id.
-					if($target.length)	{$target.empty()}
-					else	{
-						$target = $("<div \/>").attr({'id':'batchJobStatusModal'}).appendTo('body');
-						$target.dialog({'modal':true,'width':500,'height':300,'autoOpen':false});
-						}
+					var $target = $('#batchJobStatusModal'); //modal created in init.
+					$target.intervaledEmpty();
 					$target.dialog('option','title','Batch Job Status: '+jobid);
 					$target.dialog('open');
+					if(_app.ext.admin_batchjob.vars.dialogInterval)	{clearInterval(_app.ext.admin_batchjob.vars.dialogInterval)}
 					$target.showLoading({'message':'Fetching Batch Job Details'});
-app.model.addDispatchToQ({
-	'_cmd':'adminBatchJobStatus',
-	'jobid':jobid,
-	'_tag':	{'callback':'anycontent','datapointer':'adminBatchJobStatus|'+jobid,'jqObj':$target,'templateID':'batchJobStatusTemplate','dataAttribs': {'jobid':jobid}}
-	},'mutable');
-app.model.dispatchThis('mutable');
+					_app.model.addDispatchToQ({
+						'_cmd':'adminBatchJobStatus',
+						'jobid':jobid,
+						'_tag':	{
+							'callback':'tlc',
+							'datapointer':'adminBatchJobStatus|'+jobid,
+							'jqObj':$target,
+							'mode' : 'dialog',
+							'templateID':'batchJobStatusTemplate',
+							'before' : function(rd)	{
+								_app.data[rd.datapointer].jobid = jobid;
+								},
+							'onComplete' : function(rd)	{
+								_app.ext.admin_batchjob.u.initBatchTimer(rd);
+								},
+							'dataAttribs': {'jobid':jobid}}
+						},'mutable');
+					_app.model.dispatchThis('mutable');
+					_app.u.addEventDelegation($target);
 					}
 				else	{
-					app.u.throwMessage("No jobid specified in admin_batchJob.a.showBatchJobStatus");
+					_app.u.throwMessage("No jobid specified in admin_batchjob.a.showBatchJobStatus");
 					}
 				}, //showTaskManager
 
 			showReport : function($target,vars)	{
-//				app.u.dump("BEGIN admin_batchjob.a.showReport");
-				if($target && vars && vars.guid)	{
-					$target.empty();
+				vars = vars || {};
+//				_app.u.dump("BEGIN admin_batchjob.a.showReport");
+				if($target instanceof jQuery && vars.guid)	{
+					$target.intervaledEmpty();
 					$target.showLoading({'message':'Generating Report'}); //run after the empty or the loading gfx gets removed.
-//					app.u.dump(" -> $target and vars.guid are set.");
-					app.ext.admin.calls.adminReportDownload.init(vars.guid,{'callback':'showReport','jqObj':$target,'extension':'admin_batchJob'},'mutable'); app.model.dispatchThis('mutable');
-					app.model.dispatchThis('mutable');
+//					_app.u.dump(" -> $target and vars.guid are set.");
+
+					_app.model.addDispatchToQ({"_cmd":"adminReportDownload","GUID":vars.guid,"_tag":{
+						"datapointer":"adminReportDownload|"+vars.guid, 'callback':'showReport','jqObj':$target,'extension':'admin_batchjob'
+						}},"mutable");
+					_app.model.dispatchThis('mutable');
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In admin_batchjob.a.showReport, either $target ['+typeof $target+'] or batchGUID ['+vars.guid+'] not set.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In admin_batchjob.a.showReport, either $target not a jQuery instance ['+($target instanceof jQuery)+'] or batchGUID ['+vars.guid+'] not set.','gMessage':true});
 					}
 				
 				}
@@ -226,6 +269,49 @@ app.model.dispatchThis('mutable');
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		renderFormats : {
+			handleButtonDisplay : function($tag,data)	{
+				if(data.bindData.exec)	{
+					if(data.value.BATCH_EXEC && data.value.BATCH_EXEC.split('/')[0] == data.bindData.exec && data.value.STATUS && data.value.STATUS.indexOf('END') >= 0)	{
+						$tag.show().removeClass('displayNone');
+						}
+					}
+				},
+			
+			batchJobParametersList : function($tag,data)	{
+				var exec = data.bindData.batch_exec;
+				if(exec)	{
+					_app.model.addDispatchToQ({
+						'_cmd':'adminBatchJobParametersList',
+						'BATCH_EXEC' : exec,
+						'_tag':	{
+							'datapointer' : 'adminBatchJobParametersList|'+exec,
+							'callback' : function(rd){
+								if(_app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									if(_app.data[rd.datapointer]['@PARAMETERS'])	{
+										var data = _app.data[rd.datapointer]['@PARAMETERS'];
+										if(data.length)	{
+											var $o = $("<div \/>"); //$o is output. list is saved here, then added to $tag. means DOM is only updated once.
+											for(var i = 0, L = data.length; i < L; i += 1)	{
+												var job = data[i];
+												$o.append("<p data-app-role='batchContainer'><a href='#' onClick=\"_app.ext.admin_batchjob.a.adminBatchJobCreate({'parameters_uuid':'"+job.UUID+"','type':'"+job.BATCH_EXEC+"'}); return false;\">"+job.TITLE+"</a><br>(last run: "+job.LASTRUN_TS+")<br><a href='#' data-app-click='admin_batchjob|adminBatchJobParametersRemoveConfirm' data-uuid='"+job.UUID+"'>Remove<\/a><\/p>");
+												}
+											$tag.append($o.children());
+											}
+										}
+									}
+								}
+							}
+						},'mutable');
+					_app.model.dispatchThis();					
+					}
+				else	{
+					$tag.anymessage({'message':'In admin_batchjob.renderFormats.batchJobParametersList, data-bind contained no "batch_exec" key/value pair, which is required.'});
+					}
+				}
+			
 			}, //renderFormats
 
 
@@ -233,8 +319,61 @@ app.model.dispatchThis('mutable');
 
 
 		u : {
-			
-			
+			//mode can be set to status (looks in dialog) or list (if list, vars.tab is required)
+			initBatchTimer : function(vars)	{
+//				_app.u.dump("BEGIN admin_batchjob.u.initBatchTimer");
+				vars = vars || {};
+				var error,$timer,$parent;
+				if(vars.mode == 'dialog')	{
+					_app.u.dump(" -> in dialog mode");
+					$parent = $("#batchJobStatusModal");
+					$timer = $("[data-app-role='batchJobTimer']",$parent);
+					if($timer.length)	{
+						var data = _app.data[vars.datapointer];
+						if(data.status == 'NEW' || data.status == 'QUEUED')	{
+							$timer.show().text('30');
+							_app.ext.admin_batchjob.vars.dialogInterval = setInterval(function(){
+								_app.ext.admin_batchjob.u.handleBatchTimerUpdate($timer,vars);
+								},1000)
+							}
+						else	{
+							$timer.hide(); //job is done, no need for a timer.
+							}
+						}
+					else	{
+						error = "In admin_batchjob.u.batchTimer, $timer has no length."
+						}
+					
+					}
+//list mode isn't supported yet. There's a refresh button right now. may add it later.
+//				else if(mode == list && vars.tab)	{
+//					$parent = $(_app.u.jqSelector('#',vars.tab+'Content'));
+//					}
+				else	{
+					error = "In admin_batchjob.u.batchTimer, invalid mode ["+mode+"] passed."
+					}
+				
+				if(error)	{
+					$parent.anymessage({'message':error})
+					}
+				},
+			handleBatchTimerUpdate : function($timer,vars)	{
+//				_app.u.dump(" -> timerUpdate jobID: "+$timer.closest("[data-jobid]").data('jobid'));
+				if($timer.text() == 0 && $timer.is(':visible'))	{
+					clearInterval(_app.ext.admin_batchjob.vars.dialogInterval);
+					_app.ext.admin_batchjob.vars.dialogInterval = ''; //reset to blank. value is used to determine whether or not showBatchJobStatus needs to clear it.
+					_app.ext.admin_batchjob.a.showBatchJobStatus($timer.closest("[data-jobid]").data('jobid'));
+					}
+				else if(!$timer.is(':visible'))	{
+					//dialog has been closed or tabs have been switched.
+					_app.ext.admin_batchjob.vars.dialogInterval = ''; //reset to blank. value is used to determine whether or not showBatchJobStatus needs to clear it.
+					clearInterval(_app.ext.admin_batchjob.vars.dialogInterval);
+					}
+				else	{
+					
+					$timer.text(Number($timer.text()) - 1);
+					}
+				}
 			
 			}, //u
 		e : {
@@ -243,19 +382,19 @@ app.model.dispatchThis('mutable');
 			adminBatchJobParametersRemoveConfirm : function($ele,p)	{
 				if($ele.data('uuid'))	{
 
-					app.ext.admin.i.dialogConfirmRemove({
+					_app.ext.admin.i.dialogConfirmRemove({
 						"message" : "Are you sure you want to delete this saved batch process? There is no undo for this action.",
 						"removeButtonText" : "Remove", //will default if blank
 						"title" : "Remove Saved Batch Process", //will default if blank
 						"removeFunction" : function(vars,$D){
 							$D.showLoading({"message":"Deleting saved batch process"});
-							app.model.addDispatchToQ({
+							_app.model.addDispatchToQ({
 								'_cmd':'adminBatchJobParametersRemove',
 								'UUID' : $ele.data('uuid'),
 								'_tag':	{
 									'callback':function(rd){
 										$D.hideLoading();
-										if(app.model.responseHasErrors(rd)){
+										if(_app.model.responseHasErrors(rd)){
 											$D.anymessage({'message':rd});
 											}
 										else	{
@@ -266,7 +405,7 @@ app.model.dispatchThis('mutable');
 										}
 									}
 								},'mutable');
-							app.model.dispatchThis('mutable');
+							_app.model.dispatchThis('mutable');
 							//now go delete something.
 							}
 						})
@@ -274,8 +413,28 @@ app.model.dispatchThis('mutable');
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_reports.e.adminBatchJobParametersRemove, data-uuid not set on trigger element.","gMessage":true});
 					}
+				return false;
 				},
 
+			adminBatchJobExec : function($ele,p)	{
+				var data = $ele.closest("[data-element]").data();
+//				dump(" -> data: "); dump(data);
+				if(data && $ele.data('whitelist') && $ele.data('type'))	{
+					var whitelist = $ele.data('whitelist').split(',');
+					var vars = _app.u.getWhitelistedObject(data,whitelist) || {};
+					vars.GUID = _app.u.guidGenerator();
+					_app.ext.admin_batchjob.a.adminBatchJobCreate({'type':$ele.data('type'), '%vars':vars});
+					_app.model.dispatchThis('immutable');
+					}
+//allows for simple (no vars) batch jobs to be created.
+				else if($ele.data('type')){
+					_app.ext.admin_batchjob.a.adminBatchJobCreate({'type':$ele.data('type'), '%vars':{'GUID':_app.u.guidGenerator()}});
+					_app.model.dispatchThis('immutable');
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"in admin_batchjobs.e.batchJobExec, either no data found ["+(typeof data)+"] or data-whitelist ["+$ele.data('whitelist')+"] not set and/or data-type ["+$ele.data('type')+"] not set","gMessage":true});}
+				return false;
+				},
 
 			batchJobExec : function($btn)	{
 				if($btn.is('button'))	{
@@ -283,115 +442,83 @@ app.model.dispatchThis('mutable');
 					}
 				$btn.off('click.batchJobExec').on('click.batchJobExec',function(event){
 					event.preventDefault();
-					var data = $btn.closest("[data-element]").data();
-					if(data && $btn.data('whitelist') && $btn.data('type'))	{
-						var whitelist = $btn.data('whitelist').split(',');
-						var vars = app.u.getWhitelistedObject(data,whitelist) || {};
-						vars.GUID = app.u.guidGenerator();
-						app.ext.admin_batchJob.a.adminBatchJobCreate({'type':$btn.data('type'), '%vars':vars});
-						}
-//allows for simple (no vars) batch jobs to be created.
-					else if($btn.data('type')){
-						app.ext.admin_batchJob.a.adminBatchJobCreate({'type':$btn.data('type'), '%vars':{'GUID':app.u.guidGenerator()}});
-						}
-					else	{
-						$('#globalMessaging').anymessage({"message":"in admin_batchJobs.e.batchJobExec, either no data found ["+(typeof data)+"] or data-whitelist ["+$btn.data('whitelist')+"] not set and/or data-type ["+$btn.data('type')+"] not set","gMessage":true});}
+					_app.ext.admin_batchjob.e.adminBatchJobExec($btn);
 					});
+				return false;
 				},
 	
 //NOTE -> the batch_exec will = REPORT for reports.
-			showReport : function($btn)	{
-
-				if($btn.closest('tr').data('batch_exec').split('/')[0] == 'REPORT' && $btn.closest('tr').data('status').indexOf('END') >= 0)	{
-					$btn.button({text: false,icons: {primary: "ui-icon-image"}}).show();
-					$btn.off('click.showReport').on('click.showReport',function(event){
-						event.preventDefault();
-						var $table = $btn.closest('table');
-						
-						$table.stickytab({'tabtext':'batch jobs','tabID':'batchJobsStickyTab'});
-						$('button',$table).removeClass('ui-state-focus'); //removes class added by jqueryui onclick.
-						$('button',$table).removeClass('ui-state-highlight');
-						$btn.addClass('ui-state-highlight');
-						app.ext.admin_batchJob.a.showReport($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),$btn.closest('tr').data());
+			showReport : function($ele,p)	{
+				var $table = $ele.closest('table');
+				if($table.length)	{
+					$table.stickytab({'tabtext':'batch jobs','tabID':'batchJobsStickyTab'});
+					$('button',$table).removeClass('ui-state-focus'); //removes class added by jqueryui onclick.
+					$('button',$table).removeClass('ui-state-highlight');
+					$ele.addClass('ui-state-highlight');
 //make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
-						$('button, a',$table).each(function(){
-							$(this).off('close.stickytab').on('click.closeStickytab',function(){
-								$table.stickytab('close');
-								})
-							})
-						});
+					$table.off('close.stickytab').on('click.closeStickytab','button, a',function(){
+						$(this).closest('table').stickytab('close');
+						})
 					}
-				else	{
-//btn hidden by default. no action needed.
-					}
+				_app.ext.admin_batchjob.a.showReport($(_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")),{'guid':$ele.closest('[data-guid]').data('guid')});
+				return false;
 				}, //showReport
 
-
-			showDownload : function($btn)	{
-				if($btn.closest('tr').data('batch_exec').split('/')[0] == 'EXPORT' && $btn.closest('tr').data('status').indexOf('END-SUCCESS') >= 0)	{
-					$btn.button({text: false,icons: {primary: "ui-icon-arrowthickstop-1-s"}}).show();
-					$btn.off('click.showDownload').on('click.showDownload',function(event){
-						event.preventDefault();
-app.model.addDispatchToQ({
-	'_cmd':'adminBatchJobDownload',
-	'guid':$btn.closest('tr').data('guid'),
-	'base64' : '1',
-	'_tag':	{
-		'datapointer' : 'adminBatchJobDownload', //big dataset returned. only keep on in memory.
-		'callback' : 'fileDownloadInModal'
-		}
-	},'mutable');
-app.model.dispatchThis('mutable');
-						
-						});
-					}
-				else	{
-//btn hidden by default. no action needed.
-					}
+			showDownload : function($ele,p)	{
+				_app.model.addDispatchToQ({
+					'_cmd':'adminBatchJobDownload',
+					'guid':$ele.closest('[data-guid]').data('guid'),
+					'base64' : '1',
+					'_tag':	{
+						'datapointer' : 'adminBatchJobDownload', //big dataset returned. only keep on in memory.
+						'callback' : 'fileDownloadInModal'
+						}
+					},'mutable');
+				_app.model.dispatchThis('mutable');
+				return false;
 				}, //showDownload
 			
-			adminBatchJobCleanupExec : function($btn)	{
-				
-				$btn.button({text: false,icons: {primary: "ui-icon-trash"}}); //daisy-chaining the button on the show didn't work. button didn't get classes.
-				$btn.off('click.adminBatchJobCleanupExec').on('click.adminBatchJobCleanupExec',function(){
-					var jobid = $btn.closest('[data-jobid]').data('jobid');
-					if(jobid)	{
-						var _tag = {};
-						if($btn.data('mode') == 'list')	{
-							$btn.button('option','icons',{primary:"wait"}).find('ui-icon').removeClass('ui-icon').end().button('disable');
-							_tag.callback = function(rd)	{
-								if(app.model.responseHasErrors(rd)){
-									$('#globalMessaging').anymessage({'message':rd});
-									}
-								else	{
-									$btn.closest('tr').hide();
-									}
+			adminBatchJobCleanupExec : function($ele,p)	{
+				var jobid = $ele.closest('[data-jobid]').data('jobid');
+				if(jobid)	{
+					var _tag = {};
+					if($ele.data('mode') == 'list')	{
+						$ele.button('option','icons',{primary:"wait"}).find('ui-icon').removeClass('ui-icon').end().button('disable');
+						_tag.callback = function(rd)	{
+							if(_app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								$ele.closest('tr').hide();
 								}
 							}
-						else	{
-							_tag.callback = 'showMessaging';
-							_tag.message = 'Batch job '+jobid+' has been cleaned up';
-							_tag.jqObj = $('#batchJobStatusModal').empty().showLoading({"message":"Deleting batch job "+jobid})
-							}
-						app.model.addDispatchToQ({
-							'_cmd':'adminBatchJobCleanup',
-							'jobid' : jobid,
-							'_tag':	_tag
-							},'immutable');
-						app.model.dispatchThis('immutable');
 						}
 					else	{
-						$('.appMessaging').anymessage({'message':'In admin_batchJob.e.adminBatchJobCleanupExec, unable to ascertain jobID from DOM tree.','gMessage':true});
+						_tag.callback = 'showMessaging';
+						_tag.message = 'Batch job '+jobid+' has been cleaned up';
+						_tag.jqObj = $('#batchJobStatusModal').empty().showLoading({"message":"Deleting batch job "+jobid})
 						}
-					});
+					_app.model.addDispatchToQ({
+						'_cmd':'adminBatchJobCleanup',
+						'jobid' : jobid,
+						'_tag':	_tag
+						},'immutable');
+					_app.model.dispatchThis('immutable');
+					}
+				else	{
+					$('.appMessaging').anymessage({'message':'In admin_batchjob.e.adminBatchJobCleanupExec, unable to ascertain jobID from DOM tree.','gMessage':true});
+					}
+				return false;
 				},
 			
-			showBatchDetail : function($btn)	{
-				$btn.button({text: false,icons: {primary: "ui-icon-info"}});
-				$btn.off('click.showBatchDetail').on('click.showBatchDetail',function(event){
-					event.preventDefault();
-					app.ext.admin_batchJob.a.showBatchJobStatus($btn.closest("tr").data('id'));
-					});
+			adminBatchJobStatus : function($ele,p)	{
+				_app.ext.admin_batchjob.a.showBatchJobStatus($ele.closest("tr").data('id'));
+				return false;
+				},
+			
+			showBatchDetail : function($ele,P)	{
+				P.preventDefault();
+				_app.ext.admin_batchjob.e.adminBatchJobStatus($ele);
 				}
 			
 			} //e

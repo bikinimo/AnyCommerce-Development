@@ -26,7 +26,7 @@ else {
 
 var app = {vars:{
 	/////////////////////////////////\
-	"release":"201346.a",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
+	"release":"201405.a",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"_clientid":"admin",
@@ -64,7 +64,7 @@ $(document).ready(function(){
 //instantiate wiki parser.
 	myCreole = new Parse.Simple.Creole();
 	app.model.addExtensions([{'namespace':'lookup','filename':'app-login/extension.js','callback':'initExtension'}]);
-	app.u.handleEventDelegation($(document.body));
+	_app.u.addEventDelegation($(document.body));
 	});
 </script>
 

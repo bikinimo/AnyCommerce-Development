@@ -18,9 +18,9 @@
 
 
 
-//    !!! ->   TODO: replace 'username' in the line below with the merchants username.     <- !!!
 
-var store_bmo = function() {
+
+var store_bmo = function(_app) {
 	var theseTemplates = new Array('');
 	var r = {
 
@@ -39,23 +39,23 @@ var store_bmo = function() {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				
-				app.ext.store_bmo.u.bindOnclick();
+				_app.ext.store_bmo.u.bindOnclick();
 				
-				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
-					var $context = $(app.u.jqSelector('#'+infoObj.parentID));
+				_app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
+					var $context = $(_app.u.jqSelector('#'+infoObj.parentID));
 			//		if(!$context.data('countingdown')) {
-			//			app.ext.store_bmo.u.countdown($context);
+			//			_app.ext.store_bmo.u.countdown($context);
 			//			$context.data('countingdown',true);	
 			//		}
-					app.ext.store_bmo.u.runHomeCarouselTab1($context);
-					app.ext.store_bmo.u.runHomeCarouselTab2($context);
-					app.ext.store_bmo.u.runHomeCarouselTab3($context);
+					_app.ext.store_bmo.u.runHomeCarouselTab1($context);
+					_app.ext.store_bmo.u.runHomeCarouselTab2($context);
+					_app.ext.store_bmo.u.runHomeCarouselTab3($context);
 						//make sure tab4 only anycontents the accessories product list once. 
 					if(!$context.data('tab4Templated')){
-						app.ext.store_bmo.u.loadProductsAsList('.app-categories.accessories');
-						//app.ext.store_bmo.u.runHomeCarouselTab4($context); call moved to renderProductsAsList
+						_app.ext.store_bmo.u.loadProductsAsList('.app-categories.accessories');
+						//_app.ext.store_bmo.u.runHomeCarouselTab4($context); call moved to renderProductsAsList
 						$context.data('tab4Templated',true);
-						app.u.dump('data added?'); app.u.dump($context.data('tab4Templated'));
+						_app.u.dump('data added?'); _app.u.dump($context.data('tab4Templated'));
 					}
 				}]);
 
@@ -68,22 +68,22 @@ var store_bmo = function() {
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				_app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			},
 			
 			startExtension : {
 				onSuccess : function() {
-					if(app.ext.myRIA && app.ext.myRIA.template){
-						app.u.dump("store_bmo Extension Started");
-						$.extend(handlePogs.prototype,app.ext.store_bmo.variations);
-						app.u.dump('*** Extending Pogs');
+					if(_app.ext.myRIA && _app.ext.myRIA.template){
+						_app.u.dump("store_bmo Extension Started");
+						$.extend(handlePogs.prototype,_app.ext.store_bmo.variations);
+						_app.u.dump('*** Extending Pogs');
 					} else	{
-						setTimeout(function(){app.ext.store_bmo.callbacks.startExtension.onSuccess()},250);
+						setTimeout(function(){_app.ext.store_bmo.callbacks.startExtension.onSuccess()},250);
 					}
 				},
 				onError : function (){
-					app.u.dump('BEGIN app.ext.store_bmo.callbacks.startExtension.onError');
+					_app.u.dump('BEGIN _app.ext.store_bmo.callbacks.startExtension.onError');
 				}
 			},
 			
@@ -92,50 +92,50 @@ var store_bmo = function() {
 				// (dataresponse is returned from the model when the API request returns, 
 				// generaly just a repeat of _tag object you passed, but contains error response durring an error)
 				onSuccess:function(responseData){	
-					app.u.dump(' -> renderMatchingProduct');
+					_app.u.dump(' -> renderMatchingProduct');
 					// call anycontent (from anyplugins) on class to put content in ** '.match_'+app.data[responseData.datapointer].pid) **, 
 					//using the template you want to render with ** "matchingProductTemplate" **, using a pointr to the data that was returned ** "datapointer":responseData.datapointer **. 
-					//app.u.dump('ResponseData pointer'); app.u.dump(responseData.datapointer);// app.u.dump($('.prodViewerAddToCartForm ','.match_'+app.data[responseData.datapointer].pid));
+					//_app.u.dump('ResponseData pointer'); _app.u.dump(responseData.datapointer);// _app.u.dump($('.prodViewerAddToCartForm ','.match_'+app.data[responseData.datapointer].pid));
 					//$('.match_'+app.data[responseData.datapointer].pid).anycontent({"templateID":"matchingProductTemplate","datapointer":responseData.datapointer}); 
 					responseData.$container.anycontent({"templateID":responseData.loadsTemplate,"datapointer":responseData.datapointer}); 
 				},
 				onError:function(responseData){	
-					app.u.dump('Error in extension: store_bmo renderMatchingProduct'); // error response goes here if needed
+					_app.u.dump('Error in extension: store_bmo renderMatchingProduct'); // error response goes here if needed
 				}
 			},
 			
 			rendermatchingBasePrice : {
 				onSuccess : function(rd) {
 					var dataObj = {};
-					var matchPrice = app.data[rd.datapointer]['%attribs']['zoovy:base_price'];
+					var matchPrice = _app.data[rd.datapointer]['%attribs']['zoovy:base_price'];
 					var origPrice = rd.price;
 					
-					if(app.data[rd.datapointer]['%attribs']['user:limited_time_offer']) {
-						dataObj.lto = app.data[rd.datapointer]['%attribs']['user:limited_time_offer'];
+					if(_app.data[rd.datapointer]['%attribs']['user:limited_time_offer']) {
+						dataObj.lto = _app.data[rd.datapointer]['%attribs']['user:limited_time_offer'];
 					}
 					
 					dataObj.combinedTotal = Number(origPrice) + Number(matchPrice);
-					dataObj.pid = app.u.makeSafeHTMLId(rd.datapointer.split('|')[1]);
+					dataObj.pid = _app.u.makeSafeHTMLId(rd.datapointer.split('|')[1]);
 					rd.$container.anycontent({"templateID":rd.loadsTemplate,"data":dataObj});
-//					app.u.dump('--> response data:'); app.u.dump(rd);
-//					app.u.dump('--> the matching price:'); app.u.dump(matchPrice); 
-//					app.u.dump('--> the original price:'); app.u.dump(origPrice); 
-//					app.u.dump('--> the final price:'); app.u.dump(dataObj.combinedTotal); 
+//					_app.u.dump('--> response data:'); _app.u.dump(rd);
+//					_app.u.dump('--> the matching price:'); _app.u.dump(matchPrice); 
+//					_app.u.dump('--> the original price:'); _app.u.dump(origPrice); 
+//					_app.u.dump('--> the final price:'); _app.u.dump(dataObj.combinedTotal); 
 				},
 				onError : function(rd) {
-					app.u.dump('Error in extenstion: store_bmo rendermatchingBasePrice. Response data follows:'); app.u.dump(rd);
+					_app.u.dump('Error in extenstion: store_bmo rendermatchingBasePrice. Response data follows:'); _app.u.dump(rd);
 				}
 			}, //rendermatchingBasePrice
 			
 			renderProductsAsList : {
 				onSuccess : function(responseData) {
-			//		app.u.dump(app.data[responseData.datapointer]);
+			//		_app.u.dump(_app.data[responseData.datapointer]);
 					$('#carCat6','.homeTemplate').anycontent({"templateID":"tab4Template","datapointer":responseData.datapointer});
-					app.ext.store_bmo.u.runHomeCarouselTab4($('.homeTemplate'));
+					_app.ext.store_bmo.u.runHomeCarouselTab4($('.homeTemplate'));
 				},
 				onError : function(responseData){
-					app.u.dump('Error in extension: store_bmo_ renderProductsAsList');
-					app.u.dump(responseData);
+					_app.u.dump('Error in extension: store_bmo_ renderProductsAsList');
+					_app.u.dump(responseData);
 				}
 			}
 			
@@ -159,7 +159,7 @@ var store_bmo = function() {
 				//reads prices for each form set by setHiddenPrice renderFormat and changes the displayed price
 				//to the total for each piece selected. (price for top only if only top is selected, etc.)
 			changePriceDisplayed : function() {
-//				app.u.dump('start change function'); 
+//				_app.u.dump('start change function'); 
 
 				var everythingPrice = 0;	//will hold total cost of all items to display when no items selected
 				var price = 0;	//will hold the price to display if any items are selected
@@ -181,11 +181,11 @@ var store_bmo = function() {
 				
 					//if there is a price, an item is selected, change the displayed price to what was calculated
 				if(price != 0) {
-					$('.customBasePrice','.prodSummaryContainer').empty().text(app.u.formatMoney(price,'$',2,true));
+					$('.customBasePrice','.prodSummaryContainer').empty().text(_app.u.formatMoney(price,'$',2,true));
 					
 				} else {
 						//otherwise nothing is selected, display the total cost for all pieces 
-					$('.customBasePrice','.prodSummaryContainer').empty().text(app.u.formatMoney(everythingPrice,'$',2,true));
+					$('.customBasePrice','.prodSummaryContainer').empty().text(_app.u.formatMoney(everythingPrice,'$',2,true));
 				}
 			}, //changePriceDisplayed
 			
@@ -193,10 +193,10 @@ var store_bmo = function() {
 			optionsQuickView : function($this, pid) {
 				var $modal = $('.popupshado','.quickVModal');
 				var $product = $('.prodViewerContainer','.quickVModal');
-				var sourcePID = app.u.makeSafeHTMLId($modal.attr('data-pid'));
+				var sourcePID = _app.u.makeSafeHTMLId($modal.attr('data-pid'));
 				
-				app.ext.store_bmo.u.addRecentlyViewedItems();	//record pop out item as viewed
-				app.ext.store_bmo.a.hideMoreOptions($this, sourcePID);	//close pop out
+				_app.ext.store_bmo.u.addRecentlyViewedItems();	//record pop out item as viewed
+				_app.ext.store_bmo.a.hideMoreOptions($this, sourcePID);	//close pop out
 
 				$product.animate({'opacity':'0'},550);	//make removal of shown product pretty
 				setTimeout(function(){quickView('product',{'templateID':'productTemplateQuickView','pid':pid});},550);	//open new product
@@ -214,14 +214,14 @@ var store_bmo = function() {
 				$('.rec','.quickVModal').addClass('selectedList');
 				
 					//if no recently viewed items, tell them the sky is blue
-				if(app.ext.myRIA.vars.session.recentlyViewedItems.length == 0) {
+				if(_app.ext.myRIA.vars.session.recentlyViewedItems.length == 0) {
 					$('.recentEmpty',$container).show();
 				}
 					//otherwise, show them what they've seen
 				else {
 					$('.recentEmpty',$container).hide();
 					$('ul',$container).empty(); //empty product list;
-					$($container.anycontent({data:app.ext.myRIA.vars.session})); //build product list
+					$($container.anycontent({data:_app.ext.myRIA.vars.session})); //build product list
 				}
 			},
 			
@@ -261,47 +261,47 @@ var store_bmo = function() {
 			},
 		
 			addToCart : function($this) {
-				//app.u.dump('-> store_bmo addToCart');
+				//_app.u.dump('-> store_bmo addToCart');
 	
 				var numCalls = 0;
 				$('form', $this).each(function(){
-					//app.u.dump($(this));
+					//_app.u.dump($(this));
 					var id = $('.zwarn',$(this)).attr('id').split('_'); //get pid from id added render options
 					var pid = id[1]; 		//break pid out of id
 					var $form = $(this); 	//holder for the current form
 					
 					$(this).data('skipvalidation', true); //don't use native app validation
-					var cartObj = app.ext.store_product.u.buildCartItemAppendObj($(this)); //build cart object 
+					var cartObj = _app.ext.store_product.u.buildCartItemAppendObj($(this)); //build cart object 
 					var valid = true; //check this to ensure options selected
 
 					//validate
 					if(pid && $form)	{
 						//copied locally for quick reference.
-						var sogJSON = app.data['appProductGet|'+pid]['@variations'],
+						var sogJSON = _app.data['appProductGet|'+pid]['@variations'],
 						formJSON = $form.serializeJSON();
 						console.debug($form.serializeJSON());
 						
-					//	app.u.dump('BEGIN validate_pogs. Formid ='+formId);
+					//	_app.u.dump('BEGIN validate_pogs. Formid ='+formId);
 					
 						if($.isEmptyObject(sogJSON))	{
-							app.u.dump('no sogs present (or empty object)'); //valid. product may not have sogs.
+							_app.u.dump('no sogs present (or empty object)'); //valid. product may not have sogs.
 							}
 						else if($.isEmptyObject(formJSON))	{
-				//			app.u.throwGMessage("In store_product.validate.addToCart, formJSON is empty.");
+				//			_app.u.throwGMessage("In store_product.validate.addToCart, formJSON is empty.");
 							} //this shouldn't be empty. if it is, likely $form not valid or on DOM.
 						else	{
-							app.u.dump(" -> everything is accounted for. Start validating.");	
+							_app.u.dump(" -> everything is accounted for. Start validating.");	
 							$('.appMessage',$form).empty().remove(); //clear all existing errors/messages.
 						
 							var thisSTID = pid, //used to compose the STID for inventory lookup.
 							inventorySogPrompts = '',//the prompts for sogs with inventory. used to report inventory messaging if inventory checks are performed
 							errors = '', pogid, pogType;
 							
-				//			app.u.dump(" -> formJSON: "); app.u.dump(formJSON);
+				//			_app.u.dump(" -> formJSON: "); _app.u.dump(formJSON);
 							
 				//No work to do if there are no sogs. 
 							if(sogJSON)	{
-					//			app.u.dump('got into the pogs-are-present validation');
+					//			_app.u.dump('got into the pogs-are-present validation');
 								for(var i = 0; i < sogJSON.length; i++)	{
 									pogid = sogJSON[i]['id']; //the id is used multiple times so a var is created to reduce number of lookups needed.
 									pogType = sogJSON[i]['type']; //the type is used multiple times so a var is created to reduce number of lookups needed.
@@ -333,23 +333,23 @@ var store_bmo = function() {
 								}
 					
 /****************/					
-					//		app.u.dump('past validation, before inventory validation. valid = '+valid);
+					//		_app.u.dump('past validation, before inventory validation. valid = '+valid);
 		/*				
 						//if errors occured, report them.
 							 if(valid == false)	{
-					//			app.u.dump(errors);
-								var errObj = app.u.youErrObject("Uh oh! Looks like you left something out. Please make the following selection(s):<ul>"+errors+"<\/ul>",'42');
+					//			_app.u.dump(errors);
+								var errObj = _app.u.youErrObject("Uh oh! Looks like you left something out. Please make the following selection(s):<ul>"+errors+"<\/ul>",'42');
 								errObj.parentID = 'JSONpogErrors_'+pid
-								app.u.throwMessage(errObj);
+								_app.u.throwMessage(errObj);
 								}
 		*/				//if all options are selected AND checkinventory is on, do inventory check.
 							//else 
 							if(valid == true && typeof zGlobals == 'object' && zGlobals.globalSettings.inv_mode > 1)	{
 						//		alert(thisSTID);
-								if(!$.isEmptyObject(app.data['appProductGet|'+pid]['@inventory']) && !$.isEmptyObject(app.data['appProductGet|'+pid]['@inventory'][thisSTID]) && app.data['appProductGet|'+pid]['@inventory'][thisSTID]['inv'] < 1)	{
-									var errObj = app.u.youErrObject("We're sorry, but the combination of selections you've made is not available. Try changing one of the following:<ul>"+inventorySogPrompts+"<\/ul>",'42');
+								if(!$.isEmptyObject(_app.data['appProductGet|'+pid]['@inventory']) && !$.isEmptyObject(_app.data['appProductGet|'+pid]['@inventory'][thisSTID]) && _app.data['appProductGet|'+pid]['@inventory'][thisSTID]['inv'] < 1)	{
+									var errObj = _app.u.youErrObject("We're sorry, but the combination of selections you've made is not available. Try changing one of the following:<ul>"+inventorySogPrompts+"<\/ul>",'42');
 									errObj.parentID = 'JSONpogErrors_'+pid
-									app.u.throwMessage(errObj);
+									_app.u.throwMessage(errObj);
 									valid = false;
 									}
 						
@@ -360,18 +360,18 @@ var store_bmo = function() {
 					
 					if(valid){ 
 						numCalls++;
-						app.calls.cartItemAppend.init(cartObj,{},'immutable');	
+						_app.calls.cartItemAppend.init(cartObj,{},'immutable');	
 					} 
 				}); // form processing
 				if(numCalls > 0){
-					app.model.destroy('cartDetail');
-					app.calls.cartDetail.init({'callback':function(rd){
+					_app.model.destroy('cartDetail');
+					_app.calls.cartDetail.init({'callback':function(rd){
 						showContent('cart',{});
 						}},'immutable');
-					app.model.dispatchThis('immutable');
+					_app.model.dispatchThis('immutable');
 				} else {
 					//Notify user of problem
-					$('.atcPogErrors', $this).anymessage(app.u.youErrObject("You must select variations for at least one product!",'#'));
+					$('.atcPogErrors', $this).anymessage(_app.u.youErrObject("You must select variations for at least one product!",'#'));
 					
 				}
 			}, // addToCart
@@ -388,19 +388,19 @@ var store_bmo = function() {
 				var errors = '';
 				$errorDiv = errorDiv.empty(); //make sure error screen is empty. do not hide or callback errors won't show up.
 
-				if(app.u.isValidEmail(email) == false){
+				if(_app.u.isValidEmail(email) == false){
 					errors += "Please provide a valid email address<br \/>";
 					}
 				if(!password)	{
 					errors += "Please provide your password<br \/>";
 					}
 				if(errors == ''){
-					app.calls.appBuyerLogin.init({"login":email,"password":password},{'callback':'authenticateBuyer','extension':'myRIA'});
-					app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
-//					app.calls.buyerProductLists.init('forgetme',{'callback':'handleForgetmeList','extension':'store_prodlist'},'immutable');
+					_app.calls.appBuyerLogin.init({"login":email,"password":password},{'callback':'authenticateBuyer','extension':'myRIA'});
+					_app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
+//					_app.calls.buyerProductLists.init('forgetme',{'callback':'handleForgetmeList','extension':'store_prodlist'},'immutable');
 					localStorage.setItem('appPreferences','signedUp'); //set preference to bypass loading offer in case it was nuked elsewhere
 					localStorage.setItem('loadDirectly',true); //set preference to bypass loading offer in case it was nuked elsewhere
-					app.model.dispatchThis('immutable');
+					_app.model.dispatchThis('immutable');
 					showContent('customer',{'show':'myaccount'})
 					}
 				else {
@@ -411,7 +411,7 @@ var store_bmo = function() {
 			
 				//opens tab on product modal with recent, you may like, etc. lists
 			showMoreOptions : function($this, pid) {
-				var _pid = app.u.makeSafeHTMLId(pid);
+				var _pid = _app.u.makeSafeHTMLId(pid);
 				
 				$this.hide();	//hide the "more options" button
 					//slide tab out, when done add a border
@@ -427,7 +427,7 @@ var store_bmo = function() {
 			},
 			
 			hideMoreOptions : function($this, pid) {
-				var _pid = app.u.makeSafeHTMLId(pid);
+				var _pid = _app.u.makeSafeHTMLId(pid);
 		
 				$('.anotherElement_'+_pid).animate({
 					'width':'0px'
@@ -458,7 +458,7 @@ var store_bmo = function() {
 						});
 					}
 				});
-				app.ext.store_bmo.u.setTime();
+				_app.ext.store_bmo.u.setTime();
 			},
 			
 			showSizeChart : function() {
@@ -470,7 +470,7 @@ var store_bmo = function() {
 			},
 		
 			pauseFred : function($this) {
-				//app.u.dump('gothere');
+				//_app.u.dump('gothere');
 				$this.trigger('stop');
 			},
 		
@@ -516,9 +516,9 @@ var store_bmo = function() {
 	*/ /*	
 			//places customer reviews on the product page
 			showReviews : function(pid, action, hide, show) {
-				var $context = $('#productTemplate_'+app.u.makeSafeHTMLId(pid));
+				var $context = $('#productTemplate_'+_app.u.makeSafeHTMLId(pid));
 				
-				app.u.dump('SHOW REVIEW');
+				_app.u.dump('SHOW REVIEW');
 			
 				$(action, $context).animate(1000);
 				setTimeout(function() {
@@ -529,10 +529,10 @@ var store_bmo = function() {
 	*/ /*		
 			//reverts customer reveiws to the product description on the product page
 			showDescription : function(pid, action, hide, show) {
-				var $context = $('#productTemplate_'+app.u.makeSafeHTMLId(pid));
+				var $context = $('#productTemplate_'+_app.u.makeSafeHTMLId(pid));
 				
-				app.u.dump('SHOW DESC');
-				app.u.dump(pid);
+				_app.u.dump('SHOW DESC');
+				_app.u.dump(pid);
 				
 				$(action, $context).animate(1000);
 				setTimeout(function() {
@@ -551,13 +551,13 @@ var store_bmo = function() {
 		renderFormats : {
 		
 			test : function($tag,data) {
-				app.u.dump('--> TEST'); app.u.dump(data.value); 
+				_app.u.dump('--> TEST'); _app.u.dump(data.value); 
 			},
 		
 				//checks for matching piece attrib in prod list item and sets sum of prices on list item if found. 
 			matchingBasePrice : function($tag, data) {
 				var basePrice = (data.bindData.isElastic) ? data.value.base_price/100 : data.value['%attribs']['zoovy:base_price'];
-				var match = app.u.makeSafeHTMLId((data.bindData.isElastic) ? data.value.matching_piece : data.value['%attribs']['user:matching_piece']);
+				var match = _app.u.makeSafeHTMLId((data.bindData.isElastic) ? data.value.matching_piece : data.value['%attribs']['user:matching_piece']);
 							
 				if(match) {
 					var obj = {
@@ -572,8 +572,8 @@ var store_bmo = function() {
 						"price"			: basePrice,
 					};
 
-					app.calls.appProductGet.init(obj, _tag, 'immutable');
-					app.model.dispatchThis('immutable');
+					_app.calls.appProductGet.init(obj, _tag, 'immutable');
+					_app.model.dispatchThis('immutable');
 				}
 			}, //matchingBasePrice
 		
@@ -604,7 +604,7 @@ var store_bmo = function() {
 				//if info is available will populate subject and body w/ prod name, mfg, & price
 				//if only name, subject will have name, body will be empty. If no content, no subject or body
 			bindMailto : function($tag, data){
-				//app.u.dump('data.value:'); app.u.dump(data.value);
+				//_app.u.dump('data.value:'); _app.u.dump(data.value);
 				if(data.value['%attribs'] && data.value['%attribs']['zoovy:prod_name']) {
 					
 					var name = data.value['%attribs']['zoovy:prod_name'];
@@ -622,11 +622,11 @@ var store_bmo = function() {
 								
 								//the window is set, check if it's filled, and kill it if not
 							setTimeout(function(){
-								//app.u.dump('WindowObjectReference'); app.u.dump(eWindow.WindowObjectReference); //Security issues? check for later possibility of cleaner implementation 
-								if(eWindow[0]) {//app.u.dump('Webmail, window has content don't close');
+								//_app.u.dump('WindowObjectReference'); _app.u.dump(eWindow.WindowObjectReference); //Security issues? check for later possibility of cleaner implementation 
+								if(eWindow[0]) {//_app.u.dump('Webmail, window has content don't close');
 								}
 								else {
-									//app.u.dump('Outlook-esq, window has no content'); 
+									//_app.u.dump('Outlook-esq, window has no content'); 
 									eWindow.close();
 								}
 							},5000);
@@ -651,13 +651,13 @@ var store_bmo = function() {
 				//will combine features list in tab section on prod page for top and bottom products if they are both being added to the page
 			combineFeaturesList : function($tag, data) {
 				setTimeout(function(){
-				//	app.u.dump('input:'); app.u.dump($('input[type=hidden]',$tag.parent()).val());
+				//	_app.u.dump('input:'); _app.u.dump($('input[type=hidden]',$tag.parent()).val());
 					var pid = $('input[type=hidden]',$tag.parent()).val(); 
 					var $destination = $('.tabOfFeatures',$tag.parent().parent().parent().parent()); //append new content to container w/ default content
 					
 						//get the matching product's feature info
-					if(typeof app.data['appProductGet|'+pid] == 'object') {
-						var pdata = app.data['appProductGet|'+pid]
+					if(typeof _app.data['appProductGet|'+pid] == 'object') {
+						var pdata = _app.data['appProductGet|'+pid]
 						if(pdata['%attribs'] && pdata['%attribs']['zoovy:prod_features']) {
 							pdata = pdata['%attribs']['zoovy:prod_features'];
 							
@@ -670,24 +670,24 @@ var store_bmo = function() {
 							$destination.append($tmp.html());
 							$tmp.empty().remove();
 						}
-						else {app.u.dump('%attribs or zoovy:prod_features were not set for '+pid);}
-					}else {app.u.dump('appProductGet for '+pid+' did not return as an object');}
+						else {_app.u.dump('%attribs or zoovy:prod_features were not set for '+pid);}
+					}else {_app.u.dump('appProductGet for '+pid+' did not return as an object');}
 				},500);
 			}, //combineFeaturesList
 			
 				//reads prices for both top and bottom pieces and adds them for a total preliminary price
 			customBasePrice : function($tag, data) {
-				var pid = app.u.makeSafeHTMLId(data.value.pid);
+				var pid = _app.u.makeSafeHTMLId(data.value.pid);
 				var displayPrice = 0;
 				setTimeout(function(){
 						//get price of each item from it's form, and add them for total
 					$('form','.customATCForm',$tag.parent().parent()).each(function(){
 						displayPrice += Number($('.formPrice',$(this)).attr('data-price'));
-//						app.u.dump('--> price'); app.u.dump(displayPrice); 
+//						_app.u.dump('--> price'); _app.u.dump(displayPrice); 
 					});
 
 						//convert to money and replace original content w/ total value
-					displayPrice = app.u.formatMoney(displayPrice,'$',2,true);
+					displayPrice = _app.u.formatMoney(displayPrice,'$',2,true);
 					$tag.empty().text(displayPrice);
 				},250);
 			},
@@ -697,16 +697,16 @@ var store_bmo = function() {
 			setHiddenPrice : function($tag, data) {
 				var formDesignator = $tag.attr('data-formDesig'); //used to tell if a form has modified the displayed price
 				var $summaryContainer = $tag.parent().parent().parent().parent();
-				var pid = app.u.makeSafeHTMLId($('input[type="hidden"]',$tag.parent()).val()); //get pid for this form
-				var prod = app.data['appProductGet|'+pid]; //get product for this form
-//				app.u.dump('--> prod'); app.u.dump(prod);
+				var pid = _app.u.makeSafeHTMLId($('input[type="hidden"]',$tag.parent()).val()); //get pid for this form
+				var prod = _app.data['appProductGet|'+pid]; //get product for this form
+//				_app.u.dump('--> prod'); _app.u.dump(prod);
 				
 					//add base price value to hidden element in each form
 				if(prod && prod['%attribs'] && prod['%attribs']['zoovy:base_price']) {
-					var displayPrice = app.ext.store_bmo_lto.u.applyLTODiscount(pid,prod['%attribs']['zoovy:base_price']);
+					var displayPrice = _app.ext.store_bmo_lto.u.applyLTODiscount(pid,prod['%attribs']['zoovy:base_price']);
 					$tag.attr('data-price',displayPrice); 
 				}
-				else {app.u.dump('!! app.ext.store_bmo.renderformats.setHiddenPrice() failed !!');}
+				else {_app.u.dump('!! _app.ext.store_bmo.renderformats.setHiddenPrice() failed !!');}
 			}, //setHiddenPrice
 			
 			loadProd : function($tag, data){
@@ -722,17 +722,17 @@ var store_bmo = function() {
 					"$container" : $tag,
 					"loadsTemplate" : data.bindData.loadsTemplate
 				};
-				app.calls.appProductGet.init(obj, _tag, 'immutable');	// call appProductGet.init on the product id with the callback and callback location
+				_app.calls.appProductGet.init(obj, _tag, 'immutable');	// call appProductGet.init on the product id with the callback and callback location
 				
 				//execute calls
-				app.model.dispatchThis('immutable');
+				_app.model.dispatchThis('immutable');
 			},
 			
 			
 			matchATCFormPID : function($tag, data) {
-				if(typeof app.data['appProductGet|'+data.value] == 'object') {
-					var pdata = app.data['appProductGet|'+data.value]['%attribs'];
-					if(app.u.isSet(pdata['user:matching_piece'])){
+				if(typeof _app.data['appProductGet|'+data.value] == 'object') {
+					var pdata = _app.data['appProductGet|'+data.value]['%attribs'];
+					if(_app.u.isSet(pdata['user:matching_piece'])){
 						var matchData = pdata['user:matching_piece'];
 					}
 				}
@@ -742,9 +742,9 @@ var store_bmo = function() {
 			//adds class w/ pid of matching top or bottom of suit for product page that is loaded
 			//so that anyContent can locate in product page modal
 			addMatch : function($tag, data) {
-				if(typeof app.data['appProductGet|'+data.value.pid] == 'object') {
-					var pdata = app.data['appProductGet|'+data.value.pid]['%attribs'];
-					if(app.u.isSet(pdata['user:matching_piece'])){
+				if(typeof _app.data['appProductGet|'+data.value.pid] == 'object') {
+					var pdata = _app.data['appProductGet|'+data.value.pid]['%attribs'];
+					if(_app.u.isSet(pdata['user:matching_piece'])){
 						var matchData = pdata['user:matching_piece'];
 					}
 				}
@@ -755,28 +755,28 @@ var store_bmo = function() {
 			//add class w/ pid to be used as a selector for moreOptions section in prod page modal
 			classyId : function($tag, data) {
 				if(data.value.pid){
-					var pid = app.u.makeSafeHTMLId(data.value.pid)
+					var pid = _app.u.makeSafeHTMLId(data.value.pid)
 					$tag.addClass('anotherElement_'+pid);
 				}
 			},
 					
 			addInfiniteSlider : function($tag,data)	{
-//				app.u.dump("BEGIN store_bmo.renderFormats.addInfiniteSlider: "+data.value);
+//				_app.u.dump("BEGIN store_bmo.renderFormats.addInfiniteSlider: "+data.value);
 				var width = data.bindData.width;
 				var height = data.bindData.height;
 				
 				if(data.bindData.isElastic) { 
-					//app.u.dump(data.value);
+					//_app.u.dump(data.value);
 					data.value.is_square ? height = width : height = height; //make it square if the square attrib is there
 						//after height is determined to be square or not, add image in with the dimensions found.
 					if(data.value.images && data.value.images[0]) {
-						$tag.append(app.u.makeImage({"name":data.value.images[0],"w":width,"h":height,"b":"FFFFFF","tag":1}));
+						$tag.append(_app.u.makeImage({"name":data.value.images[0],"w":width,"h":height,"b":"FFFFFF","tag":1}));
 						
 							//if more than one pic assigned add image slider
 						if(data.value.images[0] && data.value.images[1]) { 
 							$tag.attr('data-images',data.value.images);
 							$tag.attr('data-lastic',true);
-							$tag.on('mouseenter.myslider',app.ext.store_bmo.u.addPicSlider2UL);
+							$tag.on('mouseenter.myslider',_app.ext.store_bmo.u.addPicSlider2UL);
 						}
 					}
 					else {	
@@ -791,16 +791,16 @@ var store_bmo = function() {
 						
 						pdata['user:is_square'] ? height = width : height = height; //make it square if the square attrib is there
 							//after height is determined to be square or not, add image in with the dimensions found.
-						$tag.append(app.u.makeImage({"name":pdata['zoovy:prod_image1'],"w":width,"h":height,"b":"FFFFFF","tag":1}));
+						$tag.append(_app.u.makeImage({"name":pdata['zoovy:prod_image1'],"w":width,"h":height,"b":"FFFFFF","tag":1}));
 						
 						//if image 1 or 2 isn't set, likely there are no secondary images. stop.
-						if(app.u.isSet(pdata['zoovy:prod_image1']) && app.u.isSet(pdata['zoovy:prod_image2']))	{
+						if(_app.u.isSet(pdata['zoovy:prod_image1']) && _app.u.isSet(pdata['zoovy:prod_image2']))	{
 							$tag.attr('data-pid',data.value.pid); //no params are passed into picSlider function, so pid is added to tag for easy ref.
-	//						app.u.dump(" -> image1 ["+pdata['zoovy:prod_image1']+"] and image2 ["+pdata['zoovy:prod_image2']+"] both are set.");
+	//						_app.u.dump(" -> image1 ["+pdata['zoovy:prod_image1']+"] and image2 ["+pdata['zoovy:prod_image2']+"] both are set.");
 	//adding this as part of mouseenter means pics won't be downloaded till/unless needed.
 	//no anonymous function in mouseenter. We'll need this fixed to ensure no double add (most likely) if template re-rendered.
 	//							$tag.unbind('mouseenter.myslider'); // ensure event is only binded once.
-								$tag.on('mouseenter.myslider',app.ext.store_bmo.u.addPicSlider2UL);//.bind('mouseleave',function(){window.slider.kill()})
+								$tag.on('mouseenter.myslider',_app.ext.store_bmo.u.addPicSlider2UL);//.bind('mouseleave',function(){window.slider.kill()})
 							}
 						}
 					}
@@ -813,7 +813,7 @@ var store_bmo = function() {
 			//HIDE ZERO INVENTORY IN PRODUCT LISTS (MUST USE INFINITE SCROLL ON LISTS)
 			hideZeroInv : function($tag, data) {
 				var pid = data.value.pid;
-				//app.u.dump('***PID:'); app.u.dump(pid);
+				//_app.u.dump('***PID:'); _app.u.dump(pid);
 				if(data.value['@inventory'] && data.value['@inventory'][pid]) {
 					var inventory = data.value['@inventory'][pid]['inv'];
 					if(inventory < 1) {
@@ -834,26 +834,26 @@ var store_bmo = function() {
 			setTime : function() {
 				var d = new Date().getTime() + 604800000; //7 days in milliseconds
 				d = d.toString().slice(0,10);
-//				app.u.dump('--> setTime date:'); app.u.dump(d); app.u.dump(app.ext.store_bmo.u.millisecondsToYYYYMMDD(new Date(d)));
+//				_app.u.dump('--> setTime date:'); _app.u.dump(d); _app.u.dump(_app.ext.store_bmo.u.millisecondsToYYYYMMDD(new Date(d)));
 				$("input[name=time]",'#createaccountTemplate').val(d).attr("disabled",true);
 			},
 		
 			addRecentlyViewedItems : function() {
-			//	app.u.dump('store_bmo recentlyViewedItems has been run');
+			//	_app.u.dump('store_bmo recentlyViewedItems has been run');
 				
 					//get pid of product modal when it closes
-				var pid = app.u.makeSafeHTMLId($('.popupshado','.quickVModal').attr('data-pid'));
+				var pid = _app.u.makeSafeHTMLId($('.popupshado','.quickVModal').attr('data-pid'));
 				
 					//add item to session var
-				if($.inArray(pid,app.ext.myRIA.vars.session.recentlyViewedItems) < 0)	{
-					app.ext.myRIA.vars.session.recentlyViewedItems.unshift(pid);
+				if($.inArray(pid,_app.ext.myRIA.vars.session.recentlyViewedItems) < 0)	{
+					_app.ext.myRIA.vars.session.recentlyViewedItems.unshift(pid);
 					}
 				else	{
 					//the item is already in the list. move it to the front.
-					app.ext.myRIA.vars.session.recentlyViewedItems.splice(0, 0, app.ext.myRIA.vars.session.recentlyViewedItems.splice(app.ext.myRIA.vars.session.recentlyViewedItems.indexOf(pid), 1)[0]);
+					_app.ext.myRIA.vars.session.recentlyViewedItems.splice(0, 0, _app.ext.myRIA.vars.session.recentlyViewedItems.splice(_app.ext.myRIA.vars.session.recentlyViewedItems.indexOf(pid), 1)[0]);
 					}
-			//	app.u.dump(app.ext.myRIA.vars.session);
-			//	app.u.dump('modal pid:'); app.u.dump(pid);
+			//	_app.u.dump(_app.ext.myRIA.vars.session);
+			//	_app.u.dump('modal pid:'); _app.u.dump(pid);
 			}, //addRecentlyViewedItems
 				
 				//loads product in hompage accessories tab	
@@ -863,9 +863,9 @@ var store_bmo = function() {
 					"callback":"renderProductsAsList",
 					"extension":"store_bmo"
 				}
-				app.ext.store_navcats.calls.appNavcatDetail.init(passedCat, _tag,'immutable');
+				_app.ext.store_navcats.calls.appNavcatDetail.init(passedCat, _tag,'immutable');
 	
-				app.model.dispatchThis('immutable');
+				_app.model.dispatchThis('immutable');
 			
 			}, //loadProductsAsList
 		
@@ -873,22 +873,22 @@ var store_bmo = function() {
 			bindOnclick : function() {
 				$('body').off('click', 'a[data-onclick]').on('click', 'a[data-onclick]', function(event){
 					 var $this = $(this);
-					 var P = app.ext.myRIA.u.parseAnchor($this.data('onclick'));
-					 return app.ext.myRIA.a.showContent('',P);
+					 var P = _app.ext.myRIA.u.parseAnchor($this.data('onclick'));
+					 return _app.ext.myRIA.a.showContent('',P);
 				});
 			},
 			
 			//anyContent to add matching top or bottom to a top or bottom prod page
 			loadMatchingProduct : function(pid) {
-				//app.u.dump('PID:'); app.u.dump(pid);
+				//_app.u.dump('PID:'); _app.u.dump(pid);
 				var matchData = "";
-				if(typeof app.data['appProductGet|'+pid] == 'object') { 
-					if(app.data['appProductGet|'+pid]) {
-						var pdata = app.data['appProductGet|'+pid]['%attribs'];
-						//app.u.dump('pdata'); app.u.dump(pdata);
-						if(app.u.isSet(pdata['user:matching_piece'])){
+				if(typeof _app.data['appProductGet|'+pid] == 'object') { 
+					if(_app.data['appProductGet|'+pid]) {
+						var pdata = _app.data['appProductGet|'+pid]['%attribs'];
+						//_app.u.dump('pdata'); _app.u.dump(pdata);
+						if(_app.u.isSet(pdata['user:matching_piece'])){
 							matchData = pdata['user:matching_piece'];
-							//app.u.dump('matchData'); app.u.dump(matchData);
+							//_app.u.dump('matchData'); _app.u.dump(matchData);
 						}
 					}
 				}
@@ -902,31 +902,31 @@ var store_bmo = function() {
 						"callback":"renderMatchingProduct",		// call back function (in callbacks above)
 						"extension":"store_bmo"					// extension that holds call back (this extension you're in)
 					};
-					app.calls.appProductGet.init(obj, _tag, 'immutable');	// call appProductGet.init on the product id with the callback and callback location
+					_app.calls.appProductGet.init(obj, _tag, 'immutable');	// call appProductGet.init on the product id with the callback and callback location
 					
 					//execute calls
-					app.model.dispatchThis('immutable');			
+					_app.model.dispatchThis('immutable');			
 				}
 				else { //no match data don't add any content
 				}
 			},
 			
 			addPicSlider2ElasticUL : function(info) {
-				app.u.dump('in addPicSlider2ElasticUL'); 
+				_app.u.dump('in addPicSlider2ElasticUL'); 
 	/*			var $obj = $(this);
 				if($obj.data('slider') == 'rendered') {
 					//do nothing. list has aready been generated.
 				}
 				else {
 					$obj.data('slider','rendered'); //used to determine if the ul contents have already been added.
-					app.u.dump($obj);
+					_app.u.dump($obj);
 				}
 	*/		},
 
 			//obj is going to be the container around the img. probably a div.
 			//the internal img tag gets nuked in favor of an ordered list.
 			addPicSlider2UL : function($tag, info){
-//				app.u.dump("BEGIN store_bmo.u.addPicSlider2UL");
+//				_app.u.dump("BEGIN store_bmo.u.addPicSlider2UL");
 				
 				var $obj = $(this);
 		
@@ -936,7 +936,7 @@ var store_bmo = function() {
 				else {
 					$obj.data('slider','rendered'); //used to determine if the ul contents have already been added.
 					var pid = $obj.attr('data-pid');
-					//app.u.dump(" -> pid: "+pid);					
+					//_app.u.dump(" -> pid: "+pid);					
 					var $img = $obj.find('img')
 					var width = $img.attr('width'); //using width() and height() here caused unusual results in the makeImage function below.
 					var height = $img.attr('height');
@@ -949,17 +949,17 @@ var store_bmo = function() {
 						
 						for(var i = 2; i <= 10; i += 1)	{
 							if(data[i])	{
-								$li = $('<li>').append(app.u.makeImage({"name":data[i],"w":width,"h":height,"b":"FFFFFF","tag":1}));
+								$li = $('<li>').append(_app.u.makeImage({"name":data[i],"w":width,"h":height,"b":"FFFFFF","tag":1}));
 								$li.appendTo($ul);
 							}
 							else	{break} //end loop at first empty image spot.
 							}
 					} 
 					else { 
-						var data = app.data['appProductGet|'+pid]['%attribs'];
+						var data = _app.data['appProductGet|'+pid]['%attribs'];
 						for(var i = 2; i <= 10; i += 1)	{
 							if(data['zoovy:prod_image'+i])	{
-								$li = $('<li>').append(app.u.makeImage({"name":data['zoovy:prod_image'+i],"w":width,"h":height,"b":"FFFFFF","tag":1}));
+								$li = $('<li>').append(_app.u.makeImage({"name":data['zoovy:prod_image'+i],"w":width,"h":height,"b":"FFFFFF","tag":1}));
 								$li.appendTo($ul);
 							}
 						else	{break} //end loop at first empty image spot.
@@ -989,15 +989,15 @@ var store_bmo = function() {
 			handleAppLoginCreate : function($form)	{
 				if($form)	{
 					var formObj = $form.serializeJSON();
-		//app.u.dump('--> Form Object'); app.u.dump(formObj); 			
+		//_app.u.dump('--> Form Object'); _app.u.dump(formObj); 			
 					if(formObj.pass !== formObj.pass2) {
-						app.u.throwMessage('Sorry, your passwords do not match! Please re-enter your password');
+						_app.u.throwMessage('Sorry, your passwords do not match! Please re-enter your password');
 						return;
 					}
 					
 					var tagObj = {
 						'callback':function(rd) {
-							if(app.model.responseHasErrors(rd)) {
+							if(_app.model.responseHasErrors(rd)) {
 								$form.anymessage({'message':rd});
 							}
 							else {
@@ -1005,15 +1005,15 @@ var store_bmo = function() {
 								//localStorage.removeItem('appPreferences');
 								//localStorage.appPreferences = 'signedUp';
 								showContent('customer',{'show':'myaccount'});
-								app.u.throwMessage(app.u.successMsgObject("A gift card has been added to your account, look for it during checkout."));
-								//app.u.throwMessage(app.u.successMsgObject("Your account has been created! Check your welcome e-mail for a gift from Bikinimo."));
+								_app.u.throwMessage(_app.u.successMsgObject("A gift card has been added to your account, look for it during checkout."));
+								//_app.u.throwMessage(_app.u.successMsgObject("Your account has been created! Check your welcome e-mail for a gift from Bikinimo."));
 							}
 						}
 					}
 					
 					formObj._vendor = "bikinimo";
-					app.calls.appBuyerCreate.init(formObj,tagObj,'immutable');				
-					app.model.dispatchThis('immutable');
+					_app.calls.appBuyerCreate.init(formObj,tagObj,'immutable');				
+					_app.model.dispatchThis('immutable');
 				}
 				else {
 					$('#globalMessaging').anymessage({'message':'$form not passed into myRIA.u.handleBuyerAccountCreate','gMessage':true});
@@ -1039,11 +1039,11 @@ var store_bmo = function() {
 					"time"			: 1395277298,
 					"vendor"		: "bikinimo"
 				}
-				app.u.dump('--> test form:'); app.u.dump(formObj);
+				_app.u.dump('--> test form:'); _app.u.dump(formObj);
 				
 				var tagObj = {
 					'callback':function(rd) {
-						if(app.model.responseHasErrors(rd)) {
+						if(_app.model.responseHasErrors(rd)) {
 							$('#mainContentArea').anymessage({'message':rd});
 						}
 						else {
@@ -1051,20 +1051,20 @@ var store_bmo = function() {
 							//localStorage.removeItem('appPreferences');
 							//localStorage.appPreferences = 'signedUp';
 							showContent('customer',{'show':'myaccount'});
-							app.u.throwMessage(app.u.successMsgObject("Your account has been created!"));
+							_app.u.throwMessage(_app.u.successMsgObject("Your account has been created!"));
 						}
 					}
 				}
 				
 				formObj._vendor = "bikinimo";
-				app.calls.appBuyerCreate.init(formObj,tagObj,'immutable');				
-				app.model.dispatchThis('immutable');
+				_app.calls.appBuyerCreate.init(formObj,tagObj,'immutable');				
+				_app.model.dispatchThis('immutable');
 			},
 			
 			toSt : function(n) {
 				var s = '';
 				if(n < 10) s +='0';
-			//	app.u.dump(n); app.u.dump(s); 
+			//	_app.u.dump(n); _app.u.dump(s); 
 				return s+n.toString();
 			},
 			
@@ -1107,7 +1107,7 @@ var store_bmo = function() {
 			
 			//returns text format of day of the week based on date object value passed in
 			getDOWFromDay : function(X)	{
-//				app.u.dump("BEGIN beachmart.u.getDOWFromDay ["+X+"]");
+//				_app.u.dump("BEGIN beachmart.u.getDOWFromDay ["+X+"]");
 				var weekdays = new Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
 				return weekdays[X];
 			},
@@ -1133,12 +1133,12 @@ var store_bmo = function() {
 					if (str.substr(12,2)) {var sec = str.substr(12,2);}
 					else {var sec = 0;}
 					d.setFullYear(year, (month - 1), day);
-//					app.u.dump(" date obj: "); app.u.dump(d);
-//					app.u.dump(" -> YYYYMMDD2Pretty ["+str+"]: Y["+year+"]  Y["+month+"]  Y["+day+"] ");
+//					_app.u.dump(" date obj: "); _app.u.dump(d);
+//					_app.u.dump(" -> YYYYMMDD2Pretty ["+str+"]: Y["+year+"]  Y["+month+"]  Y["+day+"] ");
 					r = this.getMonthFromNumber(d.getMonth())+" "+day+", "+year+" "+hour+":"+min+":"+sec;
 				}
 				else	{
-					app.u.dump("WARNING! the parameter passed into YYYYMMDD2Pretty is not a number ["+str+"]");
+					_app.u.dump("WARNING! the parameter passed into YYYYMMDD2Pretty is not a number ["+str+"]");
 				}
 				return r;
 			}, //yyyymmdd2Pretty 
@@ -1363,21 +1363,21 @@ var store_bmo = function() {
 			
 			sansReviews : function($context) {
 				if($('.noReviews', $context).children().length === 0) {
-					app.u.dump('No reviews. Running existing messge check');
+					_app.u.dump('No reviews. Running existing messge check');
 					if(($('.reviewsCont', $context).length === 0) || ($('.reviewsCont', $context).length === null)) {
-						app.u.dump('No message exists. Display message');
+						_app.u.dump('No message exists. Display message');
 						$('.beFirst', $context).append(
 						'<p class="reviewsCont">'
 						+'Be the <strong>First</strong> to Review This Product!'
 						+'</p>');
-						app.u.dump('Reveiw message displaying for : '+$context);
+						_app.u.dump('Reveiw message displaying for : '+$context);
 					}
 					else {
-						app.u.dump('Message exists, do nothing');
+						_app.u.dump('Message exists, do nothing');
 					}
 				}
 				else {
-					app.u.dump('Reviews exist, function aborted. Reviews length: '+$('.reviewsBind').children.length);
+					_app.u.dump('Reviews exist, function aborted. Reviews length: '+$('.reviewsBind').children.length);
 				}
 			},
 	*/	
@@ -1390,26 +1390,26 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 */
 	/*		showReviewFrmInline : function(P, hide)	{
 				if(!P.pid || !P.templateID)	{
-					app.u.dump(" -> pid or template id left blank");
+					_app.u.dump(" -> pid or template id left blank");
 					}
 				else	{
 					var $parent = $('#review-wrapper'+P.pid);
 					//if no review wrapper has been created before, create one. 
 					if($parent.length == 0)	{
-						app.u.dump(" -> wrapper doesn't exist. create it.");
-//						app.u.dump($("<div \/>").attr({"id":"review-wrapper",'data-pid':P.pid}));
-//						app.u.dump(('.prodWriteReviewContainer','#productTemplate_'+P.pid));
+						_app.u.dump(" -> wrapper doesn't exist. create it.");
+//						_app.u.dump($("<div \/>").attr({"id":"review-wrapper",'data-pid':P.pid}));
+//						_app.u.dump(('.prodWriteReviewContainer','#productTemplate_'+P.pid));
 						$parent = $("<div \/>").attr({"id":"review-wrapper"+P.pid,'data-pid':P.pid}).appendTo('.prodWriteReviewContainer','#productTemplate_'+P.pid);
 						}
 					else	{
-						app.u.dump(" -> use existing wrapper. empty it.");
+						_app.u.dump(" -> use existing wrapper. empty it.");
 						//this is a new product being displayed in the viewer.
 						$parent.empty();
 						}
 //	$parent.dialog({modal: true,width: ($(window).width() > 500) ? 500 : '90%',height:500,autoOpen:false,"title":"Write a review for "+P.pid});
 //the only data needed in the reviews form is the pid.
 //the entire product record isn't passed in because it may not be available (such as in invoice or order history, or a third party site).
-					$parent.append(app.renderFunctions.transmogrify({id:'review-wrapper_'+P.pid},P.templateID,{'pid':P.pid}));
+					$parent.append(_app.renderFunctions.transmogrify({id:'review-wrapper_'+P.pid},P.templateID,{'pid':P.pid}));
 					$(hide,'#productTemplate_'+P.pid).css('display','none');
 					$('.prodWriteReviewContainer','#productTemplate_'+P.pid).css('display','block');
 					}
@@ -1431,12 +1431,12 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 		
 			renderOptionCUSTOMSELECT : function(pog) {
 			
-			//	app.u.dump('POG -> '); app.u.dump(pog);
+			//	_app.u.dump('POG -> '); _app.u.dump(pog);
 
-			//	app.u.dump('BEGIN renderOptionSELECT for pog '+pog.id+' and safe id = '+safeid);
+			//	_app.u.dump('BEGIN renderOptionSELECT for pog '+pog.id+' and safe id = '+safeid);
 				var pogid = pog.id;
 				var $parentDiv = $("<span \/>");
-				var $selectList = $("<select  class='prodOpt' onChange='app.ext.store_bmo.a.changePriceDisplayed($(this))'>").attr({"name":pogid});
+				var $selectList = $("<select  class='prodOpt' onChange='_app.ext.store_bmo.a.changePriceDisplayed($(this))'>").attr({"name":pogid});
 				var i = 0;
 				var len = pog['@options'].length;
 
@@ -1459,8 +1459,8 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 					i++;
 					}
 
-			//	app.u.dump(" -> pogid: "+pogid);
-			//	app.u.dump(" -> pog hint: "+pog['ghint']);
+			//	_app.u.dump(" -> pogid: "+pogid);
+			//	_app.u.dump(" -> pog hint: "+pog['ghint']);
 				$selectList.appendTo($parentDiv);
 				if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
 				return $parentDiv;
@@ -1470,7 +1470,7 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 			
 			xinit : function(){
 				this.addHandler("type","select","renderOptionCUSTOMSELECT");
-				//app.u.dump("--- RUNNING XINIT");
+				//_app.u.dump("--- RUNNING XINIT");
 			}
 		
 		} //variations

@@ -1,3 +1,16 @@
+@font-face {
+	font-family: 'PT Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: local('PT Sans'),local('PTSans-Regular'), url(fonts/ptsans.woff) format('woff');
+	}
+@font-face {
+	font-family: 'PT Sans';
+	font-style: normal;
+	font-weight: 700;
+	src: local('PT Sans Bold'), local('PTSans-Bold'), url(fonts/ptsans_bold.woff) format('woff');
+	}
+
 @font-face	{
 	font-family: barcode3of9;
 	src: url('fonts/z3of9.ttf') /* will not work in IE9 w/out eot font file */
@@ -6,7 +19,7 @@
 body {line-height: 1;} /* helps to reduce some errant whitespace issues */
 
 body	{margin:0; padding:0; background:#f1f1f1; } 
-body, html	{font-size:100%; font-family:Tahoma, Geneva, sans-serif; color:#565656;height:100%; margin:0; padding:0;} /* height is for showLoading on body */
+body, html	{font-size:100%; font-family:PT Sans, Tahoma, Geneva, sans-serif; color:#565656;height:100%; margin:0; padding:0;} /* height is for showLoading on body */
 
 img {border:0px;}
 
@@ -40,7 +53,7 @@ class can also be applied to a 1 item per row list.
 
 .displayInlineBlock	{display:inline-block;}
 
-.alignRight	{text-align:right;}
+.alignRight, .gridTable th.alignRight	{text-align:right;}
 .alignLeft	{text-align:left;}
 .alignCenter	{text-align:center;}
 
@@ -59,6 +72,7 @@ class can also be applied to a 1 item per row list.
 .minimalMode .hideInMinimalMode 	{display:none;}
 
 .isZoovy .showForZoovyOnly, .isAnyCommerce .showForAnyCommerceOnly	{display:inherit;}
+.isZoovy option.showForZoovyOnly	{display:bloock;} /* otherwise the options go inline */
 .conditionMet .conditionalHide	{display:block;}
 .conditionMet span.conditionalHide	{display:inline-block;}
 
@@ -75,40 +89,52 @@ class can also be applied to a 1 item per row list.
 
 .ui-accordion .ui-accordion-header	{padding-left:30px;}
 
-a, .lookLikeLink	{cursor:pointer; color:#7398a5;} /* apply to text that has an onClick but needs to look like an href. override ui style which isn't as noticeable. */
+a, .lookLikeLink, .ui-widget-content a 	{cursor:pointer; color:#7398a5; text-decoration:none; outline: 0;} /* apply to text that has an onClick but needs to look like an href. override ui style which isn't as noticeable. */
+
 a:hover, .lookLikeLink:hover	{text-decoration:underline; color:#000000;}
 .pointer	{cursor:pointer;} /* apply to anything that is clickable via an onClick. */
 
 
 .opacity50	{
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; /* IE 8 */
 	-moz-opacity: 0.5; /* Netscape */
 	-khtml-opacity: 0.5; /* Safari 1.x */
 	opacity: 0.5;	/* Good browsers */
 	}
 .width50	{width:50%;}
-
+.queryMatch	{background-color:#f0f4f5;}
 /* text styling */
 
-
+pre.prettyPre {
+	white-space: pre-wrap;       /* css-3 */
+	white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+	white-space: -pre-wrap;      /* Opera 4-6 */
+	white-space: -o-pre-wrap;    /* Opera 7 */
+	word-wrap: break-word;       /* Internet Explorer 5.5+ */
+	}
 
 .barcode	{font-family: barcode3of9 !important;}
+
+
 /*section or page header. There should only be one of these per page and it should be at the very top.*/
-h1	{font-size: 1.4em;  margin: 0px 0px 15px 0px;}
+h1	{font-size: 1.4em;  margin: .8em 0px; padding:0; font-weight:bold;}
 
 /* used for the heading of section of text blocks each with it's own sub heading.
 must be followed by 2+ h3's. can be directly followed by a P ONLY if it is introductory text, followed by a series of h3's */
-h2	{font-size: 1.3em; margin: 0px 0px 6px 0px;}
+h2	{font-size: 1.3em; margin: .6em 0px; padding:0; font-weight:bold;}
 
 /* used for a subsection of a text block.  Should be preceded by a h2, though not necessarily immediately.
 should be followed by a P , TABLE or LIST. */
-h3	{font-size: 1.2em; margin: 0px 0px 3px 0px; font-weight: bold;}
+h3, legend	{font-size: 1.2em; margin: .5em 0px; font-weight: bold; padding:0;}
 
 /* used in lists to denote sections.  For instance, to separate DIV's in layouts and emails */
-h4	{font-size: 1.1em; margin: 0px 0px 3px 0px; font-weight: bold;}
+h4	{font-size: 1.1em; margin: .4em 0px; font-weight: bold; padding:0;}
 
-h5,h6	{font-size: 1em; margin: 0px 0px 3px 0px; font-weight: bold;}
+h5,h6	{font-size: 1em; margin: .3em 0px; font-weight: bold; padding:0;}
 /* if you want to display a hint or tip, give it the hint class */
+
+
+fieldset	{margin:0; padding:0; margin-bottom:1em; border:0;}
+input.smallInput	{max-width:6.2em;} /* will fit six chars plus a decimal. */
 
 
 .hint, .helper	{font-size:.75em;} /* NOTE - 'hint' is reserved. change these to help as you come across them */
@@ -180,6 +206,7 @@ If less is needed, use increments of 4
 
 .noPadOrMargin	{padding:0; margin:0;}
 .paddingNone {padding:0;}
+.borderNone {border:0;}
 
 
 /*
@@ -194,13 +221,15 @@ using these shared margins will help make the UI more consistent.
 .marginRight	{margin-right:12px;}
 .marginTop	{margin-top:12px;}
 .marginBottom	{margin-bottom:12px !important;}
+.marginTopNone	{margin-top:0;}
 
 .paddingRight	{padding-right:12px;} /* used to create space between horizontally listed spans, among other things */
 
 .stdMargin	{margin:12px;}
 .stdPadding, .ui-widget .stdPadding	{padding:12px;}
-.smallPadding, .ui-widget .smallPadding	{padding:4px !important;}
-.ui-widget-header-padding	{padding:3px 6px !important;}
+.smallPadding, .ui-widget .smallPadding	{padding:4px;}
+.ui-widget-header	{margin-bottom:0;} /* this mostly butts up next to a ui-widget-content and no bottom margin is wanted/necessary. it's applied to a header occassionally */
+.ui-widget-header-padding	{padding:3px 6px;}
 section.marginBottom	{margin-bottom:36px;} /* use on a section tag to divide portions of the page. */
 
 .ui-corner-none	{
@@ -260,7 +289,7 @@ Use this in a table where you want clear separation between rows and cells. This
 .gridTable tr:nth-child(odd)	{background:#ffffff;}
 .gridTable tr:nth-child(even)	{background:#f0f0f0;}
 
-.gridTable tr.ui-state-highlight	{background: inherit !important;}
+.gridTable tr.ui-state-highlight	{background: inherit !important;} /* the important here is important. it overrides some odd/even and other classes. it's used conservatively */
 .gridTable tr.ui-state-highlight	{background: inherit !important;}
 
 .gridTable th, .gridTable .tf	{background:#efefef; text-align:left;}
@@ -270,8 +299,16 @@ Use this in a table where you want clear separation between rows and cells. This
 
 
 
+/* floating panels, used for the setup and utilities landing pages */
 
-
+.floatPanel	{
+	width:100%;
+	margin:0 0 1% 0;
+	}
+.floatPanel .helper	{display:none;} /* condense the panels down to decrease scrolling */
+.floatPanel a	{padding:5px 0; display:block;} /* add a little space around each link to accomodate a touch */
+.floatPanel .ui-widget-header h3	{margin:0; }
+.floatPanel .ui-widget-header	{border-bottom:0;}
 /*   product/customer picker */
 
 /* apply a max height for picker accordion content, but only when it's in a dialog. no constraints needed in the body (in general). */
@@ -315,15 +352,6 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 .ui-widget-buttonbar	{padding:3px 1px;} /* only 1 px on sides because button margin will add 2px */
 .ui-widget-buttonbar button	{margin:0 2px;}
 
-.ui-widget fieldset	{border:0;}
-.ui-widget h1  {font-size:1.6em; color:#000000; font-weight:bold; margin: 0; padding: 0;} /* Used for the page title element */
-
-/* used for the wiki header 1 & 2 */
-.ui-widget h2	{font-size:1.4em; font-weight:bold; margin: 0; padding: 0;}
-.ui-widget h3, .ui-widget  legend	{font-size:1.3em; font-weight:bold; margin: 0; padding: 0;}
-.ui-widget h4	{font-size:1.2em; font-weight:bold; margin: 0; padding: 0;}
-.ui-widget h5	{font-size:1.1em; font-weight:bold; margin: 0; padding: 0;}
-.ui-widget h6	{font-size:1em; font-weight:bold; margin: 0; padding: 0;}
 
 #headerSearchFrm	{float:right;}
 #headerSearchFrm legend {display:none;}
@@ -404,14 +432,10 @@ STICKY TABS
 
 
 
-/* two column panel layout. used in reports too. */
+/* two column panel layout. will go to two column @ 768. */
 .twoColumn{  
-	width:48%;  
-	min-height:200px;  
-	float:left;  
+	width:100%;
 	}  
-
-.twoColumn.column2 {float:right;}
 
 .twoColumn .placeholder{  
 	background: #ffffff;  
@@ -541,11 +565,11 @@ NOTE - the overflow hidden on headerTop and the display inlineblock/width are to
 .mhTabsContainer .animator {left: 0px; width: 92px; height: 55px; position: absolute; z-index: 10;}
 
 .mhTabsContainer .setupTab .animIcon	{bottom:0; right:0; height:55px; width:55px;} 
-.mhTabsContainer .sitesTab .animIcon	{width:42px; height:32px; bottom: 10px; right: 6px;}
+.mhTabsContainer .sitesTab .animIcon	{width:42px; height:32px; bottom: 5px; right: 6px;}
 .mhTabsContainer .productTab .animIcon	{width:45px; height:39px; bottom: 0px; right: 5px;}
 .mhTabsContainer .ordersTab .animIcon	{width:61px; height:42px; bottom: 6px; right: 0px;}
 .mhTabsContainer .crmTab .animIcon	{width:62px; height:36px; bottom: 10px; right: 0px;}
-.mhTabsContainer .syndicationTab .animIcon	{width:60px; height:39px; bottom: 8px; right: 0px;}
+.mhTabsContainer .syndicationTab .animIcon	{width:60px; height:39px; bottom: 3px; right: 0px;}
 .mhTabsContainer .reportsTab .animIcon	{width:33px; height:39px; bottom: 10px; right: 6px;}
 .mhTabsContainer .kpiTab .animIcon	{width:41px; height:42px; bottom: 6px; right: 6px;}
 .mhTabsContainer .utilitiesTab .animIcon	{width:53px; height:53px; bottom: 1px; right: 1px;}
@@ -613,10 +637,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#990000', end
 #messagesContent .messageDetail	{float:right; width:60%; margin-right:3%;}
 
 
-@media screen and (max-width: 1000px) {
-/* changing to 7% keeps list from line-wrapping. */
-	.mhTabsContainer li	{width:7.5%;}
-	}
+
 
 
 .pageContentContainer	{line-height:100%;} /* compensate for the body line-height1 */
@@ -831,7 +852,7 @@ PAGE STYLES
 /* this was a horrible idea. at some point, these should be removed */
 .page section	{display:block; padding:0; margin:0 0 24px 0}
 .page section.displayNone	{display:none;}
-.page fieldset	{border:none; padding:0; margin-bottom:12px;}
+.page fieldset	{border:none; padding:0;}
 
 
 /*
@@ -867,7 +888,7 @@ STYLES FOR SPECIFIC UI LAYOUTS (dualMode, soloMode, slimLeft, etc)
 h1.dualModeHeader	{line-height:35px; height:35px;display:inline-block; margin:0; padding:0; text-indent:12px;} /* the text header */
 .dualModeListThead th	{text-align:left; padding:2px 4px;} /* the table headers */
 
-.dualModeListControls	{padding:2px 12px; line-height:25px; min-height:25px;}
+.dualModeListControls	{padding:2px 12px; line-height:25px; min-height:25px;} /* any sort of 'clear' added here messes w/ panels. test. */
 
 .dualModeDetail	{float:right; display:none;} /* the container for the detail column. */
 
@@ -896,22 +917,15 @@ h1.dualModeHeader	{line-height:35px; height:35px;display:inline-block; margin:0;
 
 
 .slimLeftNav	{float: left; width:20%;}
+
+/* the way accordion is used here, no left/right padding is desired. the padding is added to the inner elements so their focus state can go to the edges */
+.slimLeftNav .ui-accordion-content	{padding:.3em 0;}
+.slimLeftNav .ui-accordion-content li {padding:.2em 1em;}
+
 .slimLeftContentSection	{float: right; width:75%;}
 .slimLeftContent	{min-height:250px;} /* minheight here for showLoading */
 
-
-.slimLeftNav .roundedList li:first-child	{
-	-moz-border-radius-topleft:8px;-webkit-border-top-left-radius:8px;-khtml-border-top-left-radius:8px;border-top-left-radius:8px;
-	-moz-border-radius-topright:8px;-webkit-border-top-right-radius:8px;-khtml-border-top-right-radius:8px;border-top-right-radius:8px;
-	}
-
-.slimLeftNav .roundedList li:last-child	{
-	-moz-border-radius-bottomleft:8px;-webkit-border-bottom-left-radius:8px;-khtml-border-bottom-left-radius:8px;border-bottom-left-radius:8px;
-	-moz-border-radius-bottomright:8px;-webkit-border-bottom-right-radius:8px;-khtml-border-bottom-right-radius:8px;border-bottom-right-radius:8px;
-	}
-
-
-
+.slimLeftNav .ui-widget-header	{margin:0; border-bottom:0;}
 .slimLeftNav .roundedList li, .slimLeftNav .paddedList li	{margin-bottom:3px; padding:3px 6px;}
 
 /*
@@ -932,7 +946,7 @@ put the prompt into a span
 <label><span>prompt</span>input</label>
 */
 
-.labelsAsBreaks label, .labelsAsBreaks div.label	{display:block; margin-bottom:6px; vertical-align:top; } /* left and right margin should NOT be forced to zero */
+.labelsAsBreaks label, .labelsAsBreaks div.label	{display:block; margin-bottom:.4em; vertical-align:top; clear:both; } /* left and right margin should NOT be forced to zero */
 .labelsAsBreaks label span:first-of-type	{padding-right:12px; display:inline-block; vertical-align:top;}
 .labelsAsBreaks .subset	{margin-left:36px;}
 
@@ -944,16 +958,19 @@ see shipping panel in product editor for example
 */
 
 .labelsAsBreaks div.label h4	{margin:0; padding-right:24px; float:left; width:160px;}
-.labelsAsBreaks div.label label	{ margin:0 12px 0 0;}
+.labelsAsBreaks div.label label, .labelsAsBreaks .prompt	{ margin-right:12px;}
+
+
 
 /* optional classes to put on same container that has labelsAsBreaks. Will make labels into a column and input into another, horizontally lined up. */
-.alignedLabels label span:first-of-type	{width:30%;}
+/* first of type was a HORRIBLE idea. started adding 'prompt' so that the first-of-type can be ditched */
+.alignedLabels label span:first-of-type, .alignedLabels .prompt	{width:30%;display:inline-block;}
 .alignedInputs textarea,
 .alignedInputs input[type=email],
 .alignedInputs input[type=url],
 .alignedInputs input[type=password],
 .alignedInputs input[type=url],
-.alignedInputs input[type=text]	{width:55%; } /* slighly less than 100% is used for label/input so room for toolTip or linkDoc is available */
+.alignedInputs input[type=text]:not([size])	{width:55%; } /* slighly less than 100% is used for label/input so room for toolTip or linkDoc is available */
 
 .alignedInputs input[type=number], 
 .alignedInputs select	{max-width:55%;} /* shrink to fit widest option, but stay under threshold */
@@ -984,36 +1001,36 @@ see shipping panel in product editor for example
 /* CAMPAIGN MANAGER */
 .campaignPlatformIcons span {float:left; margin-right:4px;}
 
-#templateEditor .ToolBar	{
+.templateEditor .ToolBar	{
 	position:relative;
 	z-index:15;
 	}
 /* this applies clearfix */
-#templateEditor .ToolBar:after {
+.templateEditor .ToolBar:after {
     content: ".";
     display: block;
     height: 0;
     clear: both;
     visibility: hidden;
 	}
-#wizardForm fieldset div	{margin-bottom:12px;}
+.wizardForm fieldset div	{margin-bottom:12px;}
 
 
-#templateEditor .templatePreviewContainer {position:relative;}
-#templateEditor .device{position:absolute; top:0; left:0;} /* applied to all the 'device' backgrounds. */
+.templateEditor .templatePreviewContainer {position:relative;}
+.templateEditor .device{position:absolute; top:0; left:0;} /* applied to all the 'device' backgrounds. */
 /* device-specific class added to a 'device' div and also the parent container that holds both the iframe and the .device */
 
-#templateEditor .device	{z-index:10;}
-#templateEditor iframe	{border:0px; z-index:21; position:relative;} /* in device specific mode, position is changed to absolute. */
+.templateEditor .device	{z-index:10;}
+.templateEditor iframe	{border:0px; z-index:21; position:relative;} /* in device specific mode, position is changed to absolute. */
 
-#templateEditor .iphone5 .device	{background:url(images/devices/iphone5.jpg) no-repeat; height:798px; width:385px;}
-#templateEditor .iphone5 .device.landscape	{top:-175px; left:180px;} /* correct device image placement */
+.templateEditor .iphone5 .device	{background:url(images/devices/iphone5.jpg) no-repeat; height:798px; width:385px;}
+.templateEditor .iphone5 .device.landscape	{top:-175px; left:180px;} /* correct device image placement */
 
-#templateEditor .iphone5 iframe.portrait	{top:134px; left:33px; position:absolute;}
-#templateEditor .iphone5 iframe.landscape	{top:60px; left:90px; position:absolute;}
+.templateEditor .iphone5 iframe.portrait	{top:134px; left:33px; position:absolute;}
+.templateEditor .iphone5 iframe.landscape	{top:60px; left:90px; position:absolute;}
 
 
-#templateEditor .templatePreviewContainer div.landscape	{
+.templateEditor .templatePreviewContainer div.landscape	{
 	/* for firefox, safari, chrome, etc. */
 	-webkit-transform: rotate(-90deg);
 	-moz-transform: rotate(-90deg);
@@ -1146,6 +1163,12 @@ wasn't enough css to justify a separate .css file. If this content grows, move t
 
 
 
+/* batch jobs and manager */
+
+.batchTimer:before	{content:"Auto update in: "}
+
+
+
 /*
 NOTIFICATIONS
 */
@@ -1153,17 +1176,37 @@ NOTIFICATIONS
 .notificationDatatableInputs	{min-width:40%;}
 
 
-/*
-http://codepad.co/s/7cca38#select
-some pad (more or less)specific styles.
-*/
+/* this is a phone in landscape mode */
+@media screen and (min-width: 400px) {
+	.floatPanel .helper	{
+		display:block;
+		}
+	}
 
-@media screen and (max-width: 800px) {
+
+@media screen and (min-width: 760px) {
+	.floatPanel	{
+		width:31%;
+		margin:0 1% 1% 1%;
+		float:left;
+		box-sizing:border-box;
+		-moz-box-sizing:border-box;
+		webkit-box-sizing:border-box;		
+		}
+	.floatPanel .ui-widget-header h3	{font-size:1.0em;}
 	.twoColumn{  
-		width:100%;
-		clear:both;
+		width:48%;  
+		min-height:200px;  
+		float:left; 
 		}  
 	
-	.twoColumn.column2 {clear:both;}
+	.twoColumn.column2 {float:right;}
+	.slimLeftNav	{width:30%;}
+	.slimLeftContentSection	{float: right; width:68%;}
+	}
 
+
+@media screen and (max-width: 1024px) {
+/* changing to 7% keeps list from line-wrapping. */
+	.mhTabsContainer li	{width:7.5%;}
 	}

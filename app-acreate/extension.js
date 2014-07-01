@@ -53,6 +53,7 @@ var acreate = function() {
 				onSuccess : function()	{
 					app.u.dump('BEGIN lookup.initExtension.onSuccess ');
 					//the zoovy branding is in place by default. override if on anycommerce.com OR if an anycommerce URI param is present (for debugging)
+// ## TODO -> need a better way to handle Zoovy vs non-zoovy content.
 					if(document.domain && document.domain.toLowerCase().indexOf('anycommerce') > -1)	{
 						app.u.dump(" -> Treat as anycommerce");
 						$('.logo img').attr('src','app-admin/images/anycommerce_logo-173x30.png');
@@ -279,7 +280,7 @@ var acreate = function() {
 								else	{
 									//kewl. found a match.  now show them their logo, a link and a countdown till auto-redirect occurs.
 									if(app.data[rd.datapointer].adminURL)	{
-										window.location = app.data[rd.datapointer].adminURL+"?fromLookup="+app.u.unixNow(); //timestamp is passed so it can be used on landing page to determine if the user bookmarked w/ this param in the url
+										window.location = app.data[rd.datapointer].adminURL+"?fromLookup="+app.u.epochNow(); //timestamp is passed so it can be used on landing page to determine if the user bookmarked w/ this param in the url
 										}
 									else	{
 										$ele.prepend("<div class='warn'>We found a match on the domain, but no admin URL. Please contact your provider for assistance.</div>");

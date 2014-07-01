@@ -22,7 +22,7 @@ An extension for working within the Zoovy UI.
 */
 
 
-var admin = function() {
+var admin = function(_app) {
 // theseTemplates is it's own var because it's loaded in multiple places.
 // here, only the most commonly used templates should be loaded. These get pre-loaded. Otherwise, load the templates when they're needed or in a separate extension (ex: admin_orders)
 	var theseTemplates = new Array(
@@ -44,13 +44,8 @@ var admin = function() {
 //		'achievementsListTemplate',
 		
 		'messageListTemplate',
-		'messageDetailTemplate',
-		
-		'mailToolTemplate',
-		
-		'pageTemplateSites',
-		'domainListTemplate'
-
+		'messageDetailTemplate'
+	
 //		'projectsListTemplate',
 //		'projectDetailTemplate',
 //		'projectCreateTemplate',
@@ -58,16 +53,19 @@ var admin = function() {
 //		'rssAddUpdateTemplate',
 //		'rssListTemplate'		
 		
-		); 
+		);
 	var r = {
 		
 		vars : {
 			tab : null, //is set when switching between tabs. it outside 'state' because this doesn't get logged into local storage.
-			tabs : ['setup','sites','jt','product','orders','crm','syndication','reports','utilities','launchpad'],
+			tabs : ['setup','sites','home','product','orders','crm','syndication','reports','kpi','utilities','support','launchpad'],
 			state : {},
 			tab : 'home',
 			// YOUTUBE RELEASE VIDEO:
 			versionData : [
+				{'branch' : '201402','youtubeVideoID' : ''},
+				{'branch' : '201401','youtubeVideoID' : 'NHRNhI2AmG8'},
+//				{'branch' : '201352','youtubeVideoID' : ''},
 				{'branch' : '201346','youtubeVideoID' : 'cW_DvZ2HOy8'},
 				{'branch' : '201344','youtubeVideoID' : 'cW_DvZ2HOy8'},
 				{'branch' : '201338','youtubeVideoID' : 'A8TNbpQtgas'},
@@ -89,7 +87,7 @@ var admin = function() {
 
 
 	calls : {
-
+// ### FUTURE -> get rid of this call
 		adminAppTicketMacro : {
 			init : function(tktcode,macros,_tag,Q)	{
 				var r = 0;
@@ -110,10 +108,9 @@ var admin = function() {
 				obj['@updates'] = macros;
 				obj._cmd = 'adminAppTicketMacro';
 				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,Q || 'immutable');	
+				_app.model.addDispatchToQ(obj,Q || 'immutable');	
 				}
 			}, //adminAppTicketCreate
-
 
 //for configDetail requests, no datapointer is set by default for shipmethod, payment, etc. It DOES accept a _tag.datapointer and, if set, will look for local.
 //That means if no datapointer is passed, no localstorage is used.
@@ -124,12 +121,12 @@ var admin = function() {
 				var r = 0;
 				if(!$.isEmptyObject(obj))	{
 					if(_tag && _tag.datapointer)	{
-						if(app.model.fetchData(_tag.datapointer) == false)	{
+						if(_app.model.fetchData(_tag.datapointer) == false)	{
 							r = 1;
 							this.dispatch(obj,_tag,Q);
 							}
 						else	{
-							app.u.handleCallback(_tag);
+							_app.u.handleCallback(_tag);
 							}
 						}
 					else	{
@@ -147,11 +144,9 @@ var admin = function() {
 			dispatch : function(obj,_tag,Q)	{
 				obj._cmd = "adminConfigDetail"
 				obj._tag = _tag; //tag will be set in this call for datapointer purposes.
-				app.model.addDispatchToQ(obj,Q || 'mutable');	
+				_app.model.addDispatchToQ(obj,Q || 'mutable');	
 				}
 			}, //adminConfigDetail
-
-
 
 		adminConfigMacro : {
 			init : function(macros,_tag,Q)	{
@@ -164,7 +159,7 @@ var admin = function() {
 				obj['@updates'] = macros;
 				obj._cmd = "adminConfigMacro"
 				obj._tag = _tag; //tag will be set in this call for datapointer purposes.
-				app.model.addDispatchToQ(obj,Q || 'immutable');	
+				_app.model.addDispatchToQ(obj,Q || 'immutable');	
 				}
 			}, //adminConfigMacro
 
@@ -176,94 +171,27 @@ var admin = function() {
 //if datapointer is fixed (set within call) it needs to be added prior to executing handleCallback (which needs datapointer to be set).
 					_tag = _tag || {};
 					_tag.datapointer = "adminCustomerDetail|"+obj.CID;
-					if(app.model.fetchData(_tag.datapointer) == false)	{
+					if(_app.model.fetchData(_tag.datapointer) == false)	{
 						r = 1;
 						this.dispatch(obj,_tag,Q);
 						}
 					else	{
-						app.u.handleCallback(_tag);
+						_app.u.handleCallback(_tag);
 						}
 					}
 				else	{
-					app.u.throwGMessage("In admin.calls.adminCustomerDetail, no CID specified in param object.");
+					_app.u.throwGMessage("In admin.calls.adminCustomerDetail, no CID specified in param object.");
 					}
 				return r;
 				},
 			dispatch : function(obj,_tag,Q)	{
 				obj._cmd = "adminCustomerDetail";
 				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,Q);
+				_app.model.addDispatchToQ(obj,Q);
 				}
 			}, //adminCustomerDetail
 
-		adminCustomerRemove : {
-			init : function(CID,_tag,Q)	{
-				var r = 0;
-				if(CID)	{
-//if datapointer is fixed (set within call) it needs to be added prior to executing handleCallback (which needs datapointer to be set).
-					_tag = _tag || {};
-					_tag.datapointer = "adminCustomerRemove";
-					this.dispatch(CID,_tag);
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminCustomerRemove, no CID specified.");
-					}
-				return r;
-				},
-			dispatch : function(CID,_tag)	{
-				var obj = {};
-				obj.CID = CID;
-				obj._cmd = "adminCustomerRemove";
-				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,'immutable');
-				}
-			}, //adminCustomerDetail
-
-//no local storage to ensure latest data always present. 
-		adminCustomerSearch : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(obj && obj.searchfor && obj.scope)	{
-					this.dispatch(obj,_tag,Q);
-					r = 1;
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminCustomerSearch, no email specified.");
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._tag = _tag || {};
-				obj._cmd = "adminCustomerSearch";
-				obj._tag.datapointer = "adminCustomerSearch"; //if changed, test order create for existing customer and customer manager.				
-				app.model.addDispatchToQ(obj,Q || 'mutable');	
-				}
-			}, //adminCustomerSearch
-
-//email is required in macro
-		adminCustomerCreate : {
-			init : function(updates,_tag)	{
-				var r = 0;
-				if(updates)	{
-					this.dispatch(updates,_tag)
-					r = 1;
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminCustomerSet, macro not set or setObj was empty");
-					}
-				return r;
-				},
-			dispatch : function(updates,_tag)	{
-				var obj = {};
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminCustomerCreate';
-				obj._cmd = "adminCustomerCreate";
-				obj.CID = 0; //create wants a zero customer id
-				obj['@updates'] = updates;
-				app.model.addDispatchToQ(obj,'immutable');
-				}
-			}, //adminCustomerSet
-			
+		
 		adminCustomerUpdate : {
 			init : function(CID,updates,_tag)	{
 				var r = 0;
@@ -272,7 +200,7 @@ var admin = function() {
 					r = 1;
 					}
 				else	{
-					app.u.throwGMessage("In admin.calls.adminCustomerUpdate, CID ["+CID+"] or updates ["+updates+"] not set");
+					_app.u.throwGMessage("In admin.calls.adminCustomerUpdate, CID ["+CID+"] or updates ["+updates+"] not set");
 					}
 				return r;
 				},
@@ -284,518 +212,57 @@ var admin = function() {
 				obj.CID = CID;
 				obj['@updates'] = setObj;
 				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,'immutable');
+				_app.model.addDispatchToQ(obj,'immutable');
 				}
 			}, //adminCustomerSet
-
-
-
-		adminCustomerOrganizationSearch : {
-			init : function(obj,_tag,Q)	{
-//				app.u.dump("BEGIN admin.calls.adminCustomerOrganizationSearch"); app.u.dump(obj);
-				var r = 0;
-				if(obj)	{
-					this.dispatch(obj,_tag,Q)
-					r = 1;
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerSet, no variables passed. some sort of search query needed.",'gMessage':true});
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminCustomerOrganizationSearch';
-				obj._cmd = "adminCustomerOrganizationSearch";
-				app.model.addDispatchToQ(obj,Q || 'mutable');
-				}
-			}, //adminCustomerOrganizationSearch
-		adminCustomerOrganizationCreate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(obj)	{
-					this.dispatch(obj,_tag,Q)
-					r = 1;
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationCreate, no variables passed."});
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminCustomerOrganizationCreate';
-				obj._cmd = "adminCustomerOrganizationCreate";
-				app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			}, //adminCustomerOrganizationCreate
-		adminCustomerOrganizationUpdate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(obj && obj.ORGID)	{
-					this.dispatch(obj,_tag,Q)
-					r = 1;
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationUpdate, either obj is blank or obj.ORGID not set, which is required."});
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminCustomerOrganizationUpdate';
-				obj._cmd = "adminCustomerOrganizationUpdate";
-				app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			}, //adminCustomerOrganizationUpdate
-		adminCustomerOrganizationDetail : {
-			init : function(orgID,_tag,Q)	{
-				var r = 0;
-				if(orgID)	{
-					_tag = _tag || {};
-					_tag.datapointer = 'adminCustomerOrganizationDetail|'+orgID;
-					
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(orgID,_tag,Q);
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationDetail, either obj is blank or obj.ORGID not set, which is required."});
-					}
-				return r;
-				},
-			dispatch : function(orgID,_tag,Q)	{
-				var obj = {}
-				obj._tag = _tag || {};
-				
-				obj._cmd = "adminCustomerOrganizationDetail";
-				obj.ORGID = orgID
-				app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			}, //adminCustomerOrganizationDetail
-		adminCustomerOrganizationRemove : {
-			init : function(ORGID,_tag,Q)	{
-				var r = 0;
-				if(ORGID)	{
-					this.dispatch(ORGID,_tag,Q)
-					r = 1;
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationRemove, ORGID not set, which is required."});
-					}
-				return r;
-				},
-			dispatch : function(ORGID,_tag,Q)	{
-				var obj = {};
-				obj.ORGID = ORGID;
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminCustomerOrganizationRemove';
-				obj._cmd = "adminCustomerOrganizationRemove";
-				app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			}, //adminCustomerOrganizationRemove
-
-		adminDataQuery : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(obj && obj.query)	{this.dispatch(obj,_tag,Q); r = 1;}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminDataQuery, no object or no object.query object passed.");
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'adminDataQuery';
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminDataQuery';
-				app.model.addDispatchToQ(obj,Q);
-				}
-			}, //adminDataQuery
-			
-//			{'_cmd':'adminDataQuery','query':'listing-active','since_gmt':app.u.unixNow() - (60*60*24*10)}
 			
 		adminDomainList : {
 			init : function(_tag,Q)	{
 				_tag = _tag || {};
 				_tag.datapointer = "adminDomainList";
 				var r = 0;
-				if(app.model.fetchData(_tag.datapointer) == false)	{
+				if(_app.model.fetchData(_tag.datapointer) == false)	{
 					r = 1;
 					this.dispatch(_tag,Q);
 					}
 				else	{
-					app.u.handleCallback(_tag);
+					_app.u.handleCallback(_tag);
 					}
 				return r; 
 				},
 			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminDomainList","_tag" : _tag},Q);
+				_app.model.addDispatchToQ({"_cmd":"adminDomainList","_tag" : _tag},Q);
 				}			
 			}, //adminDomainList
-
 
 //* 201324 -> though moving towards a non-defined call based approach, for calls that need/want local storage, we'll still declare them (like this one)
 		adminEBAYCategory :  {
 			init : function(obj,_tag,Q)	{
 				obj = obj || {}
 				_tag = _tag || {};
-				_tag.datapointer = (obj.pid) ? "adminEBAYCategory|"+app.model.version+"|"+obj.pid+"|"+obj.categoryid : "adminEBAYCategory|"+app.model.version+"|"+obj.categoryid;
+				_tag.datapointer = (obj.pid) ? "adminEBAYCategory|"+_app.model.version+"|"+obj.pid+"|"+obj.categoryid : "adminEBAYCategory|"+_app.model.version+"|"+obj.categoryid;
 				var r = 0;
 //if xsl is set, localstorage is NOT used.
 				if(obj.xsl)	{
-					app.u.dump(" -> XSL is set, do NOT use what is in memory or local storage");
+					_app.u.dump(" -> XSL is set, do NOT use what is in memory or local storage");
 					r = 1;
 					this.dispatch(obj,_tag,Q);
 					}
-				else if(app.model.fetchData(_tag.datapointer) == false)	{
+				else if(_app.model.fetchData(_tag.datapointer) == false)	{
 					r = 1;
 					this.dispatch(obj,_tag,Q);
 					}
 				else	{
-					app.u.handleCallback(_tag);
+					_app.u.handleCallback(_tag);
 					}
 				return r; 
 				},
 			dispatch : function(obj,_tag,Q)	{
 				obj._cmd = 'adminEBAYCategory';
 				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,Q || 'mutable');
+				_app.model.addDispatchToQ(obj,Q || 'mutable');
 				}			
 			}, //adminDomainList
-
-
-//PRT and TYPE (ex: ORDER) are required params
-		adminEmailList : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-//				app.u.dump(" -> obj:"+Number(obj.PRT)); app.u.dump(obj); app.u.dump(_tag);
-				if(obj && (Number(obj.PRT) >= 0) && obj.TYPE)	{
-					_tag = _tag || {};
-					_tag.datapointer = "adminEmailList|"+obj.PRT+"|"+obj.TYPE;
-					
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(obj,_tag,Q);
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminEmailList, PRT ["+obj.PRT+"] and TYPE ["+obj.TYPE+"] are required and one was not set."});
-					}
-				return r; 
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = "adminEmailList";
-				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,Q || 'mutable');
-				}			
-			}, //adminEmailList
-
-		adminEmailSave : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(obj && Number(obj.PRT) >= 0 && obj.MSGID && obj.TYPE)	{this.dispatch(obj,_tag,Q); r = 1;}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminEmailSave, no object ["+typeof obj+"] or object.PRT ["+obj.PRT+"] or object.MSGID ["+obj.MSGID+"] not passed.");
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'adminEmailSave';
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminEmailSave';
-				app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			}, //adminDataQuery
-
-
-//obj requires title and uuid, priority and @GRAPHS are optional.
-		adminKPIDBCollectionCreate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminKPIDBCollectionCreate"
-				obj = obj || {};
-				if(obj.title && obj.uuid)	{
-					r = 1;
-					this.dispatch(obj,_tag,Q);
-					}
-				else	{
-					$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionCreate, uuid or title not passed","gMessage":true})
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'adminKPIDBCollectionCreate'
-				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,Q || 'immutable');	
-				}
-			}, //adminKPIDBUserDataSetsList
-		adminKPIDBCollectionDetail : {
-			init : function(uuid,_tag,Q)	{
-				var r = 0;
-				if(uuid)	{
-					_tag = _tag || {}; 
-					_tag.datapointer = "adminKPIDBCollectionDetail|"+uuid
-					if(app.model.fetchData('adminKPIDBCollectionDetail|'+uuid) == false)	{
-						r = 1;
-						this.dispatch(uuid,_tag,Q);
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
-					}
-				else	{
-					$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionDetail, uuid not passed","gMessage":true})
-					}
-				return r;
-				},
-			dispatch : function(uuid,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminKPIDBCollectionDetail","uuid":uuid,"_tag" : _tag},Q || 'mutable');	
-				}
-			}, //adminKPIDBCollectionList
-		adminKPIDBCollectionList : {
-			init : function(_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminKPIDBCollectionList"
-				if(app.model.fetchData('adminKPIDBCollectionList') == false)	{
-					r = 1;
-					this.dispatch(_tag,Q);
-					}
-				else	{
-					app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminKPIDBCollectionList","_tag" : _tag},Q || 'mutable');	
-				}
-			}, //adminKPIDBCollectionList		
-		adminKPIDBCollectionRemove : {
-			init : function(uuid,_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminKPIDBCollectionRemove"
-				if(uuid)	{
-					r = 1;
-					this.dispatch(uuid,_tag,Q);
-					}
-				else	{
-					$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionRemove, uuid not passed","gMessage":true})
-					}
-				return r;
-				},
-			dispatch : function(uuid,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminKPIDBCollectionRemove","uuid":uuid,"_tag" : _tag},Q || 'immutable');	
-				}
-			}, //adminKPIDBUserDataSetsList
-//obj requires uuid, title, priority and @GRAPHS are optional.
-		adminKPIDBCollectionUpdate : {
-			init : function(obj,_tag,Q)	{
-//				app.u.dump("BEGIN admin.calls.adminKPIDBCollectionUpdate");
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminKPIDBCollectionUpdate"
-				obj = obj || {};
-				if(obj.uuid)	{
-//					app.u.dump(" -> have UUID. proceed.");
-					r = 1;
-					this.dispatch(obj,_tag,Q);
-					}
-				else	{
-					$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionUpdate, uuid not passed","gMessage":true})
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'adminKPIDBCollectionUpdate'
-				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,Q || 'immutable');	
-				}
-			}, //adminKPIDBUserDataSetsList
-/*
-<input id="@datasets"></input>
-<input id="grpby">day|dow|quarter|month|week|none</input>
-<input id="column">gms|distinct|total</input>
-<input id="period">a formula ex: months.1, weeks.1</period>
-<input id="startyyyymmdd">(not needed if period is passed)</input>
-<input id="stopyyyymmdd">(not needed if period is passed)</input>
-*/
-// obj required dataset, grupby, column, detail. period or starty/stop date range are needed.
-		adminKPIDBDataQuery : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(!$.isEmptyObject(obj))	{
-					if(obj['@datasets'] && obj.grpby && obj.column && obj['function'])	{
-						if(obj.period || (obj.startyyyymmdd && obj.stopyyyymmdd))	{
-							r = 1;
-							this.dispatch(obj,_tag,Q);
-							}
-						else	{
-							$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBDataQuery, either period ["+obj.period+"] or start/stop ["+["+obj.startyyyymmdd+"]+"/"+obj.stopyyyymmdd+"] date range required.","gMessage":true})
-							}
-						}
-					else	{
-						$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBDataQuery; @datasets ["+typeof obj['@datasets']+"], grpby ["+obj.grpby+"], and column ["+obj.column+"] and function ["+obj['function']+"] are required","gMessage":true})
-						}
-					}
-				else	{
-					$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBDataQuery, no object passed","gMessage":true})
-					}
-
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = "adminKPIDBDataQuery";
-				obj._tag = _tag || {}; 
-				obj._tag.datapointer = "adminKPIDBDataQuery"
-				app.model.addDispatchToQ(obj,Q || 'mutable');	
-				}
-			}, //adminKPIDBDataQuery
-		adminKPIDBUserDataSetsList : {
-			init : function(_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminKPIDBUserDataSetsList"
-				if(app.model.fetchData('adminKPIDBUserDataSetsList') == false)	{
-					r = 1;
-					this.dispatch(_tag,Q);
-					}
-				else	{
-//					app.u.dump(' -> data is local');
-					app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminKPIDBUserDataSetsList","_tag" : _tag},Q || 'mutable');	
-				}
-			}, //adminKPIDBUserDataSetsList
-
-
-
-
-//@head and @body in the response is the data I should use.
-//guid comes from batch list.
-		adminReportDownload : {
-			init : function(batchGUID,_tag,Q)	{
-				var r = 0;
-				if(batchGUID)	{
-					this.dispatch(batchGUID,_tag,Q);
-					r = 1;
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminReportDownload, no batchGUID passed.");
-					}
-				return r;
-				},
-			dispatch : function(batchGUID,_tag,Q)	{
-				var obj = {};
-				obj._cmd = 'adminReportDownload';
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminReportDownload|'+batchGUID;
-				obj.GUID = batchGUID;
-				app.model.addDispatchToQ(obj,Q || 'passive');
-				}
-			},
-
-
-//obj requires title and uuid, priority and @GRAPHS are optional.
-		adminRSSRemove : {
-			init : function(listID,_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminRSSRemove"
-				if(listID)	{ // !!! this validation needs updating.
-					r = 1;
-					this.dispatch(listID,_tag,Q);
-					}
-				else	{
-					$('.appMessaging').anymessage({"message":"In admin.calls.adminRSSRemove, listID not passed","gMessage":true})
-					}
-				return r;
-				},
-			dispatch : function(listID,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminRSSRemove","_tag":_tag,"ID":listID},Q || 'immutable');	
-				}
-			}, //adminRSSRemove
-
-		adminRSSUpdate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminRSSUpdate"
-				obj = obj || {};
-				if(obj.CPG)	{ // !!! this validation needs updating.
-					r = 1;
-					this.dispatch(obj,_tag,Q);
-					}
-				else	{
-					$('.appMessaging').anymessage({"message":"In admin.calls.adminRSSUpdate, CPG not passed","gMessage":true})
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'adminRSSUpdate'
-				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,Q || 'immutable');	
-				}
-			}, //adminRSSUpdate
-
-		adminRSSDetail : {
-			init : function(cpg,_tag,Q)	{
-				var r = 0;
-				if(cpg)	{
-					_tag = _tag || {}; 
-					_tag.datapointer = "adminRSSDetail|"+cpg
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(cpg,_tag,Q);
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminRSSDetail, cpg not passed","gMessage":true})
-					}
-				return r;
-				},
-			dispatch : function(cpg,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminRSSDetail","CPG":cpg,"_tag" : _tag},Q || 'mutable');
-				}
-			}, //adminRSSDetail
-
-
-		adminMessagesList : {
-//ID will be 0 to start.
-			init : function(msgid,_tag,Q)	{
-				var r = 0;
-				if(msgid || msgid === 0)	{
-					this.dispatch(msgid,_tag,Q);
-					r = 1;
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminMessagesList, MESSAGEID not passed and is required.");
-					}
-				return r;
-				},
-			dispatch : function(msgid,_tag,Q)	{
-				var obj = {};
-				obj._cmd = 'adminMessagesList';
-				obj.msgid = msgid;
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminMessagesList|'+msgid;
-				app.model.addDispatchToQ(obj,Q || 'passive');
-				}
-			},
 
 
 //get a list of newsletter subscription lists.
@@ -804,126 +271,21 @@ var admin = function() {
 				var r = 0;
 				_tag = _tag || {}; 
 				_tag.datapointer = "adminNewsletterList"
-				if(app.model.fetchData('adminNewsletterList') == false)	{
+				if(_app.model.fetchData('adminNewsletterList') == false)	{
 					r = 1;
 					this.dispatch(_tag,Q);
 					}
 				else	{
-//					app.u.dump(' -> data is local');
-					app.u.handleCallback(_tag);
+//					_app.u.dump(' -> data is local');
+					_app.u.handleCallback(_tag);
 					}
 				return r;
 				},
 			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminNewsletterList","_tag" : _tag},Q || 'immutable');	
+				_app.model.addDispatchToQ({"_cmd":"adminNewsletterList","_tag" : _tag},Q || 'immutable');	
 				}
 			},//getNewsletters	
 
-
-		adminPrivateSearch : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(!$isEmptyObject(obj))	{this.dispatch(obj,_tag,Q); r = 1;}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminPrivateSearch, no query object passed.");
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'adminPrivateSearch';
-				obj.mode = 'elastic-native';
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminPrivateSearch';
-				app.model.addDispatchToQ(obj,Q);
-				}
-			}, //adminPrivateSearch
-
-
-
-
-
-
-
-
-		adminProjectList : {
-			init : function(_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminProjectList"
-				if(app.model.fetchData(_tag.datapointer) == false)	{
-					r = 1;
-					this.dispatch(_tag,Q);
-					}
-				else	{
-//					app.u.dump(' -> data is local');
-					app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminProjectList","_tag" : _tag},Q || 'immutable');	
-				}
-			},//adminProjectList	
-
-
-
-		adminProjectCreate : {
-			init : function(obj,_tag,Q)	{
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminProjectCreate";
-				this.dispatch(obj,_tag,Q);
-				return 1;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = "adminProjectCreate";
-				obj._tag = _tag || {};
-				app.model.addDispatchToQ(obj,Q || 'immutable');	
-				}
-			},//adminProjectCreate	
-
-		adminProjectDetail : {
-			init : function(uuid,_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminProjectDetail|"+uuid;
-				if(app.model.fetchData(_tag.datapointer) == false)	{
-					r = 1;
-					this.dispatch(uuid,_tag,Q);
-					}
-				else	{
-					app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(uuid,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminProjectDetail","files":true,"UUID":uuid,"_tag" : _tag},Q || 'immutable');	
-				}
-			},//adminProjectDetail	
-
-
-
-
-
-
-		adminOrderList : {
-			init : function(obj,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminOrderList";
-				if(app.model.fetchData(_tag.datapointer) == false)	{
-					r = 1;
-					this.dispatch(obj,_tag,Q);
-					}
-				else	{
-					app.u.handleCallback(_tag);
-					}
-				return 1;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._tag = _tag;
-				obj._cmd = "adminOrderList";
-				app.model.addDispatchToQ(obj,Q);
-				}
-			}, //adminOrderList
 //never look locally for data. Always make sure to load latest from server to ensure it's up to date.
 //order info is critial
 		adminOrderDetail : {
@@ -932,17 +294,17 @@ var admin = function() {
 				if(orderID)	{
 					_tag = _tag || {};
 					_tag.datapointer = "adminOrderDetail|"+orderID;
-					if(app.model.fetchData(_tag.datapointer) == false)	{
+					if(_app.model.fetchData(_tag.datapointer) == false)	{
 						r = 1;
 						this.dispatch(orderID,_tag,Q);
 						}
 					else	{
-						app.u.handleCallback(_tag);
+						_app.u.handleCallback(_tag);
 						}
 					r = 1;
 					}
 				else	{
-					app.u.throwGMessage("In admin.calls.adminOrderDetail, orderID not passed.");
+					_app.u.throwGMessage("In admin.calls.adminOrderDetail, orderID not passed.");
 					}
 				return r;
 				},
@@ -951,32 +313,9 @@ var admin = function() {
 				cmdObj.orderid = orderID;
 				cmdObj._tag = _tag;
 				cmdObj._cmd = "adminOrderDetail";
-				app.model.addDispatchToQ(cmdObj,Q);
+				_app.model.addDispatchToQ(cmdObj,Q);
 				}
 			}, //adminOrderDetail
-			
-//do not store this. if you do, update order editor and be sure datapointer is orderid specific.
-/*
-This is also true for appPaymentMethods
-if order total is zero, zero is only payment method.
-if paypalEC is on order, only paypalEC shows up. (paypal restriction of payment and order MUST be equal)
-if giftcard is on there, no paypal will appear.
-*/
-		adminOrderPaymentMethods	: {
-			
-			init : function(obj,_tag,Q)	{
-				this.dispatch(obj,_tag,Q);
-				return 1;
-				},
-			
-			dispatch : function(obj,_tag,Q){
-				obj._cmd = 'adminOrderPaymentMethods';
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminOrderPaymentMethods';
-				app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			
-			}, //adminOrderPaymentMethods
 			
 //updating an order is a critical function and should ALWAYS be immutable.
 		adminOrderMacro : {
@@ -987,7 +326,7 @@ if giftcard is on there, no paypal will appear.
 					r = 1;
 					}
 				else	{
-					app.u.throwGMessage("In admin.calls.adminOrderMacro, orderID not passed.");
+					_app.u.throwGMessage("In admin.calls.adminOrderMacro, orderID not passed.");
 					}
 				return r;
 				},
@@ -997,9 +336,10 @@ if giftcard is on there, no paypal will appear.
 				cmdObj.orderid = orderID;
 				cmdObj['@updates'] = updates;
 				cmdObj._tag = _tag || {};
-				app.model.addDispatchToQ(cmdObj,'immutable');
+				_app.model.addDispatchToQ(cmdObj,'immutable');
 				}
 			}, //adminOrderMacro
+
 		adminOrderSearch : {
 			init : function(elasticObj, _tag, Q)	{
 				this.dispatch(elasticObj,_tag,Q);
@@ -1012,62 +352,9 @@ if giftcard is on there, no paypal will appear.
 				obj.ELASTIC = elasticObj;
 				obj._tag = _tag || {};
 				obj._tag.datapointer = "adminOrderSearch";
-				app.model.addDispatchToQ(obj,Q || 'immutable');
+				_app.model.addDispatchToQ(obj,Q || 'immutable');
 				}
 			}, //adminOrderSearch
-		adminOrderPaymentAction	: {
-			init : function(cmdObj,_tag)	{
-				this.dispatch(cmdObj,_tag)
-				return 1;
-				},
-			dispatch : function(cmdObj,_tag)	{
-				cmdObj._cmd = 'adminOrderPaymentAction';
-				cmdObj._tag = _tag || {};
-				app.model.addDispatchToQ(cmdObj,'immutable');
-				}
-			}, //adminOrderPaymentAction
-
-
-		adminPartnerSet : {
-			init : function(obj,_tag)	{
-				obj._cmd = 'adminPartnerSet'
-				obj._tag = _tag || {};
-				obj._tag.datapointer = "adminPartnerSet";
-				app.model.addDispatchToQ(obj,'immutable');	
-				}
-			},
-
-
-		adminProductManagementCategoryList : {
-			init : function(_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminProductManagementCategoryList";
-				if(app.model.fetchData(_tag.datapointer) == false)	{
-					this.dispatch(_tag,Q);
-					}
-				else	{
-					app.u.handleCallback(_tag)
-					}
-				},
-			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminProductManagementCategoriesComplete","_tag":_tag},Q);	
-				}
-			}, //adminProductManagementCategoryList
-
-
-
-		adminSyndicationDetail : {
-			init : function(DST,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminSyndicationDetail|"+DST;
-				this.dispatch(DST,_tag,Q);
-				return 1;
-				},
-			dispatch : function(DST,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminSyndicationDetail","_tag":_tag,'DST':DST},Q || 'mutable');	
-				}
-			}, //adminSyndicationDetail
-
 
 		adminSyndicationMacro : {
 			init : function(DST, macros,_tag,Q)	{
@@ -1084,118 +371,9 @@ if giftcard is on there, no paypal will appear.
 				return r;
 				},
 			dispatch : function(DST,macros,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminSyndicationMacro","DST":DST,"@updates":macros,"_tag":_tag,'DST':DST},Q || 'mutable');	
+				_app.model.addDispatchToQ({"_cmd":"adminSyndicationMacro","DST":DST,"@updates":macros,"_tag":_tag,'DST':DST},Q || 'mutable');	
 				}
 			}, //adminSyndicationDetail
-
-
-
-		adminSyndicationHistory : {
-			init : function(DST,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminSyndicationHistory";
-				this.dispatch(DST,_tag,Q);
-				return 1;
-				},
-			dispatch : function(DST,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminSyndicationHistory","_tag":_tag,'DST':DST},Q || 'mutable');	
-				}
-			}, //adminSyndicationHistory
-
-		adminSyndicationFeedErrors : {
-			init : function(DST,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminSyndicationFeedErrors";
-				this.dispatch(DST,_tag,Q);
-				return 1;
-				},
-			dispatch : function(DST,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminSyndicationFeedErrors","_tag":_tag,'DST':DST},Q || 'mutable');	
-				}
-			}, //adminSyndicationFeedErrors
-
-		adminSyndicationDebug : {
-			init : function(DST,obj,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminSyndicationDebug";
-				this.dispatch(DST,obj,_tag,Q);
-				return 1;
-				},
-			dispatch : function(DST,obj,_tag,Q)	{
-				obj = obj || {};
-				obj._cmd = "adminSyndicationDebug";
-				obj._tag = _tag;
-				obj.DST = DST;
-				app.model.addDispatchToQ(obj,Q || 'mutable');	
-				}
-			}, //adminSyndicationDebug
-
-		adminSyndicationListFiles : {
-			init : function(DST,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminSyndicationListFiles";
-				this.dispatch(DST,_tag,Q);
-				return 1;
-				},
-			dispatch : function(DST,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminSyndicationListFiles","_tag":_tag,'DST':DST},Q || 'mutable');	
-				}
-			}, //adminSyndicationListFiles
-
-
-// @updates holds the macros.
-// CLOSE -> no params
-// APPEND -> pass note.
-// leave this one as a call.
-
-		adminTicketMacro : {
-			init : function(ticketid,macro,_tag,Q)	{
-				var r = 0;
-				if(ticketid && typeof macro === 'object')	{
-					r = 1;
-					this.dispatch(ticketid,macro,_tag,Q);
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminTicketMacro, either ticketid ["+ticketid+"] or macro ["+typeof macro+"] not defined.","gMessage":true});
-					}
-				return r;
-				},
-			dispatch : function(ticketid,macro,_tag,Q)	{
-				var obj = {};
-				obj._cmd = "adminTicketMacro";
-				obj.ticketid = ticketid;
-				obj['@updates'] = macro;
-				obj._tag = _tag || {};
-				obj._tag.datapointer = "adminTicketMacro";
-				app.model.addDispatchToQ(obj,Q || 'immutable');	
-				}
-			}, //adminTicketUpdate
-
-//obj could contain a 'detail' level. values are open, all or waiting.
-		adminTicketList : {
-			init : function(obj,_tag,Q)	{
-				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
-				_tag = _tag || {};
-				_tag.datapointer = "adminTicketList";
-				if(app.model.fetchData(_tag.datapointer) == false)	{
-					r = 1;
-					this.dispatch(obj,_tag,Q);
-					}
-				else	{
-					app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj = obj || {};
-				obj._tag = _tag;
-				obj._cmd = "adminTicketList";
-				app.model.addDispatchToQ(obj,Q);	
-				}
-			}, //adminTicketList
-
-
-
 
 
 //obj requires sub and sref.  sub can be LOAD or SAVE
@@ -1218,72 +396,28 @@ if giftcard is on there, no paypal will appear.
 				obj['_cmd'] = "adminUIBuilderPanelExecute";
 				obj['_SREF'] = sref;
 				obj["_tag"] = _tag;
-				app.model.addDispatchToQ(obj,Q);
+				_app.model.addDispatchToQ(obj,Q);
 				}
-			}, //adminUIProductPanelList
-
-//obj requires panel and pid and sub.  sub can be LOAD or SAVE
-		adminUIProductPanelExecute : {
-			init : function(obj,_tag,Q)	{
-				if(obj && obj.panel && obj.pid && obj.sub)	{
-					_tag = _tag || {};
-//save and load 'should' always have the same data, so the datapointer is shared.
-					if(obj['sub'])	{
-						_tag.datapointer = "adminUIProductPanelExecute|"+obj.pid+"|load|"+obj.panel;
-						}
-					this.dispatch(obj,_tag,Q);
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminUIProductPanelExecute, required param (panel, pid or sub) left blank. see console."); app.u.dump(obj);
-					}
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj['_cmd'] = "adminUIProductPanelExecute";
-				obj["_tag"] = _tag;
-				app.model.addDispatchToQ(obj,Q);	
-				}
-			}, //adminUIProductPanelExecute
-
-
+			}, //adminUIBuilderPanelExecute
 
 		adminPriceScheduleList : {
 			init : function(_tag,q)	{
 				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
 				_tag = _tag || {};
 				_tag.datapointer = "adminPriceScheduleList";
-				if(app.model.fetchData(_tag.datapointer) == false)	{
+				if(_app.model.fetchData(_tag.datapointer) == false)	{
 					r = 1;
 					this.dispatch(_tag,q);
 					}
 				else	{
-					app.u.handleCallback(_tag);
+					_app.u.handleCallback(_tag);
 					}
 				return r;
 				},
 			dispatch : function(_tag,q)	{
-				app.model.addDispatchToQ({"_cmd":"adminPriceScheduleList","_tag":_tag},q);	
+				_app.model.addDispatchToQ({"_cmd":"adminPriceScheduleList","_tag":_tag},q);	
 				}
 			}, //adminPriceScheduleList
-		adminWholesaleScheduleDetail : {
-			init : function(scheduleID,_tag,q)	{
-				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
-				_tag = _tag || {};
-				_tag.datapointer = "adminWholesaleScheduleDetail|"+scheduleID;
-				if(app.model.fetchData(_tag.datapointer) == false)	{
-					r = 1;
-					this.dispatch(_tag,q);
-					}
-				else	{
-					app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(scheduleID,_tag,q)	{
-				app.model.addDispatchToQ({"_cmd":"adminWholesaleScheduleDetail","schedule":scheduleID,"_tag":_tag},q);	
-				}
-			}, //adminPriceScheduleList
-
-
 
 //this call is duplicated inside the admin extension so that the datapointer can be partition specific, to reduce redundant calls.
 //the call is somewhat heavy and things like the rss tool, which needs a list of 'lists', use this to generate the list.
@@ -1292,35 +426,23 @@ if giftcard is on there, no paypal will appear.
 				_tag = _tag || {};
 				obj = obj || {};
 				obj.root = obj.root || '.';
-				_tag.datapointer = obj.filter ? 'appCategoryList|'+app.vars.partition+'|'+obj.filter+'|'+obj.root : 'appCategoryList|'+app.vars.partition+'|'+obj.root
+				_tag.datapointer = obj.filter ? 'appCategoryList|'+_app.vars.partition+'|'+obj.filter+'|'+obj.root : 'appCategoryList|'+_app.vars.partition+'|'+obj.root
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
-				if(app.model.fetchData(_tag.datapointer) == false)	{
+				if(_app.model.fetchData(_tag.datapointer) == false)	{
 					r = 1;
 					this.dispatch(obj,_tag,Q);
 					}
 				else 	{
-					app.u.handleCallback(_tag)
+					_app.u.handleCallback(_tag)
 					}
 				return r;
 				},
 			dispatch : function(obj,_tag,Q)	{
 				obj['_cmd'] = "appCategoryList";
 				obj['_tag'] = _tag;
-				app.model.addDispatchToQ(obj,Q || mutable);
+				_app.model.addDispatchToQ(obj,Q || mutable);
 				}
 			}, //appCategoryList
-
-
-//This will get a copy of the config.js file.
-		appConfig : {
-			init : function(_tag,Q)	{
-				this.dispatch(_tag,Q);
-				return 1;
-				},
-			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"appConfig","_tag" : _tag},Q);
-				}			
-			}, //appConfig
 
 
 //obj.PATH = .cat.safe.id
@@ -1334,36 +456,16 @@ if giftcard is on there, no paypal will appear.
 					r = 1;
 					}
 				else	{
-					app.u.throwGMessage("In admin.calls.appPageGet, obj.path is required and was not specified.");
+					_app.u.throwGMessage("In admin.calls.appPageGet, obj.path is required and was not specified.");
 					}
 				return r;
 				},
 			dispatch : function(obj,_tag,Q)	{
 				obj._cmd = "appPageGet";
 				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,Q);
+				_app.model.addDispatchToQ(obj,Q);
 				}
 			}, //appPageGet
-		appPageSet : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(!$.isEmptyObject(obj))	{
-					r = 1;
-					_tag = _tag || {};
-					this.dispatch(obj,_tag,Q);
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.appPageSet, obj is empty.");
-					}
-				return 1;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'appPageSet';
-				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,Q);
-				}			
-			}, //appPageSet
-
 
 		appResource : {
 			init : function(filename,_tag,Q)	{
@@ -1371,66 +473,20 @@ if giftcard is on there, no paypal will appear.
 				_tag = _tag || {};
 				_tag.datapointer = "appResource|"+filename;
 
-				if(app.model.fetchData(_tag.datapointer) == false)	{
+				if(_app.model.fetchData(_tag.datapointer) == false)	{
 					this.dispatch(filename,_tag,Q);
 					r = 1;
 					}
 				else	{
-					app.u.handleCallback(_tag);
+					_app.u.handleCallback(_tag);
 					}
 			
 				return r;
 				},
 			dispatch : function(filename,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"appResource","filename":filename,"_tag" : _tag},Q);
+				_app.model.addDispatchToQ({"_cmd":"appResource","filename":filename,"_tag" : _tag},Q);
 				}
 			}, //appResource
-
-
-		authNewAccountCreate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(typeof obj == 'object' && obj.email && obj.domain && obj.phone && obj.firstname && obj.lastname && obj.company)	{
-					this.dispatch(obj,_tag,Q);
-					r = 1;
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.authNewAccountCreate, some required attributes were missing.");
-					app.u.dump(" -> All of the fields in the form must be populated. obj follows: "); app.u.dump(obj);
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = "authNewAccountCreate";
-				obj._tag = _tag || {};
-				_tag.datapointer = "authNewAccountCreate";
-				app.model.addDispatchToQ(obj,Q);
-				}
-			},
-
-		authPasswordReset : {
-			init : function(login,_tag,Q)	{
-				var r = 0;
-				if(login)	{
-					this.dispatch(login,_tag,Q);
-					r = 1;
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.authPasswordReset, login was not passed.");
-					}
-				return r;
-				},
-			dispatch : function(login,_tag,Q)	{
-				var obj = {};
-				obj.login = login;
-				obj._cmd = "authPasswordReset";
-				obj._tag = _tag || {};
-				_tag.datapointer = "authPasswordReset";
-				app.model.addDispatchToQ(obj,Q);
-				}
-			},
-
-
 
 
 		finder : {
@@ -1448,7 +504,7 @@ if giftcard is on there, no paypal will appear.
 					obj.path = path;
 					obj.position = position;
 					obj['_tag'].datapointer = "adminNavcatProductInsert|"+path+"|"+pid;
-					app.model.addDispatchToQ(obj,'immutable');	
+					_app.model.addDispatchToQ(obj,'immutable');	
 					}
 				}, //adminNavcatProductInsert
 			
@@ -1463,156 +519,13 @@ if giftcard is on there, no paypal will appear.
 					obj.pid = pid;
 					obj.path = path;
 					obj['_tag'].datapointer = "adminNavcatProductDelete|"+path+"|"+pid;
-					app.model.addDispatchToQ(obj,'immutable');	
+					_app.model.addDispatchToQ(obj,'immutable');	
 					}
 				} //adminNavcatProductDelete
 			
-			}, //finder
+			} //finder
 
-
-		bossUserList : {
-			init : function(_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {};
-				_tag.datapointer = 'bossUserList';
-				if(app.model.fetchData(_tag.datapointer) == false)	{
-					this.dispatch(_tag,Q);
-					r = 1;
-					}
-				else	{
-					app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				Q = Q || 'immutable';
-				var obj = {_cmd : 'bossUserList'};
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'bossUserList';
-				app.model.addDispatchToQ(obj,Q);
-				}
-			}, //bossUserList
-
-		bossUserDetail : {
-			init : function(luser,_tag,Q)	{
-				var r = 0;
-				Q = Q || 'immutable';
-				_tag = _tag || {};
-				_tag.datapointer = 'bossUserDetail|'+luser;
-				if(luser)	{
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(luser,_tag,Q);
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.bossUserDetail, L user is undefined and required.");
-					}
-				return r;
-				},
-			dispatch : function(luser,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"bossUserDetail","login":luser,"_tag" : _tag},Q);
-				}
-			}, //bossUserDetail
-
-		bossUserDelete : {
-			init : function(luser,_tag,Q)	{
-				var r = 0;
-				Q = Q || 'immutable';
-				if(luser)	{
-					this.dispatch(luser,_tag,Q);
-					r = 1;
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.bossUserDelete, uid is undefined and required.");
-					}
-				return r;
-				},
-			dispatch : function(luser,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = 'bossUserDelete|'+luser;
-				app.model.addDispatchToQ({"_cmd":"bossUserDelete","login":luser,"_tag" : _tag},Q);
-				}
-			}, //bossUserDelete
-		bossUserUpdate : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				Q = Q || 'immutable';
-				if(!$.isEmptyObject(obj) && obj.luser)	{
-					this.dispatch(obj,_tag,Q);
-					r = 1;
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.bossUserUpdate, obj is empty or obj.luser is not set.");
-					app.u.dump(obj);
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'bossUserUpdate';
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'bossUserUpdate|'+obj.luser;
-				app.model.addDispatchToQ(obj,Q);
-				}
-			},
-
-
-		
-		helpSearch : {
-			init : function(keywords,_tag,Q)	{
-				app.u.dump("BEGIN admin.calls.helpSearch");
-				app.u.dump(" -> keywords: "+keywords);
-				var r = 0;
-				if(keywords)	{
-					_tag = _tag || {};
-					_tag.datapointer = 'helpSearch|'+keywords;
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						this.dispatch(keywords,_tag,Q);
-						r = 1;
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.helpSearch, keywords not specified.");
-					}
-				return 1;
-				},
-			dispatch : function(keywords,_tag,Q)	{
-				app.model.addDispatchToQ({_cmd:'helpSearch','keywords':keywords,'_tag':_tag},Q || 'mutable');
-				}
-			}, //helpSearch
-
-		helpDocumentGet : {
-			init : function(docid,_tag,Q)	{
-				if(docid)	{
-					var r = 0;
-					_tag = _tag || {};
-					_tag.datapointer = 'helpDocumentGet|'+docid;
-//					if(app.model.fetchData(_tag.datapointer) == false)	{
-						this.dispatch(docid,_tag,Q);
-//						r = 1;
-//						}
-//					else	{
-//						app.u.handleCallback(_tag);
-//						}
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.helpDocumentGet, docid not specified.");
-					}
-				return r;
-				},
-			dispatch : function(docid,_tag,Q)	{
-				app.model.addDispatchToQ({_cmd : 'helpDocumentGet','_tag':_tag,'docid':docid},Q || 'immutable');
-				}
-			} //helpDocumentGet
 		}, //calls
-
-
 
 
 
@@ -1627,31 +540,32 @@ if giftcard is on there, no paypal will appear.
 //the callback is auto-executed as part of the extensions loading process.
 		init : {
 			onSuccess : function()	{
-//				app.u.dump('BEGIN app.ext.admin.init.onSuccess ');
+//				_app.u.dump('BEGIN _app.ext.admin.init.onSuccess ');
 				var r = true; //return false if extension can't load. (no permissions, wrong type of session, etc)
-//app.u.dump("DEBUG - template url is changed for local testing. add: ");
-$('title').append(" - release: "+app.vars.release).prepend(document.domain+' - ');
-app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html',theseTemplates);
-app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/downloads.html',['downloadsPageTemplate']);
+//_app.u.dump("DEBUG - template url is changed for local testing. add: ");
+$('title').append(" - release: "+_app.vars.release).prepend(document.domain+' - ');
+_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/templates.html',theseTemplates);
+_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/downloads.html',['downloadsPageTemplate']);
 
 
 //SANITY - loading this file async causes a slight pop. but loading it inline caused the text to not show up till the file was done.
 //this is the lesser of two weevils.
-app.rq.push(['css',0,'https://fonts.googleapis.com/css?family=PT+Sans:400,700','google_pt_sans']);
-app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_compat.js']);
+//_app.rq.push(['css',0,'https://fonts.googleapis.com/css?family=PT+Sans:400,700','google_pt_sans']);
+_app.rq.push(['script',0,_app.vars.baseURL+'app-admin/resources/legacy_compat.js']);
 
+_app.rq.push(['script',0,_app.vars.baseURL+'app-admin/resources/tinymce-4.0.12/tinymce.min.js']);
+_app.rq.push(['script',0,_app.vars.baseURL+'app-admin/resources/tinymce-4.0.12/jquery.tinymce.min.js']);
 
-/* used for html editor. */
-app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.7.5.ExamplePlusSource/style/jHtmlArea.ColorPickerMenu.css','jHtmlArea_ColorPickerMenu']);
-app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.7.5.ExamplePlusSource/style/jHtmlArea.css','jHtmlArea']);
+/* used for html editor.
+_app.rq.push(['css',0,_app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/style/jHtmlArea.ColorPickerMenu.css','jHtmlArea_ColorPickerMenu']);
+_app.rq.push(['css',0,_app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/style/jHtmlArea.css','jHtmlArea']);
 //note - the editor.css file that comes with jhtmlarea is NOT needed. just sets the page bgcolor to black.
 
 // colorpicker isn't loaded until jhtmlarea is done to avoid a js error due to load order.
-app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.7.5.ExamplePlusSource/scripts/jHtmlArea-0.7.5.js',function(){
-	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.7.5.ExamplePlusSource/scripts/jHtmlArea.ColorPickerMenu-0.7.0.min.js'])
+_app.rq.push(['script',0,_app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/jHtmlArea-0.8.min.js',function(){
+	_app.rq.push(['script',0,_app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/jHtmlArea.ColorPickerMenu-0.8.min.js'])
 	}]);
-
-
+ */
 				return r;
 				},
 			onError : function(d)	{
@@ -1664,160 +578,105 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0
 //executed when the extension loads
 		initExtension : {
 			onSuccess : function()	{
-//				app.u.dump('BEGIN app.ext.admin.initUserInterface.onSuccess ');
-				var L = app.rq.length-1;
-//load any remaining resources into the app.
+//				_app.u.dump('BEGIN _app.ext.admin.initUserInterface.onSuccess ');
+				var L = _app.rq.length-1;
+//load any remaining resources into the _app.
 				for(var i = L; i >= 0; i -= 1)	{
-					app.u.loadResourceFile(app.rq[i]);
-					app.rq.splice(i, 1); //remove once handled.
+					_app.u.loadResourceFile(_app.rq[i]);
+					_app.rq.splice(i, 1); //remove once handled.
 					}
-				app.rq.push = app.u.loadResourceFile; //reassign push function to auto-add the resource.
+				_app.rq.push = _app.u.loadResourceFile; //reassign push function to auto-add the resource.
 
-if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersion.split("MSIE")[1]) < 10)	{
-	app.u.throwMessage("<p>In an effort to provide the best user experience for you and to also keep our development team sane, we've opted to optimize our user interface for webkit based browsers. These include; Safari, Chrome and FireFox. Each of these are free and provide a better experience, including more diagnostics for us to maintain our own app framework.<\/p><p><b>Our store apps support IE8+<\/b><\/p>");
-	}
-
-
-//get list of domains and show chooser.
-				var $domainChooser = $("<div \/>").attr({'id':'domainChooserDialog','title':'Choose a domain to work on'}).addClass('displayNone').appendTo(document.body);
-				$domainChooser.dialog({
-					'autoOpen':false,
-					'modal':true,
-					'width': '90%',
-					'height': 500,
-					'closeOnEscape': false,
-					open: function(event, ui) {$(".ui-dialog-titlebar-close", $(this).parent()).hide();} //hide 'close' icon. will close on domain selection
-					});
-
-//** 201320 -> no more hunting and pecking for domain. stored in dps and if it isn't there, the user will be prompted (in showHeader) to select one.
-//the domainChange will set these three vars in localStorage so they'll be there next time.
-//all three of the vars are required. images require the https_domain and several configDetail calls require partition.
-var adminObj = app.model.dpsGet('admin');
-if(!$.isEmptyObject(adminObj))	{
-	app.vars.domain = adminObj.domain;
-	app.vars.partition = adminObj.partition;
-	app.vars.https_domain = adminObj.https_domain;
-	}
-			
-//				app.u.dump(" -> domain: "+app.vars.domain);
-//				app.u.dump(" -> partition: "+app.vars.partition);
-//				app.u.dump(" -> https_domain: "+app.vars.https_domain);
-				
-				if(!app.vars.domain || isNaN(app.vars.partition) || !app.vars.https_domain)	{
-					app.u.dump(" -> either domain ["+app.vars.domain+"], partition ["+app.vars.partition+"] or https_domain ["+app.vars.https_domain+"] not set. set domain to blank to trigger domain chooser.");
-					app.vars.domain = false;  //
+				if(_app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersion.split("MSIE")[1]) < 10)	{
+					_app.u.throwMessage("<p>In an effort to provide the best user experience for you and to also keep our development team sane, we've opted to optimize our user interface for webkit based browsers. These include; Safari, Chrome and FireFox. Each of these are free and provide a better experience, including more diagnostics for us to maintain our own app framework.<\/p><p><b>Our store apps support IE8+<\/b><\/p>");
 					}
 
-//make sure all the links in the header use the proper syntax.
-				$('.bindByAnchor','#mastHead').each(function(){
-					// app.u.dump("BEGIN #mastHead rewriteLink");
-					app.ext.admin.u.rewriteLink($(this));
-					})
-//if supported, update hash while navigating.
-// see handleHashState function for what this is and how it works.
-				if("onhashchange" in window)	{ // does the browser support the hashchange event?
-//					app.u.dump("WOOT! browser supports hashchange");
-					_ignoreHashChange = false; //global var. when hash is changed from JS, set to true. see handleHashState for more info on this.
-					window.onhashchange = function () {
-//						app.u.dump("Hash has changed.");
-						app.ext.admin.u.handleHashState();
-						}
-					}
-	
 //create shortcuts. these are used in backward compatibility areas where brian loads the content.
-				window.navigateTo = app.ext.admin.a.navigateTo;
-				window.showUI = app.ext.admin.a.showUI;
-				window.loadElement = app.ext.admin.a.loadElement;
-				window.prodlistEditorUpdate = app.ext.admin.a.uiProdlistEditorUpdate;
-				window.changeDomain = app.ext.admin.a.changeDomain;
-				window.linkOffSite = app.ext.admin.u.linkOffSite;
-				window._ignoreHashChange = false; // see handleHashState to see what this does.
+				window.navigateTo = _app.ext.admin.a.navigateTo;
+				window.loadElement = _app.ext.admin.a.loadElement;
+				window.prodlistEditorUpdate = _app.ext.admin.a.uiProdlistEditorUpdate;
+				window.changeDomain = _app.ext.admin.a.changeDomain;
+				window.linkOffSite = _app.ext.admin.u.linkOffSite;
 
 
-document.write = function(v){
-	if(console && console.warn){
-		console.warn("document.write was executed. That's bad mojo. Rewritten to $('body').append();");
-		console.log("document.write contents: "+v);
-		}
-	$("body").append(v);
-	}
+//a document.write and app are like dogs and cats. They don't get along. this is the workaround
+				document.write = function(v){
+					_app.u.dump("document.write was executed. That's bad mojo. Rewritten to $('body').append();",'warn');
+					_app.u.dump("document.write contents: "+v);
+					$("body").append(v);
+					}
 
 
-var uriParams = {};
-var ps = window.location.href; //param string. find a regex for this to clean it up.
-if(ps.indexOf('?') >= 1)	{
-	ps = ps.split('?')[1]; //ignore everything before the first questionmark.
-	if(ps.indexOf('#') == 0){} //'could' happen if uri is ...admin.html?#doSomething. no params, so do nothing.
-	else	{
-		if(ps.indexOf('#') >= 1)	{ps = ps.split('#')[0]} //uri params should be before the #
-//	app.u.dump(ps);
-		uriParams = app.u.kvp2Array(ps);
-		}
-//	app.u.dump(uriParams);
-	}
-
-// app.u.dump(" -> uriParams"); app.u.dump(uriParams);
-if(uriParams.trigger == 'adminPartnerSet')	{
-	app.u.dump(" -> execute adminPartnerSet call");
-	//Merchant is most likely returning to the app from a partner site for some sort of verification
-	app.ext.admin.calls.adminPartnerSet.init(uriParams,{'callback':'showHeader','extension':'admin'});
-	app.model.dispatchThis('immutable');
-	}
+				var uriParams = {};
+				var ps = window.location.href; //param string. find a regex for this to clean it up.
+				if(ps.indexOf('?') >= 1)	{
+					ps = ps.split('?')[1]; //ignore everything before the first questionmark.
+					if(ps.indexOf('#') == 0){} //'could' happen if uri is ...admin.html?#doSomething. no params, so do nothing.
+					else	{
+						if(ps.indexOf('#') >= 1)	{ps = ps.split('#')[0]} //uri params should be before the #
+				//	_app.u.dump(ps);
+						uriParams = _app.u.kvp2Array(ps);
+						}
+				//	_app.u.dump(uriParams);
+					}
+				_app.vars.trigger = uriParams.trigger;
+//Merchant is most likely returning to the app from a partner site for some sort of verification
+				if(_app.vars.trigger == 'adminPartnerSet')	{
+					_app.u.dump(" -> execute adminPartnerSet call"); _app.u.dump(uriParams);
+					uriParams._cmd = 'adminPartnerSet';
+					uriParams._tag = {'callback':'showHeader','extension':'admin','datapointer':'adminPartnerSet'};
+					_app.model.addDispatchToQ(uriParams,"immutable");
+					_app.model.dispatchThis('immutable');
+					}
 
 
 
-if(app.vars.debug)	{
-//	$('button','#debugPanel').button();
-	var $DP = $('#debugPanel');
-	$DP.show().find('.debugMenu').menu()
-	$DP.append("<h6 class='clearfix'>debug: "+app.vars.debug+"</h6><h6 class='clearfix'>v: "+app.vars.release+"</h6><hr />");
-	$('<input \/>').attr({'type':'text','placeholder':'destroy','size':'10'}).on('blur',function(){
-		app.model.destroy($(this).val());
-		app.u.dump("DEBUG: "+$(this).val()+" was just removed from memory and local storage");
-		$(this).val('');
-		}).appendTo($DP);
-	$('#jtSectionTab').show();
-	}
+				if(_app.vars.debug)	{
+				//	$('button','#debugPanel').button();
+					var $DP = $('#debugPanel');
+					$DP.show().find('.debugMenu').menu()
+					$DP.append("<h6 class='clearfix'>debug: "+_app.vars.debug+"</h6><h6 class='clearfix'>v: "+_app.vars.release+"</h6><hr />");
+					$('<input \/>').attr({'type':'text','placeholder':'destroy','size':'10'}).on('blur',function(){
+						_app.model.destroy($(this).val());
+						_app.u.dump("DEBUG: "+$(this).val()+" was just removed from memory and local storage");
+						$(this).val('');
+						}).appendTo($DP);
+					}
 
-
-//app.u.dump("Is anycommerce? document.domain: "+document.domain+" and uriParams.anycommerce: ["+uriParams.anycommerce+"]");
 	
 //the zoovy branding is in place by default. override if on anycommerce.com OR if an anycommerce URI param is present (for debugging)
-if(document.domain && document.domain.toLowerCase().indexOf('anycommerce') > -1)	{
-	app.u.dump(" -> Treat as anycommerce");
-	$('.logo img').attr('src','app-admin/images/anycommerce_logo-173x30.png');
-	$('body').addClass('isAnyCommerce');
-	}
-else	{
-	app.u.dump(" -> Treat as zoovy");
-	$('body').addClass('isZoovy'); //displays all the Zoovy only content (will remain hidden for anyCommerce)
-	}
+				if(document.domain && document.domain.toLowerCase().indexOf('anycommerce') > -1)	{
+					_app.u.dump(" -> Treat as anycommerce");
+					$('.logo img').attr('src','app-admin/images/anycommerce_logo-173x30.png');
+					$('body').addClass('isAnyCommerce');
+					}
+				else	{
+					_app.u.dump(" -> Treat as zoovy");
+					$('body').addClass('isZoovy'); //displays all the Zoovy only content (will remain hidden for anyCommerce)
+					}
 
-
-//if user is logged in already (persistent login), take them directly to the UI. otherwise, have them log in.
-//the code for handling the support login is in the thisisanadminsession function (looking at uri)
-if(app.u.thisIsAnAdminSession())	{
-	app.ext.admin.u.showHeader();
-	}
-else if(uriParams.show == 'acreate')	{
-	app.ext.admin.u.handleAppEvents($('#createAccountContainer'));
-	$('#appPreView').css('position','relative').animate({right:($('body').width() + $("#appPreView").width() + 100)},'slow','',function(){
-		$("#appPreView").hide();
-		$('#createAccountContainer').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
-		});
-	}
-else	{
-	app.ext.admin.u.handleAppEvents($('#appLogin'));
-	$('#appPreView').css('position','relative').animate({right:($('body').width() + $("#appPreView").width() + 100)},'slow','',function(){
-		$("#appPreView").hide();
-		$('#appLogin').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
-		});
-	}
-
-
-
-
-
+				//if user is logged in already (persistent login), take them directly to the UI. otherwise, have them log in.
+				//the code for handling the support login is in the thisisanadminsession function (looking at uri)
+				if(_app.u.thisIsAnAdminSession())	{
+					_app.ext.admin.u.showHeader();
+					}
+				else if(uriParams.show == 'acreate')	{
+					_app.u.handleAppEvents($('#createAccountContainer'));
+					$('#appPreView').css('position','relative').animate({right:($('body').width() + $("#appPreView").width() + 100)},'slow','',function(){
+						$("#appPreView").hide();
+						$('#createAccountContainer').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
+						});
+					}
+				else	{
+					_app.u.handleAppEvents($('#appLogin'));
+					$('#appPreView').css('position','relative').animate({right:($('body').width() + $("#appPreView").width() + 100)},'slow','',function(){
+						$("#appPreView").hide();
+						$('#appLogin').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
+						});
+					}
+				if(!$.support['localStorage'])	{
+					$("#globalMessaging").anymessage({"message":"It appears you have localStorage disabled or are using a browser that does not support the feature. Please enable the feature or upgrade your browser","errtype":"youerr","persistent":true});
+					}
 				}
 			}, //initExtension
 
@@ -1844,21 +703,22 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 					var
 						$DMI = _rtag.jqObj,
 						$tbody = $DMI.find("[data-app-role='dualModeListTbody']:first"),
-						bindData = app.renderFunctions.parseDataBind($tbody.data('bind')), //creates an object of the data-bind params.
-						listpointer = app.renderFunctions.parseDataVar(bindData['var']),
-						data = app.data[_rtag.datapointer]; //shortcut.
-//					app.u.dump('listpointer: '+listpointer);
-//					app.u.dump('_rtag.datapointer: '+_rtag.datapointer);
-//					app.u.dump('data[listpointer]: '); app.u.dump(data[listpointer]);
+						bindData = _app.renderFunctions.parseDataBind($tbody.data('bind')), //creates an object of the data-bind params.
+						listpointer = _app.renderFunctions.parseDataVar(bindData['var']),
+						data = _app.data[_rtag.datapointer]; //shortcut.
+//					_app.u.dump('listpointer: '+listpointer);
+//					_app.u.dump('_rtag.datapointer: '+_rtag.datapointer);
+//					_app.u.dump('data[listpointer]: '); _app.u.dump(data[listpointer]);
 					$DMI.hideLoading();
 					$tbody.empty();
 					//data[listpointer] check needs to be a !isemptyobject and NOT a .length check because value could be a hash OR an array.
 					if(listpointer && data && data[listpointer] && !$.isEmptyObject(data[listpointer]))	{
 						//no errors have occured and results are present.
 						$tbody.anycontent({'data':data});
-						app.u.handleAppEvents($tbody);
+						_app.u.handleAppEvents($tbody);
+						_app.u.handleButtons($tbody);
 						if(_rtag.message)	{
-							$('.dualModeListMessaging',$DMI).anymessage(app.u.successMsgObject(_rtag.message));
+							$('.dualModeListMessaging',$DMI).anymessage(_app.u.successMsgObject(_rtag.message));
 							}
 						}
 					else if(listpointer && !$.isEmptyObject(data)  && data[listpointer])	{
@@ -1873,13 +733,13 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 					else 	{
 						//should never get here.
 						$('.dualModeListMessaging',$DMI).anymessage({"message":"In admin.callbacks.DMIUpdateResults.onSuccess, an unknown error occured. DEV: see console for details.","gMessage":true});
-						app.u.dump("$DMI.length: "+$DMI.length);
-						app.u.dump("$DMI instanceof jQuery: "+($DMI instanceof jQuery));
-						app.u.dump("$tbody.length: "+$tbody.length);
-						app.u.dump("listpointer: "+listpointer);
-						app.u.dump("typeof data: "+typeof data);
-						app.u.dump("bindData: "); app.u.dump(bindData);
-//						app.u.dump("_rtag.jqObj"); app.u.dump(_rtag.jqObj);
+						_app.u.dump("$DMI.length: "+$DMI.length);
+						_app.u.dump("$DMI instanceof jQuery: "+($DMI instanceof jQuery));
+						_app.u.dump("$tbody.length: "+$tbody.length);
+						_app.u.dump("listpointer: "+listpointer);
+						_app.u.dump("typeof data: "+typeof data);
+						_app.u.dump("bindData: "); _app.u.dump(bindData);
+//						_app.u.dump("_rtag.jqObj"); _app.u.dump(_rtag.jqObj);
 						}
 
 
@@ -1902,21 +762,20 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 //the selector also gets run through jqSelector and hideLoading (if declared) is run.
 		translateSelector : {
 			onSuccess : function(tagObj)	{
-				app.u.dump("BEGIN callbacks.translateSelector");
-//				app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
-				var selector = app.u.jqSelector(tagObj.selector[0],tagObj.selector.substring(1)); //this val is needed in string form for translateSelector.
-//				app.u.dump(" -> selector: "+selector);
+//				_app.u.dump(" -> tagObj: "); _app.u.dump(tagObj);
+				var selector = _app.u.jqSelector(tagObj.selector[0],tagObj.selector.substring(1)); //this val is needed in string form for translateSelector.
+//				_app.u.dump(" -> selector: "+selector);
 				var $target = $(selector);
-//				app.u.dump(" -> $target.length: "+$target.length);
+//				_app.u.dump(" -> $target.length: "+$target.length);
 				if(typeof jQuery().hideLoading == 'function'){$target.hideLoading();}
 				$target.removeClass('loadingBG'); //try to get rid of anything that uses loadingBG (cept prodlists) in favor of show/hideLoading()
-				var data = app.data[tagObj.datapointer];
+				var data = _app.data[tagObj.datapointer];
 //merge allows for multiple datasets to be merged together prior to translation. use with caution.
-				if(tagObj.merge && app.data[tagObj.merge])	{
-					$.extend(data,app.data[tagObj.merge]);
+				if(tagObj.merge && _app.data[tagObj.merge])	{
+					$.extend(data,_app.data[tagObj.merge]);
 					}
-				app.renderFunctions.translateSelector(selector,app.data[tagObj.datapointer]);
-				app.ext.admin.u.handleAppEvents($target);
+				_app.renderFunctions.translateSelector(selector,_app.data[tagObj.datapointer]);
+				_app.u.handleAppEvents($target);
 				}
 			}, //translateSelector
 
@@ -1924,48 +783,48 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 
 		showDataHTML : {
 			onSuccess : function(tagObj)	{
-//				app.u.dump("SUCCESS!"); app.u.dump(tagObj);
-				$(app.u.jqSelector('#',tagObj.targetID)).removeClass('loadingBG').hideLoading().html(app.data[tagObj.datapointer].html); //.wrap("<form id='bob'>");
+//				_app.u.dump("SUCCESS!"); _app.u.dump(tagObj);
+				$(_app.u.jqSelector('#',tagObj.targetID)).removeClass('loadingBG').hideLoading().html(_app.data[tagObj.datapointer].html); //.wrap("<form id='bob'>");
 				}
 			}, //showDataHTML
 
-
+//this callback is called directly by the model when an error 10 occurs.
+//no tagObj is passed into the function. test the model code after making changes here.
 		handleLogout : {
 			onSuccess : function(tagObj)	{
-				document.location = 'admin_logout.html'
+				_app.ext.admin.u.selectivelyNukeLocalStorage(); //get rid of most local storage content. This will reduce issues for users with multiple accounts.
+				_app.model.destroy('authAdminLogin'); //clears this out of memory and local storage. This would get used during the controller init to validate the session.
+				if($.support['sessionStorage'])	{sessionStorage.clear();}
+				document.location = 'admin_logout.html' + (tagObj.msg ? "?msg="+encodeURIComponent(tagObj.msg) : "");
 				}
 			},
-//in cases where the content needs to be reloaded after making an API call, but when a showUI directly won't do (because of sequencing, perhaps)
+//in cases where the content needs to be reloaded after making an API call, but when a navigateTo directly won't do (because of sequencing, perhaps)
 //For example, after new files are added to a ticket (comatability mode), this is executed on a ping to update the page behind the modal.
-		showUI : {
+		navigateTo : {
 			onSuccess : function(tagObj)	{
-				if(tagObj && tagObj.path){showUI(tagObj.path)
+				if(tagObj && tagObj.path){navigateTo(tagObj.path)
 					}
 				else {
-					app.u.throwGMessage("Warning! Invalid path specified in _rtag on admin.callbacks.showUI.onSuccess.");
-					app.u.dump("admin.callbacks.showUI.onSuccess tagObj (_rtag)");
-					app.u.dump(tagObj);
+					_app.u.throwGMessage("Warning! Invalid path specified in _rtag on admin.callbacks.navigateTo.onSuccess.");
+					_app.u.dump("admin.callbacks.navigateTo.onSuccess tagObj (_rtag)");
+					_app.u.dump(tagObj);
 					}
 				}
-			}, //showUI
-		showDomainConfig : {
-			onSuccess : function(){
-				app.ext.admin.u.domainConfig();
-				}
-			},
+			}, //navigateTo
+
 
 		showElementEditorHTML : {
 			onSuccess : function(tagObj)	{
-//				app.u.dump("SUCCESS!"); app.u.dump(tagObj);
-				var $target = $(app.u.jqSelector('#',tagObj.targetID))
-				$target.parent().find('.ui-dialog-title').text(app.data[tagObj.datapointer]['prompt']); //add title to dialog.
+//				_app.u.dump("SUCCESS!"); _app.u.dump(tagObj);
+				var $target = $(_app.u.jqSelector('#',tagObj.targetID))
+				$target.parent().find('.ui-dialog-title').text(_app.data[tagObj.datapointer]['prompt']); //add title to dialog.
 				var $form = $("<form \/>").attr('id','editorForm'); //id used in product edit mode.
 				$form.submit(function(event){
 					event.preventDefault(); //do not post form.
-					app.ext.admin.u.uiSaveBuilderElement($form,app.data[tagObj.datapointer].id,{'callback':'handleElementSave','extension':'admin','targetID':'elementEditorMessaging'})
-					app.model.dispatchThis();
+					_app.ext.admin.u.uiSaveBuilderElement($form,_app.data[tagObj.datapointer].id,{'callback':'handleElementSave','extension':'admin','targetID':'elementEditorMessaging'})
+					_app.model.dispatchThis();
 					return false;
-					}).append(app.data[tagObj.datapointer].html);
+					}).append(_app.data[tagObj.datapointer].html);
 				$form.append("<div class='marginTop center'><input type='submit' class='ui-state-active' value='Save' \/><\/div>");
 				$target.removeClass('loadingBG').html($form);
 				}
@@ -1976,32 +835,34 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 			
 			onSuccess : function(tagObj)	{
 //First, let the user know the changes are saved.
-				var msg = app.u.successMsgObject("Thank you, your changes are saved.");
+				var msg = _app.u.successMsgObject("Thank you, your changes are saved.");
 				msg['_rtag'] = tagObj; //pass in tagObj as well, as that contains info for parentID.
-				app.u.throwMessage(msg);
-				if(app.ext.admin.vars.tab)	{
-//					app.u.dump("GOT HERE! app.ext.admin.vars.tab: "+app.ext.admin.vars.tab);
-					$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty().append(app.data[tagObj.datapointer].html)
+				_app.u.throwMessage(msg);
+				if(_app.ext.admin.vars.tab)	{
+//					_app.u.dump("GOT HERE! _app.ext.admin.vars.tab: "+_app.ext.admin.vars.tab);
+					$(_app.u.jqSelector('#',_app.ext.admin.vars.tab+'Content')).empty().append(_app.data[tagObj.datapointer].html)
 					}			
 				}
 			}, //handleElementSave
 
 		showHeader : {
 			onSuccess : function(_rtag){
-//				app.u.dump("BEGIN admin.callbacks.showHeader");
-//				app.u.dump(" -> app.data["+_rtag.datapointer+"]:");	app.u.dump(app.data[_rtag.datapointer]);
+				$('body').hideLoading();
+//				_app.u.dump("BEGIN admin.callbacks.showHeader");
+//				_app.u.dump(" -> _app.data["+_rtag.datapointer+"]:");	_app.u.dump(_app.data[_rtag.datapointer]);
 //account was just created, skip domain chooser.
-				if(app.data[_rtag.datapointer] && app.data[_rtag.datapointer].domain)	{
-//					app.u.dump(" -> response contained a domain. use it to set the domain.");
-					app.ext.admin.a.changeDomain(app.data[_rtag.datapointer].domain,0,'#!dashboard');
+				if(_app.data[_rtag.datapointer] && _app.data[_rtag.datapointer].domain)	{
+//					_app.u.dump(" -> response contained a domain. use it to set the domain.");
+					_app.ext.admin.a.changeDomain(_app.data[_rtag.datapointer].domain);
+					navigateTo('#!dashboard');
 					}
-				app.ext.admin.u.showHeader();
+				_app.ext.admin.u.showHeader();
 				},
 			onError : function(responseData){
 				
-				app.u.throwMessage(responseData);
+				_app.u.throwMessage(responseData);
 //				if(responseData.errid == "100")	{
-//					app.u.throwMessage("This is most typically due to your system clock not being set correctly. For security, it must be set to both the correct time and timezone.");
+//					_app.u.throwMessage("This is most typically due to your system clock not being set correctly. For security, it must be set to both the correct time and timezone.");
 //					} //this is the clock issue.
 				$('body').hideLoading();
 				}
@@ -2009,10 +870,10 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 
 		handleDomainChooser : {
 			onSuccess : function(tagObj){
-				app.u.dump("BEGIN admin.callbacks.handleDomainChooser.onSuccess");
-				var data = app.data[tagObj.datapointer]['@DOMAINS'];
-				var $target = $(app.u.jqSelector('#',tagObj.targetID));
-				$target.empty().append("<iframe src='https://s3-us-west-1.amazonaws.com/admin-ui/ads/ad_300x250.html' class='noBorders floatRight marginLeft ad-300x250'><\/iframe>");
+				_app.u.dump("BEGIN admin.callbacks.handleDomainChooser.onSuccess");
+				var data = _app.data[tagObj.datapointer]['@DOMAINS'];
+				var $target = $(_app.u.jqSelector('#',tagObj.targetID));
+//				$target.empty().append("<iframe src='https://s3-us-west-1.amazonaws.com/admin-ui/ads/ad_300x250.html' class='noBorders floatRight marginLeft ad-300x250'><\/iframe>");
 				var L = data.length;
 				$target.hideLoading();
 				if(L)	{
@@ -2023,7 +884,8 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 					else	{
 						$ul = $("<ul \/>").attr('id','domainList').addClass('listStyleNone marginRight');
 						$ul.off('click.domain').on('click.domain','li',function(e){
-							app.ext.admin.a.changeDomain($(e.target).data('DOMAINNAME'),$(e.target).data('PRT'))
+							_app.ext.admin.a.changeDomain($(e.target).data('DOMAINNAME'),$(e.target).data('PRT'));
+							navigateTo(_app.ext.admin.u.whatPageToShow('#!dashboard'));
 							$target.dialog('close');
 							});
 						}
@@ -2031,7 +893,7 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 					function showDomains(favoritesOnly)	{
 						for(var i = 0; i < L; i += 1)	{
 							if((favoritesOnly && data[i].IS_FAVORITE) || (favoritesOnly === false))	{
-								$("<li \/>").data(data[i]).addClass('lookLikeLink').addClass(data[i].DOMAINNAME == app.vars.domain ? 'ui-selected' : '').append(data[i].DOMAINNAME+" [prt: "+data[i].PRT+"]").appendTo($ul);
+								$("<li \/>").data(data[i]).addClass('lookLikeLink').addClass(data[i].DOMAINNAME == _app.vars.domain ? 'ui-selected' : '').append(data[i].DOMAINNAME+" [prt: "+data[i].PRT+"]").appendTo($ul);
 								}
 							}
 						}
@@ -2048,16 +910,16 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 				else	{
 					$("<p>It appears you have no domains configured. <span class='lookLikeLink'>Click here<\/span> to go configure one.<\p>").on('click',function(){
 						$target.dialog('close');
-						navigateTo("#!domainConfigPanel");
+						navigateTo("#!ext/admin_sites/showDomainConfig");
 						}).appendTo($target);
 					}
 				
 				},
 			onError: function(responseData)	{
-				var $target = $(app.u.jqSelector('#',responseData._rtag.targetID));
+				var $target = $(_app.u.jqSelector('#',responseData._rtag.targetID));
 				$target.hideLoading();
 				responseData.persistent = true;
-				app.u.throwMessage(responseData);
+				_app.u.throwMessage(responseData);
 				$target.append("<P>Something has gone very wrong. We apologize, but we were unable to load your list of domains. A domain is required.</p>");
 				$("<button \/>").attr('title','Close Window').text('Close Window').click(function(){$target.dialog('close')}).button().appendTo($target);
 				}
@@ -2065,22 +927,22 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 
 		handleElasticFinderResults : {
 			onSuccess : function(tagObj)	{
-//				app.u.dump("BEGIN admin.callbacks.handleElasticFinderResults.onSuccess.");
-				var L = app.data[tagObj.datapointer]['_count'];
+//				_app.u.dump("BEGIN admin.callbacks.handleElasticFinderResults.onSuccess.");
+				var L = _app.data[tagObj.datapointer]['_count'];
 				$('#resultsKeyword').html(L+" results <span id='resultsListItemCount'></span>:");
-//				app.u.dump(" -> Number Results: "+L);
-				$parent = $(app.u.jqSelector('#',tagObj.parentID)).empty().removeClass('loadingBG')
+//				_app.u.dump(" -> Number Results: "+L);
+				$parent = $(_app.u.jqSelector('#',tagObj.parentID)).empty().removeClass('loadingBG')
 				if(L == 0)	{
 					$parent.append("Your query returned zero results.");
 					}
 				else	{
 					var pid;//recycled shortcut to product id.
 					for(var i = 0; i < L; i += 1)	{
-						pid = app.data[tagObj.datapointer].hits.hits[i]['_id'];
-//						app.u.dump(" -> "+i+" pid: "+pid);
-						$parent.append(app.renderFunctions.transmogrify({'id':pid,'pid':pid},tagObj.templateID,app.data[tagObj.datapointer].hits.hits[i]['_source']));
+						pid = _app.data[tagObj.datapointer].hits.hits[i]['_id'];
+//						_app.u.dump(" -> "+i+" pid: "+pid);
+						$parent.append(_app.renderFunctions.transmogrify({'id':pid,'pid':pid},tagObj.templateID,_app.data[tagObj.datapointer].hits.hits[i]['_source']));
 						}
-					app.ext.admin.u.filterFinderResults();
+					_app.ext.admin.u.filterFinderResults();
 					}
 				}
 			}, //handleElasticFinderResults
@@ -2088,10 +950,10 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 //callback executed after the navcat data is retrieved. the u, does most of the work.
 		addFinderToDom : {
 			onSuccess : function(tagObj)	{
-//				app.u.dump("BEGIN admin.callback.addFinderToDom.success");
-				var $target = $(app.u.jqSelector('#',tagObj.targetID));
+//				_app.u.dump("BEGIN admin.callback.addFinderToDom.success");
+				var $target = $(_app.u.jqSelector('#',tagObj.targetID));
 //have to use attribs here to we make the switch to all data, otherwise 'data' gets set once, but not when attribs change. so the second instantiation of the finder will open the first product.
-				app.ext.admin.u.addFinder(tagObj.targetID,{'findertype':$target.attr('data-findertype'),'path':$target.attr('data-path'),'attrib':$target.attr('data-attrib')});
+				_app.ext.admin.u.addFinder(tagObj.targetID,{'findertype':$target.attr('data-findertype'),'path':$target.attr('data-path'),'attrib':$target.attr('data-attrib')});
 				}
 			}, //addFinderToDom
 
@@ -2099,14 +961,14 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 //when a finder for a product attribute is executed, this is the callback.
 		pidFinderChangesSaved : {
 			onSuccess : function(tagObj)	{
-				app.u.dump("BEGIN admin.callbacks.pidFinderChangesSaved");
+				_app.u.dump("BEGIN admin.callbacks.pidFinderChangesSaved");
 				$('#finderMessaging').anymessage({'message':'Your changes have been saved.','htmlid':'finderRequestResponse','uiIcon':'check','timeoutFunction':"$('#finderRequestResponse').slideUp(1000);"})
-				app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
+				_app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				},
 			onError : function(responseData)	{
 				responseData.parentID = "finderMessaging";
-				app.u.throwMessage(responseData);
-				app.ext.admin.u.changeFinderButtonsState('enable');
+				_app.u.throwMessage(responseData);
+				_app.ext.admin.u.changeFinderButtonsState('enable');
 				}
 			
 			}, //pidFinderChangesSaved
@@ -2116,7 +978,7 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 			onSuccess : function(tagObj)	{
 
 
-app.u.dump("BEGIN admin.callbacks.finderChangesSaved");
+_app.u.dump("BEGIN admin.callbacks.finderChangesSaved");
 var uCount = 0; //# of updates
 var eCount = 0; //# of errros.
 var eReport = ''; // a list of all the errors.
@@ -2125,19 +987,24 @@ var $tmp;
 
 $('#finderTargetList, #finderRemovedList').find("li[data-status]").each(function(){
 	$tmp = $(this);
-//	app.u.dump(" -> PID: "+$tmp.attr('data-pid')+" status: "+$tmp.attr('data-status'));
+//	_app.u.dump(" -> PID: "+$tmp.attr('data-pid')+" status: "+$tmp.attr('data-status'));
 	if($tmp.attr('data-status') == 'complete')	{
 		uCount += 1;
 		$tmp.removeAttr('data-status'); //get rid of this so additional saves from same session are not impacted.
 		}
 	else if($tmp.attr('data-status') == 'error')	{
 		eCount += 1;
-		eReport += "<li>"+$tmp.attr('data-pid')+": "+app.data[$tmp.attr('data-pointer')].errmsg+" ("+app.data[$tmp.attr('data-pointer')].errid+"<\/li>";
+		if($tmp.attr('data-pointer') && _app.data[$tmp.attr('data-pointer')])	{
+			eReport += "<li>"+$tmp.attr('data-pid')+": "+_app.data[$tmp.attr('data-pointer')].errmsg+" ("+_app.data[$tmp.attr('data-pointer')].errid+"<\/li>";
+			}
+		else	{
+			eReport += "<li>"+$tmp.attr('data-pid')+": an unknown error has occured.<\/li>";
+			}
 		}
 	});
 
-app.u.dump(" -> items updated: "+uCount);
-app.u.dump(" -> errors: "+eCount);
+_app.u.dump(" -> items updated: "+uCount);
+_app.u.dump(" -> errors: "+eCount);
 if(uCount > 0)	{
 	$('#finderMessaging').anymessage({'message':'Items Updated: '+uCount,'htmlid':'finderRequestResponse','uiIcon':'check'})
 	}
@@ -2146,37 +1013,37 @@ if(eCount > 0)	{
 	$('#finderMessaging').anymessage({'message':eCount+' errors occured!<ul>'+eReport+'<\/ul>'});
 	}
 
-app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
+_app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 
 
 				},
 			onError : function(responseData)	{
 				responseData.parentID = "finderMessaging";
-				app.u.throwMessage(responseData);
-				app.ext.admin.u.changeFinderButtonsState('enable');
+				_app.u.throwMessage(responseData);
+				_app.ext.admin.u.changeFinderButtonsState('enable');
 				}
 			}, //finderChangesSaved
 		
 //callback is used for the product finder search results.
 		showProdlist : {
 			onSuccess : function(tagObj)	{
-//				app.u.dump("BEGIN admin.callbacks.showProdlist");
-				if($.isEmptyObject(app.data[tagObj.datapointer]['@products']))	{
-					$(app.u.jqSelector('#',tagObj.parentID)).empty().removeClass('loadingBG').append('Your search returned zero results');
+//				_app.u.dump("BEGIN admin.callbacks.showProdlist");
+				if($.isEmptyObject(_app.data[tagObj.datapointer]['@products']))	{
+					$(_app.u.jqSelector('#',tagObj.parentID)).empty().removeClass('loadingBG').append('Your search returned zero results');
 					}
 				else	{
-//				app.u.dump(" -> parentID: "+tagObj.parentID);
-//				app.u.dump(" -> datapointer: "+tagObj.datapointer);
-				var numRequests = app.ext.store_prodlist.u.buildProductList({
+//				_app.u.dump(" -> parentID: "+tagObj.parentID);
+//				_app.u.dump(" -> datapointer: "+tagObj.datapointer);
+				var numRequests = _app.ext.store_prodlist.u.buildProductList({
 "templateID":"adminProdStdForList",
 "parentID":tagObj.parentID,
 "items_per_page":100,
-"csv":app.data[tagObj.datapointer]['@products']
+"csv":_app.data[tagObj.datapointer]['@products']
 					});
-//				app.u.dump(" -> numRequests = "+numRequests);
+//				_app.u.dump(" -> numRequests = "+numRequests);
 					if(numRequests)
-						app.model.dispatchThis();
+						_app.model.dispatchThis();
 					}
 				}
 			}, //showProdlist
@@ -2186,23 +1053,23 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //it simply changes the data-status appropriately, then the classback "finderChangesSaved" loops through the lists and handles messaging for all the updates.
 		finderProductUpdate : {
 			onSuccess : function(tagObj)	{
-//				app.u.dump("BEGIN admin.callbacks.finderProductUpdate.onSuccess");
-//				app.u.dump(app.data[tagObj.datapointer]);
+//				_app.u.dump("BEGIN admin.callbacks.finderProductUpdate.onSuccess");
+//				_app.u.dump(_app.data[tagObj.datapointer]);
 				var tmp = tagObj.datapointer.split('|'); // tmp1 is command and tmp1 is path and tmp2 is pid
 				var targetID = tmp[0] == 'adminNavcatProductInsert' ? "finderTargetList" : "finderRemovedList";
 				targetID += "_"+tmp[2];
-//				app.u.dump(" -> targetID: "+targetID);
-				$(app.u.jqSelector('#',targetID)).attr('data-status','complete');
+//				_app.u.dump(" -> targetID: "+targetID);
+				$(_app.u.jqSelector('#',targetID)).attr('data-status','complete');
 				},
 			onError : function(d)	{
-//				app.u.dump("BEGIN admin.callbacks.finderProductUpdate.onError");
-				var tmp = app.data[tagObj.datapointer].split('|'); // tmp0 is call, tmp1 is path and tmp2 is pid
+//				_app.u.dump("BEGIN admin.callbacks.finderProductUpdate.onError");
+				var tmp = d._rtag.datapointer.split('|'); // tmp0 is call, tmp1 is path and tmp2 is pid
 //on an insert, the li will be in finderTargetList... but on a remove, the li will be in finderRemovedList_...
 				var targetID = tmp[0] == 'adminNavcatProductInsert' ? "finderTargetList" : "finderRemovedList";
 				
 				targetID += "_"+tmp[2];
-				$(app.u.jqSelector('#',targetID)).attr({'data-status':'error','data-pointer':tagObj.datapointer});
-//				app.u.dump(d);
+				$(_app.u.jqSelector('#',targetID)).attr({'data-status':'error','data-pointer':d._rtag.datapointer});
+//				_app.u.dump(d);
 				}
 			}, //finderProductUpdate
 
@@ -2211,10 +1078,10 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 		filterFinderSearchResults : {
 			onSuccess : function(tagObj)	{
-//				app.u.dump("BEGIN admin.callbacks.filterFinderSearchResults");
-				var safePath = app.u.makeSafeHTMLId(tagObj.path);
+//				_app.u.dump("BEGIN admin.callbacks.filterFinderSearchResults");
+				var safePath = _app.u.makeSafeHTMLId(tagObj.path);
 				var $tmp;
-//				app.u.dump(" -> safePath: "+safePath);
+//				_app.u.dump(" -> safePath: "+safePath);
 				//go through the results and if they are already in this category, disable drag n drop.
 				$results = $('#finderSearchResults');
 				//.find( "li" ).addClass( "ui-corner-all" ) )
@@ -2222,39 +1089,68 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				$results.find('li').each(function(){
 					$tmp = $(this);
 					if($('#finderTargetList_'+$tmp.attr('data-pid')).length > 0)	{
-				//		app.u.dump(" -> MATCH! disable dragging.");
+				//		_app.u.dump(" -> MATCH! disable dragging.");
 						$tmp.addClass('ui-state-disabled');
 						}
 					})
 				}
 			}, //filterFinderSearchResults
+/*
 
+When a 'remove' is executed, a new message is created. This allows ALL users to have their list updated when a remove occurs.
+These new messages are returned with a verb='remove' on them. So these messages must be removed from the local copy.
+*/
 		handleMessaging : {
 			onSuccess : function(_rtag)	{
+				//message count is updated whether new messages exist or not, or it won't work at init.
+				var DPSMessages = _app.model.dpsGet('admin','messages') || [];
 				
-//				app.u.dump("BEGIN admin.callbacks.handleMessaging");
-//				app.u.dump(" ->last Message (start): "+app.ext.admin.u.getLastMessageID());
-				if(app.data[_rtag.datapointer] && app.data[_rtag.datapointer]['@MSGS'] && app.data[_rtag.datapointer]['@MSGS'].length)	{
-
+				if(_app.data[_rtag.datapointer] && _app.data[_rtag.datapointer]['@MSGS'] && _app.data[_rtag.datapointer]['@MSGS'].length)	{
 					var
-						L = app.data[_rtag.datapointer]['@MSGS'].length,
-						DPSMessages = app.model.dpsGet('admin','messages') || [],
+						L = _app.data[_rtag.datapointer]['@MSGS'].length,
 						$tbody = $("[data-app-role='messagesContainer']",'#messagesContent'),
 						lastMessageID;
 
-//update the localstorage object w/ the new messages.
+function getIndexByObjValue(arr,key,value)	{
+	var theIndex = false;
+	$.grep(arr, function(e,i){if(e[key] == value){theIndex = i; return;}});
+	return theIndex;
+	}
+
+//update the localstorage object w/ the new messages, except the removes.
 					for(var i = 0; i < L; i += 1)	{
-						DPSMessages.push(app.data[_rtag.datapointer]['@MSGS'][i])
+						if(_app.data[_rtag.datapointer]['@MSGS'][i].verb == 'remove')	{
+							var index = getIndexByObjValue(DPSMessages,'origin',_app.data[_rtag.datapointer]['@MSGS'][i].origin);
+							if(index !== false && index >= 0)	{
+								DPSMessages.splice(index,1);
+								}
+							else	{} //getIndex returned something unexpected.
+							}
+						else if(_app.data[_rtag.datapointer]['@MSGS'][i].verb == 'update')	{
+							var index = getIndexByObjValue(DPSMessages,'origin',_app.data[_rtag.datapointer]['@MSGS'][i].origin);
+							//it's possible to have an 'update' w/ no existing reference in dpsMessages.
+							if(index !== false && index >= 0)	{
+								$.extend(DPSMessages[index],_app.data[_rtag.datapointer]['@MSGS'][i]);
+								}
+							else	{
+								DPSMessages.push(_app.data[_rtag.datapointer]['@MSGS'][i]);
+								}
+							}
+						else	{
+							DPSMessages.push(_app.data[_rtag.datapointer]['@MSGS'][i]);
+							}
+						lastMessageID = _app.data[_rtag.datapointer]['@MSGS'][i].id
 						}
-					app.model.dpsSet('admin','messages',DPSMessages);
-					app.model.dpsSet('admin','lastMessage',app.data[_rtag.datapointer]['@MSGS'][L-1].id);
-					app.ext.admin.u.displayMessages(app.data[_rtag.datapointer]['@MSGS']);
-//					app.u.dump(" ->last Message (end): "+app.ext.admin.u.getLastMessageID());
+					_app.model.dpsSet('admin','messages',DPSMessages);
+					if(lastMessageID)	{
+						_app.model.dpsSet('admin','lastMessage',lastMessageID);
+						}
 					}
 				else	{} //no new messages.
 				
-//add another request. this means with each immutable dispatch, messages get updated.
-				app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'mutable');
+				_app.ext.admin.u.displayMessages(DPSMessages);				
+//add another request. this means with each mutable dispatch, messages get updated.
+				_app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.getLastMessageID(),"_tag":{"datapointer":"adminMessagesList|"+_app.ext.admin.u.getLastMessageID(),'callback':'handleMessaging','extension':'admin'}},"mutable");
 				},
 			onError : function()	{
 				//no error display.
@@ -2266,13 +1162,55 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 
 
+
+
+
+	tlcFormats : {
+		// ### FUTURE -> this is not done yet.
+		smartLoop : function(data,thisTLC)	{
+
+			var $tmp = $("<div>");
+
+			var
+				arr = data.globals.binds[data.globals.focusBind], 
+				argObj = thisTLC.args2obj(data.command.args);
+
+			var filter = data.args.filter;
+			var filterby = data.args.filterby;
+			if(!filterby)	{
+				if(filter)	{_app.u.dump("In process list, a 'filter' was passed, but no filterby was specified, so the filter was ignored.\ndatabind: \n"+$tag.data('bind'),'warn');}
+				filter = undefined;
+				} //can't run a filter without a filterby. filter is keyed off of later.
+
+
+			if(argObj.templateid)	{
+//				dump(" -> templateid: "+argObj.templateid.value);// dump(arr);
+				for(var i in arr)	{
+					arr[i].obj_index = i; //allows for the data object to be looked up in memory later.
+					$tmp.tlc({'templateid':argObj.templateid,'dataset':arr[i],'dataAttribs':arr[i]});
+					}
+				data.globals.binds[data.globals.focusBind] = $tmp.children();
+				}
+			else	{
+				dump("No template specified",warn); dump(data);
+				}
+			return true;
+			}
+		
+		},
+
+
+
+
+
+
+
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
 	renderFormats : {
 
 			macros2Buttons : function($tag,data)	{
-//				app.u.dump(" got here"); app.u.dump(data.value);
 				var L = data.value.length;
 				for(var i = 0; i < L; i += 1)	{
 					//currently, this is used in orders > routes
@@ -2282,44 +1220,12 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 						$("<button \/>").addClass('smallButton').text(data.value[i].cmdtxt).attr({'data-macro-cmd':data.value[i].cmd,'data-app-click':'admin_orders|adminOrderMacroExec'}).button().appendTo($tag);
 						}
 					else	{
-						$("<button \/>").addClass('smallButton').text(data.value[i].cmdtxt).button().attr({'data-app-click':'admin_prodEdit|adminProductMacroExec','data-macro-cmd':data.value[i].cmd}).appendTo($tag);
+						$("<button \/>").addClass('smallButton').text(data.value[i].cmdtxt).button().attr({'data-app-click':'admin_prodedit|adminProductMacroExec','data-macro-cmd':data.value[i].cmd}).appendTo($tag);
 						}
 					}
 				},
 				
-				//pass in HOSTTYPE as data.
-				appHostButtons : function($tag,data)	{
-					var $menu = $("<menu \/>").hide();
-					
-					if(data.value == 'SITEPTR')	{
-						$menu.append("<li><a href='#' data-app-event='admin_templateEditor|templateChooserShow' data-mode='Site'>Choose a Template</a></li>");
-						$menu.append("<li><a href='#' data-app-event='admin_templateEditor|templateEditorShow' data-mode='Site'>Edit Project</a></li>");
-						$menu.append("<li data-app-event='admin_templateEditor|containerFileUploadShow' data-mode='Site'><a href='#'>Upload Template Files</a></li>");
-						}
-					
-					if(data.value == 'SITE' || data.value == 'SITEPTR' || data.value == 'APP')	{
-						$menu.append("<li><a href='#' data-app-event='admin_batchJob|batchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
-						$menu.append("<li><a href='#' data-app-event='admin_batchJob|batchJobExec' data-type='EXPORT/PAGES' >Export Pages.json</a></li>");
-						$menu.append("<li><a href='#' data-app-event='admin_batchJob|batchJobExec' data-type='EXPORT/APPRESOURCE' >Export App Resource Zip</a></li>");
-						}
-					if($menu.children().length)	{
-						$menu.menu();
-						$tag.append($menu); //so menu appears where it should.
-						$menu.css({'position':'absolute','width':200,'z-index':200,'top':25,'right':0});
-						var $button = $("<button>").text("App Related Utilities").button({icons: {primary: "ui-icon-gear",secondary: "ui-icon-triangle-1-s"},text: false});
-						$button.on('click',function(){
-							$menu.show();
-							$( document ).one( "click", function() {
-								$menu.hide();
-								});
-							return false;
-							})
-						$tag.append($button);
-						}
-					else	{
-						//host/domain isn't app based.
-						}
-					},
+
 				
 		reportID2Pretty : function($tag,data)	{
 			var lookupTable = {
@@ -2338,10 +1244,10 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 			$tag.append(lookupTable[data.value] || data.value); //if no translation, display report id.
 			},
 
-		companyLogo : function($tag,data)	{
+		companylogo : function($tag,data)	{
 			if(data.value.LOGO)	{
 				data.value = data.value.LOGO;
-				app.renderFormats.imageURL($tag,data);
+				_app.renderFormats.imageURL($tag,data);
 				}
 			else if(data.value.DOMAINNAME)	{
 				var $qrdiv = $("<div \/>").css({'width':$tag.width(),'height':$tag.height(),'margin' : 'auto'});
@@ -2356,24 +1262,16 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 			},
 
 		graphicURL : function($tag,data)	{
-			$tag.attr('src',"https://"+app.vars.https_domain+data.value);
-			$tag.wrap("<a href='https://"+app.vars.https_domain+data.value+"' data-gallery='gallery'>");
+			$tag.attr('src',"https://"+_app.vars['media-host']+data.value);
+			$tag.wrap("<a href='https://"+_app.vars['media-host']+data.value+"' data-gallery='gallery'>");
 			},
 
 		publicURL : function($tag,data)	{
-			$tag.attr('src',"http://"+app.vars.domain+"/media/merchant/"+app.vars.username+"/"+data.value);
-			$tag.wrap("<a href='http://"+app.vars.domain+"/media/merchant/"+app.vars.username+"/"+data.value+"' data-gallery='gallery'>");
+			$tag.attr('src',"http://"+_app.vars.domain+"/media/merchant/"+_app.vars.username+"/"+data.value);
+			$tag.wrap("<a href='http://"+_app.vars.domain+"/media/merchant/"+_app.vars.username+"/"+data.value+"' data-gallery='gallery'>");
 			},
 
-//used for adding email message types to a select menu.
-//designed for use with the vars object returned by a adminEmailList _cmd
-		emailMessagesListOptions : function($tag,data)	{
-			var L = data.value.length;
-//adminEmailListIndex below is used to lookup by index the message in the list object.
-			for(var i = 0; i < L; i += 1)	{
-				$tag.append($("<option \/>").val(data.value[i].MSGID).text(data.value[i].MSGTITLE).data({'MSGID':data.value[i].MSGID,'adminEmailListIndex':i}));
-				}
-			},
+
 
 
 //very simple data to list function. no template needed (or allowed. use processList for that).
@@ -2395,27 +1293,27 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 //put this on a select element.  Will generate the 'options'. var should be the value of the schedule already selected.
 		wholesaleScheduleSelect : function($tag,data)	{
-//			app.u.dump("BEGIN admin.renderFormats.wholesaleScheduleSelect");
-			app.ext.admin.calls.adminPriceScheduleList.init({
+			_app.u.dump("BEGIN admin.renderFormats.wholesaleScheduleSelect. data.value: "+data.value);
+			_app.ext.admin.calls.adminPriceScheduleList.init({
 				'callback' : function(rd){
-//					app.u.dump(" -> in to callback");
-					if(app.model.responseHasErrors(rd)){
+					_app.u.dump(" -> in to callback");
+					if(_app.model.responseHasErrors(rd)){
 						$tag.parent().anymessage({'message':rd})
 						}
 					else	{
-						if(app.data.adminPriceScheduleList['@SCHEDULES'] && app.data.adminPriceScheduleList['@SCHEDULES'].length)	{
+						if(_app.data.adminPriceScheduleList['@SCHEDULES'] && _app.data.adminPriceScheduleList['@SCHEDULES'].length)	{
 							var $select = $("<select \/>"),
-							schedules = app.data.adminPriceScheduleList['@SCHEDULES'], //shortcut
-							L = app.data.adminPriceScheduleList['@SCHEDULES'].length
+							schedules = _app.data.adminPriceScheduleList['@SCHEDULES'], //shortcut
+							L = _app.data.adminPriceScheduleList['@SCHEDULES'].length
 							list = null;
 //no 'none' is added here.  If you need it, add it into the select that has this renderFormat. That way it's easy to not have it.
 							for(var i = 0; i < L; i += 1)	{
 								$select.append($("<option \/>",{'value':schedules[i].SID}).text(schedules[i].SID));
 								}
-//							app.u.dump(" -> $select:"); app.u.dump($select);
+//							_app.u.dump(" -> $select:"); _app.u.dump($select);
 							$tag.append($select.children());
 							if(data.value)	{
-								$select.val(data.value);
+								$tag.val(data.value);
 								}
 							}
 						else	{
@@ -2437,7 +1335,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				data.value = splitVal[data.bindData.index || splitVal.length - 1]
 				}
 			else	{} //no split is occuring. do nothing.
-			app.renderFormats.text($tag, data)
+			_app.renderFormats.text($tag, data)
 			}
 		}, //renderFormats
 
@@ -2448,172 +1346,104 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		a : {
 
-//tmp while in dev so pushes can occur without UI being impacted.
-//opts is options (options is a reserved JS name)
-// -> opts.targetID is used within the function, but is not an accepted paramater (at this time) for being passed in.
-//    it's in opts to make debugging easier.
-
-			showUI : function(path,opts){
-//make sure path passed in conforms to standard naming conventions.
-//app.u.dump("BEGIN admin.a.showUI ["+path+"]");
-//app.u.dump(" -> path.substr(0,1): "+path.substr(0,1));
-				opts = opts || {}; //default to object so setting params within does not cause error.
-				if(path)	{
-//mode is either app or legacy. mode is required and generated based on path.
-					var mode = undefined;
-					if(path.substr(0,5) == "/biz/") {mode = 'legacy'}
-					
-					if(path.substr(0,6) == "#/biz/") {mode = 'legacy'}
-					else if(path.substr(0,2) == "#:")	{
-//						app.u.dump(" -> is #:");
-						$('#ordersContent').empty(); //always get new content for orders.
-						mode = 'tabClick';
-						opts.tab = opts.tab || path.substring(2);
-						path = "/biz/"+path.substring(2)+"/index.cgi";
-//						app.u.dump(" -> opts:"); app.u.dump(opts);
-						} //path gets changed, so a separate mode is used for tracking when reloadTab is needed.
-					else if (path.substr(0,2) == "#!") {mode = 'app'; }
-					else	{}
-					
-					if(mode)	{
-
-//app.u.dump(" -> mode: "+mode);
-//app.u.dump(" -> path: "+path);
-//app.u.dump(" -> opts: "); app.u.dump(opts);
-
-
-var reloadTab = 0; //used in conjunction with #: to determine if new or old contens should be displayed.
-var $target = undefined; //jquery object of content destination
-
-opts = opts || {}; //opts may b empty. treat as object.
-
-_ignoreHashChange = true; //see handleHashChange for details on what this does.
-document.location.hash = path; //update hash on URI.
-
-//app.u.dump(" -> opts: "); app.u.dump(opts);
-
-//if necessary get opt.tab defined. If at the end of code opt.tab is set, a tab will be brought into focus (in the header).
-if(opts.tab){} // if tab is specified, always use it.
-else if(mode == 'app')	{} //apps load into whatever content area is open, unless opt.tab is defined.
-else if(opts.dialog)	{} //dialogs do not effect tab, unless opt.tab is defined.
-
-//* 201220 -> tab is already set in the if(path) code at the top.
-//else if(mode == 'legacy' || (mode == 'tabClick' ){
-else if(mode == 'legacy'){
-	opts.tab = app.ext.admin.u.getTabFromPath(path);
-	} //#: denotes to open a tab, but not refresh the content.
-else	{
-	//hhmm. how did we get here?
-	}
-
-if(opts.tab)	{app.ext.admin.u.bringTabIntoFocus(opts.tab);} //changes which tab in the header is in focus.
-else	{} //do nothing. perfectly normal to not change what tab is in focus.
-
-
-//app.u.dump(" -> passed if/else tab determination code. tab: "+opts.tab);
-
-//set the targetID and $target for the content. 
-// By now, tab will be set IF tab is needed. (dialog and/or app mode support no tab specification)
-//this is JUST setting targetID. it isn't showing content or opening modals.
-if(opts.dialog){
-	opts.targetID = 'uiDialog';
-	$target = app.ext.admin.u.handleCompatModeDialog(opts); //jquery object is returned by this function.
-	}
-//load content into whatever tab is specified.
-else if(opts.tab)	{
-	opts.targetID = opts.tab+"Content";
-	$target = $(app.u.jqSelector('#',opts.targetID));
-
-//this is for the left side tab that appears in the orders/product interface after perfoming a search and navigating to a result.
-$('#stickytabs').empty(); //clear all the sticky tabs.
-	
-	}
-//no tab was specified. use the open tab, if it's set.
-else if(app.ext.admin.vars.tab)	{
-	opts.targetID = app.ext.admin.vars.tab+"Content";
-	$target = $(app.u.jqSelector('#',opts.targetID));
-	} //load into currently open tab. common for apps.
-else	{
-	//not in an app. no tab specified. not in modal. odd. how did we get here? No $target will be set. error handling occurs in if($target) check below.
-	}
-
-
-//app.u.dump(" -> $target determined ("+$target.attr('id')+"). length: "+$target.length);
-
-if($target && $target.length)	{
-
-	if(opts.dialog)	{
-		app.ext.admin.u.handleShowSection(path,opts,$target); 
-		}
-	else	{
-
-		app.ext.admin.u.bringTabContentIntoFocus($target); //will make sure $target is visible. if already visible, no harm.
-		if(mode == 'app')	{
-//			app.u.dump(" -> showUI mode = app");
-			app.ext.admin.u.loadNativeApp(path,opts,$target);
-			}
-		else if(mode == 'legacy')	{
-//			app.u.dump(" -> showUI mode = legacy");
-			app.ext.admin.u.handleShowSection(path,opts,$target);
-			}
-		else if(mode == 'tabClick')	{
-//			app.u.dump(" -> showUI mode = tabClick");
-//determine whether new content is needed or not. typically, #: is only run from a tab so that when returning to  the tab, the last open content shows up.
-			if(opts.tab == app.ext.admin.vars.tab)	{
-//				app.u.dump(" -> targeted tab and open tab match.");
-				reloadTab = 1; //tab clicked from a page within that tab. show new content.
-				}
-//			app.u.dump(" -> $target.children().length: "+$target.children().length);
-			if ($target.children().length === 0)	{
-//				app.u.dump(" -> no content presently in target. targetID = "+$target.attr('id')+" and $target.length: "+$target.length);
-				reloadTab = 1; //no content presently in target. load it.
-				} 
-			if(reloadTab)	{
-//* 201336 -> moved this code down. It nukes any data set by anycontent. It was being run much earlier but should only be run if new content is being added. it empties the tab contents.
-				if($target && $target.data('anycontent'))	{
-//					app.u.dump(" -> execute anycontent('destroy')");
-					$target.anycontent('destroy');
-					}
-				app.ext.admin.u.handleShowSection(path,opts,$target);
-				}
-			else	{
-				app.ext.admin.u.uiHandleNavTabs({}); //clear or last displayed navtabs (from previous section) will show up.
-				//when RETURNING to the product page, build navtabs again (search).
-				if(opts.tab == 'product')	{
-					app.ext.admin_prodEdit.u.handleNavTabs(); //builds the filters, search, etc menu at top, under main tabs.
-					}
-				} //show existing content. content area is already visible thanks to bringTabContentIntoFocus
-			}
-		else	{}// should never get here. error case for mode not being set is already passed.
-		if(opts.tab)	{app.ext.admin.vars.tab = opts.tab;} //do this last so that the previously selected tab can be referenced, if needed.
-		}
-	}
-else	{
-	app.u.throwGMessage("Warning! In in showUI, insuffient data available to determine where content should be displayed. likely no 'tab' was specified or vars.tab is not set.");
-	}
-						} //end 'if' for mode.
-					else	{	
-						app.ext.admin.a.showUI("#!dashboard");
-						$('#globalMessaging').anymessage({"message":"Warning! unable to determine 'mode' in admin.a.showUI.<br>Most likely, this was caused a refresh after an anchor link changed the hash. loading dashboard.<br>Path: "+path,"gMessage":true});
-
-						}
-					
+//Here for legacy support.  All it does is change the hash, adding opts as key value pairs AFTER the hash.
+			navigateTo : function(path,opts){
+//				dump("BEGIN navigateTo "+path);
+				opts = opts || {};
+				var newHash = path;
+				
+				//* 201402 -> there's a bug in jquery UI that sometimes causes tooltips to not close (related to dynamic content).
+				//this will remove the tooltips for the tabContent currently in focus. Works with a similar piece of code in execApp
+				$('.ui-tooltip',_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")).intervaledEmpty();
+//sometimes you need to refresh the page you're on. if the hash doesn't change, the onHashChange code doesn't get run so this is a solution to that.
+				if(path == document.location.hash)	{
+					adminApp.router.handleHashChange();
 					}
 				else	{
-					app.u.throwGMessage("Warning! path not set for admin.a.showUI");
+					if(path.indexOf('#!') == 0)	{newHash = path;}
+	//if/when vstore compat is gone, the next two if/else won't be necessary.
+					else if(path.indexOf('/biz/') == 0)	{
+						newHash = "#!"+path;
+						}
+					else if(path.indexOf('#/biz/') == 0)	{
+						newHash = "#!"+path.substring(1);
+						}
+					else	{
+	
+						}
+					if(newHash)	{
+						dump(" -> new hash: "+newHash);
+						if($.isEmptyObject(opts))	{}
+						else	{
+							newHash += "?"+$.param(opts)
+							}
+						document.location.hash = newHash; //update hash on URI.
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In navigateTo, the path provided ['+path+'] does not start w/ a #! or is not an acceptable legacy compatibility mode link.','gMessage':true});
+						}
 					}
-//app.u.dump(" -> END showUI. ");
-				return false;
-				}, //showUI
-
-//this is a function that brian has in the UI on some buttons.
-//it's diferent than showUI so we can add extra functionality if needed.
-//the app itself should never use this function.
-			navigateTo : function(path,$t)	{
-				return this.showUI(path,$t ? $t : {});
+				return false; //return false so that a href='#' onclick='return navigateTo... works properly (hash doesn't update to #);
 				},
+//executed after the hashChange, as part of the route callback.
+			handleTabClick : function(tab,opts)	{
+//				dump("BEGIN admin.a.handleTabClick");
+				opts = opts || {};
+				var $target = $(_app.u.jqSelector('#',tab+"Content"));
+				//if the tab has no content OR the tab is in focus already, show the tab landing page.
+				if(tab && $.inArray(tab,_app.ext.admin.vars.tabs) >= 0)	{
+					//tab is valid.
+					_app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+					_app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs do not show up.
+					if(tab == _app.ext.admin.vars.tab || $target.children().length === 0)	{
+						//the tab clicked is already in focus. go back to tab landing page.
+						_app.ext.admin.u.showTabLandingPage(tab,$target,opts);
+						}
+					else	{
+//						dump(" -> we jumped between tabs or we moved to a tab that already has content.");
+						_app.ext.admin.u.bringTabIntoFocus(tab); //highlights the appropriate tab, if applicable (home is valid content area, but has no tab)
+						_app.ext.admin.u.bringTabContentIntoFocus($target); //brings the tabContent div (homeContent, productContent, etc) into focus.
+						//to get here, the tab has content AND we've moved between tabs.
+						}
+					
+					_app.ext.admin.vars.tab = tab; //do this last so vars.tab shows the old tab for comparison purposes.
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.a.handleTabClick, unrecognized or blank tab specified ["+tab+"]","gMessage":true});
+					}
+
+				},
+
+			execApp : function(ext,a,opts)	{
+				opts = opts || {};
+				var
+					tab = opts.tab || _app.ext.admin.vars.tab,
+					$tab = $(_app.u.jqSelector('#',tab+"Content")),
+					$target = $("<div \/>").addClass('contentContainer'); //content is added to a child, which is then added to the tab. ensures the tab container is left alone (no data or anything like that to get left over)
+				
+				//* 201402 -> there's a bug in jquery UI that sometimes causes tooltips to not close (related to dynamic content).
+				//this will remove the tooltips for the tabContent coming in to focus. There is some similar code in navigateTo
+				$('.ui-tooltip',$tab).intervaledEmpty();
 				
 				
+				if(ext && a && _app.u.thisNestedExists("ext."+ext+".a."+a,_app))	{
+					$tab.data('focusHash',"ext/"+ext+"/"+a); //remember what app is in focus so when tab is clicked, the correct hash can be displayed.
+					$tab.intervaledEmpty().append($target);
+//this is for the left side tab that appears in the orders/product interface after perfoming a search and navigating to a result.
+					$('#stickytabs').empty(); //clear all the sticky tabs.
+					_app.ext.admin.u.bringTabIntoFocus(tab); //highlights the appropriate tab, if applicable (home is valid content area, but has no tab)
+					_app.ext.admin.u.bringTabContentIntoFocus($tab); //brings the tabContent div (homeContent, productContent, etc) into focus.
+					_app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+					_app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs do not show up.
+					_app.ext[ext].a[a]($target,opts); //now execute the action.
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In admin.a.execApp, either ext ["+ext+"] or a ["+a+"] not passed OR the action does not exist ["+(_app.u.thisNestedExists("ext."+ext+".a."+a,_app))+"] within the extension.","gMessage":true});
+					}
+
+				},
+
+
 //show YouTubeVideo in a dialog.
 			showYTVInDialog : function(videoID,vars){
 				if(videoID)	{
@@ -2637,138 +1467,135 @@ else	{
 					$('#globalMessaging').anymessage({"message":"In admin.a.showYTVInDialog, no videoID passed.","gMessage":true});
 					}
 				},
-				
+
 //data needs to include a templateID and a mode [product,customer]
 			getPicker : function(data,selectors)	{
-var r = false;  //what is returned. either false of a jquery object.
-data = data || {};
-selectors = selectors || "";
-
-if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
-	var $D = $("<div \/>"); //container for the template. It's children() are what's returned.
-	$D.anycontent({'templateID':data.templateID,'showLoading':'false',data:data});
-	$D.data('pickermode',data.mode);
-
-	if(selectors[selectors.length-1] == '\n')	{selectors = selectors.substring(0,selectors.length-1);} //If an orphan \n exists, strip it.	
-	
-	$("[data-app-role='accordionContainer']",$D).first().addClass('pickerAccordionContainer').accordion({
-		heightStyle: "content",
-		activate : function(event,ui)	{
-//			app.u.dump("ui.newHeader.data('pickmethod'): "+ui.newHeader.data('pickmethod'));
-//			app.u.dump("ui.newPanel.data('contentloaded'): "+ui.newPanel.data('contentloaded'));
-//static panels do NOT need to be declared here. just add data-contentloaded='true' to the content element.	
-			if(!ui.newPanel.data('contentloaded'))	{
-				ui.newPanel.showLoading({'message':'Fetching List'});
-				var _tag = {}
-				_tag.callback = function(rd)	{
-					if(app.model.responseHasErrors(rd)){
-						$target.anymessage({'message':rd})
+				var r = false;  //what is returned. either false of a jquery object.
+				data = data || {};
+				selectors = selectors || "";
+				
+				if(data.templateID && (data.mode == 'product' || data.mode == 'customer'))	{
+					var $D = $("<div \/>"); //container for the template. It's children() are what's returned.
+					$D.anycontent({'templateID':data.templateID,'showLoading':'false',data:data});
+					$D.data('pickermode',data.mode);
+				
+					if(selectors[selectors.length-1] == '\n')	{selectors = selectors.substring(0,selectors.length-1);} //If an orphan \n exists, strip it.	
+					
+					$("[data-app-role='accordionContainer']",$D).first().addClass('pickerAccordionContainer').accordion({
+						heightStyle: "content",
+						activate : function(event,ui)	{
+				//			_app.u.dump("ui.newHeader.data('pickmethod'): "+ui.newHeader.data('pickmethod'));
+				//			_app.u.dump("ui.newPanel.data('contentloaded'): "+ui.newPanel.data('contentloaded'));
+				//static panels do NOT need to be declared here. just add data-contentloaded='true' to the content element.	
+							if(!ui.newPanel.data('contentloaded'))	{
+								ui.newPanel.showLoading({'message':'Fetching List'});
+								var _tag = {}
+								_tag.callback = function(rd)	{
+									if(_app.model.responseHasErrors(rd)){
+										$D.anymessage({'message':rd})
+										}
+									else	{
+										//applies the content to the panel.
+										ui.newPanel.anycontent(rd).data('contentloaded',true);
+				
+										if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
+											$('label',ui.newPanel).each(function () {  
+												if($(this).data('value').charAt(0) != '.')	{
+													$(this).empty().remove(); //clear out lists, pages (login, contact, etc) and corrupt data.
+													}
+												});
+											}
+										
+										//selectors are values passed in that get 'checked' (turned on).
+										if(selectors)	{
+									//		_app.u.dump("selectors are set: "+selectors);
+											var selArr = selectors.split('\n');
+											var L = selArr.length;
+									//		_app.u.dump(" -> selArr:"); _app.u.dump(selArr);
+											for(var i = 0; i < L; i += 1)	{
+												if(selArr[i] == 'all' || selArr[i].indexOf('csv') === 0)	{
+													//csv and 'all' are handled already.
+													}
+												else	{
+													//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
+									//				_app.u.dump(" -> selArr[i].replace('=','+'): "+selArr[i].replace('=','+'));
+									//				_app.u.dump(" -> selector.length: "+$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).length);
+													$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).prop('checked','checked');
+													}
+												}
+											}
+										}
+									}
+								if(ui.newHeader.data('pickmethod') == 'LIST')	{
+									_app.ext.admin.calls.appCategoryList.init({'root':'.','filter':'lists'},_tag,'mutable');
+									}
+								else if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
+									_app.ext.admin.calls.appCategoryList.init({'root':'.','filter':''},_tag,'mutable');
+									}
+								else if(ui.newHeader.data('pickmethod') == 'CUSTOMER_SUBSCRIBERLISTS')	{
+									_app.ext.admin.calls.adminNewsletterList.init(_tag,'mutable');
+									}
+								else if(ui.newHeader.data('pickmethod') == 'PROFILE')	{
+									_tag.datapointer = 'adminEBAYProfileList';
+									_app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': _tag},'mutable');
+									}
+								else if(ui.newHeader.data('pickmethod') == 'SUPPLIER')	{
+									_tag.datapointer = 'adminSupplierList';
+				//when this all gets changed to use the dispatch Q, use the if/else if to set a cmdObj instead of just _tag, and use the localStorage check just once at the end.
+									if(_app.model.fetchData(_tag.datapointer) == false)	{
+										_app.model.addDispatchToQ({'_cmd':'adminSupplierList','_tag':_tag},'mutable');
+										}
+									else	{
+										_app.u.handleCallback(_tag);
+										}
+									}
+								else if(ui.newHeader.data('pickmethod') == 'MCAT')	{
+									_tag.datapointer = 'adminProductManagementCategoriesComplete';
+									_app.model.addDispatchToQ({"_cmd":"adminProductManagementCategoriesComplete","_tag":_tag},"mutable");
+									}
+								else	{
+									//ERROR! unrecognized pick method. !!!
+									ui.newPanel.hideLoading();
+									ui.newPanel.anymessage({"message":"In admin.u.showPicker, unrecognized pickmethod ["+ui.newHeader.data('pickmethod')+"] on accordion header.","gMessage":true});
+									}
+								_app.model.dispatchThis('mutable');
+								}
+							else	{}
+							}
+						
+						});
+				
+					if(selectors)	{
+						if(selectors == 'all')	{
+							$("[name='SELECTALL']",$D).prop('checked','checked');
+							}
+						else	{
+							
+							var selArr = selectors.split('\n');
+							var L = selArr.length;
+							for(var i = 0; i < L; i += 1)	{
+								if(selArr[i].indexOf('csv') === 0)	{
+									$("[name='csv']",$D).val(selArr[i].substring(4));
+									}
+								else	{
+									//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
+					//				$("[name='"+selArr[i].replace('=','+')+"']",$tag).prop('checked','checked');
+									}
+								}
+							}
 						}
-					else	{
-						//applies the content to the panel.
-						ui.newPanel.anycontent(rd).data('contentloaded',true);
-
-if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
-	$('label',ui.newPanel).each(function () {  
-		if($(this).data('value').charAt(0) != '.')	{
-			$(this).empty().remove(); //clear out lists, pages (login, contact, etc) and corrupt data.
-			}
-		});
-	}
-
-//selectors are values passed in that get 'checked' (turned on).
-	if(selectors)	{
-//		app.u.dump("selectors are set: "+selectors);
-		var selArr = selectors.split('\n');
-		var L = selArr.length;
-//		app.u.dump(" -> selArr:"); app.u.dump(selArr);
-		for(var i = 0; i < L; i += 1)	{
-			if(selArr[i] == 'all' || selArr[i].indexOf('csv') === 0)	{
-				//csv and 'all' are handled already.
-				}
-			else	{
-				//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
-//				app.u.dump(" -> selArr[i].replace('=','+'): "+selArr[i].replace('=','+'));
-//				app.u.dump(" -> selector.length: "+$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).length);
-				$("[name='"+selArr[i].replace('=','+')+"']",ui.newPanel).prop('checked','checked');
-				}
-			}
-		}
-						}
-					}
-				if(ui.newHeader.data('pickmethod') == 'LIST')	{
-					app.ext.admin.calls.appCategoryList.init({'root':'.','filter':'lists'},_tag,'mutable');
-					}
-				else if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
-					app.ext.admin.calls.appCategoryList.init({'root':'.','filter':''},_tag,'mutable');
-					}
-				else if(ui.newHeader.data('pickmethod') == 'CUSTOMER_SUBSCRIBERLISTS')	{
-					app.ext.admin.calls.adminNewsletterList.init(_tag,'mutable');
-					}
-				else if(ui.newHeader.data('pickmethod') == 'PROFILE')	{
-					_tag.datapointer = 'adminEBAYProfileList'
-					app.model.addDispatchToQ({'_cmd':'adminEBAYProfileList','_tag': _tag},'mutable');
-					}
-				else if(ui.newHeader.data('pickmethod') == 'SUPPLIER')	{
-					_tag.datapointer = 'adminSupplierList'
-//when this all gets changed to use the dispatch Q, use the if/else if to set a cmdObj instead of just _tag, and use the localStorage check just once at the end.
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						app.model.addDispatchToQ({'_cmd':'adminSupplierList','_tag':_tag},'mutable');
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
-					}
-				else if(ui.newHeader.data('pickmethod') == 'MCAT')	{
-					app.ext.admin.calls.adminProductManagementCategoryList.init(_tag,'mutable');
+				
+				
+				
+					r = $D.children();
 					}
 				else	{
-					//ERROR! unrecognized pick method. !!!
-					ui.newPanel.hideLoading();
-					ui.newPanel.anymessage({"message":"In admin.u.showPicker, unrecognized pickmethod ["+ui.newHeader.data('pickmethod')+"] on accordion header.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin.u.getPicker, either templateID ["+data.templateID+"] not set or mode blank/invalid ["+data.mode+"]. Mode accepts customer or product.","gMessage":true});
 					}
-				app.model.dispatchThis('mutable');
-				}
-			else	{}
-			}
-		
-		});
-
-	if(selectors)	{
-		if(selectors == 'all')	{
-			$("[name='SELECTALL']",$D).prop('checked','checked');
-			}
-		else	{
-			
-			var selArr = selectors.split('\n');
-			var L = selArr.length;
-			for(var i = 0; i < L; i += 1)	{
-				if(selArr[i].indexOf('csv') === 0)	{
-					$("[name='csv']",$D).val(selArr[i].substring(4));
-					}
-				else	{
-					//the checkboxes haven't been added to the dom yet.  They have to be handled as the panel content is generated.
-	//				$("[name='"+selArr[i].replace('=','+')+"']",$tag).prop('checked','checked');
-					}
-				}
-			}
-		}
-
-
-
-	r = $D.children();
-	}
-else	{
-	$('#globalMessaging').anymessage({"message":"In admin.u.getPicker, either templateID ["+data.templateID+"] not set or mode blank/invalid ["+data.mode+"]. Mode accepts customer or product.","gMessage":true});
-	}
 //use this to disable the accordion if 'select all' is checked.	
 //$( ".selector" ).accordion( "option", "disabled", true );
 				return r;
 				},
-				
-
-
-
 
 			showDownloads : function($target)	{
 				$target.anycontent({'templateID':'downloadsPageTemplate','showLoading':false});
@@ -2776,160 +1603,13 @@ else	{
 					showClose:false,
 					wholeHeaderToggle:false
 					});
-				app.u.handleEventDelegation($target);
-				app.ext.admin.u.applyEditTrackingToInputs($target);
-				app.u.handleCommonPlugins($target);
-				app.u.handleButtons($target);
+				_app.u.addEventDelegation($target);
+				$target.anyform();
+				_app.u.handleCommonPlugins($target);
+				_app.u.handleButtons($target);
 				},
 
 
-			showSitesTab : function($target)	{
-				$target.empty();
-				$target.showLoading({'message':'Fetching List of Domains'});
-//if domains are not already in memory, get a new partition list too. that way the callback isn't executed before the domains are available.
-				app.model.addDispatchToQ({
-					'_cmd':'adminDomainList',
-					'hosts' : 1,
-					'_tag':	{
-						'datapointer' : 'adminDomainList',
-						'callback':function(rd)	{
-							if(app.model.responseHasErrors(rd)){
-								$('#globalMessaging').anymessage({'message':rd});
-								}
-							else	{
-								$target.hideLoading();
-								var domains = app.data[rd.datapointer]['@DOMAINS'];
-								app.data[rd.datapointer]['*favorites'] = new Array();
-								var L = domains.length;
-								for(var i = 0; i < L; i += 1)	{
-									if(domains[i].IS_FAVORITE == 1)	{
-										app.data[rd.datapointer]['*favorites'].push(domains[i]);
-										}
-									}
-								$target.anycontent({'templateID':'pageTemplateSites','datapointer':rd.datapointer});
-								app.u.handleAppEvents($target);
-
-								}
-							}
-						}
-					},'mutable');
-				app.model.dispatchThis('mutable');
-
-				},
-
-
-			showMailTool : function(vars)	{
-vars = vars || {};
-
-
-
-if(vars.listType && vars.partition)	{
-//listType must match one of these. an array is used because there will be more types:
-//  'TICKET','PRODUCT','ACCOUNT','SUPPLY','INCOMPLETE'
-	var types = ['ORDER','CUSTOMER']; 
-	if(types.indexOf(vars.listType) >= 0)	{
-
-		var $mailTool = $('#mailTool');
-		if($mailTool.length)	{
-			$mailTool.empty();
-			}
-		else	{
-			$mailTool = $("<div \/>",{'id':'mailTool','title':'Send Email'}).appendTo("body");
-			$mailTool.dialog({'width':500,'height':500,'autoOpen':false,'modal':true});
-			}
-
-		$mailTool.dialog('open');
-
-		$mailTool.showLoading({'message':'Fetching list of email messages/content'});
-		app.ext.admin.calls.adminEmailList.init({'TYPE':vars.listType,'PRT':vars.partition},{'callback':function(rd){
-			$mailTool.hideLoading();
-			if(app.model.responseHasErrors(rd)){
-				$mailTool.anymessage({'message':rd})
-				}
-			else	{
-				$mailTool.anycontent({'templateID':'mailToolTemplate','datapointer':rd.datapointer,'dataAttribs':{'adminemaillist-datapointer':rd.datapointer}});
-				app.u.handleAppEvents($mailTool,vars);
-				}
-			}},'mutable');
-		app.model.dispatchThis('mutable');
-		
-		}
-	else	{
-		$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin.a.showMailTool, invalid listType ['+vars.listType+'] or partition ['+vars.partition+'] specified.'})
-		}
-
-//will open dialog so users can send a custom message (content 'can' be based on existing message) to the user. order specific.
-//though not a modal, only one can be open at a time.
-/*			if(orderID && Number(prt) >= 0)	{
-	
-				app.ext.admin.calls.adminEmailList.init({'TYPE':'ORDER','PRT':prt},{'callback':function(rd){
-					$target.hideLoading();
-					if(app.model.responseHasErrors(rd)){
-						if(rd._rtag && rd._rtag.selector)	{
-							$(app.u.jqSelector(rd._rtag.selector[0],rd._rtag.selector.substring(1))).empty();
-							}
-						app.u.throwMessage(rd);
-						}
-					else	{
-						$target.append(app.renderFunctions.transmogrify({'adminemaillist-datapointer':'adminEmailList|'+prt+'|ORDER','orderid':orderID,'prt':prt},'orderEmailCustomMessageTemplate',app.data[rd.datapointer]));
-						app.ext.admin.u.handleAppEvents($target);
-						}
-		
-					}},'mutable');
-				app.model.dispatchThis('mutable');
-				}
-			else	{
-				app.u.throwGMessage("In admin_orders.a.showCustomMailEditor, orderid ["+orderID+"] or partition ["+prt+"] not passed and both are required.");
-				}
-*/
-	}
-else	{
-	$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin.a.showMailTool, no listType specified.'})
-	}
-				
-				
-				},
-
-
-/* loading content and adding a new 'page' */
-
-/*
-load page looks in app.ext.admin.pages to see if a 'page' exists.
-pages only exists for apps. the absense of a page in the page object will be treated as legacy compatibility.
-vars allows for overrides of default page variables. Out of the gate, tab will be supported. don't know about any others.
- -> tab being set determines whether breadcrumb and navtabs are reset. no tab, no reset. allows pages to be loaded inside another tab.
- -> set vars.tab to 'current' to open page in current tab/tabcontent.
-
-			loadPage : function(pageID,vars)	{
-				var pages = app.ext.admin.pages; //shortcut
-				if(pageID && pages[pageID])	{
-					
-					}
-				else if(pageID)	{
-					//pageID set, but does not exists in pages var. report error.
-					}
-				else	{
-					//no pageID passed. report error.
-					}
-				},
-
-			addPage : function(pageID,obj){
-				if(pageID && typeof obj === 'object' && typeof obj.exec === 'function'){
-					var pages = app.ext.admin.pages;
-					if(!pages[pageID])	{
-						//required vars present
-						pages[pageID] = obj;
-						}
-					else	{
-						//HHmmmmmm... do we allow pages to be overwritten?
-						}
-					}
-				else	{
-					//page ID and obj.exec as a function are required.
-					}
-				
-				},
-*/
 
 /*
 HEADER CODE
@@ -2959,7 +1639,6 @@ HEADER CODE
 				},
 
 
-
 /*
 A generic form handler. 
 $form is a jquery object of the form.
@@ -2973,55 +1652,55 @@ The _tag can be generated two ways.
  -> these would get formatted as _tag : {'something':'someval'}
 
 Execute your own dispatch. This allows the function to be more versatile
-set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('mutable'); return false;"
+set as onSubmit="_app.ext.admin.a.processForm($(this)); _app.model.dispatchThis('mutable'); return false;"
  -> if data-q is set to passive or immutable, change the value of dispatchThis to match.
 */
 			processForm : function($form,q,_tag)	{
-//				app.u.dump("BEGIN admin.a.processForm");
+//				_app.u.dump("BEGIN admin.a.processForm");
 				var r = true;  //what is returned.
 				var obj = $form.serializeJSON({'cb':$form.data('cb_tf')}) || {};
 				_tag = _tag || {};
 				
-//				app.u.dump(" -> obj: "); app.u.dump(obj);
+//				_app.u.dump(" -> obj: "); _app.u.dump(obj);
 				
 				if($form.length && (obj._cmd || obj.call || obj._macrobuilder))	{
 //build the _tag obj.
-					_tag = $.extend(true,_tag,app.ext.admin.u.getTagObjFromSFO(obj));
+					_tag = $.extend(true,_tag,_app.ext.admin.u.getTagObjFromSFO(obj));
 					_tag.jqObj = _tag.jqObj || $form;
-//					app.u.dump(" -> _tag in processForm: "); app.u.dump(_tag);
+//					_app.u.dump(" -> _tag in processForm: "); _app.u.dump(_tag);
 					
 					
 					
 					if(obj._macrobuilder)	{
-						app.u.dump(" -> is a macrobuilder.");
+						_app.u.dump(" -> is a macrobuilder.");
 						var mbArr = obj._macrobuilder.split('|');
 						obj._tag = _tag; //when adding straight to Q, _tag should be a param in the cmd object.
-						if(mbArr.length > 1 && app.ext[mbArr[0]] && app.ext[mbArr[0]].macrobuilders &&  typeof app.ext[mbArr[0]].macrobuilders[mbArr[1]] == 'function')	{
-							app.model.addDispatchToQ(app.ext[mbArr[0]].macrobuilders[mbArr[1]](obj,$form),q);
+						if(mbArr.length > 1 && _app.ext[mbArr[0]] && _app.ext[mbArr[0]].macrobuilders &&  typeof _app.ext[mbArr[0]].macrobuilders[mbArr[1]] == 'function')	{
+							_app.model.addDispatchToQ(_app.ext[mbArr[0]].macrobuilders[mbArr[1]](obj,$form),q);
 							}
 						else	{
-							app.u.dump(" -> UNABLE to build macro.");
+							_app.u.dump(" -> UNABLE to build macro.");
 							r = false;
 							$form.anymessage({'message':'In admin.a.processForm, macrobuilder was passed ['+obj.macrobuilder+'] but does not map to a valid macrobuilder. should be extension|functionname where functionname is a function residing in macrobuilders of specified extension.','gMessage':true});
 							}
 						}
 					else if(obj._cmd)	{
-						app.u.dump(" -> is a command.");
+						_app.u.dump(" -> is a command.");
 						obj._tag = _tag; //when adding straight to Q, _tag should be a param in the cmd object.
 //had an issue w/ adding directly to the Q where if an error was present in the response and 'save' was pushed again, the original dispatch would re-send, not this one. odd. using extend solved problem.
-						app.model.addDispatchToQ($.extend(true,{},obj),q);
+						_app.model.addDispatchToQ($.extend(true,{},obj),q);
 						}
 					else if(obj.call)	{
-						app.u.dump(" -> is a call.");
+						_app.u.dump(" -> is a call.");
 						var call = obj.call; //save to another var. obj.call needs to be deleted so it isn't passed in dispatch.
 						delete obj.call;
-						app.u.dump(" -> call: "+call);
-						app.ext.admin.calls[call.split('/')[1]].init(obj,_tag,q)
+						_app.u.dump(" -> call: "+call);
+						_app.ext.admin.calls[call.split('/')[1]].init(obj,_tag,q)
 						}
 					else{} //can't get here. either cmd or call are set by now.
 
 					if(_tag.updateDMIList)	{
-						var $DMI = $(app.u.jqSelector('#',_tag.updateDMIList));
+						var $DMI = $(_app.u.jqSelector('#',_tag.updateDMIList));
 						if($DMI.length)	{
 							var cmdVars = $DMI.data('cmdVars');
 							if(cmdVars && cmdVars._cmd)	{
@@ -3029,10 +1708,10 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 								cmdVars._tag = cmdVars._tag || {};
 								cmdVars._tag.callback = cmdVars._tag.callback || 'DMIUpdateResults';
 								cmdVars._tag.extension = cmdVars._tag.extension || 'admin';
-//								app.u.dump(" -> cmdVars:" );app.u.dump(cmdVars);
+//								_app.u.dump(" -> cmdVars:" );_app.u.dump(cmdVars);
 // ** 201344 -> don't want to re-render the panels, jus tthe 'list' section.
 								cmdVars._tag.jqObj = $DMI.find("[data-app-role='dualModeList']:first");
-								app.model.addDispatchToQ(cmdVars,q);
+								_app.model.addDispatchToQ(cmdVars,q);
 								}
 							else	{
 								$form.anymessage({'message':'In admin.a.processForm, _tag/updateDMIList passed but DMI.data("cmdVars") is empty or has no _cmd set. cmdVars should be set at DMICreate and _cmd is required so that the appropriate _cmd can be run.','gMessage':true});
@@ -3046,64 +1725,46 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 					}
 				else	{
 					r = false;
-					app.u.throwGMessage("Warning! $form was empty or _cmd or call not present within $form in admin.a.processForm");
+					_app.u.throwGMessage("Warning! $form was empty or _cmd or call not present within $form in admin.a.processForm");
 					}
-//				app.u.dump("END processForm");
+//				_app.u.dump("END processForm");
 
 				return r;
 				}, //processForm
 
-
-
-			showDomainConfig : function(){
-				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty().showLoading({"message":"Requesting up to date list of domains."});
-				app.model.destroy('adminDomainList');
-				app.ext.admin.calls.adminDomainList.init({'callback':'showDomainConfig','extension':'admin'},'immutable');
-				app.model.dispatchThis('immutable')
-				},
-			
+		
 
 //host is www.zoovy.com.  domain is zoovy.com or m.zoovy.com.  This function wants a domain.
 //changeDomain(domain,partition,path). partition and path are optional. If you have the partition, pass it to avoid me looking it up.
-			changeDomain : function(domain,partition,path){
-//				app.u.dump("BEGIN admin.u.changeDomain"); app.u.dump(" -> domain: "+domain);
-				app.u.dump(" -> partition: "+partition+" and Number(partition): "+Number(partition)+" and app.u.isSet: "+app.u.isSet(partition));
+			changeDomain : function(domain,partition){
+				var r = false;
+//				_app.u.dump("BEGIN admin.u.changeDomain"); _app.u.dump(" -> domain: "+domain);
+//				_app.u.dump(" -> partition: "+partition+" and Number(partition): "+Number(partition)+" and _app.u.isSet: "+_app.u.isSet(partition));
 				if(domain)	{
 //if no partition available, get it. if partition is null, number() returns 0.		
-					if(partition == 0 || Number(partition) > 0){
-						//if partition is 'false' or undef, number(partition) will = 0. not good in this case.
-						}
+					if(partition == 0 || Number(partition) > 0){} 
 					else	{
-//(( 201338 -> previously used getDataForDomain, which was broken. changed to shared function.
-						var domainData = app.ext.admin.u.getValueByKeyFromArray(app.data.adminDomainList['@DOMAINS'],'DOMAINNAME',domain);
+//if no partition was passed, get it from the domains list.
+						var domainData = _app.ext.admin.u.getValueByKeyFromArray(_app.data.adminDomainList['@DOMAINS'],'DOMAINNAME',domain);
 						if(domainData && domainData.PRT)	{
 							partition = domainData.PRT; 
 							}
 						}
-// ** 201338 -> added this check to track down where partition isn't getting properly set.
+
+//if partition is null, number(partition) returns zero, so the zero case is handled separately.
 					if(domain && (partition == 0 || Number(partition) > 0))	{
-						app.vars.domain = domain;
-						app.vars.partition = partition;
-						app.vars.https_domain = app.data['adminDomainList']['media-host'];
+						_app.vars.domain = domain;
+						_app.vars.partition = partition;
+						_app.vars['media-host'] = _app.data.adminDomainList['media-host'];
 	//set the vars in localStorage. This is what will be used upon return to preselect a domain.
-						app.model.dpsSet('admin',"domain",domain); 
-						app.model.dpsSet('admin',"partition",partition); 
-						app.model.dpsSet('admin',"https_domain",app.vars.https_domain); 
+						_app.model.dpsSet('admin',"domain",domain); 
+						_app.model.dpsSet('admin',"partition",partition); 
+						_app.model.dpsSet('admin',"media-host",_app.vars['media-host']); 
 	//update the view.
 						$('.partition','#appView').text(partition);
 						$('.domain','#appView').text(domain);
-	
-	//get entire auth localstorage var (flattened on save, so entire object must be retrieved and saved)
-	//something here is causing session to not persist on reload.
-	/*					if(app.model.fetchData('authAdminLogin'))	{
-							var localVars = app.data['authAdminLogin'];
-							localVars.domain = domain;
-							localVars.partition = partition || null;
-							app.storageFunctions.writeLocal('authAdminLogin',localVars);
-							}
-	*/
-	//					app.u.dump(" -> path: "+path);
-						showUI(app.ext.admin.u.whatPageToShow(path || '/biz/setup/index.cgi'));
+						
+						r = true;
 
 						}
 					else	{
@@ -3111,9 +1772,9 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 						}
 					}
 				else	{
-					app.u.throwGMessage("WARNING! admin.a.changeDomain required param 'domain' not passed. Yeah, can't change the domain without a domain.");
+					$('#globalMessaging').anymessage({"message":"In admin.u.changeDomain, 'domain' not passed and it is required.","gMessage":true});
 					}
-
+				return r;
 				}, //changeDomain
 
 //used in the builder for when 'edit' is clicked on an element.
@@ -3121,8 +1782,8 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 
 			loadElement : function(type,eleID){
 				
-				app.ext.admin.calls.adminUIBuilderPanelExecute.init({'sub':'EDIT','id':eleID},{'callback':'showElementEditorHTML','extension':'admin','targetID':'elementEditorContent'});
-				app.model.dispatchThis();
+				_app.ext.admin.calls.adminUIBuilderPanelExecute.init({'sub':'EDIT','id':eleID},{'callback':'showElementEditorHTML','extension':'admin','targetID':'elementEditorContent'});
+				_app.model.dispatchThis();
 				var $editor = $('#elementEditor');
 				if($editor.length)	{
 					$('#elementEditorMessaging',$editor).empty(); //modal already exists. empty previous content. Currently, one editor at a time.
@@ -3144,9 +1805,9 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 //ID is the element ID
 
 			uiProdlistEditorUpdate : function(t,ID)	{
-				app.ext.admin.u.uiSaveBuilderElement($("#editorForm"),ID,{'callback':'showMessaging','targetID':'elementEditorMessaging','message':'Saved. Panel updated to reflect new choices.'});
-				app.ext.admin.calls.adminUIBuilderPanelExecute.init({'sub':'EDIT','id':ID},{'callback':'showElementEditorHTML','extension':'admin','targetID':'elementEditorContent'});
-				app.model.dispatchThis();
+				_app.ext.admin.u.uiSaveBuilderElement($("#editorForm"),ID,{'callback':'showMessaging','targetID':'elementEditorMessaging','message':'Saved. Panel updated to reflect new choices.'});
+				_app.ext.admin.calls.adminUIBuilderPanelExecute.init({'sub':'EDIT','id':ID},{'callback':'showElementEditorHTML','extension':'admin','targetID':'elementEditorContent'});
+				_app.model.dispatchThis();
 				$('#elementEditorContent').empty().append("<div class='loadingBG'><\/div>");
 				
 				}, //uiProdlistEditorUpdate
@@ -3156,46 +1817,54 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 ##############################    PRODUCT FINDER
 
 to generate an instance of the finder, run: 
-app.ext.admin.a.addFinderTo() passing in targetID (the element you want the finder appended to) and path (a cat safe id or list id)
+_app.ext.admin.a.addFinderTo() passing in targetID (the element you want the finder appended to) and path (a cat safe id or list id)
 currently, executing this function directly is not supported. use the showFinderInModal.
 once multiple instances of the finder can be opened at one time, this will get used more.
+vars.findertype is required. acceptable values are:
+	PRODUCT -> will assign to a product. vars.path should = a valid PID.
+	NAVCAT -> vars.path should be a valid category safe name, including preceding .
+	CHOOSER -> no path necessary. used for interacting w/ a single product at a time (orders -> add item to order w/ chooser)
+	PAGE -> no idea.
 */
 			addFinderTo : function(targetID,vars)	{
-//				app.u.dump("BEGIN admin.a.addFinderTo('"+targetID+"')"); app.u.dump(vars);
-				$(app.u.jqSelector('#',targetID)).parent().find('.ui-dialog-title').text('loading...'); //empty the title early to avoid confusion.
+//				_app.u.dump("BEGIN admin.a.addFinderTo('"+targetID+"')"); _app.u.dump(vars);
+				$(_app.u.jqSelector('#',targetID)).parent().find('.ui-dialog-title').text('loading...'); //empty the title early to avoid confusion.
 				if(vars.findertype == 'PRODUCT')	{
-					app.ext.store_product.calls.appProductGet.init(vars.path,{"callback":"addFinderToDom","extension":"admin","targetID":targetID,"path":vars.path})
+					_app.ext.store_product.calls.appProductGet.init(vars.path,{"callback":"addFinderToDom","extension":"admin","targetID":targetID,"path":vars.path})
 					}
 				else if(vars.findertype == 'NAVCAT')	{
 //Too many f'ing issues with using a local copy of the cat data.
-					app.model.destroy('appNavcatDetail|'+vars.path);
-					app.calls.appNavcatDetail.init({'safe':vars.path,'detail':'fast'},{"callback":"addFinderToDom","extension":"admin","targetID":targetID})
+					_app.model.destroy('appNavcatDetail|'+vars.path);
+					_app.calls.appNavcatDetail.init({'path':vars.path,'detail':'fast'},{"callback":"addFinderToDom","extension":"admin","targetID":targetID})
 					}
 				else if(vars.findertype == 'CHOOSER')	{
-					app.ext.admin.u.addFinder(targetID,vars);
-					$(app.u.jqSelector('#',targetID)).parent().find('.ui-dialog-title').text('Product Chooser'); //updates modal title
+					_app.ext.admin.u.addFinder(targetID,vars);
+					$(_app.u.jqSelector('#',targetID)).parent().find('.ui-dialog-title').text('Product Chooser'); //updates modal title
 					}
 				else if(vars.findertype == 'PAGE')	{
+					dump(">>>>>>>>>>>>>>>>>>>>>>> GOT HERE. HOW? <<<<<<<<<<<<<<<<<<<<<<<<");
 					$('#finderTargetList').show();
-					app.ext.admin.calls.appPageGet.init({'PATH':vars.path,'@get':[vars.attrib]},{"attrib":vars.attrib,"path":vars.path,"callback":"addFinderToDom","extension":"admin","targetID":targetID})			
+					
+					_app.model.addDispatchToQ({"_cmd":"appPageGet",'PATH':vars.path,'@get':[vars.attrib],_tag : {"datapointer":"appPageGet|"+vars.path,"attrib":vars.attrib,"path":vars.path,"callback":"addFinderToDom","extension":"admin","targetID":targetID}},"immutable");
 					}
 				else	{
-					app.u.throwGMessage("Warning! Type param for admin.a.addFinderTo is invalid. ["+vars.findertype+"]");
+					_app.u.throwGMessage("Warning! Type param for admin.a.addFinderTo is invalid. ["+vars.findertype+"]");
 					}
-				app.model.dispatchThis();
+				_app.model.dispatchThis();
 				}, //addFinderTo
 //path - category safe id or product SKU
 //attribute - ex: zoovy:accessory_products
 //vars is for variables. eventually, path and attrib should be move into the vars object.
 //vars will be used to contain all the 'chooser' variables.
+//className in vars can be used to apply instance specific classes to the finder (hide/show things as necessary).
 			showFinderInModal : function(findertype,path,attrib,vars)	{
-				app.u.dump("BEGIN showFinderInModal. findertype: "+findertype+" and path: "+path);
+				_app.u.dump("BEGIN showFinderInModal. findertype: "+findertype+" and path: "+path);
 				if(findertype)	{
 					var $finderModal = $('#prodFinder'),
 					vars = vars || {};
 //a finder has already been opened. empty it.
 					if($finderModal.length > 0)	{
-						$finderModal.empty();
+						$finderModal.empty().removeClass(); //remove all classes from any previous instances. use vars.classname to add newones.
 						$finderModal.attr({'data-findertype':'','data-path':'','data-attrib':''}); //make sure settings from last product are not used.
 						}
 					else	{
@@ -3205,116 +1874,96 @@ once multiple instances of the finder can be opened at one time, this will get u
 					if(path && !vars.path)	{vars.path = path} else {}
 					if(attrib && !vars.attrib)	{vars.attrib = attrib} else {}
 					if(findertype && !vars.findertype)	{vars.findertype = findertype} else {}
+					$finderModal.addClass(vars.classname);
 
 //set the following vars as attributes. at the time the finder was built, didn't have a good understanding of .data().
 //eventually, everything will get moved over to .data();
 					$finderModal.attr({'data-findertype':findertype,'data-path':path,'data-attrib':attrib});
 					
 					$finderModal.dialog({modal:true,width:'94%',height:650});
-					app.ext.admin.a.addFinderTo('prodFinder',vars);
+					_app.ext.admin.a.addFinderTo('prodFinder',vars);
 					}
 				else	{
-					app.u.throwGMessage("In admin.u.showFinderInModal, findertype not specified.");
+					_app.u.throwGMessage("In admin.u.showFinderInModal, findertype not specified.");
 					}
 				}, //showFinderInModal
 
 			login : function($form){
 				$('body').showLoading({"message":"Authenticating credentials. One moment please."});
-				app.calls.authAdminLogin.init($form.serializeJSON(),{'callback':'showHeader','extension':'admin'},'immutable');
-				app.model.dispatchThis('immutable');
+				_app.calls.authAdminLogin.init($form.serializeJSON(),{'callback':'showHeader','extension':'admin'},'immutable');
+				_app.model.dispatchThis('immutable');
 				}, //login
 
 			logout : function(){
 				$('body').showLoading({"message":"You are being logged out. One moment please."});
-				app.calls.authAdminLogout.init({'callback':'handleLogout','extension':'admin'});//always immutable.
-				app.model.dispatchThis('immutable');
-//nuke all this after the request so that the dispatch has the info it needs.
-				app.ext.admin.u.selectivelyNukeLocalStorage(); //get rid of most local storage content. This will reduce issues for users with multiple accounts.
-				app.model.destroy('authAdminLogin'); //clears this out of memory and local storage. This would get used during the controller init to validate the session.
-
+				_app.model.addDispatchToQ({"_cmd":"authAdminLogout","_tag":{'callback':'handleLogout','extension':'admin'}},"immutable");
+				_app.model.dispatchThis('immutable');
 				}, //logout
 
 			showAchievementList : function($target)	{
 				if($target && $target.length)	{
-					$target.show().append(app.renderFunctions.createTemplateInstance('achievementsListTemplate',{}));
-					app.ext.admin.u.handleAppEvents($target);
+					$target.show().append(_app.renderFunctions.createTemplateInstance('achievementsListTemplate',{}));
+					_app.u.handleAppEvents($target);
 					}
 				else	{
-					app.u.throwGMessage("In admin.a.showAchievementsList, $target is not specified or has no length.");
+					_app.u.throwGMessage("In admin.a.showAchievementsList, $target is not specified or has no length.");
 					}				
 				},
 
 
-
-
-
-
-			showProjects : function($target)	{
-
-				$target.intervaledEmpty();
-				app.ext.admin.i.DMICreate($target,{
-					'header' : 'Hosted Applications',
-					'className' : 'projects',
-					'controls' : "",
-					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh List<\/button><button data-app-event='admin|projectCreateShow'>New Project</button>"],
-					'thead' : ['ID','Title','Type','Created','Updated',''],
-					'tbodyDatabind' : "var: projects(@PROJECTS); format:processList; loadsTemplate:projectsListTemplate;",
-					'cmdVars' : {
-						'_cmd' : 'adminProjectList',
-						'limit' : '50', //not supported for every call yet.
-						'_tag' : {
-							'datapointer':'adminProjectList'
-							}
-						}
-					});
-				app.model.dispatchThis('mutable');
-
+			tlcTest : function($target,P)	{
+				
+				setTimeout(function(){
+					console.clear();
+					dump(" -> console cleared by tlcTest.",'greet');
+					$target.tlc({'templateid':'tlctest','dataset':_app.data.adminDomainList});
+					},500); //slight delay to make sure data is in memory and all the doc.writes are done throwing garbage at the console.
+				
 				},
 
 			showRSS : function($target)	{
-				
-				$target.intervaledEmpty();
-				app.ext.admin.i.DMICreate($target,{
+				_app.ext.admin.i.DMICreate($target,{
 					'header' : 'RSS Feeds',
 					'className' : 'rssFeeds',
 					'controls' : "",
-					'buttons' : ["<button data-app-event='admin|refreshDMI'>Refresh List<\/button><button class='floatRight' data-app-event='admin|adminRSSCreateShow' >New RSS Feed</button>"],
+					'buttons' : [
+						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
+						"<button class='applyButton' data-app-click='admin|adminRSSCreateShow' data-icon-primary='ui-icon-circle-plus'>New RSS Feed</button>"],
 					'thead' : ['ID','Title','Status','Profile','Schedule',''],
 					'tbodyDatabind' : "var: projects(@RSSFEEDS); format:processList; loadsTemplate:rssListTemplate;",
 					'cmdVars' : {
 						'_cmd' : 'adminRSSList',
 						'limit' : '50', //not supported for every call yet.
 						'_tag' : {
-							'datapointer':'adminRSSList'
+							'datapointer':'adminRSSList|'+_app.vars.partition
 							}
 						}
 					});
-				app.model.dispatchThis('mutable');
+				_app.u.handleButtons($target);
+				_app.model.dispatchThis('mutable');
 				},
 
 //opens a dialog with a list of domains for selection.
-//a domain being selected for their UI experience is important, so the request is immutable.
-//a domain is necessary so that API knows what data to respond with, including profile and partition specifics.
-//though domainChooserDialog is the element that's used, it's passed in the callback anyway for error handling purposes.
+// contents of the domain chooser are populated in callbacks.handleDomainChooser
+// the 'open' event on the dialog triggers the call and showLoading.
 			showDomainChooser : function(){
-//				app.u.dump("BEGIN admin.a.showDomainChooser");
-				$('#domainChooserDialog').dialog('open').showLoading({'message':'Fetching your list of domains.'});
-				app.ext.admin.calls.adminDomainList.init({'callback':'handleDomainChooser','extension':'admin','targetID':'domainChooserDialog'},'immutable'); 
+//				_app.u.dump("BEGIN admin.a.showDomainChooser");
+				$('#domainChooserDialog').dialog('open'); 
 				},	 //showDomainChooser
 				
 			showDashboard : function()	{
 				var $content = $("#homeContent");
 				$content.empty().anycontent({'templateID':'dashboardTemplate','showLoading':false});
-				app.ext.admin.u.bringTabIntoFocus();
-				app.ext.admin.u.bringTabContentIntoFocus($content);
+				_app.ext.admin.u.bringTabIntoFocus();
+				_app.ext.admin.u.bringTabContentIntoFocus($content);
 				
 //recent news panel.
-				app.model.destroy('appResource|recentnews.json'); //always fetch the most recent news.
+				_app.model.destroy('appResource|recentnews.json'); //always fetch the most recent news.
 				$('#dashboardColumn1',$content).anypanel({
 					'showClose' : false
 					}).showLoading({'message':'Fetching recent news'});
 
-				app.ext.admin.calls.appResource.init('recentnews.json',{'callback':'anycontent','jqObj':$('#dashboardColumn1')},'mutable'); //total sales
+				_app.ext.admin.calls.appResource.init('recentnews.json',{'callback':'anycontent','jqObj':$('#dashboardColumn1')},'mutable'); //total sales
 
 
 //quickstats ogms.
@@ -3324,18 +1973,18 @@ once multiple instances of the finder can be opened at one time, this will get u
 					'content' : $("<div><table class='fullWidth'><thead><th><\/th><th>Count<\/th><th>Sales<\/th><th>Units<\/th><\/thead><tbody id='dashboardReportTbody'><\/tbody><\/table><p>These reports are for all domains since midnight.<\/p><\/div>")
 					});
 				$('#dashboardColumn2',$content).append($salesReportPanel);
-				app.ext.admin.calls.appResource.init('quickstats/OGMS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //total sales
-				app.ext.admin.calls.appResource.init('quickstats/OWEB.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //web sales
-				app.ext.admin.calls.appResource.init('quickstats/OGRT.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //return customer
-				app.ext.admin.calls.appResource.init('quickstats/OEXP.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //expedited
-				app.ext.admin.calls.appResource.init('quickstats/SAMZ.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //amazon
-				app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //buy.com
-				app.ext.admin.calls.appResource.init('quickstats/SEBA.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay auction
-				app.ext.admin.calls.appResource.init('quickstats/SEBF.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay fixed price
-				app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //sears
+				_app.ext.admin.calls.appResource.init('quickstats/OGMS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //total sales
+				_app.ext.admin.calls.appResource.init('quickstats/OWEB.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //web sales
+				_app.ext.admin.calls.appResource.init('quickstats/OGRT.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //return customer
+				_app.ext.admin.calls.appResource.init('quickstats/OEXP.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //expedited
+				_app.ext.admin.calls.appResource.init('quickstats/SAMZ.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //amazon
+				_app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //buy.com
+				_app.ext.admin.calls.appResource.init('quickstats/SEBA.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay auction
+				_app.ext.admin.calls.appResource.init('quickstats/SEBF.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay fixed price
+				_app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //sears
 				
 
-				app.model.dispatchThis('mutable');
+				_app.model.dispatchThis('mutable');
 				} //showdashboard
 			}, //action
 
@@ -3357,7 +2006,10 @@ once multiple instances of the finder can be opened at one time, this will get u
 //If a domain hasn't been selected (from a previous session) then a prompt shows up to choose a domain.
 //the entire UI experience revolves around having a domain.
 			showHeader : function(){
-//				app.u.dump("BEGIN admin.u.showHeader");
+//				_app.u.dump("BEGIN admin.u.showHeader");
+				
+				adminApp.router.init();
+
 //hide all preView and login data.
 				$('#appLogin').hide(); 
 				$('#appPreView').hide();
@@ -3368,78 +2020,144 @@ once multiple instances of the finder can be opened at one time, this will get u
 				$("#closePanelButton",'#appView').button({icons: {primary: "ui-icon-triangle-1-n"},text: false});
 				$("#clearMessagesButton",'#appView').button({icons: {primary: "ui-icon-trash"},text:true});
 				
-				
 				$('body').hideLoading(); //make sure this gets turned off or it will be a layer over the content.
 				
-// ** 201338 -> need the product task list ul generated as early as possible.
-app.ext.admin_prodEdit.a.showProductManager();
+//will add domain chooser to dom.
+//will prompt user to choose a domain, if necessary.
+//does not dispatch itself, will piggyback on the following immutable dispatches.
+				_app.ext.admin.u.handleDomainInit();
 
+				_app.u.addEventDelegation($('#messagesContent'));
+				_app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.getLastMessageID(),"_tag":{"datapointer":"adminMessagesList|"+_app.ext.admin.u.getLastMessageID(),'callback':'handleMessaging','extension':'admin'}},"immutable");
+				_app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}},'immutable');
 
-
-//				app.ext.admin.calls.bossUserDetail(app.vars.userid.split('@')[0],{},'passive'); //will contain list of user permissions.
-//immutable because that's wha the domain call uses. These will piggy-back.
-
-
-
-					
-
-app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
-app.u.handleEventDelegation($('#messagesContent'));
-app.model.addDispatchToQ({
-	'detail':'more',
-	'_cmd': 'adminNavTreeList',
-	'_tag' : {datapointer: 'adminNavTreeList'}
-	},'immutable');
-app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get this for orders.
-app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}},'immutable');
-
+				$('.username','#appView').text(_app.vars.userid);
 				
-//show the domain chooser if no domain is set. see showDomainChooser function for more info on why.
-//if a domain is already set, this is a return visit. Get the list of domains  passively because they'll be used.
-				if(!app.vars.domain) {
-					//the selection of a domain name will load the page content. (but we'll still need to nav)
-					app.ext.admin.a.showDomainChooser(); //does not dispatch itself.
-					}
-				else {
-					
-					
-					app.ext.admin.calls.adminDomainList.init({},'immutable');
-					
-					$('.username','#appView').text(app.vars.userid);
-					$('.domain','#appView').text(app.vars.domain);
-					$('.partition','#appView').text(app.vars.partition);
-					var linkFrom = linkFrom = app.u.getParameterByName('linkFrom');
-					if(linkFrom)	{
-						app.u.dump("INCOMING! looks like we've just returned from a partner page");
-						if(linkFrom == 'amazon-token')	{
-							app.ext.admin.a.showUI('#!syndication');
-							app.ext.admin.a.showAmzRegisterModal();
-							}
-						else	{
-							app.ext.admin.a.showUI('#!dashboard');
-							}
+				var linkFrom = linkFrom = _app.u.getParameterByName('linkFrom');
+				if(linkFrom)	{
+					_app.u.dump("INCOMING! looks like we've just returned from a partner page");
+					if(linkFrom == 'amazon-token')	{
+						_app.ext.admin.a.navigateTo('#!syndication');
+						_app.ext.admin.a.showAmzRegisterModal();
 						}
 					else	{
-						app.ext.admin.a.showUI(app.ext.admin.u.whatPageToShow('#!dashboard'));
-
-						if(document.URL.indexOf("/future/") > 0)	{
-							$('#globalMessaging').anymessage({"message":"<h5>Welcome to the future!<\/h5><p>You are currently using a future (experimental) version of our interface. Here you'll find links labeled as 'alpha' and 'beta' which are a work in progress.<\/p>Alpha: here for your viewing pleasure. These links may have little or no working parts.<br \/>Beta: These are features in the testing phase. These you can use, but may experience some errors.<br \/><h6 class='marginTop'>Enjoy!<\/h6>","persistent":true});
+						_app.u.dump(" -> execute navigateTo for linkFrom being set");
+						if(!document.location.hash)	{
+							//if a hash is present, the router will load that page. But if there's no hash, we load the default page.
+							_app.ext.admin.a.navigateTo('#!dashboard');
 							}
 						}
 					}
-				app.model.dispatchThis('immutable');
-//if there's a lot of messages, this can impact app init. do it last.  This will also put new messages at the top of the list.
-				var	DPSMessages = app.model.dpsGet('admin','messages') || [];
-				if(DPSMessages.length)	{
-					app.ext.admin.u.displayMessages(DPSMessages);
+				else if(!_app.vars.domain)	{
+					//if no domain is set, don't go anywhere yet. domain/prt/media-host are pretty essential.
+					//the chooser will prompt the user to select a domain and execute a navigateTo.
+					}
+				else	{
+					_app.u.dump(" -> execute navigateTo cuz no linkFrom being present.");
+					if(!document.location.hash)	{
+						//if a hash is present, the router will load that page. But if there's no hash, we load the default page.
+						_app.ext.admin.a.navigateTo('#!dashboard');
+						}
 					}
 
+				_app.model.dispatchThis('immutable');
+//if there's a lot of messages, this can impact app init. do it last.  This will also put new messages at the top of the list.
+/*				var	DPSMessages = _app.model.dpsGet('admin','messages') || [];
+				if(DPSMessages.length)	{
+					_app.ext.admin.u.displayMessages(DPSMessages);
+					}
+*/
 				}, //showHeader
 
 
 
 
+			handleDomainInit : function()	{
 
+//add the domain chooser to the DOM.
+// the list of domains is added when the domain chooser is opened to ensure that list is always up to date.
+				var $domainChooser = $("<div \/>").attr({'id':'domainChooserDialog','title':'Choose a domain to work on'}).addClass('displayNone').appendTo(document.body);
+				$domainChooser.dialog({
+					'autoOpen':false,
+					'modal':true,
+					'width': '90%',
+					'height': 500,
+					'closeOnEscape': false,
+					open: function(event, ui) {
+						$(this).showLoading({'message':'Fetching your list of domains.'});
+						_app.ext.admin.calls.adminDomainList.init({'callback':'handleDomainChooser','extension':'admin','targetID':'domainChooserDialog'},'immutable');
+						_app.model.dispatchThis('immutable');
+						$(".ui-dialog-titlebar-close", $(this).parent()).hide();
+						} //hide 'close' icon. will close on domain selection
+					});
+
+/*
+if the user has logged in before, the domain used is stored in dps.
+if the domain is not in dps, use the domain that is in the url. should be valid or jsonapi will return errors.
+Changing the domain in the chooser will set three vars in localStorage so they'll be available next time (domain, partition and media-host).
+ -> all three of the vars are required. images require the media-host and several configDetail calls require partition.
+*/
+				var adminObj = _app.model.dpsGet('admin') || {};
+//				_app.u.dump(" -> domain object from dpsGet: "); _app.u.dump(adminObj);
+				if(!$.isEmptyObject(adminObj))	{
+					_app.vars.domain = adminObj.domain;
+					_app.vars.partition = adminObj.partition;
+					_app.vars['media-host'] = adminObj['media-host'];
+					}
+
+				if(!_app.vars.domain || isNaN(_app.vars.partition) || !_app.vars['media-host'])	{
+					_app.u.dump(" -> either domain ["+_app.vars.domain+"], partition ["+_app.vars.partition+"] or media-host ["+_app.vars['media-host']+"] not set. set domain to blank to trigger domain chooser.");
+					_app.vars.domain = false;  //
+					}
+//used to ensure the domain selected (either from document.domain or dpsGet) is valid for this account.
+				function validateDomain(domain)	{
+//					dump(" -> begin validateDoman: "+domain);
+					_app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
+						if(_app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+							}
+						else	{
+							var domObj = _app.ext.admin.u.getValueByKeyFromArray(_app.data[rd.datapointer]['@DOMAINS'],'DOMAINNAME',domain) || {};
+//							dump(' -> domObj: '); dump(domObj,'debug');
+							if(!$.isEmptyObject(domObj))	{
+								_app.ext.admin.a.changeDomain(domObj.DOMAINNAME,domObj.PRT);
+								}
+							else	{
+//To get here, the user logged in from a domain that is NOT in their list of domains or something went horribly wrong.
+								_app.ext.admin.a.showDomainChooser(); //domain list is in memory at this point. no need to dispatch.
+								$domainChooser.anymessage({"message":"The domain you logged in from does not appear in your active list of domains. Please select a domain to use:"});
+								}
+							}
+						}},'immutable');
+					}
+
+				if(_app.vars.domain)	{
+					//by now, if partition or media-host was blank, domain would be false. Verify the domain is valid (important for multi-account users on a shared ssl cert)
+					validateDomain(_app.vars.domain);
+					}
+				else	{
+					//ok, so no domain is set BUT one was used to log in from unless we're local. use it, but fetch list of domains and set partition et all.
+					if(location.protocol == 'file:')	{
+						_app.ext.admin.a.showDomainChooser();
+						}
+					else	{
+						validateDomain(document.domain);
+						}	
+					}
+				},
+//When checking to see if the domain passed matches the partition in focus, it's often handy to then do something with the partition that was checked, so it is also returned.
+			domainMatchesPartitionInFocus : function(domain)	{
+				var r = {'isMatch':null,prt:null};
+				r.prt = (_app.ext.admin.u.getValueByKeyFromArray(_app.data.adminDomainList['@DOMAINS'],'DOMAINNAME',domain) || {}).PRT;
+				if(_app.vars.partition == r.prt)	{
+					r.isMatch = true;
+					}
+				else if(Number(r.prt) >= 0 && _app.vars.partition != r.prt)	{
+					r.isMatch = false
+					}
+				else	{}
+				return r;
+				},
 
 			//return a boolean. NO MESSAGING>  that's use-case specific.
 			validatePicker : function($picker) {
@@ -3460,27 +2178,27 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 //uses whats in the hash first, then the default page passed in.
 //if you want to target a specific page, change the hash before executing this function.
 			whatPageToShow : function(defaultPage)	{
-//				app.u.dump("BEGIN admin.u.whatPageToShow");
+//				_app.u.dump("BEGIN admin.u.whatPageToShow");
 				var page = window.location.hash || defaultPage;
 				if(page)	{
-					if(page.substring(0,2) == '#!' || page.substring(0,2) == '#:')	{}  //app hashes. leave them alone cuz showUI wants #.
+					if(page.substring(0,2) == '#!' || page.substring(0,2) == '#:')	{}  //app hashes. leave them alone cuz navigateTo wants #.
 					else	{
 						page = page.replace(/^#/, ''); //strip preceding # from hash.
 						}
 					}
 				else	{
-					app.u.throwGMessage("In admin.u.whatPageToShow, unable to determine 'page'");
+					$('#globalMessaging').anymessage({"message":"In admin.u.whatPageToShow, unable to determine 'page' from hash and no default set."});
 					}
-//				app.u.dump(" -> page: "+page);
+//				_app.u.dump(" -> page: "+page);
 				return page;
 				}, //whatPageToShow
 
 			//messages would be an array and all would be displayed.
 			displayMessages : function(messages)	{ //messages could come from an API response or localstorage on load.
-//			app.u.dump(" -> messages:");  app.u.dump(messages);
+//			_app.u.dump(" -> messages:");  _app.u.dump(messages);
 				if(messages)	{
 					var
-						$tbody = $("[data-app-role='messagesContainer']",'#messagesContent'),
+						$tbody = $("[data-app-role='messagesContainer']",'#messagesContent').empty(), //the messages are all regenerated each time. need to for 'removes' and 'updates'.
 						L = messages.length,
 						$tmp = $("<table><tbody><\/tbody><\/table>"); //used to store the rows so DOM is only updated once.
 	
@@ -3491,14 +2209,14 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 								'data':messages[i]
 								});
 							}
-						app.u.handleCommonPlugins($tmp);
-						app.u.handleButtons($tmp);
+						_app.u.handleCommonPlugins($tmp);
+						_app.u.handleButtons($tmp);
 	
 						$('tbody',$tmp).children().appendTo($tbody);
 						}
 					else	{} //no new messages.
 					
-					app.ext.admin.u.updateMessageCount(); //update count whether new messages or not, in case the count is off.
+					_app.ext.admin.u.updateMessageCount(); //update count whether new messages or not, in case the count is off.
 
 				},
 			
@@ -3520,7 +2238,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				var $r = $("<div \/>");
 				if(messageID)	{
 					var
-						DPSMessages = app.model.dpsGet('admin','messages') || [],
+						DPSMessages = _app.model.dpsGet('admin','messages') || [],
 						L = DPSMessages.length,
 						msg = {};
 					
@@ -3536,7 +2254,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 						$r.anymessage({'message':'In admin.u.getMessageDetail, unable to find messageID ['+messageID+'] in dpsMessages are required','gMessage':true});
 						}
 					else	{
-						app.u.dump(" -> msg:");		app.u.dump(msg);
+						_app.u.dump(" -> msg:");		_app.u.dump(msg);
 						$r.anycontent({'templateID':'messageDetailTemplate','data':msg});
 						}
 					}
@@ -3547,21 +2265,12 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				},
 
 			getLastMessageID : function()	{
-				return app.model.dpsGet('admin','lastMessage') || 0;
-				/*
-				var r = 0; //default to zero if no past messageid is present.
-				var DPSMessages = app.model.dpsGet('admin','messages');
-				if(DPSMessages && DPSMessages.length)	{
-					r = DPSMessages[(DPSMessages.length - 1)].id;
-					app.u.dump("DPSMessages[(DPSMessages.length - 1)].id: "+DPSMessages[(DPSMessages.length - 1)].id);
-					}
-				*/
-				return r;
+				return _app.model.dpsGet('admin','lastMessage') || 0;
 				},
 
 
 			jump2GoogleLogin : function(state){
-//				app.u.dump(" -> state: "+state);
+//				_app.u.dump(" -> state: "+state);
 				var p = {
 					'scope':'openid email',
 					'response_type' : 'token id_token',
@@ -3570,27 +2279,6 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					'state' : state || ""
 					};
 				window.location = 'https://accounts.google.com/o/oauth2/auth?'+$.param(p);
-				},
-
-//used in ebay and campaign to generate toolbar for html editor.
-//buttons is optional. if passed, should be an array. [{'css':'','text':'','action':function(){}},{'css':'','text':'','action':function(){}}]
-			buildToolbarForEditor : function(buttons)	{
-				buttons = buttons || [];
-				var r = new Array(); //what is returned. an array that gets turned into buttons in the html editor.
-				r.push("html");
-				r.push("bold", "italic","strikethrough");
-				r.push("p","h1", "h2", "h3", "h4", "h5", "h6");
-				r.push("orderedList","unorderedList","|","indent","outdent");
-				r.push("horizontalrule");
-				r.push("justifyleft","justifycenter","justifyright");
-				r.push("link", "unlink");
-				var L = buttons.length;
-				if(L)	{
-					for(var i = 0; i < L; i += 1)	{
-						r.push(buttons[i])
-						}
-					}
-				return r;
 				},
 
 			
@@ -3604,25 +2292,23 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 // .edited is used with no element qualifier (such as input) so that it can be applied to non inputs, like table rows, when tables are updated (shipmethods)
 //ui-button class is used to determine if the button has had button() run on it. otherwise it'll cause a js error.
 			handleSaveButtonByEditedClass : function($context)	{
-				app.u.dump("BEGIN admin.u.handleSaveButtonByEditedClass");
-//*** 201344 -> code moved into anydelegate.
-				if($context.hasClass('eventDelegation'))	{
-					$context.anydelegate('updateChangeCounts');
+//				_app.u.dump("BEGIN admin.u.handleSaveButtonByEditedClass");
+				if($context.hasClass('anyformEnabled'))	{
+					$context.anyform('updateChangeCounts');
 					}
 				else	{
-					$context.closest('.eventDelegation').anydelegate('updateChangeCounts');
+					$context.closest('.anyformEnabled').anyform('updateChangeCounts');
 					}
 				},
 			
 		
 //run this after a form that uses 'applyuEditTrackingToInputs' is saved to revert to normal.
 			restoreInputsFromTrackingState : function($context)	{
-//*** 201344 -> code moved into anydelegate.
-				if($context.hasClass('eventDelegation'))	{
-					$context.anydelegate('resetTracking');
+				if($context.hasClass('anyformEnabled'))	{
+					$context.anyform('resetTracking');
 					}
 				else	{
-					$context.closest('.eventDelegation').anydelegate('resetTracking',$context);
+					$context.closest('.anyformEnabled').anyform('resetTracking',$context);
 					}
 				},
 			
@@ -3631,8 +2317,8 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 //will also 'enable' the parent button of that class.
 // ### update this to use event delegation on $context
 			applyEditTrackingToInputs : function($context)	{
-//*** 201344 -> code moved into anydelegate.
-				$context.anydelegate({trackEdits : true});
+//code moved into anyform.
+				$context.anyform({trackEdits : true});
 				$context.attr('data-applied-inputtracking',true); //is attribute so we can easily inspect on the dom.
 				}, //applyEditTrackingToInputs
 
@@ -3641,30 +2327,16 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 
 
 			handleFormConditionalDelegation : function($context)	{
-//*** 201344 -> code moved into anydelegate.
-				$context.anydelegate({trackEdits : true});
+//*** 201344 -> code moved into anyform.
+				$context.anyform({trackEdits : true});
 				},
-
-
-
-// ### time permittting, replace use of function below with getWhitlestedObject
-//used when converting a tr.data() into a kvp array. used in amazon thesaurus and shipments.
-			getSanitizedKVPFromObject : function(obj)	{
-				var newObj = $.extend(true,{},obj); //extend will create a duplicate so original object is unmodified.
-//				var whitelist = new Array('fee','weight','subtotal');
-				delete newObj.isTranslated;
-				delete newObj.sortableItem;
-				delete newObj.templateid; delete newObj.obj_index; delete newObj.anycontent; delete newObj.uiAnycontent; //some extras not needed.
-				return $.param(newObj);
-				},
-
 
 
 //pass in an object (probably a Serialized Form Object) and any tag that starts with _tag/ will be returned as part of an object.
 			getTagObjFromSFO : function(sfo)	{
 				var r = {}; //what is returned.
 				if(!$.isEmptyObject(sfo))	{
-//					app.u.dump('not empty object');
+//					_app.u.dump('not empty object');
 					for(var key in sfo)	{
 						if(key.substring(0,5) == "_tag/")	{
 							r[key.substring(5)] = sfo[key];//_tag/ must be stripped from key.
@@ -3678,239 +2350,30 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 
 
 			loadNativeApp : function(path,opts,$target){
-//				app.u.dump("BEGIN loadNativeApp");
-				app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-				app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+				_app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+				_app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 
-//				if(!$target)	{app.u.dump("TARGET NOT SPECIFIED")}
-
-				if(path == '#!mediaLibraryManageMode')	{
-					app.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
-					}
-				else if(path == '#!domainConfigPanel')	{
-// * 201332 -> new domain interface
-//					app.ext.admin.a.showDomainConfig();
-					app.ext.admin_config.a.showDomainManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-				else if(path == '#!dashboard')	{app.ext.admin.a.showDashboard();}
-				else if(path == '#!launchpad')	{
-					app.ext.admin.vars.tab = 'launchpad';
-					app.ext.admin.u.bringTabContentIntoFocus($("#launchpadContent"));
-					app.ext.admin_launchpad.a.showLaunchpad();  //don't run this till AFTER launchpad container is visible or resize doesn't work right
-					}
-				else if(path == '#!organizationManager')	{
-					app.u.dump(" -> tab: "+app.ext.admin.vars.tab);
-					app.ext.admin_wholesale.a.showOrganizationManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-				else if(path == '#!reports')	{
-					app.ext.admin.vars.tab = 'reports';
-					this.bringTabIntoFocus('reports');
-					this.bringTabContentIntoFocus($('#reportsContent'));
-					app.ext.admin_reports.a.showReportsPage($('#reportsContent'));
-					}
-				else if(path == '#!kpi')	{app.ext.admin_reports.a.showKPIInterface();}
-				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager($target);}
-				else if(path == '#!batchManager')	{
-					app.ext.admin.vars.tab = 'utilities';
-					this.bringTabIntoFocus('utilities');
-					this.bringTabContentIntoFocus($('#utilitiesContent'));
-					app.ext.admin_batchJob.a.showBatchJobManager($('#utilitiesContent'));
-					}
-				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));}
-				else if(path == '#!variationsManager')	{
-//					app.u.dump("$target: "); app.u.dump($target);
-					app.ext.admin_prodEdit.a.showStoreVariationsManager($target || $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-				else if(path == '#!help')	{
-					$('#supportContent').empty();
-					this.bringTabIntoFocus('support');
-					this.bringTabContentIntoFocus($('#supportContent'));
-					app.ext.admin_support.a.showHelpInterface($('#supportContent'));
-					}
-				else if(path == '#!support')	{
-					$('#supportContent').empty();
-					this.bringTabIntoFocus('support');
-					this.bringTabContentIntoFocus($('#supportContent'));
-					app.ext.admin_support.a.showTicketManager($('#supportContent'));
-					}
-				else if(path == '#!eBayListingsReport')	{app.ext.admin_reports.a.showeBayListingsReport();}
-				else if(path == '#!orderPrint')	{app.ext.convertSessionToOrder.a.printOrder(opts.data.oid,opts);}
-				else if(path == '#!supplierManager')	{app.ext.admin_wholesale.a.showSupplierManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty())}
-
-				else if(path == '#!orderCreate2')	{
-					app.calls.appCartCreate.init({'callback':function(rd){
-						if(app.model.responseHasErrors(rd)){
-							$('#globalMessaging').anymessage({'message':rd});
-							}
-						else	{
-							//appCartCreate will automatically set app.vars.cartid
-							app.ext.orderCreate.a.startCheckout($target);
-							}
-						}},'immutable');
-						app.model.dispatchThis('immutable');
-					}
-				else if(path == '#!orderCreate')	{app.ext.convertSessionToOrder.a.openCreateOrderForm();}
-
-				else if(path == '#!downloads')	{
-					$('#homeContent').empty();
-					this.bringTabIntoFocus('home');
-					this.bringTabContentIntoFocus($('#homeContent'));
-					app.ext.admin.a.showDownloads($('#homeContent'));
-					}
-				else if(path == '#!showEmailAuth')	{
-					app.ext.admin_config.a.showEmailAuth($target);
-					}
-					
-					
-				else if(path == '#!giftcardManager')	{
-					app.ext.admin_customer.a.showGiftcardManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-				else if(path == '#!notifications')	{
-					app.ext.admin_config.a.showNotifications($target);
-					}
-				else if(path == '#!trainer')	{
-					app.ext.admin_trainer.a.showTrainer($target);
-					}
-				else if(path == '#!categoriesAndLists')	{
-					app.ext.admin_navcats.a.showCategoriesAndLists($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-				else if(path == '#!billingHistory')	{
-					app.ext.admin_config.a.showBillingHistory($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-				else if(path == '#!globalVariations')	{
-					app.ext.admin_prodEdit.a.showStoreVariationsManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-				else if(path == '#!publicFiles')	{
-					app.ext.admin_medialib.u.showPublicFiles(path,opts);
-					}
-
-				else if(path == '#!globalSettings')	{
-					app.ext.admin_config.a.showGlobalSettings($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-				else if(path == '#!billingHistory')	{
-					app.ext.admin_tools.a.showBillingHistory($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-
-
-				else if(path == '#!showPlatformInfo')	{
-					app.ext.admin_support.a.showPlatformInfo($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-
-				else if(path == '#!partitionManager')	{
-					app.ext.admin_config.a.showPartitionManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-
-				else if(path == '#!privateFiles')	{
-					app.ext.admin_tools.a.showPrivateFiles($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-
-				else if(path == '#!manageFlexedit')	{
-					app.ext.admin_tools.a.showManageFlexedit($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-
-				else if(path == '#!pluginManager')	{
-					app.ext.admin_config.a.showPluginManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-				else if(path == '#!campaignManager')	{
-					app.ext.admin_customer.a.showCampaignManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-				else if(path == '#!ciEngineAgentManager')	{
-					app.ext.admin_tools.a.showciEngineAgentManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-				else if(path == '#!couponManager')	{
-					app.ext.admin_config.a.showCouponManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-				else if(path == '#!priceSchedules')	{
-					app.ext.admin_wholesale.a.showPriceSchedules($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-				else if(path == '#!accountUtilities')	{
-					app.ext.admin_tools.a.showAccountUtilities($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-				else if(path == '#!productPowerTool')	{
-					app.ext.admin_tools.a.showPPT($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-				else if(path == '#!productExport')	{
-					app.ext.admin_tools.a.showProductExport($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-				else if(path == '#!warehouseManager')	{
-					app.ext.admin_wholesale.a.showWarehouseManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-				else if(path == '#!warehouseUtilities')	{
-					app.ext.admin_wholesale.a.showWarehouseUtilities($target);
-					}
-				else if(path == '#!reviewsManager')	{
-					app.ext.admin_customer.a.showReviewsManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
-					}
-				else if (path == '#!appChooser')	{
-					app.ext.admin_templateEditor.a.showAppChooser();
-					}
-				else if (path == '#!projects')	{
-					app.ext.admin.a.showProjects($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
-					}
-				else if (path == '#!rss')	{
-					app.ext.admin.a.showRSS($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
-					}
-				else if (path == '#!paymentManager')	{
-					app.ext.admin_config.a.showPaymentManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
-					}
-				else if (path == '#!shippingManager')	{
-					app.ext.admin_config.a.showShippingManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
-					}
-				else if (path == '#!contactInformation')	{
-					app.ext.admin_config.a.showContactInformation($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
-					}
-				else if (path == '#!syndication')	{
-					app.ext.admin.vars.tab = 'syndication';
-					app.ext.admin.u.bringTabIntoFocus('syndication');
-					app.ext.admin.u.bringTabContentIntoFocus($("#syndicationContent"));
-					app.ext.admin_syndication.a.showSyndication($("#syndicationContent"));
-					}
-				else if(path == '#!sites')	{
-					app.ext.admin.vars.tab = 'sites';
-					app.ext.admin.u.bringTabIntoFocus('sites');
-					app.ext.admin.u.bringTabContentIntoFocus($("#sitesContent"));
-					app.ext.admin.a.showSitesTab($("#sitesContent"));
-					}
-				else if(path == '#!taxConfig')	{
-					app.ext.admin_config.a.showTaxConfig($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
-					}
-				else if(path == '#!orders')	{
-//					app.u.dump("into loadNativeApp -> #!orders");
-					app.ext.admin.vars.tab = 'orders';
-					app.ext.admin.u.bringTabIntoFocus('orders');
-					app.ext.admin.u.bringTabContentIntoFocus($("#ordersContent"));
-					app.ext.admin_orders.a.initOrderManager({"targetID":"ordersContent"});
-//					app.u.dump("end of loadNativeApp  else statement -> #! orders");
-					}
-				else if(path == '#!product')	{
-//					app.u.dump("Go to product editor");
-// ** 201336 -> new product editor.
-//					app.ext.admin_prodEdit.a.showProductEditor(path,opts);
-					app.ext.admin.vars.tab = 'product';
-					app.ext.admin.u.bringTabIntoFocus('product');
-					app.ext.admin.u.bringTabContentIntoFocus($("#productContent"));
-					app.ext.admin_prodEdit.a.showProductManager(opts);
-					}
-				else if(path == '#!taskManager')	{
-					app.ext.admin_task.a.showTaskManager($target);
+				if(!$target)	{_app.u.dump("TARGET NOT SPECIFIED")}
+//handle the default tabs specified as #! instead of #:
+				else if(_app.ext.admin.u.showTabLandingPage(path,$(_app.u.jqSelector('#',path.substring(2)+'Content')),opts))	{
+					//the showTabLandingPage will handle the display. It returns t/f
 					}
 				else	{
-					app.u.throwGMessage("WARNING! unrecognized path/app ["+path+"] passed into loadNativeApp.");
+					$('#globalMessaging').anymessage({"message":"In admin.u.loadNativeApp, unrecognized path/app ["+path+"] passed.","gMessage":true});
+					_app.u.throwGMessage("WARNING! ");
 					}
-//				app.u.dump("END loadNativeApp");
 				},
 
 //used for bringing one of the top tabs into focus. does NOT impact content area.
 			bringTabIntoFocus : function(tab){
 				$('.mhTabsContainer ul','#mastHead').children().removeClass('active'); //strip active class from all other tabs.
-				$('.'+tab+'Tab','#mastHead').addClass('active'); ///!!! need to put this into a jqSelector function !!!
+				// * 201402 -> added jqSelector around tab var
+				$(_app.u.jqSelector('.',tab+'Tab'),'#mastHead').addClass('active');
 				return false;
 				},
 
 //should only get run if NOT in dialog mode. This will bring a tab content into focus and hide all the rest.
-//this will replace handleShowSection
 			bringTabContentIntoFocus : function($target){
-				
 				if($target instanceof jQuery)	{
 					if($target.is('visible'))	{
 						//target is already visible. do nothing.
@@ -3919,24 +2382,22 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 						this.toggleMessagePane(); //message tab is handled separately.
 						}
 					else	{
-						app.ext.admin.u.toggleMessagePane('hide'); //make sure messages pane hides itself.
+						_app.ext.admin.u.toggleMessagePane('hide'); //make sure messages pane hides itself.
 						$('.tabContent').hide();
 						$target.show();
 						}
 					}
-
 				},
-
 
 			clearAllMessages : function(){
 				$("[data-app-role='messagesContainer']",'#messagesContent').intervaledEmpty();
-
-				app.model.dpsSet('admin','messages',[]);
-				app.ext.admin.u.updateMessageCount(); //update count whether new messages or not, in case the count is off.
-				// NOTE ### -> when this is updated to trigger a clear on the server, add a confirm prompt.
+				_app.model.addDispatchToQ({"_cmd":"adminMessagesEmpty"},"mutable"); //use mutable q to trigger another messages list call.
+				_app.model.dispatchThis("mutable");
+				_app.model.dpsSet('admin','messages',new Array());
+				_app.ext.admin.u.updateMessageCount(); //update count whether new messages or not, in case the count is off.
 				},
-			toggleMessagePane : function(state){
 
+			toggleMessagePane : function(state){
 				var $target = $('#messagesContent');
 				$target.css({top : $target.parent().height()})
 				if(state == 'hide' && $target.css('display') == 'none')	{} //pane is already hidden. do nothing.
@@ -3948,7 +2409,6 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					$target.slideUp();
 					$('.messagesTab').removeClass('messagesTabActive');
 					}
-
 				}, //toggleMessagePane
 
 //will create the dialog if it doesn't already exist.
@@ -3956,7 +2416,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 			handleCompatModeDialog : function(P){
 				var $target = false;
 				if(P.targetID)	{
-					$target = $(app.u.jqSelector('#',P.targetID));
+					$target = $(_app.u.jqSelector('#',P.targetID));
 					if($target.length){} //element exists, do nothing to it.
 					else	{
 						$target = $("<div>").attr('id',P.targetID).appendTo('body');
@@ -3967,111 +2427,75 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					$target.dialog('open');
 					}
 				else	{
-					app.u.throwGMessage("Warning! no target ID passed into admin.u.handleCompatModeDialog.");
+					_app.u.throwGMessage("Warning! no target ID passed into admin.u.handleCompatModeDialog.");
 					}
 				return $target;
 				},
 
-
-//executed from within showUI. probably never want to execute this function elsewhere.
-//this is for handling legacy paths.
-			handleShowSection : function(path,P,$target)	{
-				var tab = P.tab || app.ext.admin.u.getTabFromPath(path);
+//path should be passed in as  #!orders
+			showTabLandingPage : function(tab,$target,opts)	{
+				var r = true;
 				this.bringTabIntoFocus(tab);
-//				app.u.dump(" -> tab: "+tab);
-//				app.u.dump(" -> path: "+path);
-				if(tab == 'product' && !P.dialog)	{
-//					app.u.dump(" -> open product editor");
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-// ** 201336 -> new product editor.
-//					app.ext.admin_prodEdit.u.showProductEditor(path,P);
-					app.ext.admin_prodEdit.a.showProductManager(P);					
-					}
-				else if(tab == 'kpi' || path == '/biz/kpi/index.cgi')	{
-					app.ext.admin.u.bringTabIntoFocus('kpi');
-					app.ext.admin.u.bringTabContentIntoFocus($('#kpiContent'));
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					app.ext.admin_reports.a.showKPIInterface();
-					}
-				else if(tab == 'sites' || path == '/biz/sites/index.cgi')	{
-					app.ext.admin.u.bringTabIntoFocus('sites');
-					app.ext.admin.u.bringTabContentIntoFocus($('#sitesContent'));
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					app.ext.admin.a.showSitesTab($("#sitesContent"));
-					}
-				else if(tab == 'reports' || path == '/biz/reports/index.cgi')	{
-					app.ext.admin.u.bringTabIntoFocus('reports');
-					app.ext.admin.u.bringTabContentIntoFocus($('#reportsContent'));
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					app.ext.admin_reports.a.showReportsPage($('#reportsContent'));
-					}
-				else if(tab == 'setup' && path.split('/')[3] == 'index.cgi')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					$('#setupContent').empty().append(app.renderFunctions.createTemplateInstance('pageSetupTemplate',{}));
-//					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'setupContent'});  //navigateTo's hard coded on 2012/30
-					}
-				else if(tab == 'syndication' && path.split('/')[3] == 'index.cgi')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					app.ext.admin_syndication.a.showSyndication($('#syndicationContent'));
-//					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'syndicationContent'});
-					}
-				else if(tab == 'crm' && path.split('/')[3] == 'index.cgi')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					app.ext.admin_customer.a.showCRMManager($('#crmContent'));
-//					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'syndicationContent'});
-					}
-				else if(tab == 'orders' && path.split('/')[3] == 'index.cgi')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					app.ext.admin.u.loadNativeApp('#!orders',P);
-					}
-				else if(tab == 'utilities' && path.split('/')[3] == 'index.cgi')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					$('#utilitiesContent').intervaledEmpty().append(app.renderFunctions.createTemplateInstance('pageUtilitiesTemplate',{}));
-//					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'utilitiesContent'}); //navigateTo's hard coded on 2012/30
-					}
-				else if(tab == 'setup' && path.split('/')[3] == 'import')	{
-					app.u.dump(" -> open import editor");
-					app.ext.admin_medialib.u.showFileUploadPage(path,P);
-					}
-// * 201332 -> interface was replaced a version or two ago and this was overlooked.
-//				else if(tab == 'setup' && path.split('/')[3] == 'customfiles')	{
-//					app.u.dump(" -> open public files list");
-//					app.ext.admin_medialib.u.showPublicFiles(path,P);
-//					}
-				else	{
-//					app.u.dump(" -> open something wonderful .. "+path); app.u.dump(" -> P: "); app.u.dump(P);
-					$target.empty().append("<div class='loadingBG'></div>");
-//					alert(path);
-					app.model.fetchAdminResource(path,P);
-//					app.ext.admin.calls.adminUIExecuteCGI.init(path,{infoObj:P})
-					}
-				}, //handleShowSection
+				_app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+				_app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 
-// !!! when the old showUI goes away, so can this function.
-			getId4UIContent : function(path){
-				return this.getTabFromPath(path)+"Content";
+//anycontent(destroy) should only be run if new content is being added cuz it kills data(). it also empties the tab contents.
+				if($target && $target.data('anycontent'))	{
+					$target.anycontent('destroy');
+					}
+
+				_app.ext.admin.u.bringTabContentIntoFocus($target);
+
+				if(tab == 'product')	{
+					_app.ext.admin_prodedit.u.handleNavTabs();
+					_app.ext.admin_prodedit.a.showProductManager(opts);					
+					}
+				else if(tab == 'kpi')	{
+					_app.ext.admin_reports.a.showKPIInterface();
+					}
+				else if(tab == 'sites')	{
+					_app.ext.admin_sites.a.showSitesTab($target);
+					}
+				else if(tab == 'reports')	{
+					_app.ext.admin_reports.a.showReportsPage($target);
+					}
+				else if(tab == 'setup')	{
+					$target.anycontent({'templateID':'pageSetupTemplate','showLoading':false});
+					}
+				else if(tab == 'support')	{
+					_app.ext.admin_support.a.showTicketManager($target);
+					}
+				else if(tab == 'syndication')	{
+					_app.ext.admin_marketplace.a.showSyndication($target);
+					}
+				else if (tab == 'orders')	{
+					_app.ext.admin_orders.a.initOrderManager($target,opts);
+					}
+				else if(tab == 'crm')	{
+					_app.ext.admin_customer.a.showCRMManager($target);
+					}
+				else if(tab == 'utilities')	{
+					$target.anycontent({'templateID':'pageUtilitiesTemplate','showLoading':false});
+					}
+				else	{
+					//don't display an error. the boolean response is used in navigateTo
+					r = false;
+					}
+				return r;
 				},
+
 
 			// returns things like setup, crm, etc. if /biz/setup/whatever is selected			
 			getTabFromPath : function(path)	{
 				var r = path.split("/")[2]; //what is returned.
-//				app.u.dump(" -> R: "+r);
-//				app.u.dump(" -> app.ext.admin.vars.tabs.indexOf(r): "+app.ext.admin.vars.tabs.indexOf(r));
+//				_app.u.dump(" -> R: "+r);
+//				_app.u.dump(" -> _app.ext.admin.vars.tabs.indexOf(r): "+_app.ext.admin.vars.tabs.indexOf(r));
 				if (r == 'manage') { r = 'utilities'} //symlinked
 				if (r == 'batch') { r = 'reports'} //symlinked
 				if (r == 'download') { r = 'reports'} //symlinked
 				if (r == 'todo') { r = 'reports'} //symlinked
-				if(app.ext.admin.vars.tabs.indexOf(r) >= 0){ //is a supported tab.
-					// yay, we have a valid tab				
+				if($.inArray(r,_app.ext.admin.vars.tabs) >= 0){ //is a supported tab.
+					// yay, we have a valid tab	
 					} 
 				else	{
 					// default tab
@@ -4086,29 +2510,29 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 //it's used to output the content in 'html' (part of the response). It uses the targetID passed in the original request.
 //it also handles updating the breadcrumb, forms, links etc.
 			uiHandleContentUpdate : function(path,data,viewObj){
-//				app.u.dump("BEGIN admin.u.uiHandleContentUpdate");
-//				app.u.dump("View Obj: "); app.u.dump(viewObj);
+//				_app.u.dump("BEGIN admin.u.uiHandleContentUpdate");
+//				_app.u.dump("View Obj: "); _app.u.dump(viewObj);
 				viewObj = viewObj || {};
 				if(viewObj.targetID)	{
 					data = data || {};
-					var $target = $(app.u.jqSelector('#',viewObj.targetID))
+					var $target = $(_app.u.jqSelector('#',viewObj.targetID))
 					$target.html(data.html);
 //The form and anchor links must get run each time because a successful response, either to get page content or save it, returns the page content again for display.
 //so that display must have all the links and form submits modified.
-					app.ext.admin.u.uiHandleBreadcrumb(data.bc);
-					app.ext.admin.u.uiHandleNavTabs(data.navtabs);
-					app.ext.admin.u.uiHandleFormRewrites(path,data,viewObj);
-					app.ext.admin.u.uiHandleLinkRewrites(path,data,viewObj);
-					app.ext.admin.u.uiHandleMessages(path,data.msgs,viewObj);
+					_app.ext.admin.u.uiHandleBreadcrumb(data.bc);
+					_app.ext.admin.u.uiHandleNavTabs(data.navtabs);
+					_app.ext.admin.u.uiHandleFormRewrites(path,data,viewObj);
+					_app.ext.admin.u.uiHandleLinkRewrites(path,data,viewObj);
+					_app.ext.admin.u.uiHandleMessages(path,data.msgs,viewObj);
 
 					if(typeof viewObj.success == 'function'){viewObj.success()}
 					
 					}
 				else	{
-					app.u.throwGMessage("WARNING! no target ID passed into admin.u.uiHandleContentUpdate. This is bad. No content displayed because we don't know where to put it.");
-					app.u.dump(" -> path: "+path);
-					app.u.dump(" -> data: "); app.u.dump(data);
-					app.u.dump(" -> viewObj: "); app.u.dump(viewObj);
+					_app.u.throwGMessage("WARNING! no target ID passed into admin.u.uiHandleContentUpdate. This is bad. No content displayed because we don't know where to put it.");
+					_app.u.dump(" -> path: "+path);
+					_app.u.dump(" -> data: "); _app.u.dump(data);
+					_app.u.dump(" -> viewObj: "); _app.u.dump(viewObj);
 					}
 				$target.hideLoading();
 				}, //uiHandleContentUpdate
@@ -4126,11 +2550,11 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					if(message.substring(0,1) == '+')	{message = message.substring(1)}
 					obj = {'errid':'#','errmsg':message,'errtype':tmp[0],'uiIcon':'z-'+tmp[0].toLowerCase(),'uiClass':'z-'+tmp[0].toLowerCase()}
 					if(tmp.length > 2)	{
-	//				app.u.dump(' -> tmp.length: '+tmp.length); app.u.dump(tmp);
+	//				_app.u.dump(' -> tmp.length: '+tmp.length); _app.u.dump(tmp);
 						for(i = 1; i < (tmp.length -1); i += 1)	{ //ignore first and last entry which are type and message and are already handled.
 							obj[tmp[i].split(':')[0]] = tmp[i].split(/:(.+)?/)[1]; //the key is what appears before the first : and the value is everything after that. allows for : to be in value
 							}
-	//					app.u.dump(" -> obj: "); app.u.dump(obj);
+	//					_app.u.dump(" -> obj: "); _app.u.dump(obj);
 						}
 					}
 				return obj;
@@ -4145,8 +2569,8 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 // if an unrecognized 'type' is encountered, do NOT display an error message, but DO throw smething to the console.
 // also, if message starts with a +, strip that character.
 			uiHandleMessages : function(path,msg,viewObj)	{
-//				app.u.dump("BEGIN admin.u.uiHandleMessages ["+path+"]");
-//				app.u.dump("viewObj: "); app.u.dump(viewObj);
+//				_app.u.dump("BEGIN admin.u.uiHandleMessages ["+path+"]");
+//				_app.u.dump("viewObj: "); _app.u.dump(viewObj);
 				if(msg)	{
 					var L = msg.length;
 					var msgType, msgObj; //recycled.
@@ -4159,19 +2583,19 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					else	{
 						target = this.getTabFromPath(path)+"Content"; //put messaging in tab specific area.
 						}
-//					app.u.dump(" -> target: "+target);
+//					_app.u.dump(" -> target: "+target);
 					for(var i = 0; i < L; i += 1)	{
 						msgObj = this.uiMsgObject(msg[i]);
 						msgObj.parentID = target; //targetID in throwMessage would get passed in _rtag. parent can be top level, so use that.
 						msgObj.persistent = true; //for testing, don't hide.
-						
+
 						if(msgObj.BATCH)	{
-							msgObj.errmsg += "<div><button class='buttonify' onClick='app.ext.admin_batchJob.a.showBatchJobStatus(\""+msgObj.BATCH+"\");'>View Batch Job Status<\/button><\/div>"
+							msgObj.errmsg += "<div><button class='buttonify' onClick='_app.ext.admin_batchjob.a.showBatchJobStatus(\""+msgObj.BATCH+"\");'>View Batch Job Status<\/button><\/div>"
 							}
-//						app.u.dump(msgObj);	
-						var r = app.u.throwMessage(msgObj);
+//						_app.u.dump(msgObj);	
+						var r = _app.u.throwMessage(msgObj);
 						$('.buttonify','.'+r).button();
-						app.u.dump("throwMessage response = "+r);
+//						_app.u.dump("throwMessage response = "+r);
 						}
 					}
 				else	{
@@ -4190,7 +2614,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 					for(var i = 0; i < L; i += 1)	{
 						if(i){$target.append(" &#187; ")}
 						if(bc[i]['link'])	{
-							$target.append("<a href='#' onClick='return showUI(\""+bc[i]['link']+"\");' title='"+bc[i].name+"'>"+bc[i].name+"<\/a>");
+							$target.append("<a href='#' onClick='return navigateTo(\""+bc[i]['link']+"\");' title='"+bc[i].name+"'>"+bc[i].name+"<\/a>");
 							}
 						else	{
 							$target.append(bc[i].name);
@@ -4198,7 +2622,7 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 						}
 					}
 				else	{
-//					app.u.dump("WARNING! admin.u.handleBreadcrumb bc is blank. this may be normal.");
+//					_app.u.dump("WARNING! admin.u.handleBreadcrumb bc is blank. this may be normal.");
 					}
 				}, //uiHandleBreadcrumb
 
@@ -4223,13 +2647,13 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 						else	{
 //the extra anonymous function here and above is for support passing in a var.
 //see http://stackoverflow.com/questions/5540280/
-							$a.click(function(j){return function(){showUI(j);}}(tabs[i]['link']));
+							$a.click(function(j){return function(){navigateTo(j);}}(tabs[i]['link']));
 							}
 						$target.append($a);
 						}
 					}
 				else	{
-//					app.u.dump("WARNING! admin.u.uiHandleNavTabs tabs is blank. this may be normal.");
+//					_app.u.dump("WARNING! admin.u.uiHandleNavTabs tabs is blank. this may be normal.");
 					}
 				}, //uiHandleNavTabs
 
@@ -4237,20 +2661,20 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 // 'data' is the response from the server. includes data.html
 // viewObj is what is passed into fetchAdminResource as the second parameter
 			uiHandleFormRewrites : function(path,data,viewObj)	{
-//				app.u.dump("BEGIN admin.u.uiHandleFormRewrites");
-//				app.u.dump(" -> data: "); app.u.dump(data);
-//				app.u.dump(" -> viewObj: "); app.u.dump(viewObj);
-				var $target = $(app.u.jqSelector('#',viewObj.targetID))
+//				_app.u.dump("BEGIN admin.u.uiHandleFormRewrites");
+//				_app.u.dump(" -> data: "); _app.u.dump(data);
+//				_app.u.dump(" -> viewObj: "); _app.u.dump(viewObj);
+				var $target = $(_app.u.jqSelector('#',viewObj.targetID))
 
 //any form elements in the response have their actions rewritten.
 //the form is serialized and sent via Ajax to the UI API. This is a temporary solution to the UI rewrite.
 				$('form',$target).attr('data-jqueryoverride','true').submit(function(event){
-//					app.u.dump(" -> Executing custom form submit.");
+//					_app.u.dump(" -> Executing custom form submit.");
 					event.preventDefault();
 					$target.showLoading();
 					var formObj = $(this).serializeJSON();
-//					app.u.dump(" -> jsonObj: "); app.u.dump(jsonObj);
-					app.model.fetchAdminResource(path,viewObj,formObj); //handles the save.
+//					_app.u.dump(" -> jsonObj: "); _app.u.dump(jsonObj);
+					_app.model.fetchAdminResource(path,viewObj,formObj); //handles the save.
 					return false;
 					}); //submit
 				}, //uiHandleFormRewrites
@@ -4258,10 +2682,10 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 // 'data' is the response from the server. includes data.html
 // viewObj is what is passed into fetchAdminResource as the second parameter
 			uiHandleLinkRewrites : function(path,data,viewObj)	{
-				// app.u.dump("BEGIN admin.u.uiHandleLinkRewrites("+path+")");
-				var $target = $(app.u.jqSelector('#',viewObj.targetID));
+				// _app.u.dump("BEGIN admin.u.uiHandleLinkRewrites("+path+")");
+				var $target = $(_app.u.jqSelector('#',viewObj.targetID));
 				$('a',$target).each(function(){
-					app.ext.admin.u.rewriteLink($(this));
+					_app.ext.admin.u.rewriteLink($(this));
 					});
 				}, //uiHandleLinkRewrites
 
@@ -4273,27 +2697,28 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				if (href == undefined) {
 					// not sure what causes this, but it definitely happens, check the debug log.
 					// this occurrs when <a> tag exists but has no href (ex. maybe just an onclick)
-					app.u.dump('rewriteLink was called on a property without an href');
-					app.u.dump("ERROR rewriteLink was called on a link that did not have an href, set to href='#' and css red for your enjoyment Please fix.");
+					_app.u.dump('rewriteLink was called on a property without an href');
+					_app.u.dump("ERROR rewriteLink was called on a link that did not have an href, set to href='#' and css red for your enjoyment Please fix.");
 					$a.attr('href','#');
 					href = $a.attr('href');
 					$a.css('color','#FF0000');	// this should probably changed to a more obvious errorClass
-					// app.u.dump($a);
+					// _app.u.dump($a);
 					}
 
 				if (href.substring(0,5) == "/biz/" || href.substring(0,2) == '#!')	{
-					var newHref = app.vars.baseURL;
+					var newHref = _app.vars.baseURL;
 					newHref += href.substring(0,2) == '#!' ? href :'#'+href; //for #! (native apps) links, don't add another hash.
 					$a.attr({'title':href,'href':newHref});
 					$a.click(function(event){
 						event.preventDefault();
-						return showUI(href);
+						return navigateTo(href);
 						});
 					}
 				}, //rewriteLink
-//only click events can open a new window w/out triggering a popup warning. so only set skipInterstitial to true of being triggered by a click.
+
+//only click events can open a new window w/out triggering a popup warning. so only set skipInterstitial to true if being triggered by a click.
 			linkOffSite : function(url,pretty,skipInterstitial){
-				app.u.dump("BEGIN admin.u.linkOffSite to "+url);
+				_app.u.dump("BEGIN admin.u.linkOffSite to "+url);
 				if(url)	{
 					if(skipInterstitial)	{
 						window.open(url);
@@ -4318,13 +2743,19 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				var obj = $form.serializeJSON();
 				obj['sub'] = "SAVE";
 				obj.id = ID;
-				app.ext.admin.calls.adminUIBuilderPanelExecute.init(obj,tagObj);
+				_app.ext.admin.calls.adminUIBuilderPanelExecute.init(obj,tagObj);
 				},			
 			
+
+
+/*
+///////////////     FINDER \\\\\\\\\\\\\\\\\\\
+*/
+
 			
 			
 			saveFinderChanges : function()	{
-//				app.u.dump("BEGIN admin.u.saveFinderChanges");
+//				_app.u.dump("BEGIN admin.u.saveFinderChanges");
 				var myArray = new Array();
 				var $tmp;
 				var $finderModal = $('#prodFinder')
@@ -4332,8 +2763,8 @@ app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}
 				var path = $finderModal.attr('data-path');
 				var attrib = $finderModal.attr('data-attrib');
 //				var sku = $finderModal.attr('data-sku');
-//				app.u.dump(" -> path: "+path);
-//				app.u.dump(" -> sku: "+sku);
+//				_app.u.dump(" -> path: "+path);
+//				_app.u.dump(" -> sku: "+sku);
 
 /*
 The process for updating a product vs a category are substantially different.  
@@ -4345,31 +2776,31 @@ for a category, each sku added or removed is a separate request.
 //finder for product attribute.
 					var sku = path;	// we do this just to make the code clear-er
 					var list = '';
-					var attribute = app.renderFunctions.parseDataVar(attrib);
+					var attribute = _app.renderFunctions.parseDataVar(attrib);
 					$('#finderTargetList').find("li").each(function(index){
 //make sure data-pid is set so 'undefined' isn't saved into the record.
 						if($(this).attr('data-pid'))	{list += ','+$(this).attr('data-pid')}
 						});
 					if(list.charAt(0) == ','){ list = list.substr(1)} //remove ',' from start of list string.
-					app.u.dump(" -> "+attribute+" = "+list);
+					_app.u.dump(" -> "+attribute+" = "+list);
 					var attribObj = {};
 					attribObj[attribute] = list;
-					app.model.destroy('appProductGet|'+sku); //remove product from memory and localStorage
-//					app.ext.admin.calls.adminProductUpdate.init(sku,attribObj,{'callback':'pidFinderChangesSaved','extension':'admin'});
-					app.model.addDispatchToQ({
+					_app.model.destroy('appProductGet|'+sku); //remove product from memory and localStorage
+//					_app.ext.admin.calls.adminProductUpdate.init(sku,attribObj,{'callback':'pidFinderChangesSaved','extension':'admin'});
+					_app.model.addDispatchToQ({
 						'pid':sku,
 						'%attribs':attribObj,
 						'_cmd': 'adminProductUpdate',
 						'_tag' : {'callback':'pidFinderChangesSaved','extension':'admin'}
 						},'immutable');					
-					app.calls.appProductGet.init({'pid':sku},{},'immutable');
+					_app.calls.appProductGet.init({'pid':sku},{},'immutable');
 					}
 				else if (findertype == 'NAVCAT')	{
 					// items removed need to go into the Q first so they're out of the remote list when updates start occuring. helps keep position correct.
 					$('#finderRemovedList').find("li").each(function(){
 						$tmp = $(this);
 						if($tmp.attr('data-status') == 'remove')	{
-							app.ext.admin.calls.finder.adminNavcatProductDelete.init($tmp.attr('data-pid'),path,{"callback":"finderProductUpdate","extension":"admin"});
+							_app.ext.admin.calls.finder.adminNavcatProductDelete.init($tmp.attr('data-pid'),path,{"callback":"finderProductUpdate","extension":"admin"});
 							$tmp.attr('data-status','queued')
 							}
 						});
@@ -4378,21 +2809,21 @@ for a category, each sku added or removed is a separate request.
 					//concat both lists (updates and removed) and loop through looking for what's changed or been removed.				
 					$("#finderTargetList li").each(function(index){
 						$tmp = $(this);
-						//	app.u.dump(" -> pid: "+$tmp.attr('data-pid')+"; status: "+$tmp.attr('data-status')+"; index: "+index+"; $tmp.index(): "+$tmp.index());
+						//	_app.u.dump(" -> pid: "+$tmp.attr('data-pid')+"; status: "+$tmp.attr('data-status')+"; index: "+index+"; $tmp.index(): "+$tmp.index());
 	
 					if($tmp.attr('data-status') == 'changed')	{
 						$tmp.attr('data-status','queued')
-						app.ext.admin.calls.finder.adminNavcatProductInsert.init($tmp.attr('data-pid'),index,path,{"callback":"finderProductUpdate","extension":"admin"});
+						_app.ext.admin.calls.finder.adminNavcatProductInsert.init($tmp.attr('data-pid'),index,path,{"callback":"finderProductUpdate","extension":"admin"});
 						}
 					else	{
 						//datastatus set but not to a valid value. maybe queued?
 						}
 					});
-					app.model.destroy('appNavcatDetail|'+path);
-					app.calls.appNavcatDetail.init({'safe':path,'detail':'fast'},{"callback":"finderChangesSaved","extension":"admin"},'immutable');
+					_app.model.destroy('appNavcatDetail|'+path);
+					_app.calls.appNavcatDetail.init({'path':path,'detail':'fast'},{"callback":"finderChangesSaved","extension":"admin"},'immutable');
 					}
 				else if (findertype == 'PAGE') {
-					app.u.dump("SAVING findertype PAGE");
+					_app.u.dump("SAVING findertype PAGE");
 					var list = ""; //set to empty string so += below doesn't start with empty stirng
 					var obj = {};
 //finder for product attribute.
@@ -4403,10 +2834,12 @@ for a category, each sku added or removed is a separate request.
 					if(list.charAt(0) == ','){ list = list.substr(1)} //remove ',' from start of list string.
 					obj.PATH = path;
 					obj[attrib] = list;
-					app.ext.admin.calls.appPageSet.init(obj,{'callback':'pidFinderChangesSaved','extension':'admin'},'immutable');
+					obj._cmd = 'appPageSet';
+					obj._tag = {'callback':'pidFinderChangesSaved','extension':'admin'};
+					_app.model.addDispatchToQ(obj,"immutable");
 					}
 				else {
-					app.u.throwGMessage('unknown findertype='+findertype+' in admin.a.saveFinderChanges');
+					_app.u.throwGMessage('unknown findertype='+findertype+' in admin.a.saveFinderChanges');
 					}
 				//dispatch occurs on save button, not here.
 				}, //saveFinderChanges
@@ -4418,15 +2851,15 @@ for a category, each sku added or removed is a separate request.
 
 //onclick, pass in a jquery object of the list item
 			removePidFromFinder : function($listItem){
-//app.u.dump("BEGIN admin.u.removePidFromFinder");
+//_app.u.dump("BEGIN admin.u.removePidFromFinder");
 var path = $listItem.closest('[data-path]').attr('data-path');
-//app.u.dump(" -> safePath: "+path);
+//_app.u.dump(" -> safePath: "+path);
 var newLiID = 'finderRemovedList_'+$listItem.attr('data-pid');
-//app.u.dump(" -> newLiID: "+newLiID);
+//_app.u.dump(" -> newLiID: "+newLiID);
 
-if($(app.u.jqSelector('#',newLiID)).length > 0)	{
+if($(_app.u.jqSelector('#',newLiID)).length > 0)	{
 	//item is already in removed list.  set data-status to remove to ensure item is removed from list on save.
-	$(app.u.jqSelector('#',newLiID)).attr('data-status','remove');
+	$(_app.u.jqSelector('#',newLiID)).attr('data-status','remove');
 	}
 else	{
 	var $copy = $listItem.clone();
@@ -4436,7 +2869,7 @@ else	{
 //kill original.
 $listItem.empty().remove();
 
-app.ext.admin.u.updateFinderCurrentItemCount();
+_app.ext.admin.u.updateFinderCurrentItemCount();
 
 				}, //removePidFromFinder
 
@@ -4455,19 +2888,19 @@ if pid is passed into this function, the finder treats everything as though we'r
 
 			addFinder : function(targetID,vars){
 
-app.u.dump("BEGIN admin.u.addFinder");
-app.u.dump(" -> targetID: "+targetID);
-app.u.dump(vars);
+_app.u.dump("BEGIN admin.u.addFinder");
+_app.u.dump(" -> targetID: "+targetID);
+_app.u.dump(vars);
 
 //jquery likes id's with no special characters.
-var safePath = app.u.makeSafeHTMLId(vars.path);
+var safePath = _app.u.makeSafeHTMLId(vars.path);
 var prodlist = new Array();
 
-var $target = $(app.u.jqSelector('#',targetID));
-// app.u.dump(" -> $target.length: "+$target.length);
+var $target = $(_app.u.jqSelector('#',targetID));
+// _app.u.dump(" -> $target.length: "+$target.length);
 //create and translate the finder template. will populate any data-binds that are set that refrence the category namespace
 //empty to make sure we don't get two instances of finder if clicked again.
-$target.empty().append(app.renderFunctions.createTemplateInstance('adminProductFinder',"productFinderContents"));
+$target.empty().append(_app.renderFunctions.createTemplateInstance('adminProductFinder',"productFinderContents"));
 
 $('#chooserResultContainer', $target).hide();
 $('#adminFinderButtonBar', $target).show();
@@ -4476,16 +2909,16 @@ $('#finderTargetList', $target).show();
 
 
 if(vars.findertype == 'PRODUCT')	{
-	app.u.dump(" -> Product SKU: "+vars.path);
-	$target.parent().find('.ui-dialog-title').text('Product Finder: '+app.data['appProductGet|'+vars.path]['%attribs']['zoovy:prod_name']); //updates modal title
-	app.renderFunctions.translateTemplate(app.data['appProductGet|'+vars.path],"productFinderContents");
+	_app.u.dump(" -> Product SKU: "+vars.path);
+	$target.parent().find('.ui-dialog-title').text('Product Finder: '+_app.data['appProductGet|'+vars.path]['%attribs']['zoovy:prod_name']); //updates modal title
+	_app.renderFunctions.translateTemplate(_app.data['appProductGet|'+vars.path],"productFinderContents");
 	attrib = $('#prodFinder').attr('data-attrib');
-	if(app.data['appProductGet|'+vars.path]['%attribs'][vars.attrib])
-		prodlist = app.ext.store_prodlist.u.cleanUpProductList(app.data['appProductGet|'+vars.path]['%attribs'][vars.attrib]);
+	if(_app.data['appProductGet|'+vars.path]['%attribs'][vars.attrib])
+		prodlist = _app.ext.store_prodlist.u.cleanUpProductList(_app.data['appProductGet|'+vars.path]['%attribs'][vars.attrib]);
 	}
 else if(vars.findertype == 'NAVCAT')	{
-	$target.parent().find('.ui-dialog-title').text('Product Finder: '+app.data['appNavcatDetail|'+vars.path].pretty); //updates modal title
-	prodlist = app.data['appNavcatDetail|'+vars.path]['@products'];
+	$target.parent().find('.ui-dialog-title').text('Product Finder: '+_app.data['appNavcatDetail|'+vars.path].pretty); //updates modal title
+	prodlist = _app.data['appNavcatDetail|'+vars.path]['@products'];
 	}
 else if (vars.findertype == 'CHOOSER')	{
 	$('#chooserResultContainer', $target).show();
@@ -4502,22 +2935,22 @@ else if(vars.findertype == 'PAGE')	{
 		$target.parent().find('.ui-dialog-title').text('Product Finder: Cart');
 		}
 	else	{
-		$target.parent().find('.ui-dialog-title').text('Product Finder: '+app.data['appNavcatDetail|'+vars.path].pretty); //updates modal title
+		$target.parent().find('.ui-dialog-title').text('Product Finder: '+_app.data['appNavcatDetail|'+vars.path].pretty); //updates modal title
 		}
-	if(app.data['appPageGet|'+vars.path]['%page'][vars.attrib])	{
-		prodlist = app.ext.store_prodlist.u.cleanUpProductList(app.data['appPageGet|'+vars.path]['%page'][vars.attrib])
+	if(_app.data['appPageGet|'+vars.path]['%page'][vars.attrib])	{
+		prodlist = _app.ext.store_prodlist.u.cleanUpProductList(_app.data['appPageGet|'+vars.path]['%page'][vars.attrib])
 		}	
 	}
 else	{
-	app.u.throwGMessage("WARNING! in admin.u.addFinder, findertype not set or is an unsupported value ["+vars.findertype+"].");
+	_app.u.throwGMessage("WARNING! in admin.u.addFinder, findertype not set or is an unsupported value ["+vars.findertype+"].");
 	}
-//app.u.dump(" -> path: "+path);
-//app.u.dump(" -> prodlist: "+prodlist);
+//_app.u.dump(" -> path: "+path);
+//_app.u.dump(" -> prodlist: "+prodlist);
 
 //bind the action on the search form.
 $('#finderSearchForm').off('submit.search').on('submit.search',function(event){
 	event.preventDefault();
-	app.ext.admin.u.handleFinderSearch(vars.findertype);
+	_app.ext.admin.u.handleFinderSearch(vars.findertype);
 	return false;
 	});
 
@@ -4530,7 +2963,7 @@ if(vars.findertype && vars.findertype == 'CHOOSER')	{
 else if (vars.findertype)	{
 	$("[data-btn-action='productFinder|chooser']",$target).hide();
 //build the product list for items that are already selected.
-	app.ext.store_prodlist.u.buildProductList({
+	_app.ext.store_prodlist.u.buildProductList({
 		"loadsTemplate": prodlist.length < 200 ? "adminProdStdForList" : "adminProdSimpleForList",
 		"items_per_page" : 500, //max out at 500 items
 		"hide_summary" : true, //disable multipage. won't play well w/ sorting, drag, indexing, etc
@@ -4554,11 +2987,11 @@ else if (vars.findertype)	{
 	*/
 		stop: function(event, ui) {
 			var parent = ui.item.parent().attr('id')
-	//		app.u.dump(" -> parent id of dropped item: "+ui.item.parent().attr('id'));
+	//		_app.u.dump(" -> parent id of dropped item: "+ui.item.parent().attr('id'));
 			if(parent == 'finderTargetList')	{
 				ui.item.attr({'data-status':'changed','id':'finderTargetList_'+ui.item.attr('data-pid')});
 				}
-			app.ext.admin.u.updateFinderCurrentItemCount();
+			_app.ext.admin.u.updateFinderCurrentItemCount();
 			} 
 		});
 	
@@ -4567,17 +3000,17 @@ else if (vars.findertype)	{
 	// .ui-state-disabled is added to items in the results list that are already in the category list.
 	$("#finderSearchResults").selectable({ filter: 'li',filter: "li:not(.ui-state-disabled)" }); 
 	//make category product list only draggable within itself. (can't drag items out).
-	$("#finderTargetList").sortable( "option", "containment", 'parent' ); //.bind( "sortupdate", function(event, ui) {app.u.dump($(this).attr('id'))});
+	$("#finderTargetList").sortable( "option", "containment", 'parent' ); //.bind( "sortupdate", function(event, ui) {_app.u.dump($(this).attr('id'))});
 		
 	
 	//set a data-btn-action on an element with a value of save, moveToTop or moveToBottom.
 	//save will save the changes. moveToTop will move selected product from the results over to the top of column the category list.
 	//moveToBottom will do the same as moveToTop except put the product at the bottom of the category.
 	$('[data-btn-action]',$target).each(function(){
-		app.ext.admin.u.bindFinderButtons($(this),safePath);
+		_app.ext.admin.u.bindFinderButtons($(this),safePath);
 		});
 	
-		app.ext.admin.u.updateFinderCurrentItemCount();
+		_app.ext.admin.u.updateFinderCurrentItemCount();
 
 	
 	}
@@ -4593,18 +3026,18 @@ else	{} //findertype is not declared. The error handling for this has already ta
 //idprefex will be prepended to the tag name. ex: idprefix = bob_, then id's bob_IS_FRESH will be checked.
 			whichTagsAreChecked : function(idprefix)	{
 				var r = new Array();
-				var L = app.ext.admin.vars.tags.length;
+				var L = _app.ext.admin.vars.tags.length;
 				for(var i = 0; i < L; i += 1)	{
-					if($(app.u.jqSelector('#',idprefix+app.ext.admin.vars.tags[i])).is(':checked')){r.push(app.ext.admin.vars.tags[i])};
+					if($(_app.u.jqSelector('#',idprefix+_app.ext.admin.vars.tags[i])).is(':checked')){r.push(_app.ext.admin.vars.tags[i])};
 					}
 				return r;
 				},
 
 			tagsAsCheckboxes : function(idprefix)	{
 				var r = ''; //what is returned. a chunk of html. each tag with a checkbox.
-				var L = app.ext.admin.vars.tags;
+				var L = _app.ext.admin.vars.tags;
 				for(var i = 0; i < L; i += 1)	{
-					r += "<div><input type='checkbox' id='finderSearchFilter_"+app.ext.admin.vars.tags[i]+"' name='"+app.ext.admin.vars.tags[i]+"' /><label for='finderSearchFilter_"+app.ext.admin.vars.tags[i]+"'>"+app.ext.admin.vars.tags[i].toLowerCase()+"</label></div>"
+					r += "<div><input type='checkbox' id='finderSearchFilter_"+_app.ext.admin.vars.tags[i]+"' name='"+_app.ext.admin.vars.tags[i]+"' /><label for='finderSearchFilter_"+_app.ext.admin.vars.tags[i]+"'>"+_app.ext.admin.vars.tags[i].toLowerCase()+"</label></div>"
 					}
 				return r;
 				},
@@ -4618,25 +3051,31 @@ else	{} //findertype is not declared. The error handling for this has already ta
 				$('#resultsListItemCount').text(" ("+resultsSize+" remain)")
 				},
 
+
+			handleChooserResultsClick : function($t)	{
+				$('#chooserResultContainer').empty();
+				_app.ext.store_product.u.showProductDataIn('chooserResultContainer',{'pid':$t.data('pid'),'templateID':'productTemplateChooser'});
+				},
+
 //need to be careful about not passing in an empty filter object because elastic doesn't like it. same for query.
 			handleFinderSearch : function(findertype)	{
 				$('#finderSearchResults').empty().addClass('loadingBG');
 				var qObj = {}; //query object
 				var columnValue = $('#finderSearchQuery').val();
 				qObj.type = 'product';
-				qObj.mode = 'elastic-native';
+				qObj.mode = 'elastic-search';
 				qObj.size = 400;
 				qObj.query =  {"query_string" : {"query" : columnValue}};
 			
 				//dispatch is handled by form submit binder
-				app.ext.store_search.calls.appPublicSearch.init(qObj,{"callback":"handleElasticFinderResults","extension":"admin","parentID":"finderSearchResults","datapointer":"elasticsearch","templateID": findertype == 'CHOOSER' ? 'adminChooserElasticResult' : 'adminElasticResult'});
-				app.model.dispatchThis();
+				_app.ext.store_search.calls.appPublicSearch.init(qObj,{"callback":"handleElasticFinderResults","extension":"admin","parentID":"finderSearchResults","datapointer":"elasticsearch","templateID": findertype == 'CHOOSER' ? 'adminChooserElasticResult' : 'adminElasticResult'});
+				_app.model.dispatchThis();
 				},
 
 
 //will 'disable' any item that is in the result set that already appears in the category or as a accessory/related item.
 			filterFinderResults : function()	{
-//				app.u.dump("BEGIN admin.callbacks.filterFinderSearchResults");
+//				_app.u.dump("BEGIN admin.callbacks.filterFinderSearchResults");
 				var $tmp;
 //go through the results and if they are already in this category, disable drag n drop.
 //data-path will be the SKU of the item in focus (for a product attribute finder)
@@ -4645,7 +3084,7 @@ else	{} //findertype is not declared. The error handling for this has already ta
 				$results.find('li').each(function(){
 					$tmp = $(this);
 					if($('#finderTargetList_'+$tmp.attr('data-pid')).length > 0 || $tmp.attr('data-pid') == sku)	{
-//						app.u.dump(" -> MATCH! disable dragging.");
+//						_app.u.dump(" -> MATCH! disable dragging.");
 						$tmp.addClass('ui-state-disabled');
 						}
 					})				
@@ -4670,14 +3109,14 @@ else	{} //findertype is not declared. The error handling for this has already ta
 			bindFinderButtons : function($button,safePath){
 // ### Move search button into this too. 
 
-//	app.u.dump(" -> btn-action found on element "+$button.attr('id'));
+//	_app.u.dump(" -> btn-action found on element "+$button.attr('id'));
 if($button.attr('data-btn-action') == 'save')	{
 
 	$button.click(function(event){
 		event.preventDefault();
-		app.ext.admin.u.saveFinderChanges($button.attr('data-path'));
-		app.model.dispatchThis('immutable');
-		app.ext.admin.u.changeFinderButtonsState('disable');
+		_app.ext.admin.u.saveFinderChanges($button.attr('data-path'));
+		_app.model.dispatchThis('immutable');
+		_app.ext.admin.u.changeFinderButtonsState('disable');
 		
 		return false;
 		});
@@ -4695,7 +3134,7 @@ else if($button.attr('data-btn-action') == 'moveToTop' || $button.attr('data-btn
 		event.preventDefault();
 		$('#finderSearchResults .ui-selected').each(function(){
 			var $copy = $(this).clone();
-			app.u.dump(" -> moving item "+$copy.attr('data-pid'));
+			_app.u.dump(" -> moving item "+$copy.attr('data-pid'));
 			if($button.attr('data-btn-action') == 'moveToTop')
 				$copy.prependTo('#finderTargetList')
 			else
@@ -4704,7 +3143,7 @@ else if($button.attr('data-btn-action') == 'moveToTop' || $button.attr('data-btn
 			$copy.removeClass('ui-selected').attr('id','finderTargetList_'+$copy.attr('data-pid'));
 			$(this).remove();
 			})
-		app.ext.admin.u.updateFinderCurrentItemCount();
+		_app.ext.admin.u.updateFinderCurrentItemCount();
 		return false;
 		})
 	}
@@ -4730,7 +3169,7 @@ else	{
 				$D = $("[data-app-role='dualModeDetail']",$parent), //detail column
 				numDetailPanels = $D.children().length,
 				oldMode = $parent.data('app-mode'),
-				$btn = $("[data-app-event='admin|toggleDualMode']",$parent);
+				$btn = $("[data-app-click='admin|toggleDMI']",$parent);
 
 				if(mode)	{}
 				else if($parent.data('app-mode') == 'list')	{mode = 'detail'}
@@ -4739,8 +3178,8 @@ else	{
 
 //go into detail mode. This expands the detail column and shrinks the list col. 
 //this also toggles a specific class in the list column off
-//				app.u.dump(" -> old mode: "+oldMode);
-//				app.u.dump(" -> mode: "+mode);
+//				_app.u.dump(" -> old mode: "+oldMode);
+//				_app.u.dump(" -> mode: "+mode);
 				
 				if(mode == 'detail')	{
 					
@@ -4789,7 +3228,7 @@ else	{
 					$L.removeClass('detailMode');
 					}
 				else	{
-					app.u.throwGMessage("In admin_user.u.toggleDisplayMode, invalid mode ["+mode+"] passed. only list or detail are supported.");
+					_app.u.throwGMessage("In admin_user.u.toggleDisplayMode, invalid mode ["+mode+"] passed. only list or detail are supported.");
 					}
 				
 				}, //toggleDualMode
@@ -4799,139 +3238,37 @@ else	{
 //login data will allow the user to return without logging in.
 //session data is panel disposition and order and things like that.
 			selectivelyNukeLocalStorage : function(){
+				_app.u.dump(" !!!!!!!! selectivelyNukeLocalStorage executed !!!!!!!! ");
 				var admin = {};
-				if(app.model.fetchData('authAdminLogin'))	{admin = app.data['authAdminLogin'];}
-				var dps = app.model.dpsGet(); //all 'session' vars
-				localStorage.clear();
-				app.storageFunctions.writeLocal('authAdminLogin',admin);
-// * 201320 -> domain and partition were persitent between sessions. bad for multi-account users and also support.
-				dps.admin.domain = '';
-				dps.admin.partition = '';
-				app.storageFunctions.writeLocal('session',dps);
+				if(_app.model.fetchData('authAdminLogin'))	{admin = _app.data['authAdminLogin'];}
+				var dps = _app.model.dpsGet(); //all 'dps' vars
+				window.localStorage.clear();
+				_app.model.writeLocal('authAdminLogin',admin);
+//domain and partition are persitent between sessions. bad for support so clear them.
+//for multi-account users, the domainInit code checks to make sure the selected domain is valid.
+				if(_app.vars.trigger == 'support')	{
+					dps.admin = dps.admin || {};
+					dps.admin.domain = '';
+					dps.admin.partition = '';
+					}
+				_app.model.writeLocal('dps',dps);
 				},
 
 
 
 			uiCompatAuthKVP : function()	{
-				return '_userid=' + app.vars.userid + '&_authtoken=' + app.vars.authtoken + '&_deviceid=' + app.vars.deviceid + '&_domain=' + app.vars.domain;
+				return '_userid=' + _app.vars.userid + '&_authtoken=' + _app.vars.authtoken + '&_deviceid=' + _app.vars.deviceid + '&_domain=' + _app.vars.domain;
 				},
 
 //$t is 'this' which is the button.
-
-
-/*
-CODE FOR URL MANAGEMENT
-
-When a page change occurs, the hash is updated.
-This hash change triggers a 'state' in the browser so that the back button will work.
-when the browser detects a hash change, it will execute this code.
-Of course, if we change the hash with JS, it will also trigger this code.
-so, in our js for changing pages (showUI), we start by setting the global var _ignoreHashChange to true.
-Then this function will know to NOT perform a showUI of it's own.
-because this feature should be on most of the time, ignorehashchange is turned off each 
-time a hash change occurs.
-I didn't have this function actually trigger the page handler instead of toggling ignore... on/off because
-it relied to heavily on a feature of the browser and who knows how consistenly it's supported. If it isn't, we 
-just lose the back button feature.
-*/
-
-			handleHashState : function()	{
-//				app.u.dump("BEGIN myRIA.u.handleHashState");
-				var hash = window.location.hash.replace(/^#/, ''); //strips first character if a hash.
-//				app.u.dump(" -> hash: "+hash);
-				if(hash.substr(0,5) == "/biz/" && !_ignoreHashChange)	{
-					showUI(hash);
-					}
-				else	{
-					//the hash changed, but not to a 'page'. could be something like '#top' or just #.
-					}
-				_ignoreHashChange = false; //turned off again to re-engage this feature.
-				},
-
-
-
-
-//a UI Action should have a databind of data-app-event (this replaces data-btn-action).
-//value of action should be EXT|buttonObjectActionName.  ex:  admin_orders|orderListFiltersUpdate
-//good naming convention on the action would be the object you are dealing with followed by the action being performed OR
-// if the action is specific to a _cmd or a macro (for orders) put that as the name. ex: admin_orders|orderItemAddBasic
-//obj is some optional data. obj.$content would be a common use.
-// !!! this code is duplicated in the controller now. change all references in the version after 201308 (already in use in UI)
-			handleAppEvents : function($target,obj)	{
-//				app.u.dump("BEGIN admin.u.handleAppEvents");
-				if($target && $target.length && typeof($target) == 'object')	{
-//					app.u.dump(" -> target exists"); app.u.dump($target);
-					$("[data-app-event]",$target).each(function(){
-						var $ele = $(this),
-						obj = obj || {},
-						extension = $ele.data('app-event').split("|")[0],
-						action = $ele.data('app-event').split("|")[1];
-//						app.u.dump(" -> action: "+action);
-						if(action && extension && typeof app.ext[extension].e[action] == 'function'){
-//if an action is declared, every button gets the jquery UI button classes assigned. That'll keep it consistent.
-//if the button doesn't need it (there better be a good reason), remove the classes in that button action.
-							app.ext[extension].e[action]($ele,obj);
-							} //no action specified. do nothing. element may have it's own event actions specified inline.
-						else	{
-							app.u.throwGMessage("In admin.u.handleAppEvents, unable to determine action ["+action+"] and/or extension ["+extension+"] and/or extension/action combination is not a function");
-							}
-						});
-					}
-				else if(!$target)	{
-					app.u.throwGMessage("In admin.u.handleAppEvents, target was either not specified.");
-					}
-				else	{
-					app.u.throwGMessage("In admin.u.handleAppEvents, target is not an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.");
-					}
-				
-				}, //handleAppEvents
-
-
-
-//as more listTypes are added, make sure the call uses immutable.
-//vars should contain listType, partition and then depending on the list type, CID or OrderID.
-			sendEmail : function($form,vars)	{
-
-				if($form && typeof vars == 'object')	{
-					var sfo = $form.serializeJSON(),
-					numDispatches = 0,
-					callback = function(rd)	{
-						$form.hideLoading();
-						if(app.model.responseHasErrors(rd)){
-							$form.anymessage({'message':rd});
-							}
-						else	{
-							$form.empty().anymessage(app.u.successMsgObject('Your email has been sent.'));
-							}						
-						}
-				
-					$form.showLoading({'message':'Sending Email'});
-					
-					if(vars.listType == 'CUSTOMER' && vars.CID)	{
-						numDispatches += app.ext.admin.calls.adminCustomerUpdate.init(vars.CID,['SENDEMAIL?MSGID='+sfo.MSGID+'&MSGSUBJECT='+encodeURIComponent(sfo.SUBJECT)+'&MSGBODY='+encodeURIComponent(sfo.BODY)],{'callback':callback}); //update is always immutable.
-						}
-					else if(vars.listType == 'ORDER' && vars.orderID)	{
-						numDispatches += app.ext.admin.calls.adminCustomerUpdate.init(vars.orderID,['EMAIL?MSGID='+sfo.MSGID+'&MSGSUBJECT='+encodeURIComponent(sfo.SUBJECT)+'&MSGBODY='+encodeURIComponent(sfo.BODY)],{'callback':callback}); //update is always immutable.						
-						}
-					else	{
-						$form.hideLoading();
-						$form.anymessage({'gMessage':true,'persistent':true,'message':'In admin.u.sendEmail, based on listType, required var(s) were missing. Here is what was set: '+(typeof vars === 'object' ? JSON.stringify(vars) : vars)});
-						}
-					
-					}
-				else	{
-					$form.anymessage({'gMessage':true,'message':'In admin.u.sendEmail, either $form ['+typeof $form+'] or vars.CID ['+vars.CID+'] not set.'});
-					}
-				return numDispatches;
-				},
 
 			
 			fetchRSSDataSources : function(Q)	{
 				var numRequests = 0;
 				Q = Q || 'mutable';
-				numRequests += app.ext.admin.calls.adminPriceScheduleList.init({},Q); //need this for add and edit.
-				numRequests += app.ext.admin.calls.adminDomainList.init({},Q); //need this for add and edit.
-				numRequests += app.ext.admin.calls.appCategoryList.init({'root':'.','filter':'lists'},{},Q); //need this for add and edit.
+				numRequests += _app.ext.admin.calls.adminPriceScheduleList.init({},Q); //need this for add and edit.
+				numRequests += _app.ext.admin.calls.adminDomainList.init({},Q); //need this for add and edit.
+				numRequests += _app.ext.admin.calls.appCategoryList.init({'root':'.','filter':'lists'},{},Q); //need this for add and edit.
 				return numRequests;
 				},
 
@@ -4939,16 +3276,16 @@ just lose the back button feature.
 			handleRSSContent : function($target,$button){
 
 var
-	numRequests = app.ext.admin.u.fetchRSSDataSources('mutable'),
+	numRequests = _app.ext.admin.u.fetchRSSDataSources('mutable'),
 	callback = function(rd){
 	$target.hideLoading();
-	if(app.model.responseHasErrors(rd)){
+	if(_app.model.responseHasErrors(rd)){
 		$target.anymessage({'message':rd})
 		}
 	else	{
 		
 		var 
-			catTree = app.data['appCategoryList|'+app.vars.partition+'|.']['@paths'] //shortcut
+			catTree = _app.data['appCategoryList|'+_app.vars.partition+'|.']['@paths'] //shortcut
 			L = catTree.length,
 			lists = new Array(); //stores a list of the 'lists' from the nav tree
 		for(var i = 0; i < L; i += 1)	{
@@ -4957,12 +3294,12 @@ var
 				}
 			}
 		
-		$target.anycontent({'templateID':'rssAddUpdateTemplate','data':$.extend(true,{'@lists':lists},app.data['adminDomainList'],app.data['adminPriceScheduleList'])});
+		$target.anycontent({'templateID':'rssAddUpdateTemplate','data':$.extend(true,{'@lists':lists},_app.data['adminDomainList'],_app.data['adminPriceScheduleList'])});
 		if($button)	{
 			$('.buttonbar',$target).first().append($button)
 			}
 		$('.toolTip',$target).tooltip();
-		app.u.handleAppEvents($target);
+		_app.u.handleAppEvents($target);
 //create is/can be a modal, edit is a panel. The modal needs to be recentered after content is added.
 		if($target.hasClass('ui-dialog-content'))	{
 			$target.dialog('option', 'position', $target.dialog('option','position')); //reposition dialog in browser to accomodate new content.
@@ -4973,8 +3310,8 @@ var
 
 
 if(numRequests)	{
-	app.calls.ping.init({'callback':callback},'mutable');
-	app.model.dispatchThis('mutable');
+	_app.calls.ping.init({'callback':callback},'mutable');
+	_app.model.dispatchThis('mutable');
 	}
 else	{
 	callback({});
@@ -4985,14 +3322,12 @@ else	{
 //used on an array of objects. [{some:value},{some:othervalue}]
 //in ex above, pass in 'some and 'other value' and 1 will be returned.
 		getIndexInArrayByObjValue : function(array,objkey,objvalue)	{
-//			app.u.dump("BEGIN admin.u.getIndexInArrayByObjValue");
-//			app.u.dump(" -> objvalue: "+objvalue);
+//			_app.u.dump("BEGIN admin.u.getIndexInArrayByObjValue");
+//			_app.u.dump(" -> objvalue: "+objvalue);
 			
 			var r = false;  //what is returned. the variation index if a match is found.
 			if(array && objkey && objvalue)	{
-//				app.u.dump(" -> all required params are present.");
-				var L = array.length;
-				for(var i = 0; i < L; i+=1)	{
+				for(var i = 0, L = array.length; i < L; i+=1)	{
 					if(array[i][objkey] == objvalue)	{
 						r = i;
 						break; //exit early once a match is found.
@@ -5000,18 +3335,18 @@ else	{
 					}
 				}
 			else	{
-				$('#globalMessaging').anymessage({"message":"In admin_prodEdit.u.getProductVariationByID, either array or objkey ["+objkey+"] or objvalue ["+objvalue+"] not passed.","gMessage":true});
+				$('#globalMessaging').anymessage({"message":"In admin.u.getIndexInArrayByObjValue, either array or objkey ["+objkey+"] or objvalue ["+objvalue+"] not passed.","gMessage":true});
 				}
-//			app.u.dump(" -> getIndexInArrayByObjValue r:"+r);
+//			_app.u.dump(" -> getIndexInArrayByObjValue r:"+r);
 			return r;
 			},			
 			
 			
 			getValueByKeyFromArray : function(obj,key,value)	{
-//				app.u.dump("BEGIN admin.u.getValueByKeyFromArray");
-//				app.u.dump("key: "+key);
-//				app.u.dump("value: "+value);
-//				app.u.dump("obj: "); app.u.dump(obj);
+//				_app.u.dump("BEGIN admin.u.getValueByKeyFromArray");
+//				_app.u.dump("key: "+key);
+//				_app.u.dump("value: "+value);
+//				_app.u.dump("obj: "); _app.u.dump(obj);
 				var r = false; //what is returned. false or the object isf a match is found.
 				if(key && value && !$.isEmptyObject(obj))	{
 					for(var index in obj)	{
@@ -5021,7 +3356,7 @@ else	{
 							break; //once a match is found, exit early.
 							}
 						}
-//					app.u.dump("getValueByKeyFromArray r: "); app.u.dump(r);
+//					_app.u.dump("getValueByKeyFromArray r: "); _app.u.dump(r);
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin.u.getValueByKeyFromArray, either obj is empty or key ['+key+'] and/or value ['+value+'] is not set.','gMessage':true});
@@ -5051,11 +3386,12 @@ vars:
 	showLoadingMessage: if set, will add showLoading to $target.
 */
 			DMICreate : function($target,vars)	{
-//				app.u.dump("BEGIN admin.u.buildDualModeInterface");
-//				app.u.dump(" -> vars: "); app.u.dump(vars);
+//				_app.u.dump("BEGIN admin.u.buildDualModeInterface");
+//				_app.u.dump(" -> vars: "); _app.u.dump(vars);
 				var r = false; //what is returned. will be the results table element if able to create dualModeInterface
 				vars = vars || {};
 				if($target instanceof jQuery && vars.tbodyDatabind)	{
+					
 //set up the defaults.
 					vars.showLoading = (vars.showLoading === false) ? false  : true; //to be consistent, default this to on.
 					vars.showLoadingMessage = vars.showLoadingMessage || "Fetching Content...";
@@ -5063,29 +3399,29 @@ vars:
 					vars.handleAppEvents = (vars.handleAppEvents === false) ? false  : true;
 
 					var $DM = $("<div \/>"); //used as a holder for the content. It's children are appended to $target. Allows DOM to only be updated once.
-
 					$DM.anycontent({'templateID':'dualModeTemplate','showLoading':false}); //showloading disabled so it can be added AFTER content added toDOM (works better)
+
 					var
 						$DMI = $("[data-app-role='dualModeContainer']",$DM),
 						$tbody = $("[data-app-role='dualModeListTbody']:first",$DM),
 						$table = $(".dualModeListTable:first",$DM);
 					
-					$DMI.attr('id','DMI_'+app.u.guidGenerator()); //apply an ID. this allows for content in a dialog to easily reference it's parent DMI.
+					$DMI.attr('id','DMI_'+_app.u.guidGenerator()); //apply an ID. this allows for content in a dialog to easily reference it's parent DMI.
 					if(vars.anytable)	{
 						$table.addClass('applyAnytable');
 						}
-					
+
 //if set, build thead.
 					if(vars.thead && typeof vars.thead == 'object')	{
 //find and get a copy of the template used in the loadsTemplate. use it to determine which headers should be hidden in midetail mode.
-						var bindData = app.renderFunctions.parseDataBind(vars.tbodyDatabind);
+						var bindData = _app.renderFunctions.parseDataBind(vars.tbodyDatabind);
 						var $tmp;
-						if(app.templates[bindData.loadsTemplate])	{
-							$tmp =  app.templates[bindData.loadsTemplate].clone(); //always clone to leave original unmolested.
+						if(_app.templates[bindData.loadsTemplate])	{
+							$tmp =  _app.templates[bindData.loadsTemplate].clone(true); //always clone to leave original unmolested.
 							}
-						else if($(app.u.jqSelector('#',bindData.loadsTemplate)).length)	{
-							app.model.makeTemplate($(app.u.jqSelector('#',bindData.loadsTemplate)),bindData.loadsTemplate);
-							$tmp =  app.templates[bindData.loadsTemplate].clone();
+						else if($(_app.u.jqSelector('#',bindData.loadsTemplate)).length)	{
+							_app.model.makeTemplate($(_app.u.jqSelector('#',bindData.loadsTemplate)),bindData.loadsTemplate);
+							$tmp =  _app.templates[bindData.loadsTemplate].clone(true);
 							}
 						else	{}//empty tmp means no check to add hide in detail mode class.
 
@@ -5094,12 +3430,14 @@ vars:
 							$Thead = $("[data-app-role='dualModeListThead'] tr:first",$DM);
 
 						for(var i = 0; i < L; i += 1)	{
+//							_app.u.dump(i+") "+vars.thead[i]); dump($("td:nth-child("+ ( i + 1 )+")",$tmp));
 //looks at corresponding td in loadsTemplate (if set) and applies hide class (
-							$('<th \/>').addClass(($tmp && $("td:nth-child("+i+")",$tmp).hasClass('hideInDetailMode')) ? "hideInDetailMode" : "").text(vars.thead[i]).appendTo($Thead);
+							$('<th \/>').addClass(($tmp && $("td:nth-child("+( i + 1 )+")",$tmp).hasClass('hideInDetailMode')) ? "hideInDetailMode" : "").text(vars.thead[i]).appendTo($Thead);
 							}
+
 						}// thead loop
 					else if(vars.thead)	{
-						app.u.dump("In admin.u.buildDualModeInterface, vars.thead was passed but not in a valid format. Expecting an array.",warn)
+						_app.u.dump("In admin.u.buildDualModeInterface, vars.thead was passed but not in a valid format. Expecting an array.",warn)
 						}
 					else	{} //no thead. that's fine.
 
@@ -5114,7 +3452,9 @@ vars:
 						vars.cmdVars._tag = vars.cmdVars._tag || {};
 						vars.cmdVars._tag.callback = vars.cmdVars._tag.callback || 'anycontent';
 						vars.cmdVars._tag.jqObj = $table;
-						app.model.addDispatchToQ(vars.cmdVars,'mutable');
+						if(!vars.skipInitialDispatch)	{
+							_app.model.addDispatchToQ(vars.cmdVars,'mutable');
+							}
 						}
 
 						
@@ -5131,7 +3471,7 @@ vars:
 
 //if set, build buttons.
 					if(typeof vars.buttons === 'object')	{
-//						app.u.dump(' -> buttons are an object');
+//						_app.u.dump(' -> buttons are an object');
 						var
 							BL = vars.buttons.length,
 							$buttonContainer = $("[data-app-role='dualModeListButtons']:first",$DM);
@@ -5142,7 +3482,8 @@ vars:
 						}// thead loop
 
 					if(vars.handleAppEvents)	{
-						app.u.handleAppEvents($DM,{'$context':$DM.children().first()}); //
+						_app.u.dump(" -> executing app events for DMI.");
+						_app.u.handleAppEvents($DM,{'$context':$DM.children().first()}); //
 						}
 
 					$DM.children().appendTo($target);
@@ -5154,6 +3495,7 @@ vars:
 					if(vars.anytable)	{
 						$table.anytable();
 						}
+					_app.u.addEventDelegation($DMI);
 
 					r = $table //the table gets returned
 
@@ -5182,9 +3524,9 @@ dataAttribs -> an object that will be set as data- on the panel.
 				vars = vars || {};
 				var $DMI = $btn.closest("[data-app-role='dualModeContainer']");
 				
-				vars.panelID = vars.panelID || 'panel_'+app.u.guidGenerator();
+				vars.panelID = vars.panelID || 'panel_'+_app.u.guidGenerator();
 				vars.data = vars.data || undefined;
-				var $panel = $(app.u.jqSelector('#',vars.panelID));
+				var $panel = $(_app.u.jqSelector('#',vars.panelID));
 				if($panel.length)	{
 					//move panel to top. empty it because whatever is runnign DMIPanelOpen will refresh.
 					$panel.find('.ui-widget-content').intervaledEmpty().anycontent($.extend(true,{},vars,{'showLoading':false}));
@@ -5198,16 +3540,13 @@ dataAttribs -> an object that will be set as data- on the panel.
 					$("[data-app-role='dualModeDetail']",$DMI).prepend($panel);
 					$panel.slideDown('fast');
 					//append detail children before changing modes. descreases 'popping'.
-					app.ext.admin.u.toggleDualMode($DMI,'detail');
+					_app.ext.admin.u.toggleDualMode($DMI,'detail');
 					
 					if(vars.handleAppEvents)	{
-						app.u.handleAppEvents($panel);
+						_app.u.handleAppEvents($panel);
 						}
 					
-					$('.applyAnycb',$panel).anycb();
-					$('.applyAnytable',$panel).anytable();
-					$('.toolTip',$panel).tooltip();
-					$('.applyAnytabs',$panel).anytabs();
+					_app.u.handleCommonPlugins($panel);
 					}
 				
 				return $panel;
@@ -5246,14 +3585,21 @@ dataAttribs -> an object that will be set as data- on the panel.
 				vars = vars || {};
 				vars.title = vars.title || ""; //don't want 'undefind' as title if not set.
 				vars.anycontent = vars.anycontent || true; //default to runing anycontent. if no templateID specified, won't run.
-				vars.handleAppEvents = vars.handleAppEvents || true; //default to runing anycontent. if no templateID specified, won't run.
-
+				vars.handleAppEvents = (vars.handleAppEvents == false) ? false : true; //need to be able to turn this off in case a dialog is appended to a parent.
 
 				var $D = $("<div \/>").attr('title',vars.title);
-				if(vars.anycontent && vars.templateID)	{
-//					app.u.dump(" -> vars: "); app.u.dump(vars);
+				
+				if(!$.isEmptyObject(vars.tlc))	{
+					$D.tlc(vars.tlc);
+					}
+				else if(vars.anycontent && vars.templateID)	{
+//					_app.u.dump(" -> vars: "); _app.u.dump(vars);
 					$D.anycontent(vars);
 					}
+				else	{
+					//no templating/interpolation necessary.
+					}
+
 				$D.dialog({
 					modal: true,
 					width : '90%',
@@ -5261,7 +3607,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 					appendTo : vars.appendTo || "",
 					close: function(event, ui)	{
 						$('body').css({'height':'auto','overflow':'auto'}) //bring browser scrollbars back.
-//						app.u.dump('got into dialog.close - destroy.');
+//						_app.u.dump('got into dialog.close - destroy.');
 						$(this).dialog('destroy');
 						$(this).intervaledEmpty(1000,1);
 						}, //will remove from dom on close
@@ -5280,14 +3626,14 @@ dataAttribs -> an object that will be set as data- on the panel.
 					});
 
 				if(vars.handleAppEvents)	{
-					
-					app.u.handleAppEvents($D,vars);
+					_app.u.handleAppEvents($D,vars);
 					}
-
-//				$('.applyAnycb',$D).anycb();
-				$('.applyAnytable',$D).anytable();
-				$('.toolTip',$D).tooltip();
-				
+				if(!vars.skipDelegation)	{
+					_app.u.addEventDelegation($D);
+					}
+				$D.anyform();
+				_app.u.handleCommonPlugins($D);
+				_app.u.handleButtons($D);
 				return $D;
 				} //dialogCreate
 
@@ -5310,6 +3656,30 @@ dataAttribs -> an object that will be set as data- on the panel.
 
 
 		e : {
+			
+			showMenu : function($ele,p)	{
+				p.preventDefault();
+//				_app.u.dump("admin.e.showMenu (Click!)");
+//If you open a menu, then immediately open another with no click anywhere between, the first menu doesn't get closed. the hide() below resolves that.
+				$('menu.adminMenu:visible').hide();
+				var $menu = $ele.next('menu');
+				if($menu.hasClass('ui-menu'))	{} //already menuified.
+				else	{
+					$menu.menu().addClass('adminMenu');
+					$ele.parent().css('position','relative');
+					}
+// ** 201402 -> the menu, when opening a dialog, was not closing
+				$menu.on('click','a, button',function(){$menu.hide();});
+				$( document ).one( "click", function() {$menu.hide();});
+				$menu.css({'position':'absolute','width':($menu.data('width') || 200),'z-index':200}).show();
+				$menu.position({
+					my: "left top",
+					at: "left bottom",
+					of: $ele
+					});
+				return false;
+				},
+			
 //add a class of allowBulkCheck to the checkboxes that you want toggled on event 
 			checkAllCheckboxesExec : function($ele,p)	{
 				if($ele.data('selected'))	{
@@ -5329,25 +3699,69 @@ dataAttribs -> an object that will be set as data- on the panel.
 			restoreHeightOnBlur : function($ele,p)	{
 				$ele.css('height','');
 				},
+//this can be used on data formatted as an array of hashes. productReviewList is an example.
+// data-pointer must be set. ex: adminProductReviewList
+// data-listpointer must also be set. ex: @REVIEWS
+// data-filename needs to be set as well and should include the extension.
+			dataCSVExportExec : function($ele,p)	{
+				if($ele.data('pointer') && $ele.data('listpointer') && $ele.data('filename')){
+					if(_app.data[$ele.data('pointer')] && _app.data[$ele.data('pointer')][$ele.data('listpointer')] && _app.data[$ele.data('pointer')][$ele.data('listpointer')].length)	{
+						var csvData = [], head = [], list = _app.data[$ele.data('pointer')][$ele.data('listpointer')]; //shortcut
+
+						var keys = Object.keys(list[0]); //an array of each row's 'headers'. used in the .map (can't use head cuz of formatting)
+
+						//build headers in a csv-friendly manner.
+						for(var index in list[0])	{
+							head.push('"' + index + '"');
+							}
+						csvData.push(head);
+						//build body.
+						for(var i = 0, L = list.length; i < L; i += 1)	{
+							var tmpArr = [];
+							keys.map(function(v) {
+								var value = list[i][v];
+								if(value && value.match(/^-{0,1}\d*\.{0,1}\d+$/)) {
+									tmpArr.push(parseFloat(value));
+									}
+								else {
+									tmpArr.push('"' + ( value ? value.replace(/"/g, '""') : '' ) + '"');
+									}
+								});
+							csvData.push(tmpArr);
+							}
+						_app.u.fileDownloadInModal({
+							'data_url' : true,
+							'body' : csvData,
+							'filename' : 'product_reviews.csv'
+							});
+						}
+					else	{
+						$('#globalMessaging').anymessage({"message":"In admin_customer.e.reviewExportExec, data not in memory or has no length.","gMessage":true});
+						}					
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.e.dataExportExec, data-pointer ["+$ele.data('pointer')+"], data-listpointer ["+$ele.data('listpointer')+"] and/or data-filename ["+$ele.data('filename')+"] left blank on trigger element and all are required.","gMessage":true});
+					}
+				},
+
 
 //used for loading a simple dialog w/ no data translation.
 //if translation is needed, use a custom app-event, but use the dialogCreate function and pass in data. see admin_customer.e.giftcardCreateShow for an example
 //set data-templateid on the button to specify a template.
-			openDialog : function($btn,vars)	{
-				$btn.button();
-				$btn.off('click.openDialog').on('click.openDialog',function(){
-					vars = vars || {};
-					if($btn.data('templateid'))	{
-						vars.templateID = $btn.data('templateid');
-						vars.title = $btn.data('title');
-						vars.showLoading = false;
-						var $D = app.ext.admin.i.dialogCreate(vars);
-						$D.dialog('open');
-						}
-					else	{
-						$('#globalMessaging').anymessage({'message':'In admin.e.openDialog, expected button to have a data-templateid.','gMessage':true});
-						}
-					});
+			openDialog : function($ele,P)	{
+				vars = {};
+				if($ele.data('templateid'))	{
+					vars.templateID = $ele.data('templateid');
+					vars.title = $ele.data('title');
+					vars.showLoading = false;
+					var $D = _app.ext.admin.i.dialogCreate(vars);
+					_app.u.handleButtons($D);
+					_app.u.addEventDelegation($D);
+					$D.dialog('open');
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin.e.openDialog, expected button to have a data-templateid.','gMessage':true});
+					}
 				}, //openDialog
 			
 //used in conjuction with the new interface (i) functions.
@@ -5355,49 +3769,51 @@ dataAttribs -> an object that will be set as data- on the panel.
 				$btn.button();
 				$btn.off('click.processForm').on('click.processForm',function(event){
 					event.preventDefault();
-					app.ext.admin.e.submitForm($btn,vars);
+					_app.ext.admin.e.submitForm($btn,vars);
 					});
 				},
 
 
 			
 //for delegated events. Also triggered by process form.
+// $ele could be the form itself or the button.
 			submitForm : function($ele,p)	{
+				dump("BEGIN admin.e.submitForm");
 				var $form = $ele.closest('form');
-				
-				if($ele.data('skipvalidation') || app.u.validateForm($form))	{					
-					if(app.ext.admin.a.processForm($form,'immutable',p))	{
+				p.preventDefault();
+				if($ele.data('skipvalidation') || _app.u.validateForm($form))	{					
+					if(_app.ext.admin.a.processForm($form,'immutable',p))	{
 						$form.showLoading({'message':'Updating...'});	
-						app.model.dispatchThis('immutable');
+						_app.model.dispatchThis('immutable');
 						}
 					else	{
 						//processForm will handle error display.
 						}
 					}
 				else	{} //validateForm handles error display.
+				return false;
 				},
 
 
 
-			controlFormSubmit : function($btn)	{
-				$btn.button();
-				$btn.off('click.controlFormSubmit').on('click.controlFormSubmit',function(){
-					var
-						sfo = $btn.closest('form').serializeJSON({"cb":true}),
-						$DMI = $btn.closest("[data-app-role='dualModeList']");
-					
-					sfo._tag = app.ext.admin.u.getTagObjFromSFO(sfo);
-					sfo._tag.jqObj = $DMI;
-					if(sfo._cmd)	{
-						$DMI.showLoading();
-						app.model.addDispatchToQ(sfo,'mutable');
-						app.model.dispatchThis('mutable');
-						}
-					else	{
-						$btn.closest('.appMessaging').first().anymessage({"message":"In admin.e.controlFormSubmit, serialized form object had no _cmd specified.",'gMessage':true});
-						}
-					});
+			controlFormSubmit : function($ele,P)	{
+				P.preventDefault();
+				var
+					sfo = $ele.closest('form').serializeJSON({"cb":true}),
+					$DMI = $ele.closest("[data-app-role='dualModeList']");
+				
+				sfo._tag = _app.ext.admin.u.getTagObjFromSFO(sfo);
+				sfo._tag.jqObj = $DMI;
+				if(sfo._cmd)	{
+					$DMI.showLoading();
+					_app.model.addDispatchToQ(sfo,'mutable');
+					_app.model.dispatchThis('mutable');
+					}
+				else	{
+					$ele.closest('.appMessaging').first().anymessage({"message":"In admin.e.controlFormSubmit, serialized form object had no _cmd specified.",'gMessage':true});
+					}
 				},
+
 //uses delegated events.
 //add to a select list and the cmd bars on the DMI will be updated with the key and the selected value. used in CRM and ticketing 
 			updateDMICmdVar : function($ele,p)	{
@@ -5406,41 +3822,32 @@ dataAttribs -> an object that will be set as data- on the panel.
 					$DMI.data('listmode','list');
 					$DMI.data('cmdVars')[$ele.attr('name')] = $ele.val();
 					if($ele.data('trigger') == 'refresh')	{
-						$('button[data-app-event="admin|refreshDMI"]',$DMI).trigger('click');
+						$('button[data-app-click="admin|refreshDMI"]',$DMI).trigger('click');
 						}
 					}
 				},
 
-			refreshDMI : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-arrowrefresh-1-s"},text: false});
-				var $DMI = $btn.closest("[data-app-role='dualModeContainer']");
 
-				if($DMI.length && !$.isEmptyObject($DMI.data('cmdVars')) && $DMI.data('cmdVars')._cmd)	{
-					$btn.off('click.refreshDMI').on('click.refreshDMI',function(event){
-						event.preventDefault();
-						$DMI.showLoading({'message' : 'Refreshing list...' });
-						$("[data-app-role='dualModeListTbody']",$DMI).empty();
-						$("[data-app-click='admin|checkAllCheckboxesExec']",$DMI).data('selected',false); //resets 'select all' button to false so a click selects everything.
-						var cmdVars = {};
-						if($btn.data('serializeform'))	{
-							$.extend(true,cmdVars,$DMI.data('cmdVars'),$btn.closest('form').serializeJSON({'cb':true})); //serialized form is last so it can overwrite anything in data.cmdvars
-							}
-						else	{
-							cmdVars = $DMI.data('cmdVars');
-							}
-
-						cmdVars._tag = cmdVars._tag || {};
-						cmdVars._tag.callback = cmdVars._tag.callback || 'DMIUpdateResults';
-						cmdVars._tag.extension = cmdVars._tag.extension || 'admin';
-						cmdVars._tag.jqObj = $DMI;
-						app.model.addDispatchToQ(cmdVars,'mutable');
-						app.model.dispatchThis('mutable');
-						});
+			refreshDMI : function($ele,P)	{
+				if(P && typeof P.preventDefault == 'function'){P.preventDefault();}
+				var $DMI = $ele.closest("[data-app-role='dualModeContainer']");
+				$DMI.showLoading({'message' : 'Refreshing list...' });
+				$("[data-app-role='dualModeListTbody']",$DMI).empty();
+				$("[data-app-click='admin|checkAllCheckboxesExec']",$DMI).data('selected',false); //resets 'select all' button to false so a click selects everything.
+				var cmdVars = {};
+				if($ele.data('serializeform'))	{
+					$.extend(true,cmdVars,$DMI.data('cmdVars'),$ele.closest('form').serializeJSON({'cb':true})); //serialized form is last so it can overwrite anything in data.cmdvars
 					}
 				else	{
-					$btn.hide(); //required params are not set.
-					app.u.dump("A refreshDMI app event was set, however either no parent DMI found [$DMI.length: "+$DMI.length+"] or $DMI.data.cmdVars was empty (these are required for this feature and should be set as part of DMICreate).",'warn');
+					cmdVars = $DMI.data('cmdVars');
 					}
+
+				cmdVars._tag = cmdVars._tag || {};
+				cmdVars._tag.callback = cmdVars._tag.callback || 'DMIUpdateResults';
+				cmdVars._tag.extension = cmdVars._tag.extension || 'admin';
+				cmdVars._tag.jqObj = $DMI;
+				_app.model.addDispatchToQ(cmdVars,'mutable');
+				_app.model.dispatchThis('mutable');
 				},
 
 			lockAccordionIfChecked : function($cb)	{
@@ -5465,31 +3872,10 @@ dataAttribs -> an object that will be set as data- on the panel.
 
 			alphaNumeric : function($input)	{
 				$input.off('keypress.alphaNumeric').on('keypress.alphaNumeric',function(event){
-					return app.u.alphaNumeric(event);
+					return _app.u.alphaNumeric(event);
 					})
 				},
-/*
-not in use
-			achievementDetail : function($row)	{
-				$row.on('mouseover.achievementDetail',function(){
-					$(this).addClass("ui-state-highlight").css({'border':'none','cursor':'pointer'});
-					})
-					.on('mouseout.achievementDetail',function(){
-					$(this).removeClass('ui-state-highlight');
-					})
-					.on('click.achievementDetail',function(event){
-						event.preventDefault();
-						if($(this).data('app-contentid') && $(app.u.jqSelector('#',$(this).data('app-contentid'))).length)	{
-							app.u.dump(" -> $(this).data('app-contentid'): "+$(this).data('app-contentid'));
-							$(app.u.jqSelector('#',$(this).data('app-contentid'))).dialog({'modal':true});
-							}
-						else	{
-							app.u.throwGMessage("In admin.e.achievementDetail, no data-content-id specified on element.");
-							}
-						});
-				},
-*/
-/* app chooser */
+
 
 			dialogCloseExec : function($ele,p)	{
 				$ele.closest(".ui-dialog-content").dialog('close');
@@ -5503,71 +3889,37 @@ not in use
 					});
 				},
 
-//vars needs to include listType as well as any list type specific variables (CID for CUSTOMER, ORDERID for ORDER)
-			execMailToolSend : function($btn,vars){
-				$btn.button();
-				$btn.off('click.execMailToolSend').on('click.execMailToolSend',function(event){
-					event.preventDefault();
-					vars = vars || {};
-					var $form = $btn.closest('form');
-
-					if(vars.listType)	{
-						if(app.u.validateForm($form))	{
-							app.ext.admin.u.sendEmail($form,vars);	
-
-//handle updating the email message default if it was checked. this runs independant of the email send (meaning this may succeed but the send could fail).
-							if($("[name='updateSystemMessage']",$form).is(':checked') && $("[name='MSGID']",$form).val() != 'BLANK')	{
-								frmObj.PRT = vars.partition;
-								frmObj.TYPE = vars.listType; //Don't pass a blank FORMAT, must be set to correct type.
-								delete frmObj.updateSystemMessage; //clean up obj for _cmd var whitelist.
-								app.ext.admin.calls.adminEmailSave.init(frmObj,{'callback':function(rd){
-									if(app.model.responseHasErrors(rd)){
-										$form.anymessage({'message':rd});
-										}
-									else	{
-										$form.anymessage(app.u.successMsgObject(frmObj.MSGID+" message has been updated."));
-										}
-									}},'immutable');
-								}
-							
-							app.model.dispatchThis('immutable');
-							}
-						else	{} //validateForm handles error display.
-
-						}
-					else	{
-						$form.anymessage({'message':'In admin.e.execMailToolSend, no list type specified in vars for app event.'});
-						}
-					});
-				},
-
 
 
 			messageClearExec : function($ele,P)	{
+				P.preventDefault();
 				var msgid = $ele.closest('tr').data('messageid');
-//				app.u.dump(" -> remove message: "+msgid);
+//				_app.u.dump(" -> remove message: "+msgid);
 				$ele.closest('tr').empty().remove();
 				var
-					DPSMessages = app.model.dpsGet('admin','messages'),
+					DPSMessages = _app.model.dpsGet('admin','messages'),
 					index = null;
 
 				$.grep(DPSMessages, function(e,i){if(e.id == msgid){index = i; return;}});
 				
-//				app.u.dump(" -> index: "); app.u.dump(index);
-				if(index)	{
+				_app.u.dump(" -> messageClearExec index: "); _app.u.dump(index);
+				if(index >= 0)	{
 					DPSMessages.splice(index,1);
-					app.u.dump(DPSMessages);
-					app.model.dpsSet('admin','messages',DPSMessages);
-					app.ext.admin.u.updateMessageCount();
+					_app.u.dump({'dpsMessages' : DPSMessages});
+					_app.model.dpsSet('admin','messages',DPSMessages);
+					_app.ext.admin.u.updateMessageCount();
+					_app.model.addDispatchToQ({"_cmd":"adminMessageRemove","msgid":msgid},"mutable"); //use mutable Q to trigger another messagesList call.
+					_app.model.dispatchThis("mutable");
 					}
 				else	{
 					//could not find a matching message in DPS.
 					}
+				return false;
 				},
 
 			messageDetailShow : function($ele,P)	{
 				var $tr = $ele.closest('tr');
-				$(".messageDetail","#messagesContent").empty().append(app.ext.admin.u.getMessageDetail($tr.data('messageid')));
+				$(".messageDetail","#messagesContent").empty().append(_app.ext.admin.u.getMessageDetail($tr.data('messageid')));
 				},
 
 
@@ -5579,7 +3931,7 @@ not in use
 				$btn.button();
 				$btn.off('click.accountLogin').on('click.accountLogin',function(event){
 					event.preventDefault();
-					app.ext.admin.a.login($btn.closest('form'));
+					_app.ext.admin.a.login($btn.closest('form'));
 					});
 				},
 			
@@ -5587,8 +3939,8 @@ not in use
 				$btn.button();
 				$btn.off('click.showCreateAccount').on('click.showCreateAccount',function(event){
 					event.preventDefault();
-					localStorage.clear();
-					app.ext.admin.u.handleAppEvents($('#createAccountContainer'));
+					_app.ext.admin.u.selectivelyNukeLocalStorage();
+					_app.u.handleAppEvents($('#createAccountContainer'));
 					$("#appLogin").css('position','relative').animate({right:($('body').width() + $("#appLogin").width() + 100)},'slow','',function(){
 						$("#appLogin").hide();
 						$('#createAccountContainer').css({'left':'1000px','position':'relative'}).removeClass('displayNone').show().animate({'left':'0'},'slow'); //show and remove class. show needed for toggling between login and create account.
@@ -5597,10 +3949,9 @@ not in use
 				},
 
 			showPasswordRecover : function($btn)	{
-				$btn.button();
 				$btn.off('click.showPasswordRecover').on('click.showPasswordRecover',function(event){
 					event.preventDefault();
-					app.ext.admin.u.handleAppEvents($('#appPasswordRecover'));
+					_app.u.handleAppEvents($('#appPasswordRecover'));
 					$("#appLogin").css('position','relative').animate({right:($('body').width() + $("#appLogin").width() + 100)},'slow','',function(){
 						$("#appLogin").hide();
 						$('#appPasswordRecover').css({'left':'1000px','position':'relative'}).removeClass('displayNone').show().animate({'left':'0'},'slow'); //show and remove class. show needed for toggling between login and create account.
@@ -5613,9 +3964,9 @@ not in use
 				$btn.off('click.execPasswordRecover').on('click.execPasswordRecover',function(event){
 					event.preventDefault();
 					var $form = $btn.closest('form');
-					if(app.u.validateForm($form))	{
-						app.ext.admin.calls.authPasswordReset.init($("[name='login']",$form),{},'immutable');
-						app.model.dispatchThis('immutable');
+					if(_app.u.validateForm($form))	{
+						_app.model.addDispatchToQ({"_cmd":"authPasswordRecover","email":$("[name='email']",$form).val(),"_tag":{"datapointer":"authPasswordRecover","callback":"showMessaging","jqObj":$form,"message":"A temporary password has been emailed to the address provided."}},"immutable");
+						_app.model.dispatchThis('immutable');
 						}
 					else	{} //validateForm handles error display.
 					});
@@ -5638,7 +3989,7 @@ not in use
 					var $form = $btn.parents('form'),
 					formObj = $form.serializeJSON(),
 					$errors = $("<ul \/>");
-//					app.u.dump(" -> authNewAccountCreate.formObj: "); app.u.dump(formObj);
+//					_app.u.dump(" -> authNewAccountCreate.formObj: "); _app.u.dump(formObj);
 					if(!formObj.firstname){$("<li \/>").text("First name").appendTo($errors)}
 					if(!formObj.lastname){$("<li \/>").text("Last name").appendTo($errors)}
 					if(!formObj.email){$("<li \/>").text("Email").appendTo($errors)}
@@ -5651,48 +4002,22 @@ not in use
 						}
 					else	{
 						$('body').showLoading({'message':'Creating new account. One moment please.'});
-						app.ext.admin.calls.authNewAccountCreate.init(formObj,{'callback':'showHeader','extension':'admin'},'immutable');
-						app.model.dispatchThis('immutable');
+						formObj._cmd = 'authNewAccountCreate';
+						formObj._tag = {"datapointer":"authNewAccountCreate",'callback':'showHeader','extension':'admin'};
+						_app.model.addDispatchToQ(formObj,"immutable");
+						_app.model.dispatchThis('immutable');
 						}
 					
 					});
 				},
 
 
-//applied to the select list that contains the list of email messages. on change, it puts the message body into the textarea.
-			"toggleEmailInputValuesBySource" : function($select)	{
-				$select.off('change.toggleEmailInputValuesBySource').on('change.toggleEmailInputValuesBySource',function(){
-					var
-						$option = $("option:selected",$(this)),
-						datapointer = $option.closest("[data-adminemaillist-datapointer]").data('adminemaillist-datapointer'),
-						$form = $option.closest('form');
-
-					if($option.val() == 'BLANK')	{
-						$form.find("[name='body']").val(""); //clear the form.
-						$form.find("[name='updateSystemMessage']").attr({'disabled':'disabled','checked':false}); //can't update 'blank'.
-						$(".msgType",$form).empty();
-						}
-					else if(datapointer && app.data[datapointer])	{
-						$form.find("[name='BODY']").val(app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGBODY);
-						$form.find("[name='SUBJECT']").val(app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGSUBJECT);
-						$form.find("[name='updateSystemMessage']").removeAttr('disabled');
-						$(".msgType",$form).text($form.find("[name='MSGID']").val());
-						}
-					else	{
-						$form.anymessage({'gMessage':true,'message':"In admin.e.orderEmailCustomChangeSource, either unable to determine datapointer ["+datapointer+"] or app.data[datapointer] is undefined ["+typeof app.data[datapointer]+"]."});
-						}
-					})
-				}, //orderEmailCustomChangeSource
 
 
-			"toggleDualMode" : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-seek-next"},text: false});
-				$btn.hide(); //editor opens in list mode. so button is hidden till detail mode is activated by edit/detail button.
-				$btn.off('click.toggleDualMode').on('click.toggleDualMode',function(event){
-					event.preventDefault();
-					app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']").first());
-					});
-				}, //toggleDualMode
+// add this to the button that this is applied to: class='applyButton' data-text='false' data-icon-primary='ui-icon-seek-next'
+			toggleDMI : function($ele,p)	{
+				_app.ext.admin.u.toggleDualMode($ele.closest("[data-app-role='dualModeContainer']"));
+				},
 
 
 //use this on any delete button that is in a table row and that does NOT automatically delete, but just queue's it.
@@ -5703,40 +4028,39 @@ not in use
 				$btn.button({icons: {primary: "ui-icon-closethick"},text: false});
 				$btn.off('click.tagRowForRemove').on('click.tagRowForRemove',function(event){
 					event.preventDefault();
-					app.ext.admin.e.tagRow4Remove($btn,vars)
+					_app.ext.admin.e.tagRow4Remove($(this),$.extend(true,vars,event))
 					});
 				}, //tagRowForRemove
 
 //used for delegated events and is triggered by app-event tagRowForRemove
 			tagRow4Remove : function($ele,p)	{
-//if this class is already present, the button is set for delete already. unset the delete.
-//added to the tr since that's where all the data() is, used in the save. If class destination changes, update customerEditorSave app event function.
+//				_app.u.dump("tagRow4Remove click!");
+				$ele.toggleClass('ui-state-error');
+//Toggle the class first. That clearly indiciates the erest of the way whether we're in delete or undelete mode.
+//edited class added to the tr since that's where all the data() is, used in the save. If class destination changes, update customerEditorSave app event function.
+				var $tr = $ele.closest('tr');
 				if($ele.hasClass('ui-state-error'))	{
-// ** 201324 -> changed the selector in the 'find' to only run on elments that have been through button(). avoids a JS error
-					$ele.removeClass('ui-state-error').parents('tr').removeClass('edited').removeClass('rowTaggedForRemove').find("button[role='button']").each(function(){
-						$(this).button('enable');
-						}); //enable the other buttons
-					$ele.button('enable');
-					}
-				else	{
 //adding the 'edited' class does NOT change the row (due to odd/even class) , but does let the save changes button record the accurate # of updates.
-					$ele.addClass('ui-state-error').closest('tr').addClass('edited').addClass('rowTaggedForRemove').find("button[role='button']").each(function(){
-//							app.u.dump(" -> $(this).text(): "+$(this).text());
+					$tr.addClass('edited').addClass('rowTaggedForRemove').find("button[role='button']").each(function(){
 						$(this).button('disable')
 						}); //disable the other buttons
 					$ele.button('enable');
-
 					}
-				app.ext.admin.u.handleSaveButtonByEditedClass($ele.closest("form"));				
+				else	{
+// the find("button[role='button']") is to refine to elmeents that have been through button(). avoids a JS error
+					$ele.removeClass('ui-state-error');
+					$tr.removeClass('rowTaggedForRemove').find("button[role='button']").each(function(){
+						$(this).button('enable');
+						}); //enable the other buttons
+					if($tr.data('isnew'))	{$(this).addClass('edited')}
+					else	{$tr.removeClass('edited')}
+					}
+				_app.ext.admin.u.handleSaveButtonByEditedClass($ele);				
 				},
 			
 //make sure button is withing the table. tfoot is good.
-			tagAllRowsForRemove : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-closethick"},text: true});
-				$btn.off('click.tagRowForRemove').on('click.tagRowForRemove',function(event){
-					event.preventDefault();
-					$btn.closest('table').find("button[data-app-event='admin|tagRowForRemove']").trigger('click');
-					});
+			toggleAllRows4Remove : function($ele,p)	{
+				$ele.closest('table').find("button[data-app-click='admin|tagRow4Remove']").trigger('click');
 				},
 
 //apply to a select list and, on change, a corresponding fieldset will be turned on (and any other fieldsets will be turned off)
@@ -5747,7 +4071,7 @@ not in use
 				$ele.off('change.showOrderFieldset').on('change.showConnectorFieldset',function(){
 					$ele.closest('form').find("[data-app-role='connectorFieldsetContainer'] fieldset").each(function(){
 						var $fieldset = $(this);
-//						app.u.dump(" -> $fieldset.data('app-role'): "+$fieldset.data('app-role'));
+//						_app.u.dump(" -> $fieldset.data('app-role'): "+$fieldset.data('app-role'));
 						if($ele.val() == $fieldset.data('app-role'))	{$fieldset.show().effect( 'highlight', {}, 500);}
 						else	{$fieldset.hide();}
 						})
@@ -5757,403 +4081,184 @@ not in use
 
 
 
-			domainPutInFocus : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-check"},text: false});
-				var domain = $btn.closest("[data-domainname]").data('domainname');
-				if(domain == app.vars.domain)	{$btn.addClass('ui-state-highlight')}
-				$btn.off('click.domainPutInFocus').on('click.domainPutInFocus',function(event){
-					event.preventDefault();
-//					$btn.closest('table').find('button.ui-state-focus').removeClass('ui-state-focus');
-					app.ext.admin.a.changeDomain(domain,$btn.closest("[data-prt]").attr('data-prt'));
-					});
-				//
-				},
-			domainView : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-newwin"},text: false});
-				$btn.off('click.domainView').on('click.domainView',function(event){
-					event.preventDefault();
-					var domainname = $btn.closest("[data-domainname]").data('domainname');
-if(domainname)	{
-	if($btn.data('mode') == 'host')	{
-		var hostname = $btn.closest("[data-hostname]").data('hostname');
-		if(hostname)	{
-			linkOffSite("http://"+hostname+"."+domainname+"/",'',true);
-			}
-		else {
-			$('#globalMessaging').anymessage({"message":"In admin.e.domainView, unable to determine host.","gMessage":true});
-			}
-		}
-	else	{
-		linkOffSite("http://www."+domainname+"/",'',true);
-		}
-	}
-else	{
-	$('#globalMessaging').anymessage({"message":"In admin.e.domainView, unable to determine domain.","gMessage":true});
-	}
-					
-					});
-				},
-	
-			
-			projectLinkOpen : function($btn)	{
-				if($btn.closest('tr').data('link'))	{
-					$btn.button({icons: {primary: "ui-icon-refresh"},text: false});
-					$btn.off('click.projectLinkOpen').on('click.projectLinkOpen',function(){
-						window.open($btn.closest('tr').data('link'));
-						});
-					}
-				else	{
-					$btn.hide();
-					}
-				},
-			projectUpdateShow : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.projectUpdateShow').on('click.projectUpdateShow',function(event){
-					event.preventDefault();
-					var	projectUUID = $btn.closest('tr').data('uuid');
-					
-					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
-						'templateID' : 'projectDetailTemplate', //not currently editable. just more details.
-						'panelID' : 'project_'+projectUUID,
-						'header' : 'Edit Project: '+$btn.closest('tr').data('title') || projectUUID,
-						'handleAppEvents' : true,
-						showLoading : true
-						});
-//files are not currently fetched. slows things down and not really necessary since we link to github. set files=true in dispatch to get files.
-					app.model.addDispatchToQ({
-						"_cmd":"adminProjectDetail",
-						"UUID":projectUUID,
-						"_tag": {
-							'callback':'anycontent',
-							'translateOnly' : true,
-							jqObj:$panel,
-							'datapointer' : 'adminProjectDetail|'+projectUUID
-							}
-						},'mutable');
-					app.model.dispatchThis('mutable');
-					});
-				},
-			
-			projectCreateShow : function($btn)	{
-				$btn.button();
-				$btn.off('click.projectCreateShow').on('click.projectCreateShow',function(){
-					var $D = app.ext.admin.i.dialogCreate({
-						'title' : 'Create a New Project',
-						'templateID' : 'projectCreateTemplate',
-						showLoading : false,
-						appendTo : $(this).closest("[data-app-role='dualModeContainer']")
-						});
-					
-					$D.dialog('open');
-					})
-				},
-			
-			projectCreateExec  : function($btn,vars)	{
-				$btn.button();
-				vars = vars || {};
-				$btn.off('click.projectCreateExec').on('click.projectCreateExec',function(){
-					var
-						$form = $btn.closest('form'),
-						sfo = $form.serializeJSON(),
-						$DMI = $form.closest("[data-app-role='dualModeContainer']");
-					
-					if(app.u.validateForm($form))	{
-						$form.showLoading({'message':'Adding your new project. This may take a few moments as the repository is imported.'});
-						app.model.destroy('adminProjectList');
-						sfo.UUID = app.u.guidGenerator();
-						app.ext.admin.calls.adminProjectCreate.init(sfo,{'callback':function(rd){
-							$form.hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								$form.anymessage({'message':rd});
-								}
-							else	{
-								
-								if($DMI.length)	{
-									$DMI.anymessage(app.u.successMsgObject('Thank you, your project has been created.'));
-									$form.closest('.ui-dialog-content').dialog('close');
-									}
-								else	{
-									$form.empty().anymessage(app.u.successMsgObject('Thank you, your project has been created.'));
-									}
-								}
-							}},'immutable');
-						app.ext.admin.calls.adminProjectList.init({
-							'callback' :  'DMIUpdateResults',
-							'extension' : 'admin',
-							'jqObj' : $DMI
-							},'immutable');
-						app.model.dispatchThis('immutable');
-						}
-					else	{} //validateForm handles error display.
-					})
-				},
-
-			projectRemove : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
-				$btn.off('click.projectGitRepoOpen').on('click.projectGitRepoOpen',function(){
-					app.ext.admin.i.dialogConfirmRemove({
-						"message" : "Are you sure you wish to remove this app/project? There is no undo for this action.",
-						"removeButtonText" : "Remove Project", //will default if blank
-						"title" : "Remove Project", //will default if blank
-						"removeFunction" : function(vars,$D){
-							$D.parent().showLoading({"message":"Deleting "});
-							app.model.addDispatchToQ({
-								'_cmd':'adminProjectRemove',
-								'UUID' : $btn.closest("[data-uuid]").attr('data-uuid'),
-								'_tag':	{
-									'callback':function(rd){
-										$D.parent().hideLoading();
-										if(app.model.responseHasErrors(rd)){
-											$D.anymessage({'message':rd});
-											}
-										else	{
-											$D.dialog('close');
-											$('#globalMessaging').anymessage(app.u.successMsgObject('Your project has been removed'));
-											$btn.closest('tr').empty().remove();
-											}
+			adminRSSRemove : function($ele,p)	{
+				var data = $ele.closest('tr').data();
+				var $D = _app.ext.admin.i.dialogConfirmRemove({
+					"message" : "Are you sure you want to delete <b>"+(data.name || data.id)+"<\/b>? This action can not be undone.",
+					"removeButtonText" : "Remove Feed", //will default if blank
+					"title" : "Remove RSS Feed", //will default if blank
+					"removeFunction" : function(vars,$D){
+						$D.showLoading({"message":"Deleting RSS feed"});
+						_app.model.addDispatchToQ({
+							'_cmd':'adminRSSRemove',
+							'CPG' : data.cpg,
+							'_tag':	{
+								'datapointer' : 'adminRSSRemove',
+								'callback' : function(rd)	{
+									$D.hideLoading();
+									if(_app.model.responseHasErrors(rd)){
+										$D.anymessage({'message':rd});
+										}
+									else	{
+										$D.empty().anymessage({'message':'Your feed has been deleted.'});
+										$D.parent().find('.ui-dialog-buttonpane').hide(); //hide cancel and remove buttons.
+										$ele.closest("tr").hide();
 										}
 									}
-								},'mutable');
-							app.model.dispatchThis('mutable');
-							}
-						})
-					});
-				}, //projectRemove
-			
-			projectGitRepoOpen : function($btn)	{
-				if($btn.closest('tr').data('github_repo'))	{
-					$btn.button({icons: {primary: "ui-icon-newwin"},text: false});
-					$btn.off('click.projectGitRepoOpen').on('click.projectGitRepoOpen',function(){
-						window.open($btn.closest('tr').data('github_repo'));
-						});
-					}
-				else	{
-					$btn.hide();
-					}
-				},
-
-			adminRSSRemove : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
-				$btn.off('click.showEditRule').on('click.showEditRule',function(event){
-
-					event.preventDefault();
-					var data = $(this).closest('tr').data(),
-					$D = $("<div \/>").attr('title','Delete RSS Feed').append("Are you sure you want to delete <b>"+(data.name || data.id)+"<\/b>? This action can not be undone.");
-
-					$D.dialog({
-resizable: false,
-modal: true,
-buttons: {
-	"Delete Feed": function() {
-		$D.showLoading({'message':'Deleting Feed'});
-		app.ext.admin.calls.adminRSSRemove.init(data.id,{'callback':function(rd){
-			$D.hideLoading();
-			if(app.model.responseHasErrors(rd)){
-				$D.anymessage({'message':rd})
-				}
-			else	{
-				$D.empty();
-				app.ext.admin.a.showRSS($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
-				}
-			}},'immutable');
-
-		app.model.addDispatchToQ({
-			"_cmd":"adminRSSList",
-			"_tag" : {
-				'datapointer' : 'adminRSSList|'+app.vars.partition
-				}
-			},'immutable');
-
-
-		app.model.dispatchThis('immutable');
-		},
-	Cancel: function() {$( this ).dialog( "close" ).empty().remove();}
-	}
-        });
-
+								}
+							},'immutable');
+						_app.model.dispatchThis('immutable');
+						}
 					});
 				}, //adminRSSRemove
 			
-			adminRSSUpdateExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.adminRSSUpdateExec').on('click.adminRSSUpdateExec',function(){
+			adminRSSUpdateExec : function($ele,p)	{
+				var
+					$form = $ele.closest('form'),
+					sfo = $form.serializeJSON();
+				
+				if(_app.u.validateForm($form))	{
+					$form.showLoading({'message':'Updating RSS Feed'});
+					_app.model.addDispatchToQ({"_cmd":"adminRSSUpdate","_tag":{"datapointer":"adminRSSUpdate",'callback': 'showMessaging','message' : "Your RSS feed has been updated",'jqObj' : $form}},"immutable");
+					_app.model.dispatchThis('immutable');
+					}
+				else	{} //validateForm handles error display
 
-var
-	$form = $btn.closest('form'),
-	sfo = $form.serializeJSON();
-
-if(app.u.validateForm($form))	{
-	$form.showLoading({'message':'Updating RSS Feed'});
-	app.ext.admin.calls.adminRSSUpdate.init(sfo,{'callback':function(rd){
-		$form.hideLoading();
-		if(app.model.responseHasErrors(rd)){
-			$form.anymessage({'message':rd})
-			}
-		else	{
-			$form.anymessage(app.u.successMsgObject('Thank you, your feed has been updated.'));
-			}
-		}},'immutable');
-	app.model.dispatchThis('immutable');
-	}
-else	{} //validateForm handles error display
-
-					})
 				},
 
 		//to render the addUpdate template for rss, the following data sources are necessary:  schedules, domains, navcat 'lists' and the detail for the rss feed itself.			
-			adminRSSUpdateShow : function($btn){
+			adminRSSUpdateShow : function($ele,p){
 
-				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.adminRSSUpdateShow').on('click.adminRSSUpdateShow',function(event){
-					event.preventDefault();
-					app.ext.admin.u.fetchRSSDataSources('mutable')
-
-					var data = $btn.closest('tr').data();
-					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
-						'templateID' : 'rssAddUpdateTemplate', //not currently editable. just more details.
-						'panelID' : 'rss'+data.cpg,
-						'header' : 'Edit Feed: '+data.cpg,
-						'handleAppEvents' : false, //handled later.
-						showLoading : false
-						});
-					$panel.showLoading({'message':'Fetching RSS detail'})
-//files are not currently fetched. slows things down and not really necessary since we link to github. set files=true in dispatch to get files.
-					app.model.addDispatchToQ({
-						"_cmd":"adminRSSDetail",
-						"CPG":data.cpg,
-						"_tag": {
-							'callback':function(rd){
-								if(app.model.responseHasErrors(rd)){
-									$('#globalMessaging').anymessage({'message':rd});
-									}
-								else	{
-									//success content goes here.
-									$panel.anycontent({'translateOnly':true,'data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminPriceScheduleList'],app.data['adminRSSDetail|'+data.cpg])});
-									$('.buttonbar',$panel).first().append($("<button \/>").attr('data-app-event','admin|adminRSSUpdateExec').text('Save').addClass('floatRight')); //template is shared w/ add, so button is added after the fact.
-									$('.toolTip',$panel).tooltip();
-									$("[name='CPG']",$panel).attr('readonly','readonly').css('border','none');
-								
-								//schedule, domain and source list don't pre-select by renderformat. the code below handles that.
-									if(app.data['adminRSSDetail|'+data.cpg].feed_link)	{
-										$("[name='feed_link']",$panel).val(app.data['adminRSSDetail|'+data.cpg].feed_link);
-										}
-									
-									if(app.data['adminRSSDetail|'+data.cpg].schedule)	{
-										$("[name='schedule']",$panel).val(app.data['adminRSSDetail|'+data.cpg].schedule);
-										}
-									
-									if(app.data['adminRSSDetail|'+data.cpg].list)	{
-										$("[name='list']",$panel).val(app.data['adminRSSDetail|'+data.cpg].list);
-										}
-									app.u.handleAppEvents($panel);
-									}
-								},
-							'datapointer' : 'adminRSSDetail|'+data.cpg
-							}
-						},'mutable');
-					app.model.dispatchThis('mutable');
+				var data = $ele.closest('tr').data();
+				var $panel = _app.ext.admin.i.DMIPanelOpen($ele,{
+					'templateID' : 'rssAddUpdateTemplate', //not currently editable. just more details.
+					'panelID' : 'rss'+data.cpg,
+					'header' : 'Edit Feed: '+data.cpg,
+					'handleAppEvents' : false, //handled later.
+					showLoading : false
 					});
+				$panel.showLoading({'message':'Fetching RSS detail'});
 
+				_app.ext.admin.u.fetchRSSDataSources('mutable');
+//files are not currently fetched. slows things down and not really necessary since we link to github. set files=true in dispatch to get files.
+				_app.model.addDispatchToQ({
+					"_cmd":"adminRSSDetail",
+					"CPG":data.cpg,
+					"_tag": {
+						'callback':function(rd){
+							if(_app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								//success content goes here.
+								$panel.anycontent({'translateOnly':true,'data':$.extend(true,{},_app.data["appCategoryList|"+_app.vars.partition+"|lists|."],_app.data['adminDomainList'],_app.data['adminPriceScheduleList'],_app.data['adminRSSDetail|'+data.cpg])});
+								$('.buttonbar',$panel).first().append($("<button \/>").addClass('applyButton').attr('data-app-click','admin|adminRSSUpdateExec').text('Save').addClass('floatRight')); //template is shared w/ add, so button is added after the fact.
+								
+								_app.u.handleCommonPlugins($panel);
+								_app.u.handleButtons($panel);
+								
+								$("[name='CPG']",$panel).attr('readonly','readonly').css('border','none');
+							
+//schedule, domain and source list don't pre-select by renderformat. the code below handles that.
+								if(_app.data['adminRSSDetail|'+data.cpg].feed_link)	{
+									$("[name='feed_link']",$panel).val(_app.data['adminRSSDetail|'+data.cpg].feed_link);
+									}
+								
+								if(_app.data['adminRSSDetail|'+data.cpg].schedule)	{
+									$("[name='schedule']",$panel).val(_app.data['adminRSSDetail|'+data.cpg].schedule);
+									}
+								
+								if(_app.data['adminRSSDetail|'+data.cpg].list)	{
+									$("[name='list']",$panel).val(_app.data['adminRSSDetail|'+data.cpg].list);
+									}
+								_app.u.handleAppEvents($panel);
+								}
+							},
+						'datapointer' : 'adminRSSDetail|'+data.cpg
+						}
+					},'mutable');
+				_app.model.dispatchThis('mutable');
 				}, //adminRSSUpdateShow
-
-			adminRSSCreateExec : function($btn,vars)	{
-				$btn.button();
-				$btn.off('click.adminRSSCreateExec').on('click.adminRSSCreateExec',function(){
-var
-	$form = $btn.closest('form'),
-	sfo = $form.serializeJSON();
-
-if(app.u.validateForm($form))	{
-	$form.showLoading({'message':'Creating RSS Feed'});
-	
-	app.model.addDispatchToQ($.extend(true,{},sfo,{
-		"_cmd":"adminRSSCreate",
-		"_tag" : {
-			'callback':function(rd){
-				$form.hideLoading();
-				if(app.model.responseHasErrors(rd)){
-					$form.anymessage({'message':rd})
+			
+			adminRSSCreateShow : function($ele,p)	{
+				var $D = _app.ext.admin.i.dialogCreate({
+					'title':'Add New RSS Feed',
+					'templateID':'rssAddUpdateTemplate',
+					'showLoading':false
+					});
+				$D.dialog('open');
+				$("form",$D).append("<input type='hidden' name='_cmd' value='adminRSSCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/message' value='Your RSS feed has been created.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+				
+				$('.buttonbar:first',$D).append("<button data-app-click='admin|submitForm' class='applyButton'>Save Feed</button>");
+				_app.u.handleButtons($D);
+				var numRequests = _app.ext.admin.u.fetchRSSDataSources('mutable');
+				if(numRequests)	{
+					$D.showLoading({'message':'Fetching resources'});
+					_app.calls.ping.init({
+						'callback':'anycontent',
+						'datapointer' : 'ping',
+						'jqObj' : $D,
+						'translateOnly' : true,
+						'extendByDatapointers' : ["appCategoryList|"+_app.vars.partition+"|lists|.","adminDomainList","adminPriceScheduleList"]
+						},'mutable');
+					_app.model.dispatchThis('mutable');
 					}
 				else	{
-					vars['$dialog'].empty().anymessage(app.u.successMsgObject('Thank you, your feed has been created.'));
-					app.ext.admin.a.showRSS($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
+					$D.anycontent({'translateOnly':true,'data':$.extend(true,{},_app.data["appCategoryList|"+_app.vars.partition+"|lists|."],_app.data['adminDomainList'],_app.data['adminPriceScheduleList'])});
 					}
-				}
-			}
-		}),'immutable');
-
-	app.model.dispatchThis('immutable');
-	}
-else	{} //validateForm handles error display
-
-					})
 				},
-			adminRSSCreateShow : function($btn)	{
-				$btn.button();
-				$btn.off('click.adminRSSCreateShow').on('click.adminRSSCreateShow',function(){
 
 
-var	$D = $("<div \/>").attr('title',"Add a new project");
-$D.addClass('displayNone').appendTo('body'); 
-$D.dialog({
-	width : '70%',
-	modal: true,
-	autoOpen: false,
-	close: function(event, ui)	{
-		$(this).dialog('destroy').remove();
-		}
-	});
-
-$D.dialog('open');
-$D.showLoading({'message':'Fetching Data for Feed Creation'});
-
-var
-	numRequests = app.ext.admin.u.fetchRSSDataSources('mutable')
-	callback = function(rd){
-		$D.hideLoading();
-		if(app.model.responseHasErrors(rd)){
-			$target.anymessage({'message':rd})
-			}
-		else	{
-	
-			$D.anycontent({'templateID':'rssAddUpdateTemplate','data':$.extend(true,{},app.data["appCategoryList|"+app.vars.partition+"|lists|."],app.data['adminDomainList'],app.data['adminPriceScheduleList'])});
-			$('.buttonbar',$D).first().append($("<button \/>").attr('data-app-event','admin|adminRSSCreateExec').text('Save').addClass('floatRight')); //template is shared w/ add, so button is added after the fact.
-			$('.toolTip',$D).tooltip();
-			app.u.handleAppEvents($D,{'$dialog':$D});
-			$D.dialog('option', 'position', $D.dialog('option','position')); //reposition dialog in browser to accomodate new content.
-			}
-		}
-
-
-if(numRequests)	{
-	app.calls.ping.init({'callback':callback},'mutable');
-	app.model.dispatchThis('mutable');
-	}
-else	{
-	callback({});
-	}
-
-					});
-				},
-			
 			showYTVInDialog : function($ele)	{
-				app.ext.admin.a.showYTVInDialog($ele.data('youtubeid'),$ele.data());
+				_app.ext.admin.a.showYTVInDialog($ele.data('youtubeid'),$ele.data());
 				},
 			googleLogin : function($btn)	{
 				$btn.off('click.googleLogin').on('click.googleLogin',function(){
-					app.ext.admin.u.jump2GoogleLogin(encodeURIComponent(btoa(JSON.stringify({"onReturn":"return2Domain","domain": location.origin+"/"+app.model.version+"/index.html"})))); 
+					_app.ext.admin.u.jump2GoogleLogin(encodeURIComponent(btoa(JSON.stringify({"onReturn":"return2Domain","domain": location.origin+"/"+_app.model.version+"/index.html"})))); 
 					});
 				},
-			linkOffSite : function($btn)	{
-				$btn.button();
-				$btn.off('click.linkOffSite').on('click.linkOffSite',function(){
-					if($btn.data('url'))	{
-						linkOffSite($btn.data('url'),'',true);
+// ** 201402 -> added isSearching/killSearch to avoid multiple concurrent searches which could crater the browser on large datasets.
+			tableFilter : function($ele,p)	{
+				var $table = $ele.closest("[data-tablefilter-role='container']").find("[data-tablefilter-role='table']");
+				if($('td.isSearchable',$table).length)	{
+					if($ele.val().length >= 2)	{
+//						dump(" -> tableFilter is searching: "+$table.data('isSearching'));
+						if($table.data('isSearching'))	{$table.data('killSearch',true)} //tells any search in progress to stop.
+//only rows that are not already hidden are impacted. In some cases, some other operation may have hidden the row and we don't want our 'unhide' later to show them.
+//the 'not' is to target only the first level of table contents, no nested data (used in domains, for example) is not inadvertantly impacted.
+						$(($table.data('tablefilterSelector') ? $table.data('tablefilterSelector')+":visible" : 'tbody tr:visible'),$table).not('tbody tbody',$table).hide().data('hidden4Search',true);
+						var filter = $ele.val().toLowerCase();
+						$table.data('isSearching',true);
+						$('td.isSearchable',$table).each(function(){
+							if($table.data('killSearch') == true)	{$table.data('killSearch',false); return;} //exit search. likely a new search is starting.
+							if($(this).text().toLowerCase().indexOf(filter) >= 0)	{
+								$(this).closest(($table.data('tablefilterSelector') ? $table.data('tablefilterSelector') : 'tr')).show();
+								$(this).addClass('queryMatch');
+								}
+							});
+						$table.data('isSearching',false);
 						}
 					else	{
-						$btn.button('disable');
+					//no query or short query. unhide any rows (query may have been removed).
+						$(($table.data('tablefilterSelector') ? $table.data('tablefilterSelector') : 'tr'),$table).each(function(){
+							if($(this).data('hidden4Search'))	{$(this).show();}
+							});
+						$('.queryMatch',$table).removeClass('queryMatch');
 						}
-					});
+					}
+				else	{
+					//there are no td's tagged as searchable. what to do here?
+					dump(" -> tableFilter was run on a table with no searchable td's. Add the isSearchable class to at least one td.");
+					}
+				},
+
+			linkOffSite : function($ele,p)	{
+				if($ele.data('url'))	{
+					linkOffSite($ele.data('url'),'',true);
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin.e.linkOffSite, no data-url set on trigger element.','gMessage':true});
+					}
 				}
 			
 			} //e / appEvents

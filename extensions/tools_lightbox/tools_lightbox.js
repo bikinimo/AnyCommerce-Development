@@ -21,23 +21,23 @@
 //	Intended as a free, open source alternative to 3rd party plugins like Magic Zoom Plus.
 //	Utilizes the Lightbox 2 jQuery plugin: http://lokeshdhakar.com/projects/lightbox2/
 
-var tools_lightbox = function() {
+var tools_lightbox = function(_app) {
 	var r = {
 	callbacks : {
 		init : {
 			onSuccess : function()	{
 				var r = false;
 				
-				app.u.loadResourceFile(['script',0,'extensions/tools_lightbox/lightbox/js/lightbox.js']);
-				app.u.loadResourceFile(['css',0,'extensions/tools_lightbox/lightbox/css/lightbox.css','css-lightbox']);
-				//app.u.loadResourceFile(['css',0,'extensions/tools_lightbox/lightbox/css/screen.css','lightbox-screen']);
+				_app.u.loadResourceFile(['script',0,'extensions/tools_lightbox/lightbox/js/lightbox.js']);
+				_app.u.loadResourceFile(['css',0,'extensions/tools_lightbox/lightbox/css/lightbox.css','css-lightbox']);
+				//_app.u.loadResourceFile(['css',0,'extensions/tools_lightbox/lightbox/css/screen.css','lightbox-screen']);
 				
 				r = true;
 
 				return r;
 				},
 			onError : function()	{
-				app.u.dump('BEGIN tools_lightbox.callbacks.init.onError');
+				_app.u.dump('BEGIN tools_lightbox.callbacks.init.onError');
 				}
 			}
 		}, //callbacks
@@ -63,9 +63,9 @@ bindData params:
 required:
 	hrefAttr - a dot-notation path for de-referencing the image path from the parent data- ex: "%attribs.zoovy:prod_image1"
 optional:
-	w - A width to be passed to the app.u.makeImage call
-	h - A height to be passed to the app.u.makeImage call
-	b - A background color to be passed to the app.u.makeImage call
+	w - A width to be passed to the _app.u.makeImage call
+	h - A height to be passed to the _app.u.makeImage call
+	b - A background color to be passed to the _app.u.makeImage call
 	
 	groupingAttr - a dot-notation path for de-referencing an attribute for grouping- ex: "pid" for a simple bind to a product ID.
 	groupingPrefix - a prefix that will be attached to the groupingAttr.  For separating groups by instance- prodlist vs. product page for example
@@ -87,12 +87,12 @@ optional:
 					var zoovyImage = data.bindData.hrefAttr.split('.')[1];
 					if(data.value[attrib][zoovyImage]) {
 						$tag.show();
-						$tag.append(app.u.makeImage({"name":data.value[attrib][zoovyImage],"w":width,"h":height,"b":"FFFFFF","tag":1}));
+						$tag.append(_app.u.makeImage({"name":data.value[attrib][zoovyImage],"w":width,"h":height,"b":"FFFFFF","tag":1}));
 					}
 				}
 			
 				if(!data.bindData.hrefAttr){
-					app.u.dump("-> tools_lightbox.renderFormats.lightboxLink NO HREFATTR SPECIFIED");
+					_app.u.dump("-> tools_lightbox.renderFormats.lightboxLink NO HREFATTR SPECIFIED");
 					return false;
 					}
 				else {
@@ -110,7 +110,7 @@ optional:
 						}
 					
 					if(!hrefAttr){
-						app.u.dump("-> tools_lightbox.renderFormats.lightboxLink HREFATTR COULD NOT BE INTERPOLATED FROM DATA OBJECT");
+						_app.u.dump("-> tools_lightbox.renderFormats.lightboxLink HREFATTR COULD NOT BE INTERPOLATED FROM DATA OBJECT");
 						return false;
 						}
 					else {
@@ -121,7 +121,7 @@ optional:
 /*specific to bmo*/		if(data.bindData.h && pdata['user:is_square']){ imgObj.h = data.bindData.w; }else{ imgObj.h = data.bindData.h; }
 						if(data.bindData.b){ imgObj.b = data.bindData.b; }
 						
-						var href = app.u.makeImage(imgObj);
+						var href = _app.u.makeImage(imgObj);
 						
 						var rel= 'lightbox';
 						if(data.bindData.groupingAttr){

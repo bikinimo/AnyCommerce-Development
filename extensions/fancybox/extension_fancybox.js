@@ -17,7 +17,7 @@
 ************************************************************** */
 
 
-var fancybox = function() {
+var fancybox = function(_app) {
 	var theseTemplates = new Array('');
 	var r = {
 	callbacks : {
@@ -27,15 +27,15 @@ var fancybox = function() {
 				return r;
 				},
 			onError : function()	{
-				app.u.dump('BEGIN fancybox.callbacks.init.onError');
+				_app.u.dump('BEGIN fancybox.callbacks.init.onError');
 				}
 			},
 		startExtension : {
 			onSuccess : function()	{
-				app.rq.push(['css',0,'extensions/fancybox/jquery.fancybox.css','fancyboxStylesheet']);
-				app.rq.push(['script',0,'extensions/fancybox/jquery.fancybox.js',function(){
-					app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
-						var $context = $(app.u.jqSelector('#',P.parentID)); 
+				_app.rq.push(['css',0,'extensions/fancybox/jquery.fancybox.css','fancyboxStylesheet']);
+				_app.rq.push(['script',0,'extensions/fancybox/jquery.fancybox.js',function(){
+					_app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
+						var $context = $(_app.u.jqSelector('#',P.parentID)); 
 						$('.fancybox', $context).fancybox({
 							'helpers': {
 								'overlay' : {
@@ -51,7 +51,7 @@ var fancybox = function() {
 				},
 			onError : function()	{
 
-				app.u.dump('BEGIN fancybox.callbacks.startExtension.onError');
+				_app.u.dump('BEGIN fancybox.callbacks.startExtension.onError');
 				}
 			}
 		}, //callbacks
@@ -61,12 +61,12 @@ var fancybox = function() {
 			fancybox : function($tag, data){
 				var bgcolor = data.bindData.bgcolor ? data.bindData.bgcolor : 'ffffff'
 				if(data.value)	{
-					var imgSrc = app.u.makeImage({'tag':0,'w':$tag.attr('width'),'h':$tag.attr('height'),'name':data.value,'b':bgcolor});
-					app.u.dump('ID => '+$tag.attr('id'));
+					var imgSrc = _app.u.makeImage({'tag':0,'w':$tag.attr('width'),'h':$tag.attr('height'),'name':data.value,'b':bgcolor});
+					_app.u.dump('ID => '+$tag.attr('id'));
 					
 					$tag.addClass('fancybox');
 					$tag.attr('src',imgSrc);
-					$tag.attr('data-fancybox-href', app.u.makeImage({'tag':0,'name':data.value,'b':bgcolor}));
+					$tag.attr('data-fancybox-href', _app.u.makeImage({'tag':0,'name':data.value,'b':bgcolor}));
 					if($tag.parent().data('pid')){
 						$tag.attr('data-fancybox-group', 'prodGallery_'+$tag.parent().data('pid'));
 						}

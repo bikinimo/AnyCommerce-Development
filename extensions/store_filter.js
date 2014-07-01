@@ -17,7 +17,7 @@
 ************************************************************** */
 
 
-var store_filter = function() {
+var store_filter = function(_app) {
 	var theseTemplates = new Array('');
 	var r = {
 	
@@ -37,8 +37,8 @@ var store_filter = function() {
 		".app-categories.bikini_sets":{ //category for filter
 			"filter": "bikiniSetsForm",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){
-				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
-				app.ext.store_filter.u.triggerBox($form);
+				_app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
+				_app.ext.store_filter.u.triggerBox($form);
 			}
 		},
 		
@@ -46,30 +46,30 @@ var store_filter = function() {
 		".app-categories.separates":{ //category for filter
 			"filter": "separatesForm",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){
-				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
-				app.ext.store_filter.u.triggerBox($form);
+				_app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
+				_app.ext.store_filter.u.triggerBox($form);
 			}
 		},
 		
 		".app-categories.tankinis":{ //category for filter
 			"filter": "sizesFormAY00",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){
-				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
-				app.ext.store_filter.u.renderHiddenField($form, 'tankini');
+				_app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
+				_app.ext.store_filter.u.renderHiddenField($form, 'tankini');
 			}
 		},
 		
 		".app-categories.swim_dresses":{ //category for filter
 			"filter": "sizesFormAY00",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){
-				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
-				app.ext.store_filter.u.renderHiddenField($form, 'swim+dresse');
+				_app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
+				_app.ext.store_filter.u.renderHiddenField($form, 'swim+dresse');
 			}
 		},
 		
 		".app-categories.one_pieces":{ //category for filter
 			"filter": "onePiecesForm",	//name of filter form to use for this category
-			"exec" : function($form,infoObj) {app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
+			"exec" : function($form,infoObj) {_app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
 		},
 		
 	//	".45-solid-color-swimsuits":{ //category for filter
@@ -77,35 +77,35 @@ var store_filter = function() {
 	//		"exec" : function($form,infoObj){app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});}
 	//	},
 		
-		".app-categories.cover_ups":{ //category for filter
+		"._app-categories.cover_ups":{ //category for filter
 			"filter": "sizesFormA814",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){
-				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
-				app.ext.store_filter.u.renderHiddenField($form, 'coverup');
+				_app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
+				_app.ext.store_filter.u.renderHiddenField($form, 'coverup');
 			}
 		},
 		
 		".app-categories.dresses":{ //category for filter
 			"filter": "sizesFormA814",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){
-				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
-				app.ext.store_filter.u.renderHiddenField($form, 'dress');
+				_app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
+				_app.ext.store_filter.u.renderHiddenField($form, 'dress');
 			}
 		},
 		
 		".app-categories.sleepwear":{ //category for filter
 			"filter": "sizesFormA814",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){
-				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
-				app.ext.store_filter.u.renderHiddenField($form, 'sleepwear');
+				_app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
+				_app.ext.store_filter.u.renderHiddenField($form, 'sleepwear');
 			}
 		},
 		
 		".app-categories.accessories":{ //category for filter
 			"filter": "sizesFormA814",	//name of filter form to use for this category
 			"exec" : function($form,infoObj){
-				app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
-				app.ext.store_filter.u.renderHiddenField($form, 'accessorie');
+				_app.ext.store_filter.u.renderSlider($form, infoObj, {MIN:0,MAX:300});
+				_app.ext.store_filter.u.renderHiddenField($form, 'accessorie');
 			}
 		},
 	
@@ -117,39 +117,39 @@ var store_filter = function() {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				
-			//	app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
-			//		app.u.dump('Store_filter started');
+			//	_app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
+			//		_app.u.dump('Store_filter started');
 			//	}]);
 				
 				
 				//Filter Search:
-				app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(infoObj) {
+				_app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(infoObj) {
 					//context for reset button to reload page
-					var $context = $(app.u.jqSelector('#',infoObj.parentID)); 
+					var $context = $(_app.u.jqSelector('#',infoObj.parentID)); 
 					
-					app.u.dump("BEGIN categoryTemplate onCompletes for filtering");
-					if(app.ext.store_filter.filterMap[infoObj.navcat]) {
-						app.u.dump(" -> safe id DOES have a filter.");
+					_app.u.dump("BEGIN categoryTemplate onCompletes for filtering");
+					if(_app.ext.store_filter.filterMap[infoObj.navcat]) {
+						_app.u.dump(" -> safe id DOES have a filter.");
 						
-						app.ext.store_filter.u.changeLayoutToFilter($context);
+						_app.ext.store_filter.u.changeLayoutToFilter($context);
 
-						var $page = $(app.u.jqSelector('#',infoObj.parentID));
-						app.u.dump(" -> $page.length: "+$page.length);
-						if($page.data('filterAdded'))	{app.u.dump("filter exists skipping form add");} //filter is already added, don't add again.
+						var $page = $(_app.u.jqSelector('#',infoObj.parentID));
+						_app.u.dump(" -> $page.length: "+$page.length);
+						if($page.data('filterAdded'))	{_app.u.dump("filter exists skipping form add");} //filter is already added, don't add again.
 						else {
 							$page.data('filterAdded',true)
-							var $form = $("[name='"+app.ext.store_filter.filterMap[infoObj.navcat].filter+"']",'#appFilters').clone().appendTo($('.filterContainer',$page));
+							var $form = $("[name='"+_app.ext.store_filter.filterMap[infoObj.navcat].filter+"']",'#appFilters').clone().appendTo($('.filterContainer',$page));
 							$form.on('submit.filterSearch',function(event) {
 								event.preventDefault()
-								app.u.dump(" -> Filter form submitted.");
-								app.ext.store_filter.a.execFilter($form,$page);
+								_app.u.dump(" -> Filter form submitted.");
+								_app.ext.store_filter.a.execFilter($form,$page);
 									//put a hold on infinite product list and hide loadingBG for it
 								$page.find("[data-app-role='productList']").data('filtered',true);
 								$page.find("[data-app-role='infiniteProdlistLoadIndicator']").hide();
 							});
 
-							if(typeof app.ext.store_filter.filterMap[infoObj.navcat].exec == 'function') {
-								app.ext.store_filter.filterMap[infoObj.navcat].exec($form,infoObj)
+							if(typeof _app.ext.store_filter.filterMap[infoObj.navcat].exec == 'function') {
+								_app.ext.store_filter.filterMap[infoObj.navcat].exec($form,infoObj)
 							}
 
 							//make all the checkboxes auto-submit the form.
@@ -177,7 +177,7 @@ var store_filter = function() {
 			onError : function() {
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN app.ext.store_filter.callbacks.init.onError');
+				_app.u.dump('BEGIN app.ext.store_filter.callbacks.init.onError');
 			}
 		}
 			
@@ -203,31 +203,31 @@ var store_filter = function() {
 					}
 				}
 				else {
-					app.u.dump("WARNING! could not detect .ui-slider class within fieldset for slider filter.");
+					_app.u.dump("WARNING! could not detect .ui-slider class within fieldset for slider filter.");
 				}
 				return r;
 			}, //slider
 
 			hidden : function($fieldset, mKey) {
 				if(mKey == 0) {	
-					return app.ext.store_filter.u.buildElasticTerms($("input:hidden",$fieldset),$fieldset.attr('data-elastic-key'));
+					return _app.ext.store_filter.u.buildElasticTerms($("input:hidden",$fieldset),$fieldset.attr('data-elastic-key'));
 				}
 				else {
-					return app.ext.store_filter.u.buildMultiElasticTerms($("input:hidden",$fieldset),$fieldset.attr('data-elastic-key'));
+					return _app.ext.store_filter.u.buildMultiElasticTerms($("input:hidden",$fieldset),$fieldset.attr('data-elastic-key'));
 				}
 			}, //hidden
 			
 			checkboxes : function($fieldset, mKey) {
 				if (mKey == 0) {
-					return app.ext.store_filter.u.buildElasticTerms($(':checked',$fieldset),$fieldset.attr('data-elastic-key'));
+					return _app.ext.store_filter.u.buildElasticTerms($(':checked',$fieldset),$fieldset.attr('data-elastic-key'));
 				}
 				else {
-					return app.ext.store_filter.u.buildMultiElasticTerms($(':checked',$fieldset),$fieldset.attr('data-elastic-key'));
+					return _app.ext.store_filter.u.buildMultiElasticTerms($(':checked',$fieldset),$fieldset.attr('data-elastic-key'));
 				}
 			}, //checkboxes
 			
 	/*		multi_key_checkboxes : function($fieldset, multiElasticKey) {
-				return app.ext.store_filter.u.buildElasticTerms($(':checked',$fieldset),multiElasticKey);
+				return _app.ext.store_filter.u.buildElasticTerms($(':checked',$fieldset),multiElasticKey);
 			} //multi_key_checkboxes
 */
 		}, //getFilterObj
@@ -242,43 +242,43 @@ var store_filter = function() {
 		
 			execFilter : function($form,$page) {
 
-				app.u.dump("BEGIN store_filter.a.filter");
+				_app.u.dump("BEGIN store_filter.a.filter");
 				var $prodlist = $("[data-app-role='productList']",$page).first().empty();
 
 				$('.categoryList',$page).hide(); //hide any subcategory lists in the main area so customer can focus on results
 				$('.categoryText',$page).hide(); //hide any text blocks.
-//				app.u.dump('app.ext.store_filter.u.buildElasticFilters($form)'); app.u.dump(app.ext.store_filter.u.buildElasticFilters($form));
-				if(app.ext.store_filter.u.validateFilterProperties($form)) {
-					app.u.dump(" -> validated Filter Properties.")
+//				_app.u.dump('_app.ext.store_filter.u.buildElasticFilters($form)'); _app.u.dump(_app.ext.store_filter.u.buildElasticFilters($form));
+				if(_app.ext.store_filter.u.validateFilterProperties($form)) {
+					_app.u.dump(" -> validated Filter Properties.")
 					var query = {
 						"mode":"elastic-native",
 						"size":100,
-						"filter" : app.ext.store_filter.u.buildElasticFilters($form)
+						"filter" : _app.ext.store_filter.u.buildElasticFilters($form)
 					}//query
 					
-					app.u.dump(" -> Query: "); app.u.dump(query);
+					_app.u.dump(" -> Query: "); _app.u.dump(query);
 					if(query.filter.and.length > 0 || query.filter.and.filters.length > 0)	{
 						$prodlist.addClass('loadingBG');
-						app.ext.store_search.calls.appPublicProductSearch.init(query,{'callback':function(rd){
+						_app.ext.store_search.calls.appPublicProductSearch.init(query,{'callback':function(rd){
 
-							if(app.model.responseHasErrors(rd)) {
+							if(_app.model.responseHasErrors(rd)) {
 								$page.anymessage({'message':rd});
 							}
 							else {
-								var L = app.data[rd.datapointer]['_count'];
+								var L = _app.data[rd.datapointer]['_count'];
 								$prodlist.removeClass('loadingBG')
 								if(L == 0) {
 									$page.anymessage({"message":"Your query returned zero results."});
 								}
 								else {
-									$prodlist.append(app.ext.store_search.u.getElasticResultsAsJQObject(rd));
+									$prodlist.append(_app.ext.store_search.u.getElasticResultsAsJQObject(rd));
 								}
 							}
 
 						//},'datapointer':'appPublicSearch|elasticFiltering','templateID':'productListTemplateResultsNoPreview'});
 						},'datapointer':'appPublicSearch|elasticFiltering','templateID':'productListTemplateResults'});
 						
-						app.model.dispatchThis();
+						_app.model.dispatchThis();
 					}
 					else {
 						$page.anymessage({'message':"Please make some selections from the list of filters"});
@@ -335,7 +335,7 @@ var store_filter = function() {
 					var $fieldset = $(this);
 					var multipleKey = $fieldset.attr('data-elastic-key').split(" ").length;
 						//if a multiple elastic key is found increment the count for later examination under oath
-//					app.u.dump('checkElasticForm var multipleKey'); app.u.dump(multipleKey);					
+//					_app.u.dump('checkElasticForm var multipleKey'); _app.u.dump(multipleKey);					
 					if($("input[type='checkbox']",$fieldset).is(":checked") && multipleKey > 1) {
 						count++;
 					}	
@@ -344,14 +344,14 @@ var store_filter = function() {
 					}
 				});
 				
-//				app.u.dump('checkElasticForm var count'); app.u.dump(count);
+//				_app.u.dump('checkElasticForm var count'); _app.u.dump(count);
 					//if the count has been incremented, there is a multiple key and the filter will be constructed accordingly
 				if(count != 0) { 
-//				app.u.dump('returned true');
+//				_app.u.dump('returned true');
 					return true;
 				}
 				else {
-//				app.u.dump('returned false');
+//				_app.u.dump('returned false');
 					return false;
 				}
 			},
@@ -374,9 +374,9 @@ var store_filter = function() {
 						r = false;
 						$form.anymessage({"message":"In store_filters.u.validateFilterProperties,  no data-filtertype set on fieldset. can't include as part of query. [index: "+index+"]",gMessage:true});
 					}
-					else if(typeof app.ext.store_filter.getElasticFilter[filterType] != 'function')	{
+					else if(typeof _app.ext.store_filter.getElasticFilter[filterType] != 'function')	{
 						r = false;
-						$form.anymessage({"message":"WARNING! type ["+filterType+"] has no matching getElasticFilter function. [typoof: "+typeof app.ext.store_filter.getElasticFilter[filterType]+"]",gMessage:true});
+						$form.anymessage({"message":"WARNING! type ["+filterType+"] has no matching getElasticFilter function. [typoof: "+typeof _app.ext.store_filter.getElasticFilter[filterType]+"]",gMessage:true});
 					}
 					else if(!$fieldset.attr('data-elastic-key')) {
 						r = false;
@@ -392,7 +392,7 @@ var store_filter = function() {
 			
 			buildElasticFilters : function($form) {
 					//if multiple elastic keys are used the query must be structured differently
-				if(app.ext.store_filter.u.checkElasticForm($form)) {
+				if(_app.ext.store_filter.u.checkElasticForm($form)) {
 					var filters = {
 						"and" : {
 							"filters" : []  //push on to this the values from each fieldset.
@@ -406,11 +406,11 @@ var store_filter = function() {
 					}//query
 					var mKey = 0; //passed w/ fieldsets to indicate query will just have and structure, no OR
 				}
-//				app.u.dump('buildElasticFilters var mKey'); app.u.dump(mKey); 
+//				_app.u.dump('buildElasticFilters var mKey'); _app.u.dump(mKey); 
 				
 				$('fieldset',$form).each(function() {
 					var $fieldset = $(this);
-					filter = app.ext.store_filter.getElasticFilter[$fieldset.attr('data-filtertype')]($fieldset, mKey);
+					filter = _app.ext.store_filter.getElasticFilter[$fieldset.attr('data-filtertype')]($fieldset, mKey);
 					if(filter && mKey == 0) {
 						filters.and.push(filter);
 					}
@@ -475,7 +475,7 @@ var store_filter = function() {
 				//investigate using query over multiple fields:
 				// http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#_multi_field_2
 			buildMultiElasticTerms : function($obj,attr)	{
-//			app.u.dump('buildElasticTerms attr'); app.u.dump(attr);	
+//			_app.u.dump('buildElasticTerms attr'); _app.u.dump(attr);	
 
 				var r = false; //what is returned. will be term or terms object if valid.
 				
@@ -487,7 +487,7 @@ var store_filter = function() {
 						},
 					}; //filterOR
 					
-//					app.u.dump('buildElasticTerms var filterOR'); app.u.dump(filterOR);
+//					_app.u.dump('buildElasticTerms var filterOR'); _app.u.dump(filterOR);
 					var multiAttr = attr.split(" "); 	//array of the terms to add
 					var count = attr.split(" ").length; //count of attribs in said array
 					
