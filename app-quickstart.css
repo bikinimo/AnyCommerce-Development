@@ -1,119 +1,28 @@
-body,html{margin:0px; padding:0px; font-family:'Ubuntu', serif; font-size:12px; color:#231f20; font-weight:normal;}
+@charset "utf-8";
+
+/*
+
+The css in this file is optimized for a mobile device, then uses media queries to tailor the experience for larger browsers.
+That way, the mobile device (which typically has less power) can skip all the heavy lifting of dealing w/ the media queries.
+The media queries are located at the bottom of this file.
+
+*/
+
+body,html	{font-size:85%;} /* increased for non mobile devices w/ a media query */
 
 #appTemplates {display:none;} /* container for all templates. should be hidden */
 
-#appPreView	{height:100%; width:100%; background:rgba(0,0,0,0.5); margin:0; position:absolute; z-index:10;}
-.uhOh {height:auto; width:50%; background:#ffffff; border:3px inset #276b98; border-radius:5px; text-align:center; margin:20px auto; padding:15px;}
+#appPreView	{width:50%; max-width:550px; margin:0 auto;}
 
-.sprite {background-image:url(images/sprites-500x500.png);}
+section	{display:block;}
 
-/********** NEW CSS ADD**********/
-.fl{float:left;}
-.fr{float:right;}
-.cb{clear:both;}
-
-.wrapper{margin:0 auto; padding:0px; width:964px;}
-
-/*Header Start*/
-.header{margin:16px 0 0 0; padding:0px; width:964px; float:left;}
-.headerone{margin:0px; padding:0px; width:964px; float:left;}
-.headerleft{margin:0px; padding:0px; float:left;} /*width:529px;*/
-.headerleft img{margin:9px 0 0 14px;}
-.headerright{margin:0px; padding:0px; width:560px; float:right;}
-.headerright1{margin:0px; padding:0px; width:485px; float:right;}
-.topsecmenu{margin:0px; padding:0px; width:372px; float:left;}
-.contactsec{margin:0px; padding:0px; text-align:right; line-height:20px;}
-.contactsec a, .contactsec .giftCardLink {color:#808080; text-decoration:none; display:inline}
-.contactsec a:hover, .contactsec .giftCardLink:hover {color:#000000; text-decoration:none;}
-.contactsec span{padding:0 10px; color: #808080;}
-.cartsec{margin:0px; padding:6px 0 0 0; text-align:right;}
-.cartsec img{margin:-3px 10px 0 0; padding:0;}
-.gryimgright{margin:0px; padding:0px; float:right;}
-.headerright2{margin:10px 0 0 0; padding:0px; width:450px; float:right; color: #808080; font-size: 14px;}
-.headerright2 .inpbox{margin:0 2px 0 5px; padding:3px; width:254px; border: 1px solid #808080; font-size:11px; color: #404040;}
-.headerright2 .searchbut{margin:0px; padding:0px; float:right;}
-
-.navsection{margin:6px 0 0 0; padding:0px; width:964px; float:left; background:url(images/nav_bg.png) no-repeat; height:27px;}
-.navsection ul{margin:0px; padding:0px;}
-.navsection ul li{margin:0px; padding:5px 10px; list-style-type:none; float:left;}
-/*.navsection ul li:hover{margin:0px; padding:4px 15px 5px 15px; list-style-type:none; float:left; border-radius:5px 5px 0 0 ;  color:#221f1f !important; background:#EAE8E5 !important;}
+/*
+*** 201338 -> here to fix a bug in jqueryUI. the dialogs, when attempting to move, would jump away from the cursor in FF. This fixed it.
+Put this high in the doc as a reminder to occassionally re-check if it can be removed
 */
-.navsection ul li a{color:#FFFFFF; font-size:14px; text-decoration:none; padding:4px 10px;}
-.navsection ul li a:hover{color:#fe7a00;}
-
-.sizebg{margin:5px 0px; padding:4px 0 0 0; width:964px; float:left; background:url(images/sizebg-964x30.png) no-repeat; height:30px; text-align:center; font-size:20.5px; font-weight:bold;}
-.sizebg a, .popupshado .sizebg a{color:#ffffff; text-decoration:none;}
-.sizebg a:hover, .popupshado .sizebg a:hover{color:#54A7E1; text-decoration:none;}
-.sizebg span{padding:0 5px; color:#ffffff;}
-/*Header Close*/
-
-/*Middle Start*/
-.middle{padding:0px; width:964px; float:left;}
-.banner{margin:5px 0 0 0; padding:0px; float:left; width:964px;}
-.bannerleft{margin:0px; padding:0px; float:left; width:609px;}
-.bannerright{margin:0 0 0 9px; padding:0px; float:left; width:346px;}
-.bannerright1{margin:0px; padding:0px; float:left; width:346px; height:10px;}
-.bannerright2{margin:0px; padding:4px 14px 16px 14px; float:left; height:290px; width:316px; border:1px solid #b1b1b1; border-radius:5px; overflow:hidden;}
-.bannerright2 h1{margin:0px; padding:0px; font-size:42px; font-family:'Abel', serif; color:#54a7e1; font-weight:normal;}
-.perbox{margin:2px 0 20px 0; padding:0px; width:318px; float:left;}
-.perboxleft{margin:0px; padding:0px; width:153px; float:left;}
-.perboxright{height:231px; margin:0 0 0 10px; padding:0px; width:155px; float:left; display:inline-block; position:relative;}
-.perboxright h1{margin:0px; padding:0px; font-size:17px; color:#000000; font-family:'Ubuntu', serif;}
-.perboxright h2, .perboxright span.cents, .perboxright span.price {margin:0px; padding:6px 0 0 0; font-size:18px; color:#ec1c24; font-family:'Ubuntu', serif; font-weight:bold;}
-.price {color:#f05a24; font-size:13.5px;}
-.perboxright div, .perboxright div.reg .cents, .reg {color:#000000; font-size:10px; font-weight:normal;}
-.perboxright span#deal{color:#54A7E1; font-size:10px; font-weight:bold; margin:20px auto; text-align:center;}
-.perboxright span.notAvailableForPurchase {display:block; margin:8px 0;}
-.perboxright .countDesc {color:#ffffff; text-align:center; padding:0 0 0 3px;}
-.perboxright .colon.colon2 {color:#000000;}
-.perboxright .addCart{margin:20px auto; padding:1px; background:url('images/tabonbg.gif') repeat-x scroll 0 0 transparent; border:1px solid #276B98; border-radius:5px; color:#ffffff; display:block; font-family:source sans pro;}
-.timerem{margin:12px 0 0 0; padding:0px;}
-.bannerright3{margin:0px; padding:0px; float:left; width:346px;}
-.tabbingstatic{margin:11px 0 0 0; padding:0px; float:left;}
-.madebox{margin:0px; padding:0px; width:964px; float:left; background:url(images/made_usa.gif) repeat-x; min-height:97px;}
-.madebox1{margin:12px 0 0 65px; padding:0px; width:235px; float:left;}
-.madebox1 h1{margin:0px; padding:0px; font-size:23px; font-family:'Abel', serif; color:#54a7e1; font-weight:normal; text-align:center;}
-.madebox1 p{text-align:center; margin:0px; padding:0px; color:#2e5f80; line-height:15px;}
-.madebox1 .giftCardLink{text-align:center; color:#ec1c24; display:block; text-decoration:underline;} 
-.madebox1 .giftCardLink:hover{text-decoration:none;}
-/*Middle Close*/
-
-/*Footer Start*/
-.footer{margin:0 0 50px 0; padding:0px; width:964px; float:left; background:url(images/footerbg.gif) repeat-x; min-height:215px;}
-.footertop{margin:50px 0 0 0; padding:0px; width:964px; float:left;}
-.custmser{margin:0 0 0 24px; padding:0px; float:left;}
-.custmser h1{margin:0px; padding:0 0 3px 0; font-size:19px; font-family:'Source Sans Pro', serif; color:#276b98; font-weight:bold; }
-.custmser ul{margin:0 45px 0 0; padding:0px; float:left;}
-.custmser ul li{margin:0px; padding:0 0 2px 0; list-style-type:none;}
-.custmser ul li a{color:#808080; text-decoration:none;}
-.custmser ul li a:hover{color:#000000; text-decoration:none;}
-.socialmedia{margin:0 0 0 70px; padding:0px; float:left;}
-.socialmedia h1{margin:0 0 0 0; padding:0 0 7px 0; font-size:19px; font-family:'Source Sans Pro', serif; color:#276b98; font-weight:bold;}
-.coupons{margin:0 0 0 170px; padding:0px; float:left;}
-.coupons h1{margin:0 0 0 0; padding:0 0 3px 0; font-size:19px; font-family:'Source Sans Pro', serif; color:#276b98; font-weight:bold; }
-.coupons p{margin:0px; padding:0 0 5px 0; color:#808080; line-height:15px;}
-.coupons .fullinpbox{margin:4px 0 0 0; padding:2px 5px 1px 5px; width:153px; border:1px solid #b1b1b1; float:left; font-size:11px;}
-.footerbot{margin:0px; padding:0px; width:964px; float:left; text-align:center;}
-.foticon img{margin:0px; padding:3px 0 0 3px;}
-.copright{margin:0px; padding:7px 0 0 0; color:#808080;}
-.copright a {text-decoration:none; color:#808080;}
-.copright a:hover{color:yellow;}
-/*Footer Close*/
-/*Loader Page Start*/
-.loderwrapper{margin:10px auto; padding:0px; width:636px; height:410px; background:url(images/loader-bg_643x415.png) no-repeat; position:relative; z-index:10;}
-.lodemid{margin:0 0 0 213px; padding:0px; float:left; width:397px;}
-.loaderlogo{margin:16px 0 0 18px; padding:0px;}
-.fashionclub{margin:38px 0 0 28px; padding:0px; width:338px; text-align:center; color:#2e5f80; font-family:'Source Sans Pro', serif; font-weight:bold;}
-.fashionclub h2{margin:0px; padding:0px; font-weight:normal; font-size:22px;}
-.fashionclub h1{margin:0px; padding:0px; font-weight:bold; font-size:54px; letter-spacing:-3px; line-height:40px;}
-.fashionclub p, .fashionclub div {margin:0px; padding:15px 0 0 0; font-weight:normal; font-size:14px; line-height:20px;}
-.fashionclub div {padding:5px 0 0 0;}
-.remidbutt{margin:18px 0 0 0; padding:0px; width:397px; float:left;}
-.remidbutt img{margin:0 0 0 8px;}
-.homeTemplate{margin:-17px 0 0 0; padding:0px;}
-/*Loader Page Start*/
-/********** NEW CSS ADD**********/
-
+.ui-dialog {
+    position: fixed;
+	}
 
 /*
 loading class. add class to your templates if you want a loading graphic to appear while data is requested. add only to the parent element. 
@@ -125,11 +34,18 @@ note - background- are use instead of background in case element this is applied
 li.loadingBG, .wait	{background:url(wait.gif) no-repeat top center !important; min-height:20px !important; min-width:20px;}
 span.wait	{display:inline-block;}
 
-/******* global styles - added for cross-browser uniformity or usability ******/
+/* global styles - added for cross-browser uniformity or usability */
 
 img	{border:0; vertical-align: top; display:inline-block;} /* vertical-align: top; removes the whitespace sometimes added under an image.  */
-button {display:inline-block; margin: 0; padding: 0; cursor:pointer !important;}
-p	{margin-bottom:12px;}
+a:focus { outline: none; } /* disable the outline around links. it's unattactive */
+a.blockLink	{text-decoration:none; cursor:pointer;} /* used for #! anchors. IE needs the cursor defined or it shows as an arrow instead of a hand. */
+
+button {display:inline-block; margin: 0; padding: 0; cursor:pointer;}
+/* for small buttons */
+.smallButton .ui-button-text	{line-height:normal; font-size:.75em;} /* don't mess with padding. will effect icon buttons */
+.smallButton .ui-button-text-icon-primary .ui-button-icon-primary	{left:.25em}
+
+p	{margin-bottom:1em;}
 
 
 table {
@@ -144,16 +60,28 @@ td.valignMiddle	{vertical-align: middle;}
 /* feel free to delete these or override in your own .css file */
 h1, h2, h3, h4, h5, h6	{padding:0; margin:0;}
 
+/* some optional form styling
+<label><span class='prompt'>prompt</span><input class='alignInput'></label> w/ alignedForm class around it on form, fieldset, whatever 
+ */
+.alignedForm label	{display:block; clear:both; margin:0 0 .2em 0; padding:0; vertical-align:top;} /* remove padding/margin to ensure cross-browser consistency */
+.alignedForm label:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+	}
+.alignedForm .prompt	{text-align:right; float:left; width:35%; display:block; margin-right:2%;}
+.alignedForm .alignInput	{width:55%; float:right;} /* not enforcing width is common enough that it justifies using a class to enforce it. */
+
 /* chrome and safari add an outer border/glow to the input in focus. this removes it. */
 input:focus {
 	outline:none;
 	}
 
 input.numberInput	{width:50px}
-
+label span.prompt	{display:inline-block; width:20%; margin-right:2em; vertical-align:top;}
 button:focus	{outline:none;}
-
-.zform_number	{width:50px;}
 
 /*
 classes used on menus that are toggled on/off. wrap offMenu around the default buttons and onMenu around buttons that get turned on.
@@ -167,7 +95,7 @@ and offMenu is toggle off, hiding the change button.
 .bindByAnchor	{} /* here just to give a little aid to wysiwyg editors. no styles should be applied. used w/ bindNav feature */
 
 
-ul li{ list-style-type:none;}
+
 
 /* some general classes used for styling templates. feel free to use these. It's not recommended you delete or rename them */
 
@@ -179,9 +107,9 @@ ul li{ list-style-type:none;}
 .floatRight	{float:right;}
 
 .alignCenter	{text-align:center;}
-.alignCenter #appPreViewProgressBar{height:4px; width:315px; background:#0033FF; border-radius:5px; margin:0 0 0 200px;}
 .alignLeft	{text-align:left;}
 .alignRight	{text-align:right;}
+.alignJustify {text-align:justify;}
 
 .center	{margin:0 auto;}
 
@@ -199,8 +127,6 @@ ul li{ list-style-type:none;}
 
 /* used when an element needs to start of hidden. this is used frequently. */
 .displayNone	{display:none;}
-
-.visibilityHidden {visibility:hidden;}
 
 .lineThrough	{text-decoration:line-through}
 .underline	{text-decoration:underline; cursor:pointer} /* only use this on clickable text */
@@ -222,13 +148,15 @@ ul li{ list-style-type:none;}
 
 
 
-.marginLeft	{margin-left:12px;}
-.marginRight	{margin-right:12px;}
-.marginTop	{margin-top:12px;}
-.marginBottom	{margin-bottom:12px;}
-.stdMargin	{margin:12px;}
-.headerPadding	{padding: 3px 6px;} /* for use in headings or legends that use the ui-state classes and need a little padding within. */
-.stdPadding	{padding:12px;}
+.marginLeft	{margin-left:1em;}
+.marginRight	{margin-right:1em;}
+.marginTop	{margin-top:1em;}
+.marginBottom	{margin-bottom:1em;}
+
+.stdMargin	{margin:1em;}
+.headerPadding	{padding: .2em .4em;} /* for use in headings or legends that use the ui-state classes and need a little padding within. */
+.stdPadding	{padding:1em;}
+.smallPadding	{padding:.5em;}
 .fullWidth	{width:100%;}
 
 
@@ -241,47 +169,18 @@ ul li{ list-style-type:none;}
 .buyerLoggedIn .hideIfLoggedOut	{display: block;} /* may be 'block' */
 .buyerLoggedIn span.hideIfLoggedOut, .buyerLoggedIn a.hideIfLoggedOut	{display: inline;} /* ensures inline on span elements */
 
-
-
-
-
-/****** APP specific styles ******/
-
-
-/* messaging css. some error css is defined in the jqueryui styles */
-
-.appMessage P	{padding:0; margin:0;} /* used in app messaging for warnings, alerts, successes, etc */
-.zMessage	{margin:6px; 0}
-
-.appMessage	{margin-bottom:12px; position:relative;}
-.appMessage .stdMargin {padding:5px;}
-.appMessage .ui-button	{position:absolute; top:-3px; right:-3px; z-index:100;}
-.appMessage .ui-icon	{float:left; margin-right:12px;}
-
-/* some messages have a red bg. add a white circle around the icon in these cases. */
-.ui-state-z-ise .ui-icon, .ui-state-z-error .ui-icon, .ui-state-z-debug .ui-icon	{
-	background-color:#ffffff;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
-	}
-
-/*.appMessage .ui-icon-alert	{background:url(images/error-82x82.png) no-repeat; height:82px; width:82px; margin:0 10px 10px 0;} */
-.appMessage .appMessageTxt	{float:left;}
-
-.ui-state-success, .ui-state-statusupdate	{border:1px solid #aecdae !important; background:#e3f6e3 !important; color:#333333 !important;}
-.ui-state-warning	{border:1px solid #f58d48 !important; background:#ffdfc9 !important; color:#333333 !important;}
-
+.hint	{font-weight:normal; font-size:.8em;}
 
 /* used in order history and faq (possibly other places) in a format similar to an accordian, but more than one panel can be open. */
-.appAccordianesque .ui-accordion-header {padding:3px 24px;}
+.appAccordianesque .ui-accordion-header {padding:.5em 2em;}
 
 
 
 /* pages like  company and/or customer are in a two column format. by default, a narrow right w/ nav and the main column w/ content. */
 
-.mainColumn	{width:100%;}
+.mainColumn	{width:75%;}
 .sideline	{float:right; width:20%; margin:0 0 24px 0px; display:none;}
-.sideline a	{padding:5px 0; text-decoration:none; display:block;} /* recommend at least 5px vert padding for mobile/pad */
+.sideline a	{padding:.3em 0; text-decoration:none; display:block;} /* recommend at least 5px vert padding for mobile/pad */
 
 
 
@@ -294,93 +193,77 @@ ul li{ list-style-type:none;}
 
 
 
-/***************************************************
+/*
 
 LISTS (product list and/or subcategory list)
 these get used just about everywhere. leave these fairly generic 
 and override using classes or id's as needed.
 
-***************************************************/
+*/
+a.blockLink {border:none; display:block;}
 
 .listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
 .noPadOrMargin	{padding:0; margin:0;}
-.fluidList li{float:left; margin:0 0 0 37px; padding:0; display:inline-block;}
+.fluidList li{float:left; margin:1em; padding:0; display:inline-block;}
 
-.quickView	{position:absolute; top:247px; right:48px; z-index:1001;} /* jqui modal has zindex 1002 */
+.quickView	{position:absolute; top:5px; right:5px; z-index:1001;} /* jqui modal has zindex 1002 */
 
 /* over rides - height and width ensure each row is the same height. percentages could be used for width */
-.productList > li	{width:148px; min-height:285px; position:relative; padding:0;}
-.productList > li > img{margin:0px; padding:0px; width:148px !important; height:208px !important;}
-.lineItemProdlist > li	{position:relative; display:block; padding:10px !important; width:99% !important; min-height:auto !important; /*border-bottom:1px dotted #efefef;*/} /* single column product list - used in cart, checkout, etc. productList class is also defined in these cases. */
+.productList > li	{width:150px; height:250px; position:relative;}
+.lineItemProdlist > li	{position:relative; display:block; padding:1em 0; float:none; width:auto; height:auto !important; border-bottom:1px dotted #efefef;} /* single column product list - used in cart, checkout, etc. productList class is also defined in these cases. */
 
-.lineItemProdlist .prodThumb	{margin-right:12px;}
+.lineItemProdlist .prodThumb	{margin-right:1em;}
 
 .categoryList > li	{width:150px; height:200px;}
 
 .productList h4, .productList h5, .productList h6, .categoryList h4, .categoryList h5, .categoryList h6	{padding:0; margin:0;} /* h4 - h6 are used in default templates for name, price, etc */
 
-.productList li, .categoryList li	{font-size:12px;}
+.productList li, .categoryList li	{font-size:.8em;}
 
-.productList h4, .categoryList h4	{font-size:12px;}
-.productList h5, .categoryList h5	{font-size:11px;}
-.productList h6, .categoryList h6	{font-size:11px;}
+.productList h4, .categoryList h4	{font-size:1em;}
+.productList h5, .categoryList h5	{font-size:.9em;}
+.productList h6, .categoryList h6	{font-size:.85em;}
 
 
 /* multpage header for lists (product list) - most styling handled by jqueryUI */
 
-.mpControls	{padding:2px 6px;}
-
-
-
+.mpControls	{padding:.3em .8em;}
 
 /* used for the picture slider mouse over effect in some product lists */
 
 .slideMe	{position:absolute; top:0px;}
 .slideMe, .slideMe li	{list-style:none; margin:0; padding:0;}
-.slideMe li	{float:left; border:0;}
+.slideMe li	{float:left; margin-right:2px; border:0;}
 
-	/*default pic slider was replaced, this hides the orig controls for the plugin used
-	if they are to be used they need to be set to line up outside of the container, they are 
-	in, or with a z-index, otherwise clicking on them will trigger the modal pop up that is 
-	on the list item*/
-.ic_right_nav, .ic_left_nav, .ic_controls {display:none;}
 
 
 
 
 /* for variations */
 
-.variation	{margin-bottom:6px;} /* class applied to div containing a variation group */
-.pogType_radio span label	{display:block; margin-bottom:4px; margin-left:12px;}
+.variation	{margin-bottom:.5em;} /* class applied to div containing a variation group */
+.variation_radio span label	{display:block; margin-bottom:.5em; margin-left:1em;}
 
 
 
 
-/***************************************************
+/*
 
 PRODUCT DETAIL PAGE (productTemplate)
 
-***************************************************/
+*/
 
-.prodViewerContainer	{width:100%; opacity:0;}
+.prodViewerContainer	{width:100%;}
 
-.breadAndAddThisContainer	{margin-bottom:8px; padding-bottom:8px; border-bottom:1px dotted #b6b6b6;}
+.breadAndAddThisContainer	{margin-bottom:.5em; padding-bottom:.5em; border-bottom:1px dotted #b6b6b6;}
 
 /* primary image and thumbnails */
-.imageContainer	{width:10%; padding-right:24px;}
-.prodViewerContainer .prodThumbs	{margin:5px 0 0 0;}
-.prodViewerContainer .prodThumbs div	{float:left; margin:12px 12px 0 0;}
-.prodViewerContainer .prodThumbs div.squareHider	{float:left; margin:0;}
-.prodSmallImage {margin:0 4px; text-decoration:none;}
-.prodSmallImage img {margin:0 0 5px 0;}
+.imageContainer	{width:10%; padding-right:2em;}
+.prodViewerContainer .prodThumbs div	{float:left; margin:1em 1em 0 0;}
 
-.prodSummaryContainer{width:90%; font-family:Arial, Helvetica, sans-serif;}
-.prodSummaryContainer h1{color: #54A7E1;
-    font-family: 'Abel',serif;
-    font-size: 28px;
-    font-weight: normal;
-    margin: 0;
-    padding: 0;}
+
+.prodSummaryContainer	{width:90%;}
+
 
 .tabbedProductContent .prodReviewsTab	{display:block;} /* reviews tab always shows up */
 
@@ -388,24 +271,20 @@ PRODUCT DETAIL PAGE (productTemplate)
 the child list and loading graphic should only show up IF the product is a parent.
 so the displayNone class is used, then a .grpType_PARENT class is added if the item is a parent.
 */
-.grpType_PARENT	{display:block; margin-bottom:12px;}
+.grpType_PARENT	{display:block; margin-bottom:1em;}
 #prodlistChildren li	{width:75px; height:120px; overflow:hidden; margin-left:0;}
 
-.customATCForm, .standardATCForm	{margin-bottom:24px;}
-.customATCForm input[name="qty"], .standardATCForm input[name="qty"] {width:25px; text-align:center;}
-.customATCForm input[name="qty"].qtyChanged.ui-state-highlight, .standardATCForm input[name="qty"].qtyChanged.ui-state-highlight {color:#ffffff; font-weight:bold;}
-.prodViewerAddToCartForm fieldset	{margin:0 0 12px 0; padding:0;}
-.variation > label:after	{content:":"; padding-right:12px;} /* applies to first label in a group. so no impact on radio labels */
+.prodViewerAddToCartForm	{margin-bottom:2em;}
+.prodViewerAddToCartForm fieldset	{margin-bottom: 1em; padding:0;}
+.variation > label:after	{content:":"; padding-right:1em;} /* applies to first label in a group. so no impact on radio labels */
 
-.CRMButtonMenu	{margin:0; padding:0; margin-bottom:12px;}
-.ui-widget-content .CRMButtonMenu a {color:#286C99;}
-.CRMButtonMenu .tellFriend {text-decoration:underline;}
+.CRMButtonMenu	{margin:0; padding:0; margin-bottom:1em;}
 
-.pogType_attribs	{display:none;} /* don't show finder attributes */
+.variation_attribs	{display:none;} /* don't show finder attributes */
 
 /****** REVIEW GFX - used for review summary and in list of reviews on product detail page ******/
 
-.reviewSummaryContainer	.numReviews	{line-height:21px; display:inline-block; height:21px; float:left; margin-left:4px; padding-right:6px;}
+.reviewSummaryContainer	.numReviews	{line-height:21px; display:inline-block; height:21px; float:left; margin-left:.5em; padding-right:.5em;}
 .reviewSummaryContainer	.numReviews:after	{content:": "}
 
 .reviewSprite	{background: url(qs_reviews_stars-124x324.png) no-repeat; width:124px; height:22px; display:none;} /* display none hides the reviews for the 'zero' reviews graphic */
@@ -424,97 +303,98 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 .prodlist .review_0	{display:none;} /* hide the stars for items with no reviews */
 
 
-/****** REVIEW LIST - on product detail page, used for product reviews. ******/
+/* REVIEW LIST - on product detail page, used for product reviews. */
 #prodViewerReviews	{margin:0; padding:0;} /* parent ul containing all reviews, each review as an li */
-.reviewLineItem {margin:0 0 12px 0; padding:0 0 12px 0; display:block; clear:both; border-bottom:1px #cccccc dotted;} /* on the li of an individual review */
-.prodReviewInfo	{float:left; display:block; width:165px; list-style:none; margin:0 12px 0px 0; font-weight:normal; padding:0;} /* on the ul of the list containing the name, location, date, etc */
+.reviewLineItem {margin:0 0 1em 0; padding:0 0 1em 0; display:block; clear:both; border-bottom:1px #cccccc dotted;} /* on the li of an individual review */
+.prodReviewInfo	{float:left; display:block; width:165px; list-style:none; margin:0 1em 0px 0; font-weight:normal; padding:0;} /* on the ul of the list containing the name, location, date, etc */
 .prodReviewInfo li	{display:block; clear:both;} /* applies to li for location, name, date, etc */
 .prodReviewTemplate li p	{font-weight:normal; margin:0; padding:0;}
 
 .reviewLineItem blockquote	{margin:0 0 0 185px; padding:0;}
 
 
-/****** WRITE REVIEW MODAL ******/
-#reviewFrm label	{display:block; text-align:right; float:left; width:150px;}
-#reviewsMessage		{width:250px; height:250px;}
-#reviewFrm input, #reviewFrm textarea, #reviewFrm select	{margin-bottom:5px;}
-#reviewFrm .ui-button	{float:right;}
 
-/***************************************************
+
+/*
 
 BREADCRUMB
  -> used on product and category pages
 
-***************************************************/
-.breadcrumb	{margin-bottom:12px; font-family:'Abel', serif; font-size:42px; margin:3px 0 7px 40px;}
-.breadcrumb li{padding:0; margin:0; cursor:pointer; display:none;}
-.breadcrumb li:after{margin:0px; padding:0px; content:""; font-weight:bold;}
-/*.breadcrumb li:last-child:after{ margin:0px; padding:0px; content:"";}*/
-.breadcrumb li:last-child { margin:0px; padding:0px; content:""; display:list-item;}
-.breadcrumb li:last-child a	{color:#54A7E1; text-decoration:none; font-weight:bold; cursor:text;}
-/***************************************************
+*/
+
+
+.breadcrumb	{margin-bottom:1em;}
+.breadcrumb li	{padding:0; margin:0; cursor:pointer; padding-right:10px;}
+.breadcrumb li:after	{content:" \00BB "; padding-left:1em; font-size:1em; font-weight:bold; color:#999999;}
+.breadcrumb li:last-child:after	{content:"";}
+
+.breadcrumb li:last-child a	{color:#666666; text-decoration:none; font-weight:bold; cursor:text;}
+
+
+
+/*
 
 cartTemplate
 
-***************************************************/
+*/
 
 
 .cartContainer	{width:100%;}
-
 #mainContentArea_cart .continueShoppingButton	{display:none;} /* used in modal cart only */
 
-/***************************************************
+.cartSummaryTotalsContainer .ui-widget .cartRefreshButton	{margin: -4px 0 0 0; float:right;}
+/*
 
 CUSTOMER PAGES
 
-***************************************************/
+*/
 
 
-
-
-/****** LOGIN MODAL ******/
-#loginFormForModal fieldset	{border:0}
-.loginOption fieldset div	{margin-bottom:12px;}
-.loginOption label	{width:120px; text-align:right; display:block; float:left; clear:left;}
-.loginOption label:after	{margin-right:12px; content:":"}
-
-
-/****** NEWSLETTER SUBSCRIBE/ACCOUNT CREATE ******/
-#subscribeFormContainer .userInfo div	{margin-bottom:6px;}
+/* NEWSLETTER SUBSCRIBE/ACCOUNT CREATE */
+#subscribeFormContainer .userInfo div	{margin-bottom:.5em;}
 #subscribeFormContainer li	{list-style:none;}
-#subscribeFormContainer .userInfo label, #changePasswordForm label	{width:120px; display:inline-block; margin-right:10px;}
+#subscribeFormContainer .userInfo label, #changePasswordForm label	{width:120px; display:inline-block; margin-right:1em;}
 .subscribeListItem	{display:block; height:30px;}
 
 
-/****** ORDER HISTORY AND INVOICE ******/
+/* ORDER HISTORY AND INVOICE */
 
 #ordersArticle .ui-accordion-content	{padding:.4em} /* reduce padding here to make a little extra room */
 #ordersArticle .orderContentsTable	{width:100%}
 
 
+/* ### TODO -> find where this is used and make it responsive */
 #orderInvoiceSoloPage table	{width:700px;}
 .orderContentsProdlistContainer	{width:500px;}
-.orderContentsProdlistContainer .prodThumbContainer	{float:left; margin:0 5px 5px 0;}
+.orderContentsProdlistContainer .prodThumbContainer	{float:left; margin:0 .5em .5em 0;}
 
-/****** MY ACCOUNT ******/
+.invoiceAddressContainer .billAddress, .invoiceAddressContainer .shipAddress	{margin-bottom:1em;}
 
-#buyerAddresses	{margin-bottom:12px;}
-#buyerAddresses h2	{margin:12px 0; clear:both;}
-#buyerAddresses address	{margin:0 0px 12px 0; float:left; width:90%; display:block; padding:5px;}
+/* MY ACCOUNT */
+
+#buyerAddresses	{margin-bottom:1em;}
+#buyerAddresses h2	{margin:1em 0; clear:both;}
+#buyerAddresses address	{margin:0 0px 1em 0; float:left; width:90%; display:block; padding:1em;}}
 
 
+/* buyer lists */
+.smallButtonList .ui-button-icon-only {width:1.4em}
+.smallButtonList .ui-button-icon-only .ui-button-text	{height:1.4em; padding:0;}
 
-/***************************************************
+.buyerList .prodThumbContainer	{position:relative;}
+
+
+/*
 
 SEARCH RESULTS PAGE
 
-***************************************************/
+*/
 
 #mainContentArea_search	{position:relative;}
 
-.resultsHeader	{position:relative; padding:3px 6px;}
+.resultsHeader	{position:relative; padding:.3em 1em;}
 .resultsMenuContainer	{position:absolute; top:1px; left:3px;}
-.resultsMenuContainer .resultsMenu	{margin:3px 12px 0 0px;} /* used for sorting and pagination menus */
+.resultsMenuContainer .resultsMenu	{margin:.3em 1em 0 0;} /* used for sorting and pagination menus */
 .resultsMenuContainer ul.ui-menu ul	{z-index:10000; width:150px;}
 
 .resultsHeader .nextPageButton, .resultsHeader .prevPageButton	{float:right;}
@@ -523,33 +403,21 @@ SEARCH RESULTS PAGE
 
 .minimalMode .hideInMinimalMode	{display:none;}
 .minimalMode .searchResultsProduct	{
-	height:120px; width:120px; overflow:hidden; margin:0 5px 5px 0;
+	height:120px; width:120px; overflow:hidden; margin:0 .5em .5em 0;
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
 	box-sizing: border-box;
 	}
-#categoryTemplate_appcategoriesseparates .searchResultsProduct {display:block !important;}
-#categoryTemplate_appcategoriesseparatesbottoms .searchResultsProduct {display:block !important;}
 
-/***************************************************
+/*
 
 HELP PAGES
 
-***************************************************/
-
-/***** CONTACT US ******/
-#contactForm {float:right; margin: 0 0 12px 12px;}
-#contactForm fieldset	{border:1px solid #cccccc; padding:10px;}
-#contactForm div	{margin-bottom:5px}
-#contactForm label	{width:105px; display:inline-block; margin-right:6px; vertical-align:top; text-align:right;}
-#contactForm input, #contactForm textarea	{border: 1px solid #CCCCCC;
-    padding: 2px;
-    width: 205px;}
-#contactForm textarea	{height:125px;}
+*/
 
 
-
-/**** FAQ *****/
+/* FAQ /
+### TODO -> why is this commented out?
 .faqQuestion:before, .faqAnswer:before	{font-size:1.4em; font-weight:bold; padding-right:10px; color:#CCCCCC; display:inline-block;}
 .faqQuestion:before	{content:"Q: ";}
 .faqAnswer:before	{content:"A: ";}
@@ -560,61 +428,21 @@ HELP PAGES
 
 
 
-
-/***************************************************
+/*
 
 CART
 
+*/
 
-***************************************************/
-
-#cartStuffList.productList > li {min-height:0;}
-
-.ltoItem .hideLTO {display:none;}
-.ltoItem .showLTO {display:block; color:red; text-align:right;}
-.ltoItem h4 {font-size:20px; text-align:right;}
-
-.cartSummaryTotalsContainer h2	{margin:0; border-top:0; border-left:0; border-right:0; padding:2px 12px; font-size:12px;} /* header */
-.cartSummaryTotalsContainer .cartSummaryContainer	{padding:12px;}
-.cartZipCodeContainer, .cartAltButtonsContainer, .cartSummaryContainer	{margin-bottom:12px; padding-bottom:12px; border-bottom:1px dotted #efefef;}
-
-.cartStuffContainer	{width:55%; vertical-align:top; padding-right:12px; float:left;}
-.cartSummaryTotalsContainer {width:40%; padding-left:12px; font-size:.8em; float:right;} /* by default, this is the right column */
-
-.checkoutButtonsContainer span	{display:block; float:left; margin:0 12px 12px 0;}
-
-.cartShipMethods, .cartZipCodeContainer, .cartSummary	{margin:12px 0;}
-
-.cartSummaryTotalsContainer h3	{margin:12px 0;} /* shipping methods prompt */
-
-.checkoutButton	{font-weight:bold !important;} /* probably want to customize this with a graphic or something that stands out much more */
+.cartStuffContainer	{width:100%; margin:0 0 1em 0;}
+#cartStuffList	{list-style:none; margin:0; padding:0; font-size:.85em;}
+#cartStuffList li	{display:block; margin:0 0 1em 0;}
+.cartButtons	{text-align:center;}
+.cartButtons .thisButton	{display:block; margin-bottom:.5em;}
+.cartSummaryTotalsContainer h2	{font-size:.8em;} 
 
 
 
-
-
-
-/***************************************************
-
-CHECKOUT
-
-***************************************************/
-
-
-#paybySupplemental_CREDIT .ui-icon-help	{display:inline-block; margin-left:6px;}
-
-
-.paybySupplemental {padding:12px; font-weight:normal; border-top-width:0;}
-.paybySupplemental select {margin-right:12px;}
-
-.addressList address	{float:left; margin:0 12px 12px 0;}
-
-.creditCardCVVIcon	{display:inline-block !important;}
-
-.checkoutFormContainer input, checkoutFormContainer select	{margin:2px 6px 2px 0;}
-.checkoutFormContainer input[type='password']	{width:200px;} /* class affects both login password and create account passwords */
-
-.headerPadding label	{padding:2px 6px;}
 
 /* Pure CSS3 Multi Level Drop Down Navigation Menu */
 /*             http://www.bloggermint.com/demos/darknavmenu/#            */
@@ -641,7 +469,7 @@ CHECKOUT
 .ddUlMenu ul li a {
 	float: left;
 	text-decoration:none;
-	padding:0 12px;
+	padding:0 1em;
 	cursor:pointer;
 	}
 
@@ -668,471 +496,36 @@ CHECKOUT
 	border: 0 none;
 	width: 160px;
 	}
+
+
+.debug	{position:fixed; bottom:0; left:0; right:0; background:#ffffff; color:#000000; border-top:1px solid #666666; padding:.5em;}
+
+
+
+/* cart product list */
+@media only screen and (min-width: 400px) {
+	body,html	{font-size:100%;}
+	}
+
+
+
+@media only screen and (min-width: 750px) {
+	/* invoice address get aligned on the same row now that space allows for it. the container around the addresses will handle the margin now. */
+	.invoiceAddressContainer .billAddress, .invoiceAddressContainer .shipAddress	{float:left;  margin-bottom:0;}
+	.invoiceAddressContainer .billAddress	{margin-right:2em;}
+	/* shift cart totals to right side */
+	.cartSummaryTotalsContainer, .cartStuffContainer	{width:49%;}
+	.cartStuffContainer	{float:left;}
+	.cartSummaryTotalsContainer	{float:right;}
+	.cartButtons .thisButton	{float:right; margin:0 0 .4em .4em;}
+	.cartButtons .continueShoppingSpan	{float:left; margin:0;}
 	
-.debug{position:fixed; bottom:0; left:0; right:0; background:#ffffff; color:#000000; border-top:1px solid #666666; padding:5px;}
+	.companyAddress	{float:left; margin-right:2em; width:40%;}
+	.hint	{font-weight:normal; font-size:.7em;}
+	}
 
-.ui-tabs .ui-tabs-nav li a{float:left; padding:5px 60px 4px 60px !important; text-decoration:none; font-weight:normal;}
-.navtopsiz li a{font-size:18px !important;}
-.ui-tabs .ui-state-default{background:url("images/taboffbg.gif") repeat-x #808080 !important; color: #1C94C4; font-weight: bold;}
-.ui-tabs .ui-tabs-nav li.ui-tabs-active.ui-state-default{background:url("images/tabactivebg.gif") repeat-x #d9d9d9 !important; border-left:1px solid #b1b1b1; border-right:1px solid #b1b1b1; border-top:1px solid #b1b1b1;}
-.tabbing .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited{color:#FFFFFF !important; text-decoration:none;}
-/*.tabbing .ui-state-default a{color:#FFFFFF !important; text-decoration:none;}*/
-.tabbing .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited{color:#666666 !important; text-decoration:none;}
-
-.ui-widget-content{background:#FFFFFF !important; color:#333333; border-color:#b1b1b1 !important;}
-.shopingbag{color:#808080; padding:0 0 0 6px;}
-.cartItemCount{color:#808080;}
-
-.appMessaging{float:left; width:100%; margin:0px; padding:0px;}
-.logbor{color:#efeaea !important;}
-input.ui-button{padding: 0.2em 1em;}
-
-fieldset input.ui-button-text {background:#cccccc !important; color:#333 !important; border:1px solid #cccccc !important; }
-
-.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight{border:1px solid #CCCCCC !important;}
-.lineItemProdlist > li {margin:0 0 10px 0; padding:0px;}
-
-/*login show start*/
-.loginShow {display:none;}
-.loginShow a {color:#808080;}
-.loginHide a{ font-size:12px; color:#F00; font-weight:bold; text-transform:uppercase; }
-.buyerLoggedIn span.loginShow {display:inline-block;}
-.buyerLoggedIn .loginHide {display:none;}
-.hideIfLoggedIn{display:block;}
-.buyerLoggedIn .hideIfLoggedIn	{display:none;}
-.hideIfLoggedOut	{display:none;}
-.buyerLoggedIn .hideIfLoggedOut	{display: block;} /* may be 'block' */
-.buyerLoggedIn span.hideIfLoggedOut, .buyerLoggedIn a.hideIfLoggedOut	{display: inline;} /* ensures inline on span elements */
-.productSearchKeyword { width:200px;}
-.plswait{padding:0; margin:2px 0 0 260px; font-size:1px !important; letter-spacing:1px; width:327px;}
-/*login end */
-
-/*Drop Down Menu Css*/
-ul#topnav{margin:0px; padding:0; float:left; list-style:none; position:relative;}
-ul#topnav li span{padding:0px 0 13px 0; position:absolute; left:0; top:25px; display:none; background:#6dbcff; color:#fff; float:left; border-color:#276B97; border-width: 0px 2px 2px; border-style: none solid solid; border-radius:0px 0px 6px 6px; z-index:9;}
-/*ul#topnav li span{padding:20px 0; position:absolute; left:0; top:27px;	display:none; min-width:600px; background:#eae8e5; color:#fff; float:left; border-radius:0 6px 6px 6px; border-left:2px solid #276b97; border-right:2px solid #276b97; border-bottom:2px solid #276b97; }*/
-ul#topnav li:hover span{display: block;}
-ul#topnav li:hover span.separatesDrop {display: block; left:120px;}
-ul#topnav li span a{display: inline; color:#000000;}
-ul#topnav li span a:hover{text-decoration: underline;}
-
-ul#topnav li span ul{margin:0 50px 0 0 ; padding:0px; float:left;}
-ul#topnav li span ul li{float:none;}
-ul#topnav li span ul li a{padding:4px 0 0 0; font-size:12px; float:left; color:#ffffff;}
-ul#topnav li span ul li a:hover{color:#34719e; text-decoration:none;}
-
-/*Drop Dwon Menu Css*/
-.sendmess{margin:0px; padding:0px; font-size:0px; border:0px !important; height:23px !important; width:102px !important; cursor:pointer; background:none !important; background-image:url(images/send_massage.gif) !important; background-repeat:no-repeat;}
-.addtocarti{margin:0px; padding:0px; font-size:0px !important; border:0px !important; background:none
- !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
-.addtocartipro span{margin:0px; padding:0px; font-size:0px; border:0px !important; background:none !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
-.addtocartipro .ui-state-default{margin:0 0 0 33px;  border:none !important;background:none !important; display:none; /*padding:0px;  height:23px !important; width:83px !important;*/}
-.prominh{min-height:205px !important; text-align:left;}
-.clickab{margin:0px; padding:0px; font-size:26px; font-family:'Abel', serif; color:#F05A24; text-align:center; font-weight:bold;}
-.clickab a{color:#F05A24 !important; text-decoration:none;}
-.clickab a:hover{color:#276b98 !important; text-decoration:none;}
-.ztitle2 {color: #666666; font-size: 14px;  font-weight: bold; margin:10px 0 0 0; font-family:'Ubuntu',serif;}
-
-.basePrice, .customBasePrice {color:#f05a24; font-size:15.5px !important;}
-.basePrice h5, .customBasePrice h5, .prodSummaryContainer h5 {color:#000; font-size:12px; padding:2px 6px 0 0 ;}
-
-.ui-widget .ui-widget{font-size:12px;}
-
-.accaddtocart{margin:0px; padding:0px; font-size:0px !important; border:0px !important; background:none !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
-.accsize{/*margin:-80px 0 0 132px; padding:0px; width:776px; float:left;*/}
-
-.emailinp{margin:0px; padding:4px; border:1px solid #CCCCCC;}
-.billinp{margin:0px; padding:4px; border:1px solid #CCCCCC; width:180px;}
-.billsel{width:190px; margin:2px 0; height:24px;}
-.billbor{border:1px solid #CCCCCC;}
-.lbbutt{ border:none !important;}
-.lbbutt span{margin:0px !important; padding:0px !important; border:none !important;}
-
-
-
-
-.tabPaging { margin:10px 0 0 0}
-.tabPaging p {
-	margin:0 0 20px 0;
-	padding:0px;
-}
-.tabPaging ul {
-	float:left; /*width:677px;*/ /*width:663px;*/
-	width:100%;
- 	list-style-type:none;
-	margin:0px 0 0px; padding:0px;
- }
-.tabPaging ul li, .tabPaging .ui-tabs-nav li.prodFeaturesTab, .tabPaging .ui-tabs-nav li.prodReviewsTab, .tabPaging .ui-tabs-nav li.ui-tabs-active.ui-state-default {
-	float:left;
-	margin:0 6px 0 0 !important;
-	padding:0px;
-	border:none;
-}
-.tabPaging ul li a, .ui-tabs-nav li.prodFeaturesTab a, .ui-tabs-nav li.prodReviewsTab a {
-	float:left;
-	font:600 15px 'Source Sans Pro', serif;
-	color:#ffffff;
-	background:url(images/tab-off-bg_1x22.jpg) repeat-x;
-	padding:1px 20px !important;
-	margin:0;
-	text-decoration:none;
-	cursor:pointer;
-	-webkit-border-top-left-radius: 5px;
-	-webkit-border-top-right-radius: 5px;
-	-moz-border-radius-topleft: 5px;
-	-moz-border-radius-topright: 5px;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;  
- }
-
-.prodPageTabs .tabPaging ul li a:hover, .prodPageTabs .ui-tabs-nav li.ui-state-active a:hover {
-	background:url(images/taboff-bg.gif) repeat-x;
-}
-.prodPageTabs .tabPaging ul li a.active, .prodPageTabs .ui-tabs-nav li.ui-state-active a, .prodPageTabs .ui-tabs-nav li.ui-state-active a:hover {
-	color:#ffffff !important;
-	background:url(images/tabonbg.gif) repeat-x;
-	-webkit-border-top-left-radius: 5px;
-	-webkit-border-top-right-radius: 5px;
-	-moz-border-radius-topleft: 5px;
-	-moz-border-radius-topright: 5px;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
-}
-
-.prodPageTabs.tabbedProductContentTD .ui-widget-content {border:none;}
-.prodPageTabs.tabbedProductContentTD .ui-widget-content .tabingcontent.ui-tabs-panel {border:#b2b2b2 solid 1px;} 
-.tabingcontent.ui-tabs-panel { width:96%; float:left; padding:2%; -webkit-border-radius: 10px;
-	-webkit-border-top-left-radius: 0;
-	-moz-border-radius: 10px;
-	-moz-border-radius-topleft: 0;
-	border-radius: 10px;
-	border-top-left-radius: 0;
-}
-.tabingcontent ul{list-style-type:none; margin:0px; padding:0 0 0 20px;}
-.tabingcontent ul li{height:auto; width:90%; list-style-type:disc; clear:both;}
-.tabingcontent .tabOfFeatures .clear {height:15px; width:100%; margin:0 0 15px 0; border-bottom:1px solid #999999; clear:both;}
-.accMain{ float:left; width:100%;}
-.tp{ border-top:#CCCCCC solid 1px; padding-top:20px; float:left; width:100%;}
-.tp:first-child{ border-top:0px; padding-top:0px;}
-.marginBottom h5{ float:left; margin-left:30px;}
-.marginBottom h5:first-child{ margin-left:0px;}
-.oprice{ margin:5px 0 0 0px; color:#ef5a27}
-#previewLogo {
-	margin:16px 0 0 18px; padding:0px;
-}
-#previewLogo img {
-	vertical-align: middle;
-}
-
-#previewContent {
-	height:238px;
-	position:relative;
-}
-
-.previewButtonCont {height:auto; width:auto; position:absolute; bottom:17px; right:0; cursor:auto !important;}
-
-
-.categorySelectorTitle {
-	position: absolute;
-	bottom: 0px;
-	left: 0px;
-	background: rgba(0,0,0,.75);
-	width: 100%;
-	height: 90px;
-	line-height: 90px;
-}
-
-.categorySelectorButtonContainer {width:129px; margin:0 0 0 2px;}
-
-.categorySelectorButton {
-	/*margin: 0px 20px;*/
-	color: white;
-	font-weight: bold;
-	font-size: 1.3em;
-	/*padding: 10px;*/
-	/*background: rgb(252,163,31); /* Old browsers */
-	/*background: -moz-linear-gradient(top,  rgba(252,163,31,1) 0%, rgba(249,101,6,1) 100%); /* FF3.6+ */
-	/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,163,31,1)), color-stop(100%,rgba(249,101,6,1))); /* Chrome,Safari4+ */
-	/*background: -webkit-linear-gradient(top,  rgba(252,163,31,1) 0%,rgba(249,101,6,1) 100%); /* Chrome10+,Safari5.1+ */
-	/*background: -o-linear-gradient(top,  rgba(252,163,31,1) 0%,rgba(249,101,6,1) 100%); /* Opera 11.10+ */
-	/*background: -ms-linear-gradient(top,  rgba(252,163,31,1) 0%,rgba(249,101,6,1) 100%); /* IE10+ */
-	/*background: linear-gradient(to bottom,  rgba(252,163,31,1) 0%,rgba(249,101,6,1) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fca31f', endColorstr='#f96506',GradientType=0 ); /* IE6-9 */
-}
-
-.categorySelectorTitle h1 {
-	color: white;
-	padding: 0px 20px;
-}
-
-#progressBarContainer {
-	/*margin: 0px auto;
-	padding: 40px;*/
-	text-align: center;
-}
-
-#progressBarOutline {
-	background: #999999;
-	border-radius:5px;
-	margin: 0px auto;
-}
-
-#progressBar {
-	height:4px; width:315px; background:#0033FF; border-radius:5px; margin-top:45px;
-}
-
-#progressText{
-	color: #000000;
-	font-size: 1em;
-	font-weight: normal; padding:5px 0 0 0;
-}
-.carouselCont1, .carouselCont2, .carouselCont3, .carouselCont4{
-	position:relative;
-	left:-460px;
-	height:265px;
-	width:920px;
-	margin:0 0 0 50%; 
-	padding:0px;
-	overflow:hidden;
-}
-
-
-/*.carouselCont1 div.caroufredsel_wrapper{
-	float:left;
-	clear:both;
-	width:960px;
-	height:250px;
-	margin-right:10px;
-}*/
-/*.caroufredsel_wrapper{height:260px !important;}*/
-.caroPrev1, .caroPrev2, .caroPrev3, .caroPrev4{
-	position:absolute;
-	bottom:148px;
-	left:-22px;
-	z-index:1;
-}
-.caroNext1, .caroNext2, .caroNext3, .caroNext4{
-	position:absolute;
-	bottom:148px;
-	right:-22px;
-	z-index:1;
-}
-
-.productList1, .productList2, .productList3, .productList4 {textAlign:left;float:none; position:absolute; top:0; right:auto; bottom:auto;}
-.productList1 > li, .productList2 > li, .productList3 > li, .productList4 > li 	{width:148px; min-height:265px; position:relative; padding:0px; margin:0 0 0 35px; float:left;}
+@media only screen and (min-width: 1024px) {
+	.cartTemplateShippingContainer		{float:left; width:48%;}
+	.cartSummary	{float:right; width:48%; text-align:right;}
+	}
 	
-
- /*popup css*/
-.black_overlay{display:none; position:absolute; top:0%; left: 0%; width: 100%; /*height: 100%;*/ background-color: black; z-index:1001; -moz-opacity: 0.8; opacity:.80; filter: alpha(opacity=80);}
-.white_content{display: none; position: absolute; top:28%; left: 24%; width: 50%; height: 48%; padding: 15px; border: 3px solid #cdcdcd;  background-color:#e4e4e4; shadow
-z-index:1002; overflow: auto; /*box-shadow: 1px 1px 3px 3px #000000;*/ font-family:Arial, Helvetica, sans-serif; color:#333333;}
-.savethis{font-size:15px; font-weight:bold;}
-/*popup css*/	
-
-.closebutt{margin:0px; padding:0px; position:absolute; right:5px; top:5px; width:41px;}	
-.popsizb{margin:0 0 10px 0; padding:0px; float:left; width:100%;}
-.popsizb label{margin:0px; padding:3px 0 0 0; min-width:150px; float:left; font-weight:bold;}
-.popsizb input{margin:0px; padding:2px; min-width:200px; border:1px solid #cccccc;}
-.reuturninb{margin:0 0 0 70px; padding:0px; float:left;}
-.reuturninbinp{margin:0px; padding:2px; min-width:200px; border:1px solid #cccccc;}
-
-.questb{margin:10px 0 10px 0; padding:0px; float:left; width:75%;}
-.questb label{margin:0px; padding:0px; min-width:150px; float:left; font-weight:bold;}
-.questb textarea{margin:0px; padding:0px; min-width:200px; float:left; border:1px solid #cccccc; height:50px;}
-.additbutt{margin:0 0 0 250px; padding:0px; float:left;}
-
-.easyrebox{margin:10px 0 0 0; padding:0px; float:left; width:100%;}
-.easyrebox h4{margin:0px; padding:0px; font-size:12px; font-weight:bold;}
-.easyrebox p{margin:10px 0 0 0; padding:0px;}
-
-.adulttab{margin:10px auto; width:450px;}
-/*.spangtsta{margin:0px; padding:0px;  width:960px !important;}*/
-.reltabmore{margin:0px; padding:0px; text-align:center;}
-
-@media screen and (-webkit-min-device-pixel-ratio:0)
-{
-.headerright2 .inpbox{margin:0 0 0 11px; padding:3px 5px 2px 5px; width:272px; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #808080; float:left; border-right:none !important; font-size:11px;}
-.madebox1{margin:12px 0 0 20px; padding:0px; width:283px; float:left;}
-.perboxright{margin:0 0 0 7px; padding:0px; width:158px; float:left; display:inline-block;}
-.ui-tabs .ui-tabs-nav li a{float:left; padding:5px 60px 4px 60px; text-decoration:none; font-weight:normal;}
-}
-
-.ui-tabs .ui-tabs-nav li{border-bottom: 0 none; float:left; list-style:none outside none;  margin:1px 0 0 0 !important;  padding:0; position:relative; top:0; white-space:nowrap;}
-
-.ui-tabs .ui-tabs-nav li.ui-tabs-active{margin-bottom:-1px; padding-bottom:0 !important;}
-.viimgta{height:20px; width:100%; margin:14px 0 14px 0; padding:0px; overflow:hidden; box-shadow:0 4px 4px -1px #999999;}
-.openVideo, .closeVideo {height:20px; width:100%; display:block; background-color:#54A7E1; font-family:Ubuntu,Arial,sans-serif; color:#ffffff; text-align:center; border-radius:5px 5px 0 0; border:none;}
-.closeVideo {display:none;}
-.closeVideo span {opacity:0;}
-.anytabs .ui-corner-tr{border-top-right-radius:0px !important;} 
-.mpControlContainer{display:none;}
-.gallpagebor{border:1px solid #b1b1b1; margin:0px; padding:0px; border-radius:10px;}
-.proborview li{margin:0px; padding:10px !important; border:1px solid #CCC !important; min-height:50px !important;}
- 
-/*.ui-resizable .ui-dialog-titlebar{background:#FFFFFF !important; border:0px !important;}
-.ui-resizable .ui-dialog-titlebar > .ui-dialog-title{visibility:hidden;}*/
-
-.quickVModal .anotherElement {background:#ffffff; border-radius:0 5px 5px 0; top:27px; position:absolute; border-top:1px solid #b1b1b1; border-right:1px solid #b1b1b1; border-bottom:1px solid #b1b1b1;}
-.quickVModal.anotherElement #product-modal.ui-dialog-content {overflow:visible;}
-
-.productListTemplatePopout {height:auto; width:120px; padding:0 10px;}
-.productListTemplatePopout .prodThumbContainer.floatLeft {height:auto; width:auto;}
-.productListTemplatePopout h5 {text-align:center;}
-.productListTemplatePopout h6 {border-bottom:1px solid #b1b1b1; margin:0 0 10px 0; padding:0 0 10px 0; text-align:center;}
-
-.comparissonsbox{margin:0px; padding:0px; text-align:center; clear:both;}
-.quickVModal .popoutButton {height:20px; width:21px;}
-.comparissonsbox ul{margin:0px; padding:0px;}
-.comparissonsbox ul li{margin:0px; padding:0px; list-style-type:none; font-family:'Abel', serif; font-size:20px; color:#276b98; text-decoration:underline;}
-.comparissonsbox ul li:hover{color:#333; text-decoration:underline;}
-.comparissonsbox ul li.selectedList {color:#54A7E1; text-decoration:none; cursor:auto;}
-
-.recentlybox{margin:10px 0 0 0; padding:0px;}
-.recentlybox .prodThumbContainer{margin:0px; padding:0 0 5px 0; float:left; width:100%;}
-.recentlybox .prodThumbContainer h5{margin:0px; padding:0px; width:100%; float:left;}
-
-.recentlybox .variation .label_select{float:left;}
-.recentlybox .variation_A2{margin:6px 0 0 0; padding:0px; display:inline-block;}
-.recentlybox .variation span > select{margin:0px; padding:0px; width:100px; float:left;}
-
-.recentEmpty {font-family:electrolize; font-size:21px; text-align:center; margin:20px 10px;}
-
-.tellb{margin:10px 0 0 0; padding:0px; float:left; width:100%;}
-.tellb label{margin:0px; padding:3px 0 0 0; width:150px; float:left; font-weight:normal;}
-.tellb input{margin:0px; padding:2px; width:240px; float:left; border:1px solid #a8a7a7;}
-.tellb textarea{margin:0px; padding:2px; width:240px; float:left; border:1px solid #a8a7a7; min-height:70px;}
-.tellbbut{margin:20px 0 0 -44px; padding:0px; float:left; width:100%; text-align:right;}
-
-.sizetabbox{margin:0px; padding:0px;}
-.sizetabbox .ui-widget-content{background:none; border:none !important;}
-.sizetabbox .ui-tabs .ui-tabs-nav{margin:0; padding:0px !importANT;}
-.sizetabbox .ui-widget-header{background:#FFF !important; border:none !important;}
-.sizetabcontarea{border:1px solid #b1b1b1; border-bottom-left-radius:4px; border-bottom-right-radius:4px;}
-.sizetabcontarea ul li{list-style-type:disc !important;}
-
-#contact_form .zform_textbox{width: 400px;}
-#contact_form label{display: inline-block; padding-right: 5px; text-align: right; vertical-align: top; width: 150px;}
-.zform_textbox {background-color: #FFFFFF; border: 1px solid #C4C4C4;  color: #000000; font-size: 11px;}
-.zform_button {background-color: #ff9f00; border: 1px solid #F89B21; color: #FFFFFF;  font-size: 11px;}
-#contact_form div.form_input {margin-bottom: 5px;}
-.zform_textarea {background-color: #FFFFFF;border: 1px solid #C4C4C4; color: #000000;  font-size: 11px;}
-.zform_textarea.styleHelp {min-height:130px; width:400px;}
-
-/*Count Css*/
-.counttext{color:#00FF00; background:none; border:none; font-family:'Electrolize',serif; padding:0 0 0 3px; text-align:center; font-weight:bold; font-size:16px; width:25px;}
-.colon{color:#00ff00; font-family:'Electrolize',serif; font-size:12px; font-weight:bold; display:inline;}
-/*Count Css*/
-.popupshado{box-shadow:0 3px 3px 1px #cdcdcd;  padding:10px 0 10px 10px; margin:5px 0 0 0; /*box-shadow:inset 5px 0 5px -5px #333, inset -5px 0 5px -5px #333;*/  /*position:relative; top:-7px;*/ }
-.popupshado .sizebg {width:634px; background-image:url(images/sizebg-634x30.png); margin:5px 0 5px 14px;}
-.centerDialog {margin:0 auto;}
-
-.galladdtocarti{margin:0px; padding:0px; font-size:0px !important; border:0px !important; background:none
- !important; height:31px !important; width:112px !important; cursor:pointer; background-image:url(images/gallery_cart.gif) !important; background-repeat:no-repeat;}
- 
-.active{color:#fff; background:url(images/tabonbg.gif) repeat-x !important; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; 	-moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; border-top-left-radius: 5px; border-top-right-radius: 5px; padding:3px 22px;} 
-
-/*vilas added*/
-#homepageBottomTabs .ui-tabs-nav li a, #homepageSizingTabs .ui-tabs-nav li a {float:left; padding:5px 58px 4px 58px !important; text-decoration:none; font-weight:normal;}
-/*vilas added*/
-
-
-/*************************************************************************************
-LOGIN MODAL
-*************************************************************************************/
-
-.createAccount {height:270px; width:44%; margin:0 3%; float:left; font-family:ubuntu; text-align:center;}
-.createAccount h1 {color:#000000; text-align:center; font-family:Electrolize; font-size:2.0em; margin:28px 0 8px 0;}
-.createAccount p {font-size:1.5em;}
-.createAccount .modalCreateButton {padding:5px; margin:10px; font-family:Electrolize; border:none; font-size:1.6em; background:#286c99; color:#ffffff; box-shadow:0 0 14px 2px #999; border-radius:4px;} 
-
-#gotAccount {height:270px; width:44%; margin:14px 3% 0 3%; float:right; background:#286c99; font-family:ubuntu; font-weight:normal; box-shadow:0 0 14px 2px #999; border-radius:4px;}
-#gotAccount h1 {color:#ffffff; text-align:center; margin:29px 0 0 0; font-family:Electrolize;}
-#gotAccount fieldset {padding:0; border:0;}
-#gotAccount input {height:auto; width:90%; margin:10px auto; display:block; border:none; padding:5px 0 5px 5px; font-size:1.6em; border-radius:4px;}
-#gotAccount input.logInModalSubmit {height:auto; width:100px; font-size:1.6em; font-family:Electrolize; color:#ffffff; font-weight:normal; background:#c2976b !important;}
-#gotAccount a {color:#ffffff; font-family:"source sans pro"; font-size:12px; text-align:center; text-decoration:underline; margin:auto; display:block;}
-
-#recoverPasswordContainer .recoverField {margin:5px 0 12px 12px; float:left;}
-
-
-/*************************************************************************************
-createaccountArticle
-*************************************************************************************/
-
-#loginMessagingInline.appMessaging {margin:0 0 12px 40px;}
-.buyerLoggedIn .hideIfLoggedIn{display:none;}
-.hideIfLoggedOut{display:none;}
-.buyerLoggedIn .hideIfLoggedOut	{display: block;} /* may be 'block' */
-.buyerLoggedIn span.hideIfLoggedOut, .buyerLoggedIn a.hideIfLoggedOut{display: inline;} /* ensures inline on span elements */
-
-#createaccountArticle .creatAccount {height:auto; width:960px; margin:20px auto;}
-#gotAccount1 {height:auto; width:300px; float:left; background:#286c99; font-family:ubuntu; font-weight:bold; padding:0 0 20px 0; border-radius:4px;}
-#gotAccount1 h1 {color:#ffffff; text-align:center; margin:29px 0 0 0; font-family:Electrolize;}
-#gotAccount1 fieldset {padding:0; border:0}
-#gotAccount1 input {height:auto; width:90%; margin:10px auto; display:block; border:none; padding:5px; border-radius:4px;}
-#gotAccount1 input[type='submit'] {height:auto; width:100px; font-size:1.6em; font-family:Electrolize; color:#ffffff; font-weight:normal; background:#c2976b !important;}
-#gotAccount1 a {color:#ffffff; font-family:"source sans pro"; font-size:12px; text-align:center; text-decoration:underline; margin:auto; display:block;}
-
-.Account {height:auto; width:620px; float:right; font-family:"source sans pro"; font-size:1.2em; font-weight:bold;}
-.Account h1 {font-family:Electrolize; font-weight:bold; margin:0 0 30px 0; color:#286c99;}
-.fieldM {height:auto; width:600px; padding:0 0 10px 0; margin:0 auto; overflow:hidden; color:#286c99;}
-.field {height:auto; width:83px; display:inline-block; text-align:right;}
-.fieldM input, .fieldM select {height:30px; width:91px; margin:0 7px; padding:0 9px; border-radius:4px; font-family:ubuntu; border:2px solid #286c99;}
-.fieldM option {height:20px; padding:5px 0 0 5px;}
-.fieldM input.textfname {width:154px;}
-.fieldM input.textflast {width:187px;}
-.fieldM input.textfadd {width:260px;}
-.fieldM input.textfadd1 {width:163px;}
-.fieldM input.textfcity {width:179px;}
-.fieldM.stateFix {position:relative; top:-6px;}
-.selectWrapperS {height:30px; width:60px; display:inline-block; overflow:hidden; border:2px solid #286c99; margin:0 7px; position:relative; bottom:-13px; border-radius:4px;}
-@media screen and (-webkit-min-device-pixel-ratio:0) {.selectWrapperS{bottom:-1px;}}
-.fieldM select.textfstate {height:30px; width:80px; padding:6px 0px 3px 2px; border:none; background-position:33px 0px; margin:0;}
-.fieldM .selectField {position:relative; bottom:10px;}
-.selectWrapperC {height:30px; width:245px; display:inline-block; overflow:hidden; border:2px solid #286c99; margin:0 7px; border-radius:4px;}
-.fieldM select.textfcountry {width:285px; padding:7px 3px 3px 3px; background-position:219px 0px; border:none; margin:0; background-repeat:no-repeat;}
-.fieldM input.textfmail {width:140px; margin:0 29px 0 7px;}
-.fieldM input.textfpass {width:140px;}
-.fieldM input.textfphone {width:145px;}
-.Account .createButton {color:#ffffff; padding:15px; margin:10px auto; border:none; display:block; font-family:Electrolize; font-weight:bold; font-size:1.8em; background:#febc00; border-radius:4px;}
-.Account .createButton:hover {color:#febc00; background:#286c99;}
-
-
-/*************************************************************************************
-Layered search styles
-*************************************************************************************/
-
-.filterContainer {float:left; padding:40px 0 0 0;}
-.filterBox {height:auto; width:auto; background-color:#3BB3C3; margin-top:10px; font-family:"Open Sans";}
-.productColumn {width:auto;}
-.catTitle {height:35px; width:auto; margin: 0 10px; color:#3BB3C3; font-family:"Open Sans"; font-size:24px; font-weight:bold; line-height:32px; position:absolute; top:215px; left:530px; background:none;}
-.buyerGuides {height:30px; width:220px; border:2px solid #F8C301; position:absolute; top:215px; right:207px; color:#3BB3C3; text-align:center; font-family:"Open Sans"; font-size:14px; font-weight:bold; background:#F5F1DE;}
-.buyerGuides span {font-size:10px; color:#000000; font-weight:normal; display:block; margin:-4px 0 0 0;}
-.buyerGuides:hover {color:#E0463A;}
-.numItemsOnListContainer {height:30px; width:45px; position:absolute; top:253px; right:510px; overflow:hidden;}
-.numItemsOnList {background-color:#3bb3c3; width:67px; height:auto; border:none; color:#ffffff; background-image:url(images/sprites-500x500.png); background-position:-455px -183px;}
-.numItemsOnList option {text-align:center;}
-.categoryTemplateContainer {height:auto; width:761px;}
-label.break	{display:block; margin:0 0 4px 6px; color:#276B98; padding:0 0 0 23px; text-indent:-23px;}
-.layeredSearch	{height:auto; width:148px; margin:16px 0 16px 37px; color:#000000;}
-.layeredSearch legend	{font-size:1.0em; font-family:electrolize;  font-weight:normal; text-align:center; border:none; margin:0 0 4px 0; padding:0 5px; color:#F05A24;}
-.layeredSearch fieldset {border:1px solid #b1b1b1; border-radius:5px; margin-bottom:12px;}
-.layeredSearch .sliderValue {height:auto; width:95%; text-align:center; margin:0 0 15px 0;}
-.layeredSearch .slider-range {width:90%; margin:auto;}
-.layeredSearch .resetButton {height:auto; width:100%; color:#ffffff; background-color:#276B98; border:none; border-radius:5px; box-shadow:2px 2px 1px 1px #b1b1b1; font-family:electrolize;  font-weight:bold; padding:5px; margin:10px auto; display:block;}
-
-
-/*************************************************************************************
-returnArticle (also contains shipping info. for now)
-*************************************************************************************/
-
-#returnArticle {margin:0 50px; font-family:electrolize;}
-#returnArticle h1 {margin:10px 0; color:#666666;}
-#returnArticle ul li {list-style-type:disc; margin:10px 0 0 0;}
-.returnContent {margin:0 50px; font-family:ubuntu;} 
-.returnContent p {color:#000000; font-weight:normal; line-height:18px;}
-
-
-/*************************************************************************************
-end returnArticle
-*************************************************************************************/
