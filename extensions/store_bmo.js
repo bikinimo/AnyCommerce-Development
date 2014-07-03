@@ -39,27 +39,6 @@ var store_bmo = function(_app) {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				
-				_app.ext.store_bmo.u.bindOnclick();
-				
-				_app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
-					var $context = $(_app.u.jqSelector('#'+infoObj.parentID));
-			//		if(!$context.data('countingdown')) {
-			//			_app.ext.store_bmo.u.countdown($context);
-			//			$context.data('countingdown',true);	
-			//		}
-					_app.ext.store_bmo.u.runHomeCarouselTab1($context);
-					_app.ext.store_bmo.u.runHomeCarouselTab2($context);
-					_app.ext.store_bmo.u.runHomeCarouselTab3($context);
-						//make sure tab4 only anycontents the accessories product list once. 
-					if(!$context.data('tab4Templated')){
-						_app.ext.store_bmo.u.loadProductsAsList('.app-categories.accessories');
-						//_app.ext.store_bmo.u.runHomeCarouselTab4($context); call moved to renderProductsAsList
-						$context.data('tab4Templated',true);
-						_app.u.dump('data added?'); _app.u.dump($context.data('tab4Templated'));
-					}
-				}]);
-
-				
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
 
@@ -74,10 +53,29 @@ var store_bmo = function(_app) {
 			
 			startExtension : {
 				onSuccess : function() {
-					if(_app.ext.myRIA && _app.ext.myRIA.template){
+					if(_app.ext.quickstart && _app.ext.quickstart.template){
+						
 						_app.u.dump("store_bmo Extension Started");
 						$.extend(handlePogs.prototype,_app.ext.store_bmo.variations);
 						_app.u.dump('*** Extending Pogs');
+						
+						_app.templates.homepageTemplate.on('complete.beachmall_store',function(event,$context,infoObj) {	
+							_app.ext.store_bmo.u.addTabs($('#homepageTabs'));
+							_app.ext.store_bmo.u.addTabs($('#homepageBottomTabs'));
+							_app.ext.store_bmo.u.addTabs($('#homepageSizingTabs'));
+							
+							_app.ext.store_bmo.u.runHomeCarouselTab1($context);
+							_app.ext.store_bmo.u.runHomeCarouselTab2($context);
+							_app.ext.store_bmo.u.runHomeCarouselTab3($context);
+								//make sure tab4 only anycontents the accessories product list once. 
+							if(!$context.data('tab4Templated')){
+								_app.ext.store_bmo.u.loadProductsAsList('.app-categories.accessories');
+								//_app.ext.store_bmo.u.runHomeCarouselTab4($context); call moved to renderProductsAsList
+								$context.data('tab4Templated',true);
+//								_app.u.dump('data added?'); _app.u.dump($context.data('tab4Templated'));
+							}
+						});
+						
 					} else	{
 						setTimeout(function(){_app.ext.store_bmo.callbacks.startExtension.onSuccess()},250);
 					}
@@ -214,14 +212,14 @@ var store_bmo = function(_app) {
 				$('.rec','.quickVModal').addClass('selectedList');
 				
 					//if no recently viewed items, tell them the sky is blue
-				if(_app.ext.myRIA.vars.session.recentlyViewedItems.length == 0) {
+				if(_app.ext.quickstart.vars.session.recentlyViewedItems.length == 0) {
 					$('.recentEmpty',$container).show();
 				}
 					//otherwise, show them what they've seen
 				else {
 					$('.recentEmpty',$container).hide();
 					$('ul',$container).empty(); //empty product list;
-					$($container.anycontent({data:_app.ext.myRIA.vars.session})); //build product list
+					$($container.anycontent({data:_app.ext.quickstart.vars.session})); //build product list
 				}
 			},
 			
@@ -395,7 +393,7 @@ var store_bmo = function(_app) {
 					errors += "Please provide your password<br \/>";
 					}
 				if(errors == ''){
-					_app.calls.appBuyerLogin.init({"login":email,"password":password},{'callback':'authenticateBuyer','extension':'myRIA'});
+					_app.calls.appBuyerLogin.init({"login":email,"password":password},{'callback':'authenticateBuyer','extension':'quickstart'});
 					_app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
 //					_app.calls.buyerProductLists.init('forgetme',{'callback':'handleForgetmeList','extension':'store_prodlist'},'immutable');
 					localStorage.setItem('appPreferences','signedUp'); //set preference to bypass loading offer in case it was nuked elsewhere
@@ -462,10 +460,12 @@ var store_bmo = function(_app) {
 			},
 			
 			showSizeChart : function() {
+				dump('START show size chart');
 				$('#sizingGuideTemplate').dialog({'modal':'true', 'title':'Sizing Guide','width':800, 'height':550});
 			},
 			
 			showStyleChart : function() {
+				dump('START show style chart');
 				$('#styleGuideTemplate').dialog({'modal':'true', 'title':'Style Guide','width':800, 'height':550});
 			},
 		
@@ -829,6 +829,13 @@ var store_bmo = function(_app) {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			
+			//checks for class anytabs. If not found, adds it and runs anytabs on the passed container element.
+			addTabs : function(container) {
+				if(!$container.hasClass('anytabs')){
+					$container.addClass('anytabs').anytabs();
+				}
+			},
 		
 				//sets a date X days from current date on hidden input in acct creation form to use as expiration for new acct gift card.
 			setTime : function() {
@@ -845,14 +852,14 @@ var store_bmo = function(_app) {
 				var pid = _app.u.makeSafeHTMLId($('.popupshado','.quickVModal').attr('data-pid'));
 				
 					//add item to session var
-				if($.inArray(pid,_app.ext.myRIA.vars.session.recentlyViewedItems) < 0)	{
-					_app.ext.myRIA.vars.session.recentlyViewedItems.unshift(pid);
+				if($.inArray(pid,_app.ext.quickstart.vars.session.recentlyViewedItems) < 0)	{
+					_app.ext.quickstart.vars.session.recentlyViewedItems.unshift(pid);
 					}
 				else	{
 					//the item is already in the list. move it to the front.
-					_app.ext.myRIA.vars.session.recentlyViewedItems.splice(0, 0, _app.ext.myRIA.vars.session.recentlyViewedItems.splice(_app.ext.myRIA.vars.session.recentlyViewedItems.indexOf(pid), 1)[0]);
+					_app.ext.quickstart.vars.session.recentlyViewedItems.splice(0, 0, _app.ext.quickstart.vars.session.recentlyViewedItems.splice(_app.ext.quickstart.vars.session.recentlyViewedItems.indexOf(pid), 1)[0]);
 					}
-			//	_app.u.dump(_app.ext.myRIA.vars.session);
+			//	_app.u.dump(_app.ext.quickstart.vars.session);
 			//	_app.u.dump('modal pid:'); _app.u.dump(pid);
 			}, //addRecentlyViewedItems
 				
@@ -873,8 +880,8 @@ var store_bmo = function(_app) {
 			bindOnclick : function() {
 				$('body').off('click', 'a[data-onclick]').on('click', 'a[data-onclick]', function(event){
 					 var $this = $(this);
-					 var P = _app.ext.myRIA.u.parseAnchor($this.data('onclick'));
-					 return _app.ext.myRIA.a.showContent('',P);
+					 var P = _app.ext.quickstart.u.parseAnchor($this.data('onclick'));
+					 return _app.ext.quickstart.a.showContent('',P);
 				});
 			},
 			
@@ -1016,7 +1023,7 @@ var store_bmo = function(_app) {
 					_app.model.dispatchThis('immutable');
 				}
 				else {
-					$('#globalMessaging').anymessage({'message':'$form not passed into myRIA.u.handleBuyerAccountCreate','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'$form not passed into quickstart.u.handleBuyerAccountCreate','gMessage':true});
 				}
 			},
 			
