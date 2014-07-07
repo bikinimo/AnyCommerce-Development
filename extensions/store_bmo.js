@@ -53,32 +53,32 @@ var store_bmo = function(_app) {
 			
 			startExtension : {
 				onSuccess : function() {
-					if(_app.ext.quickstart && _app.ext.quickstart.template){
+				//	if(_app.ext.quickstart && _app.ext.quickstart.template){ Revisit using this if trouble w/ extending pogs shows up. 
 						
-						_app.u.dump("store_bmo Extension Started");
-						$.extend(handlePogs.prototype,_app.ext.store_bmo.variations);
-						_app.u.dump('*** Extending Pogs');
+					_app.u.dump("START store_bmo.callbacks.init.startExtension");
+					$.extend(handlePogs.prototype,_app.ext.store_bmo.variations);
+					//_app.u.dump('*** Extending Pogs');
+					
+					_app.templates.homepageTemplate.on('complete.store_bmo',function(event,$context,infoObj) {	
+						_app.ext.store_bmo.u.addTabs($('#homepageTabs'));
+						_app.ext.store_bmo.u.addTabs($('#homepageBottomTabs'));
+						_app.ext.store_bmo.u.addTabs($('#homepageSizingTabs'));
 						
-						_app.templates.homepageTemplate.on('complete.beachmall_store',function(event,$context,infoObj) {	
-							_app.ext.store_bmo.u.addTabs($('#homepageTabs'));
-							_app.ext.store_bmo.u.addTabs($('#homepageBottomTabs'));
-							_app.ext.store_bmo.u.addTabs($('#homepageSizingTabs'));
-							
-							_app.ext.store_bmo.u.runHomeCarouselTab1($context);
-							_app.ext.store_bmo.u.runHomeCarouselTab2($context);
-							_app.ext.store_bmo.u.runHomeCarouselTab3($context);
-								//make sure tab4 only anycontents the accessories product list once. 
-							if(!$context.data('tab4Templated')){
-								_app.ext.store_bmo.u.loadProductsAsList('.app-categories.accessories');
-								//_app.ext.store_bmo.u.runHomeCarouselTab4($context); call moved to renderProductsAsList
-								$context.data('tab4Templated',true);
+						_app.ext.store_bmo.u.runHomeCarouselTab1($context);
+						_app.ext.store_bmo.u.runHomeCarouselTab2($context);
+						_app.ext.store_bmo.u.runHomeCarouselTab3($context);
+							//make sure tab4 only anycontents the accessories product list once. 
+						if(!$context.data('tab4Templated')){
+							_app.ext.store_bmo.u.loadProductsAsList('.app-categories.accessories');
+							//_app.ext.store_bmo.u.runHomeCarouselTab4($context); call moved to renderProductsAsList
+							$context.data('tab4Templated',true);
 //								_app.u.dump('data added?'); _app.u.dump($context.data('tab4Templated'));
-							}
-						});
+						}
+					});
 						
-					} else	{
-						setTimeout(function(){_app.ext.store_bmo.callbacks.startExtension.onSuccess()},250);
-					}
+				//	} else	{
+				//		setTimeout(function(){_app.ext.store_bmo.callbacks.startExtension.onSuccess()},250);
+				//	}
 				},
 				onError : function (){
 					_app.u.dump('BEGIN _app.ext.store_bmo.callbacks.startExtension.onError');
@@ -114,7 +114,7 @@ var store_bmo = function(_app) {
 					
 					dataObj.combinedTotal = Number(origPrice) + Number(matchPrice);
 					dataObj.pid = _app.u.makeSafeHTMLId(rd.datapointer.split('|')[1]);
-					rd.$container.anycontent({"templateID":rd.loadsTemplate,"data":dataObj});
+					rd.$container.tlc({"templateid":rd.loadsTemplate,"dataset":dataObj});
 //					_app.u.dump('--> response data:'); _app.u.dump(rd);
 //					_app.u.dump('--> the matching price:'); _app.u.dump(matchPrice); 
 //					_app.u.dump('--> the original price:'); _app.u.dump(origPrice); 
@@ -128,7 +128,8 @@ var store_bmo = function(_app) {
 			renderProductsAsList : {
 				onSuccess : function(responseData) {
 			//		_app.u.dump(_app.data[responseData.datapointer]);
-					$('#carCat6','.homeTemplate').anycontent({"templateID":"tab4Template","datapointer":responseData.datapointer});
+					$('#carCat6','.homeTemplate').tlc({"templateid":"tab4Template","datapointer":responseData.datapointer});
+					//$('#carCat6','.homeTemplate').anycontent({"templateID":"tab4Template","dataset":responseData.datapointer});
 					_app.ext.store_bmo.u.runHomeCarouselTab4($('.homeTemplate'));
 				},
 				onError : function(responseData){
@@ -542,6 +543,26 @@ var store_bmo = function(_app) {
 			} //END showDescription
 	*/	
 		}, //Actions
+		
+		
+////////////////////////////////////   TLCFORMATS   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+			
+		tlcFormats : {
+		
+			searchbyobject: function(data,thisTLC) {
+				var argObj = thisTLC.args2obj(data.command.args,data.globals); //this creates an object of the args
+					//check if there is a $var value to replace in the filter object (THERE IS PROBABLY A BETTER WAY TO DO THIS)
+				if(argObj.replacify) {argObj.filter = argObj.filter.replace('replacify',data.value);}
+	//			dump(argObj.replacify);
+				var query = JSON.parse(argObj.filter);
+	//	dump('----search by tag'); dump(data.value); dump(argObj.filter); dump(query);
+				_app.ext.store_search.calls.appPublicProductSearch.init(query,$.extend({'datapointer':'appPublicSearch|tag|'+argObj.tag,'templateID':argObj.templateid,'extension':'store_search','callback':'handleElasticResults','list':data.globals.tags[data.globals.focusTag]},argObj));
+				_app.model.dispatchThis('mutable');
+				return false; //in this case, we're off to do an ajax request. so we don't continue the statement.
+			}
+			
+		},
+
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -555,7 +576,7 @@ var store_bmo = function(_app) {
 			},
 		
 				//checks for matching piece attrib in prod list item and sets sum of prices on list item if found. 
-			matchingBasePrice : function($tag, data) {
+			matchingbaseprice : function($tag, data) {
 				var basePrice = (data.bindData.isElastic) ? data.value.base_price/100 : data.value['%attribs']['zoovy:base_price'];
 				var match = _app.u.makeSafeHTMLId((data.bindData.isElastic) ? data.value.matching_piece : data.value['%attribs']['user:matching_piece']);
 							
@@ -760,7 +781,7 @@ var store_bmo = function(_app) {
 				}
 			},
 					
-			addInfiniteSlider : function($tag,data)	{
+			addinfiniteslider : function($tag,data)	{
 //				_app.u.dump("BEGIN store_bmo.renderFormats.addInfiniteSlider: "+data.value);
 				var width = data.bindData.width;
 				var height = data.bindData.height;
@@ -831,7 +852,8 @@ var store_bmo = function(_app) {
 		u : {
 			
 			//checks for class anytabs. If not found, adds it and runs anytabs on the passed container element.
-			addTabs : function(container) {
+			addTabs : function($container) {
+//				dump('START addTabs ');
 				if(!$container.hasClass('anytabs')){
 					$container.addClass('anytabs').anytabs();
 				}
@@ -863,17 +885,15 @@ var store_bmo = function(_app) {
 			//	_app.u.dump('modal pid:'); _app.u.dump(pid);
 			}, //addRecentlyViewedItems
 				
-				//loads product in hompage accessories tab	
+			//loads product in hompage accessories tab	
 			loadProductsAsList :function(passedCat) {
-			
 				var _tag = {
 					"callback":"renderProductsAsList",
 					"extension":"store_bmo"
 				}
-				_app.ext.store_navcats.calls.appNavcatDetail.init(passedCat, _tag,'immutable');
-	
+				//_app.calls.appNavcatDetail.init(passedCat, _tag,'immutable');
+				_app.calls.appNavcatDetail.init({"path":passedCat,"detail":"more"},_tag,"immutable");
 				_app.model.dispatchThis('immutable');
-			
 			}, //loadProductsAsList
 		
 			//replacement for bindByAnchor href to make crawlable links. (works everywhere)

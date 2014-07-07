@@ -54,8 +54,20 @@ var store_routing = function(_app) {
 				_app.router.addAlias('checkout', 	function(routeObj){showContent('checkout',	routeObj.params);});
 
 				_app.router.addAlias('search', 		function(routeObj){showContent('search',	routeObj.params);});
-
-
+				//shows search result for any product with the tag passed and the is_app attribute
+				_app.router.addAlias('apptagsearch', 		function(routeObj){
+					var tag = routeObj.params.tag.toUpperCase(); 
+					showContent('search',{'elasticsearch':{'filter':{'and':{'filters':[{'term':{'tags':tag}},{'term':{'is_app':'1'}}]}}}})
+				});
+				//shos search results for any product with the attribute that is passed and set to "1", and the is_app attribute
+				_app.router.addAlias('appattribsearch',		function(routeObj){
+					var elasticsearch = {'filter':{'and':[{'term':{'is_app':'1'}}]}};
+					var fObj = {'term':{}};
+					fObj.term[routeObj.params.attrib] = '1';
+					elasticsearch.filter.and.push(fObj);
+					showContent('search',{'elasticsearch':elasticsearch});
+				});
+				
 				_app.router.appendHash({'type':'exact','route':'cart/','callback':function(routeObj){showContent('cart',routeObj.params);}});
 				_app.router.appendHash({'type':'exact','route':'home','callback':'homepage'});
 				_app.router.appendHash({'type':'exact','route':'','callback':'homepage'});
@@ -70,6 +82,8 @@ var store_routing = function(_app) {
 				_app.router.appendHash({'type':'match','route':'checkout*','callback':'checkout'});
 				_app.router.appendHash({'type':'match','route':'search/tag/{{tag}}*','callback':'search'});
 				_app.router.appendHash({'type':'match','route':'search/keywords/{{KEYWORDS}}*','callback':'search'});
+				_app.router.appendHash({'type':'match','route':'apptag/{{tag}}*','callback':'apptagsearch'}); //elastic search for tag plus is_app
+				_app.router.appendHash({'type':'match','route':'appattrib/{{attrib}}*','callback':'appattribsearch'}); //elastic search for attrib plus is_app
 
 
 /*

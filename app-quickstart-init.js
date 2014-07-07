@@ -47,6 +47,10 @@ myApp.rq.push(['extension',0,'cart_quickadd','extensions/cart_quickadd/extension
 myApp.rq.push(['extension',0,'store_bmo_lto','extensions/limited_time_offer/store_bmo_lto.js']);
 myApp.rq.push(['extension',0,'store_filter','extensions/store_filter.js']);
 
+myApp.rq.push(['script',0,myApp.vars.baseURL+'carouFredSel-6.1.0/jquery.carouFredSel-6.1.0-packed.js']);
+myApp.rq.push(['script',0,myApp.vars.baseURL+'carouFredSel-6.1.0/jquery.carouFredSel-6.1.0.js']);
+myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.infinitecarousel3.js']); //light infinite carousel for prod pages (replaces imgSlider)
+//myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.infinitecarousel3.min.js']); //light infinite carousel for prod pages (replaces imgSlider)
 myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']); //used pretty early in process..
 myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.ui.anyplugins.js']); //in zero pass because it's essential to rendering and error handling.
 myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/tlc.js']); //in zero pass cuz you can't render a page without it..

@@ -17,12 +17,12 @@
 ************************************************************** */
 
 
-var store_bmo_lto = function() {
+var store_bmo_lto = function(_app) {
 	var theseTemplates = new Array('');
 	var r = {
 	
 		vars : {
-			defaultLTO : 0
+			defaultlto : 0
 		},
 
 	
@@ -43,7 +43,7 @@ var store_bmo_lto = function() {
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN app.ext.stor_bmo_lto.callbacks.init.onError');
+				_app.u.dump('BEGIN _app.ext.stor_bmo_lto.callbacks.init.onError');
 				}
 			},
 
@@ -67,6 +67,36 @@ var store_bmo_lto = function() {
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 		
+			//same as regular money function but checks if product is an LTO and applies discount to displayed price if so (just for display)
+			ltomoney : function($tag,data)	{
+//			_app.u.dump('BEGIN ltomoney');
+			var amount = data.bindData.iselastic ? (data.value / 100) : data.value;
+			if(!$tag.attr('data-nodiscount') == 1) {
+				amount = _app.ext.store_bmo_lto.u.applyLTODiscount($tag.parent().attr('data-pid'),amount);
+			}	
+			if(amount)	{
+//				dump($tag.attr('data-currecny')); dump($tag.attr('data-hide-zero'));
+				var r,o,sr;
+				r = _app.u.formatMoney(amount,$tag.attr('data-currecny'),'',$tag.attr('data-hide-zero'));
+//					_app.u.dump(' -> attempting to use var. value: '+data.value);
+//					_app.u.dump(' -> currencySign = "'+data.bindData.currencySign+'"');
+				var preText = $tag.attr('data-pretext') ? $tag.attr('data-pretext')+" " : ""; 
+
+				//if the value is greater than .99 AND has a decimal, put the 'change' into a span to allow for styling.
+				if(r.indexOf('.') > 0)	{
+//					_app.u.dump(' -> r = '+r);
+					sr = r.split('.');
+					o = sr[0];
+					o = preText + o;
+					if(sr[1])	{o += '<span class="cents">.'+sr[1]+'<\/span>'}
+					$tag.html(o);
+					}
+				else	{
+					$tag.html(preText + r);
+					}
+				}
+			}, //money
+		
 				//adds a class to $tag parent for css style changes to LTO cart/checkout items
 			hideStuffListLTO : function($tag, data) {
 				if(data.value == '%LTO10' || data.value == '%LTO15' || data.value == '%LTO20' || data.value == '%LTO25') {
@@ -82,32 +112,32 @@ var store_bmo_lto = function() {
 							products.push(data.value[index].product);
 						}
 					}
-//					app.u.dump('--> LTO addCouponLTO'); app.u.dump(products);
+//					_app.u.dump('--> LTO addCouponLTO'); _app.u.dump(products);
 					var numRequests = 0;
 					for(var index in products) {
 						var _tag = {
 							'callback':function(rd) {
-								if(app.model.responseHasErrors(rd)) {
-									app.u.throwMessage(rd);
+								if(_app.model.responseHasErrors(rd)) {
+									_app.u.throwMessage(rd);
 								}
 								else {
-									var prod = app.data[rd.datapointer];
+									var prod = _app.data[rd.datapointer];
 									if(prod['%attribs'] && prod['%attribs']['user:limited_time_offer'] && prod['%attribs']['zoovy:prod_promoclass']) {
-										if(app.ext.store_bmo_lto.u.isTheLTO(prod['%attribs']['user:limited_time_offer'])) {
-											var discount = app.ext.store_bmo_lto.u.qtyOfDiscountLTO(prod['%attribs']);
-//												app.u.dump('LTO'+discount);
+										if(_app.ext.store_bmo_lto.u.isTheLTO(prod['%attribs']['user:limited_time_offer'])) {
+											var discount = _app.ext.store_bmo_lto.u.qtyOfDiscountLTO(prod['%attribs']);
+//												_app.u.dump('LTO'+discount);
 											if(discount) {
 												discount = 'LTO'+discount;
 													//add the discount to the cart. 
-												app.ext.cco.calls.cartCouponAdd.init(discount,{'callback':function(rd) {
-													if(app.model.responseHasErrors(rd)) {
+												_app.ext.cco.calls.cartCouponAdd.init(discount,{'callback':function(rd) {
+													if(_app.model.responseHasErrors(rd)) {
 														$('#cartMessaging').anymessage({'message':rd})
 													}
 													else {
-														//app.ext.orderCreate.u.handlePanel($('#cartTemplateForm'),'chkoutCartItemsList',['empty','translate','handleDisplayLogic','handleAppEvents']);
+														//_app.ext.orderCreate.u.handlePanel($('#cartTemplateForm'),'chkoutCartItemsList',['empty','translate','handleDisplayLogic','handleAppEvents']);
 													}
 												}});
-												app.model.dispatchThis('immutable');
+												_app.model.dispatchThis('immutable');
 											}
 											else {} //discount is 0, no coupon to add.
 										}
@@ -117,19 +147,19 @@ var store_bmo_lto = function() {
 								}
 							}
 						};
-						numRequests += app.ext.store_prodlist.calls.appProductGet.init({'pid':products[index]},_tag,'immutable');
+						numRequests += _app.ext.store_prodlist.calls.appProductGet.init({'pid':products[index]},_tag,'immutable');
 					}
-					if(numRequests > 0){app.model.dispatchThis('immutable');}
+					if(numRequests > 0){_app.model.dispatchThis('immutable');}
 			}, //addCouponLTO
 				
-				//gets last item in $limited-time-offer and sets an extension var to be read in countdownCheck().
-			defaultLTO : function($tag,data) {
-				app.ext.store_bmo_lto.vars.defaultLTO = data.value[data.value.length - 1];
+				//gets last item in $limited-time-offer and sets a data attribute w/ its pid to be read in countdownCheck().
+			defaultlto : function($tag,data) {
+				$tag.attr('data-default-lto',data.value[data.value.length - 1]);
 			},
 		
 				//shows "regular price" in product listing if the product is the current LTO item.
-			isLTO : function($tag, data) {
-				if(app.ext.store_bmo_lto.u.isTheLTO(data.value)) {
+			islto : function($tag, data) {
+				if(_app.ext.store_bmo_lto.u.isTheLTO(data.value)) {
 					$tag.show(); //the product is the limited time offer item for now, show it.
 				}
 				else {} //is not yet or already past it's limited time offer status, hidden by default so do nada.
@@ -137,35 +167,35 @@ var store_bmo_lto = function() {
 			
 				//checks promo end date/time against current date/time. Deletes item to show next if promo is over,
 				//calls countdown() to show timer on item if promo isn't over.
-			countdownCheck : function($tag, data) {
+			countdowncheck : function($tag, data) {
+				var defaultLTO = $('[data-default-lto]','.homeTemplate').attr('data-default-lto');
 				var prod = data.value['%attribs'];
-				var pid = app.u.makeSafeHTMLId(data.value.pid);
-				
+				var pid = _app.u.makeSafeHTMLId(data.value.pid);
 				if(prod && prod['user:limited_time_offer']) {
 					var prodStartTime = prod['user:limited_time_offer'].split('.')[0];
 					var prodEndTime = prod['user:limited_time_offer'].split('.')[1];
 					
 					if(prodEndTime){		
-				//		var d = new Date(app.ext.store_bmo.u.makeUTCFloridaTimeMS());
-						var d = new Date(app.ext.store_bmo.u.makeUTCTimeMS());
-						var nowTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d); //current UTC time	
+				//		var d = new Date(_app.ext.store_bmo.u.makeUTCFloridaTimeMS());
+						var d = new Date(_app.ext.store_bmo.u.makeUTCTimeMS());
+						var nowTime = _app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d); //current UTC time	
 							//all offers are past, so show the last item w/ "this offer over" message by passing the expired date to countdown.
-						if (prodEndTime < nowTime && pid == app.ext.store_bmo_lto.vars.defaultLTO) {
-							app.u.dump('All limited time offers have passed, list needs repopulating');
-							app.ext.store_bmo_lto.u.countdown($tag.parent(),prodEndTime);
+						if (prodEndTime < nowTime && pid == defaultLTO) {
+							_app.u.dump('All limited time offers have passed, list needs repopulating');
+							_app.ext.store_bmo_lto.u.countdown($tag.parent(),prodEndTime);
 						}
 							//check if end of promotion has been reached, remove if it has.
 						else if(prodEndTime < nowTime) {
-							app.u.dump('!! LTO date for '+pid+' has ended. Remove or edit product record.'); 
+							_app.u.dump('!! LTO date for '+pid+' has ended. Remove or edit product record.'); 
 							$tag.parent().remove();
 						}	//check if promotion has not started yet, remove if not
 						else if(prodStartTime > nowTime) {
-							app.u.dump('LTO date for '+pid+' has not occured yet.'); 
+							_app.u.dump('LTO date for '+pid+' has not occured yet.'); 
 							$tag.parent().remove();
 						}
 						else {
 								//promotion is still good load countdown with it
-							app.ext.store_bmo_lto.u.countdown($tag.parent(),prodEndTime);
+							_app.ext.store_bmo_lto.u.countdown($tag.parent(),prodEndTime);
 						}
 					}
 					else {
@@ -176,8 +206,8 @@ var store_bmo_lto = function() {
 					$tag.parent().remove();
 				}
 			} //countdownCheck
-	
 		}, //renderFormats
+	
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 //utilities are typically functions that are executed by an event or action.
@@ -196,7 +226,7 @@ var store_bmo_lto = function() {
 		
 				//checks the discount attrib assigned and returns a value to be used for the percentage discount.
 			qtyOfDiscountLTO : function(prod) {
-			app.u.dump('--> Promoclass:'); app.u.dump(prod['zoovy:prod_promoclass']);
+			_app.u.dump('--> Promoclass:'); _app.u.dump(prod['zoovy:prod_promoclass']);
 				var discount = false; //what is returned, level of discount or false if no discount
 				switch(prod['zoovy:prod_promoclass']) {
 					case '10': discount = '10';	break;
@@ -212,8 +242,8 @@ var store_bmo_lto = function() {
 				var r = false;
 				var ltoStartTime = limited_time_offer.split('.')[0];
 				var ltoEndTime = limited_time_offer.split('.')[1];
-				var d = new Date(app.ext.store_bmo.u.makeUTCTimeMS());
-				var nowTime = app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d);
+				var d = new Date(_app.ext.store_bmo.u.makeUTCTimeMS());
+				var nowTime = _app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d);
 				
 				if(ltoStartTime && ltoEndTime && ltoStartTime < nowTime && ltoEndTime > nowTime) {
 					r = true; //the product is the limited time offer item for now.
@@ -226,15 +256,15 @@ var store_bmo_lto = function() {
 				//applies LTO discount to product price if it has one, and 
 			applyLTODiscount : function(pid, amount) {
 				if(pid) {
-					pid = app.u.makeSafeHTMLId(pid);
-					var prod = app.data['appProductGet|'+pid];
+					pid = _app.u.makeSafeHTMLId(pid);
+					var prod = _app.data['appProductGet|'+pid];
 					var discount = 0; //if no discount, multiply by 0 will keep price the same
 				
 						//if the product has a limited time offer and any discount the displayed price needs to be changed
 					if(prod && prod['%attribs'] && prod['%attribs']['user:limited_time_offer'] && prod['%attribs']['zoovy:prod_promoclass']) {
 						prod = prod['%attribs'];
-						if(app.ext.store_bmo_lto.u.isTheLTO(prod['user:limited_time_offer'])) {
-							discount = app.ext.store_bmo_lto.u.qtyOfDiscountLTO(prod) * 0.01;
+						if(_app.ext.store_bmo_lto.u.isTheLTO(prod['user:limited_time_offer'])) {
+							discount = _app.ext.store_bmo_lto.u.qtyOfDiscountLTO(prod) * 0.01;
 						}
 					} //end discount if
 
@@ -246,11 +276,11 @@ var store_bmo_lto = function() {
 		
 				//runs countdown timer against current time and passed argument of product lto end time
 			countdown : function($context, prodTime) {
-				var endTime = new Date(app.ext.store_bmo.u.yyyymmdd2Pretty(prodTime));
-//				app.u.dump('End Time is: '); app.u.dump(endTime.getTime());
+				var endTime = new Date(_app.ext.store_bmo.u.yyyymmdd2Pretty(prodTime));
+//				_app.u.dump('End Time is: '); _app.u.dump(endTime.getTime());
 				var cl = $('form[name="clock"]', $context);
-		//		var count=Math.floor((endTime.getTime()-app.ext.store_bmo.u.makeUTCFloridaTimeMS())/1000);
-				var count=Math.floor((endTime.getTime()-app.ext.store_bmo.u.makeUTCTimeMS())/1000);
+		//		var count=Math.floor((endTime.getTime()-_app.ext.store_bmo.u.makeUTCFloridaTimeMS())/1000);
+				var count=Math.floor((endTime.getTime()-_app.ext.store_bmo.u.makeUTCTimeMS())/1000);
 				
 				if(count<=0) {
 					$('input[name=days]', cl).val('00');
@@ -266,15 +296,15 @@ var store_bmo_lto = function() {
 					$('#deal',$context).addClass('displayNone');
 					document.getElementById("deal").style.display = 'none';
 				
-					$('input[name=secs]', cl).val(''+app.ext.store_bmo.u.toSt(count%60));
+					$('input[name=secs]', cl).val(''+_app.ext.store_bmo.u.toSt(count%60));
 					count=Math.floor(count/60);
-					$('input[name=mins]', cl).val(''+app.ext.store_bmo.u.toSt(count%60));
+					$('input[name=mins]', cl).val(''+_app.ext.store_bmo.u.toSt(count%60));
 					count=Math.floor(count/60);
-					$('input[name=hours]', cl).val(''+app.ext.store_bmo.u.toSt(count%24));
+					$('input[name=hours]', cl).val(''+_app.ext.store_bmo.u.toSt(count%24));
 					count=Math.floor(count/24);
 					$('input[name=days]', cl).val(''+count);    
 				
-					setTimeout(function(){app.ext.store_bmo_lto.u.countdown($context,prodTime);},1000);
+					setTimeout(function(){_app.ext.store_bmo_lto.u.countdown($context,prodTime);},1000);
 				}
 			}, //countdown
 				
