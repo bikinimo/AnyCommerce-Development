@@ -159,10 +159,12 @@ var store_bmo_lto = function(_app) {
 		
 				//shows "regular price" in product listing if the product is the current LTO item.
 			islto : function($tag, data) {
+				if(data.value) {
 				if(_app.ext.store_bmo_lto.u.isTheLTO(data.value)) {
 					$tag.show(); //the product is the limited time offer item for now, show it.
 				}
 				else {} //is not yet or already past it's limited time offer status, hidden by default so do nada.
+				}
 			},
 			
 				//checks promo end date/time against current date/time. Deletes item to show next if promo is over,

@@ -600,7 +600,7 @@ var store_bmo = function(_app) {
 		
 				//hides products in a product list that do not have the is_app attrib,
 				//or that have a matching_piece attrib that ends in ST (is a matching bottom).
-			hideFromList: function($tag, data) {
+			hidefromlist: function($tag, data) {
 				var attribs = data.bindData.isElastic ? data.value.matching_piece : data.value['%attribs'];
 				if(attribs) {
 				
@@ -782,9 +782,9 @@ var store_bmo = function(_app) {
 			},
 					
 			addinfiniteslider : function($tag,data)	{
-//				_app.u.dump("BEGIN store_bmo.renderFormats.addInfiniteSlider: "+data.value);
-				var width = data.bindData.width;
-				var height = data.bindData.height;
+				_app.u.dump("BEGIN store_bmo.renderFormats.addInfiniteSlider: "+data.value);
+				var width = $tag.attr('data-width');
+				var height = $tag.attr('data-height');
 				
 				if(data.bindData.isElastic) { 
 					//_app.u.dump(data.value);

@@ -713,26 +713,29 @@ Used for the product in a product list (prodlist), usually in the body of a cate
 the loadingBG class is removed (must be that classname) when the template is translated.
 remember to NOT put the button inside the href or two events will occur onclick.
 -->
-<li id="productListTemplate" class="loadingBG  " onmouseover="$('.quickView',$(this)).show();" onmouseout="$('.quickView').hide();">
+<li id="productListTemplate" class="loadingBG"> <!-- onmouseover="$('.quickView',$(this)).show();" onmouseout="$('.quickView').hide();" -->
+	<!-- MARK MAY NEED LATER FOR SEO PURPOSES <a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class="blockLink"></a> -->
 
-	<button class="floatRight pointer quickView displayNone" data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView">Quickview</button>
-	
-	<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class="blockLink">
-		<div data-tlc="bind $var '.pid'; quickstart#addpicslider  --legacy; apply --append;" class="prodThumbContainer">
-		<img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank;){{bind $var '.%attribs.zoovy:prod_image1';}}; if(is $var --notblank;){{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
-		</div>
-
-		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h5>
-
-		<h6 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{ format --currency='USD';  format --prepend='Our Price: '; apply --append;}};"></h6>
+	<div class="pointer prominh" data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView">
+		<div data-tlc="bind $var '.'; store_bmo#hidefromlist --legacy;"></div>
+		<div data-tlc="bind $var '.'; store_bmo#addinfiniteslider --legacy" data-height="210" data-width="150" class="prodThumbContainer floatLeft"></div> <!-- MARK sheight:150; STILL NEED THIS? -->
 		
-		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
-<!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
-	</a>
+		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{format --truncate='38'; apply --append;}};"></h5>
+
+		<div data-tlc="bind $var '.%attribs.user:matching_piece'; if (is $var --notblank) {{apply --hide;}};">
+			<h6 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{ format --currency='USD';  apply --add --class='price'; format --prepend=''; apply --append;}};"></h6>
+			<div data-tlc="bind $var '.%attribs.user:limited_time_offer'; store_bmo_lto#islto --legacy;" class="displayNone">
+				<h6 data-tlc="bind $var '.%attribs.zoovy:base_price'; store_bmo_lto#ltomoney --legacy;" class="reg" data-pretext='Regularly:' data-currecny='$' data-hide-zero='1' data-nodiscount='1'></h6>
+			</div>
+		</div>
+		<div data-tlc="bind $var '.%attribs.user:matching_piece'; if (is $var --notblank) {{apply --show;}};" class="displayNone">
+			<h6 data-tlc="bind $var '.'; store_bmo#matchingbaseprice --legacy;" class="hideInMinimalMode price"></h6>
+		</div>
+	</div>
 	
 	<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" onsubmit="return false" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
 		<input name="qty" value="1" type="hidden">
-		<button data-tlc="quickstart#addtocartbutton  --legacy; apply --append;" data-bind="format:addtocartbutton; extension:quickstart; useParentData:true;" class='applyButton'>more details</button>
+		<!-- MARK WHY IS THIS FORM EVEN STILL HERE? <button data-tlc="quickstart#addtocartbutton  --legacy; apply --append;" data-bind="format:addtocartbutton; extension:quickstart; useParentData:true;" class='applyButton'>more details</button> -->
 	</form>
 
 </li>
