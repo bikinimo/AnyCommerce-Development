@@ -613,7 +613,8 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			</div>
 		</div>
 		<div class="displayNone" data-tlc="bind $var '.%attribs.user:matching_piece'; if (is $var --notblank) {{apply --show;}};">
-			<h2 class='hideInMinimalMode' data-tlc="bind $var '.'; store_bmo#matchingbaseprice --legacy;"></h2> <!-- currencysign: $;  hidezero:true; classname:price; pretext: Only: -->
+			<span class="price">Only: </span>
+			<h2 class='hideInMinimalMode' data-tlc="bind $var '.'; store_bmo#matchingbaseprice --prepend='Only: ' --legacy;"></h2>  <!-- currencysign: $;  hidezero:true; classname:price; pretext: Only: -->
 		</div> 
 		<div data-tlc="bind $pid '.pid'; store_product#addtocartbutton --legacy;">
 		<!--	<button class='addCart' data-bind='var:product(pid); format:assignAttribute; attribute:data-pid;' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).attr('data-pid')});">Get This Offer!</button> -->
@@ -640,8 +641,8 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 </div>
 
 
-<div id='matchingPriceTemplate'>
-	<span data-tlc="bind $var '.combinedTotal'; store_bmo_lto#ltomoney --legacy;" class="price" data-pretext='Only:' data-currecny='$' data-hide-zero='1'></span> <!-- set:  -iselastic='1' (with two dashes) for elastic use -->
+<div id='matchingPriceTemplate' class="matchingPriceTemplate">
+	<span data-tlc="bind $var '.combinedTotal'; store_bmo_lto#ltomoney --legacy;" class="price" data-currecny='$' data-hide-zero='1'></span> <!-- set data-pretext='Only:' for pretext ... set:  -iselastic='1' (with two dashes) for elastic use -->
 	<div class='displayNone' data-tlc="bind $var '.lto'; store_bmo_lto#islto --legacy;">
 		<div data-tlc="bind $pid '.pid'; apply --attrib='data-pid';">
 			<div data-tlc="bind $var '.combinedTotal'; store_bmo_lto#ltomoney --legacy;" class="reg" data-pretext='Regularly:' data-currecny='$' data-hide-zero='1' data-nodiscount='1'></div>
@@ -740,8 +741,6 @@ remember to NOT put the button inside the href or two events will occur onclick.
 
 </li>
 
-<li id='productListTemplatePopout' class='loadingBG productListTemplatePopout'></li>
-
 
 <!--
 for product lists with addToCart feature (accessories, for example)
@@ -774,28 +773,20 @@ container ul should have lineItemProdlist class on it instead of productList
 
 <li id="productListTemplateBuyerList" class="loadingBG floatLeft marginRight marginBottom">
 	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';">
-
 		<div class="prodThumbContainer marginBottom">
 			<div class="ui-widget ui-widget-content ui-corner-all">
 				<img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank;){{bind $var '.%attribs.zoovy:prod_image1';}}; if(is $var --notblank;){{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
 				<div class="smallButtonList ui-widget ui-widget-header ui-corner-all alignCenter">
-
-<a data-tlc="bind $var '.'; store_routing#seoanchor --type='product' --seo; apply --attrib='href';" class='applyButton' data-text='false' data-icon-primary='ui-icon-cart'>Add To Cart</a>
-<a href='#' data-app-click="quickstart|quickviewShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-info' data-loadstemplate='productTemplate'>Details</a>
-<a href='#' data-app-click="store_crm|productReviewShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-star'>Write Review</a>
-<a href='#' data-app-click="store_crm|productBuyerListRemoveExec" class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Remove From List</a>
-
+					<a data-tlc="bind $var '.'; store_routing#seoanchor --type='product' --seo; apply --attrib='href';" class='applyButton' data-text='false' data-icon-primary='ui-icon-cart'>Add To Cart</a>
+					<a href='#' data-app-click="quickstart|quickviewShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-info' data-loadstemplate='productTemplate'>Details</a>
+					<a href='#' data-app-click="store_crm|productReviewShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-star'>Write Review</a>
+					<a href='#' data-app-click="store_crm|productBuyerListRemoveExec" class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Remove From List</a>
 				</div>
 			</div>
 		</div>
-		
 		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite floatRight"></span>
-
 		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h5>
-
 		<h6 data-tlc="bind $var '.%attribs.zoovy:base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};"></h6>
-
-
 	</div>
 </li>
 
@@ -814,18 +805,21 @@ remember to NOT put the button inside the 'href' container or two events will oc
 
 SANITY -> if you change the height and width of this image, change the .minimalMode .searchResultsProduct in qs_styles.css to match
 -->
-<li id="productListTemplateResults" class="loadingBG searchResultsProduct ">
-	<div data-app-click="quickstart|inlineProductPreviewShow" class="pointer">
-		<div class="prodThumbContainer">
-		<img data-tlc="bind $var '.images.0'; apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
+<li id="productListTemplateResults" class="loadingBG searchResultsProduct">
+	
+	<div data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView" onclick="myApp.ext.store_bmo.a.pauseFred($(this).parent().parent());" class="pointer">
+		<div data-tlc="bind $var '.'; store_bmo#hidefromlist --legacy;" data-iselastic='1'></div>
+		<div data-tlc="bind $var '.'; store_bmo#addinfiniteslider --legacy" data-height="210" data-width="150" data-iselastic='1' class="prodThumbContainer floatLeft"></div>
+
+		<h5 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{format --truncate='38'; apply --append;}};" class="hideInMinimalMode"></h5>
+		<div data-tlc="bind $var '.matching_piece'; if (is $var --notblank;) {{apply --hide;}};">
+			<h6 data-tlc="bind $var '.base_price';  if (is $var --notblank;) {{math --div='100'; format --currency='USD'; apply --add --class='price'; apply --append;}};" class="hideInMinimalMode"></h6>
 		</div>
-
-		<h5 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};" class="hideInMinimalMode"></h5>
-
-		<h6 data-tlc="bind $var '.base_price';  if (is $var --notblank;) {{math --div='100'; format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="hideInMinimalMode"></h6>
-		
+		<div data-tlc="bind $var '.matching_piece'; if(is $var --notblank;) {{apply --show;}};" class="displayNone">
+			<h6 data-tlc="bind $var '.'; store_bmo#matchingbaseprice --legacy;" data-iselastic="1" class="hideInMinimalMode price"></h6>
+		</div>
 	</div>
-	<a class="hideInMinimalMode pointer moreDetails" data-tlc="bind $seoname '.prod_name'; bind $var '.'; store_routing#seoanchor --type='product' --seo --seoname=$seoname; apply --attrib='href';">more details</a>
+	<!-- MARK MAY NEED FOR SEO LATER <a class="hideInMinimalMode pointer moreDetails" data-tlc="bind $seoname '.prod_name'; bind $var '.'; store_routing#seoanchor --type='product' --seo --seoname=$seoname; apply --attrib='href';">more details</a> -->
 </li>
 
 <li id="productListTemplateResultsNoPreview" class="loadingBG searchResultsProduct ">
@@ -1068,7 +1062,9 @@ this will likely become more flexible in the future. ###
 
 
 
-
+<ul>
+	<li id='productListTemplatePopout' class='loadingBG productListTemplatePopout'></li>
+</ul>
 
 
 

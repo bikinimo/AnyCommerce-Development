@@ -132,8 +132,10 @@ ul li{ list-style-type:none;}
 .perboxright{height:231px; margin:0 0 0 10px; padding:0px; width:155px; float:left; display:inline-block; position:relative;}
 .perboxright h1{margin:0px; padding:0px; font-size:17px; color:#000000; font-family:'Ubuntu', serif;}
 .perboxright h2, .perboxright span.cents, .perboxright span.price {margin:0px; padding:6px 0 0 0; font-size:18px; color:#ec1c24; font-family:'Ubuntu', serif; font-weight:bold;}
+.perboxright h2 {display:inline;}
 .price {color:#f05a24; font-size:13.5px;}
 .perboxright div, .perboxright div.reg .cents, .reg {color:#000000; font-size:10px; font-weight:normal;}
+.matchingPriceTemplate {display:inline;}
 .perboxright span#deal{color:#54A7E1; font-size:10px; font-weight:bold; margin:20px auto; text-align:center;}
 .perboxright span.notAvailableForPurchase {display:block; margin:8px 0;}
 .perboxright .countDesc {color:#ffffff; text-align:center; padding:0 0 0 3px;}
@@ -149,7 +151,7 @@ ul li{ list-style-type:none;}
 .madebox1 .giftCardLink{text-align:center; color:#ec1c24; display:block; text-decoration:underline;} 
 .madebox1 .giftCardLink:hover{text-decoration:none;}
 
-.homepageTabs {margin:3px 0 0 0; width:962px; float:left;}
+#homepageTabs {margin:3px 0 0 0; width:962px; float:left;}
 /*Middle Close*/
 
 /*Footer Start*/

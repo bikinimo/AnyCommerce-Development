@@ -577,8 +577,8 @@ var store_bmo = function(_app) {
 		
 				//checks for matching piece attrib in prod list item and sets sum of prices on list item if found. 
 			matchingbaseprice : function($tag, data) {
-				var basePrice = (data.bindData.isElastic) ? data.value.base_price/100 : data.value['%attribs']['zoovy:base_price'];
-				var match = _app.u.makeSafeHTMLId((data.bindData.isElastic) ? data.value.matching_piece : data.value['%attribs']['user:matching_piece']);
+				var basePrice = ($tag.attr('data-iselastic')) ? data.value.base_price/100 : data.value['%attribs']['zoovy:base_price'];
+				var match = _app.u.makeSafeHTMLId(($tag.attr('data-iselastic')) ? data.value.matching_piece : data.value['%attribs']['user:matching_piece']);
 							
 				if(match) {
 					var obj = {
@@ -601,11 +601,11 @@ var store_bmo = function(_app) {
 				//hides products in a product list that do not have the is_app attrib,
 				//or that have a matching_piece attrib that ends in ST (is a matching bottom).
 			hidefromlist: function($tag, data) {
-				var attribs = data.bindData.isElastic ? data.value.matching_piece : data.value['%attribs'];
+				var attribs = $tag.attr('data-iselastic') ? data.value.matching_piece : data.value['%attribs'];
 				if(attribs) {
 				
 						//if not elastic list check if it's an app product, hide if not (elastic does this by default no need to duplicate)
-					if(!data.bindData.isElastic) {
+					if(!$tag.attr('data-iselastic')) {
 						if(!attribs['user:is_app']) $tag.parent().parent().hide();
 						else if(attribs['user:is_app'] && attribs['users:is_app'] == 0) $tag.parent().parent().hide();
 						else {attribs = attribs['user:matching_piece']} //must be an app product and not-elastic, set attribs to be used to hide matching piece next
@@ -786,7 +786,7 @@ var store_bmo = function(_app) {
 				var width = $tag.attr('data-width');
 				var height = $tag.attr('data-height');
 				
-				if(data.bindData.isElastic) { 
+				if($tag.attr('data-iselastic')) { 
 					//_app.u.dump(data.value);
 					data.value.is_square ? height = width : height = height; //make it square if the square attrib is there
 						//after height is determined to be square or not, add image in with the dimensions found.
