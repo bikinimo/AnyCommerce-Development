@@ -1,5 +1,5 @@
 {
-	"_version":201346,
+	"_version":201405,
 	"_start":"createBuyer",
 	"_inputs":[
 		{ "required":1,"var":"email","type":"text","label":"Email" },
@@ -21,7 +21,7 @@
 	
 	"createBuyer" : [
 		"SET?firstname=$firstname&lastname=$lastname",
-		"PASSWORDRESET?password=$pass",
+		"PASSWORD-SET?password=$pass",
 		"ADDRCREATE?SHORTCUT=DEFAULT&TYPE=BILL&firstname=$firstname&lastname=$lastname&phone=$phone&address1=$address1&address2=$address2&email=$email&city=$city&region=$region&postal=$postal&countrycode=$country",
 		"ADDRCREATE?SHORTCUT=DEFAULT&TYPE=SHIP&firstname=$firstname&lastname=$lastname&phone=$phone&address1=$address1&address2=$address2&email=$email&city=$city&region=$region&postal=$postal&countrycode=$country",
 		"GIFTCARD-CREATE?BALANCE=10.00&CARDTYPE=1&EXPIRES_GMT=$time"

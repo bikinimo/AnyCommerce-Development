@@ -24,14 +24,33 @@ var store_bmo = function(_app) {
 	var theseTemplates = new Array('');
 	var r = {
 
-
-////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
 	vars : { 
 		//eventdate : new Date("november 6, 2013 15:48:59")
 		//eventdate : "2013110615" //YYYYMMDDHH format
 		eventdate : "9999999999" //YYYYMMDDHH format
 	},
+
+////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+	calls : {
+		appBuyerCreate : {
+				init : function(obj,_tag)	{
+					this.dispatch(obj,_tag);
+					return 1;
+				},
+				dispatch : function(obj,_tag){
+					obj._tag = _tag || {};
+					obj._cmd = "appBuyerCreate";
+					_app.model.addDispatchToQ(obj,'immutable');
+				}
+			}, //appBuyerCreate
+		
+	}, //calls
+
+
+////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
 
 	callbacks : {
 //executed when extension is loaded. should include any validation that needs to occur.
@@ -153,6 +172,11 @@ var store_bmo = function(_app) {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
+		
+			//slides any element w/ data-slide, in the parent of the container passed, up and down (added mainly for account recovery on login/acct creation)
+			togglerecover : function($tag) {
+				$("[data-slide='toggle']",$tag.parent()).slideToggle();
+			},
 		
 				//pass a class or id name, a string "class" for type if it's a class, any other for an id, and the parent tag as a $object
 			scrollTo : function(name, type, $parent) {
@@ -1049,7 +1073,7 @@ var store_bmo = function(_app) {
 					}
 					
 					formObj._vendor = "bikinimo";
-					_app.calls.appBuyerCreate.init(formObj,tagObj,'immutable');				
+					_app.ext.store_bmo.calls.appBuyerCreate.init(formObj,tagObj,'immutable');				
 					_app.model.dispatchThis('immutable');
 				}
 				else {
@@ -1577,6 +1601,25 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 					
 				}
 			}, // addToCart
+			
+			//copied from app-quickstart.js so additional parameter could be used to assign the error location (for diff. login screens)
+			loginFrmSubmit : function($ele,p)	{
+				p.preventDefault();
+				if(_app.u.validateForm($ele))	{
+					var sfo = $ele.serializeJSON();
+					_app.ext.cco.calls.cartSet.init({"bill/email":sfo.login,"_cartid":_app.model.fetchCartID()}) //whether the login succeeds or not, set bill/email in the cart.
+					sfo._cmd = "appBuyerLogin";
+					sfo.method = 'unsecure';
+					sfo._tag = {"datapointer":"appBuyerLogin",'callback':'authenticateBuyer','extension':'quickstart'}
+					sfo._tag = {"datapointer":"appBuyerLogin",'callback':'authenticateBuyer','extension':'quickstart'}
+					_app.model.addDispatchToQ(sfo,"immutable");
+					_app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
+					_app.model.dispatchThis('immutable');
+					showContent('customer',{'show':'myaccount'})
+				}
+				else	{} //validateForm will handle the error display.
+				return false;
+			} //loginFrmSubmit
 		
 		}, //e [app Events]
 			

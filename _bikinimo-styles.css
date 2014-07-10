@@ -244,11 +244,6 @@ CUSTOMER PAGES
 
 */
 
-/****** LOGIN MODAL ******/
-#loginFormForModal fieldset	{border:0}
-.loginOption fieldset div	{margin-bottom:12px;}
-.loginOption label	{width:120px; text-align:right; display:block; float:left; clear:left;}
-.loginOption label:after	{margin-right:12px; content:":"}
 
 
 /*
@@ -708,20 +703,29 @@ z-index:1002; overflow: auto; /*box-shadow: 1px 1px 3px 3px #000000;*/ font-fami
 LOGIN MODAL
 *************************************************************************************/
 
+#loginFormForModal fieldset	{border:0}
+/*
+.loginOption fieldset div	{margin-bottom:12px;}
+.loginOption label	{width:120px; text-align:right; display:block; float:left; clear:left;}
+.loginOption label:after	{margin-right:12px; content:":"}
+*/
 .createAccount {height:270px; width:44%; margin:0 3%; float:left; font-family:ubuntu; text-align:center;}
 .createAccount h1 {color:#000000; text-align:center; font-family:Electrolize; font-size:2.0em; margin:28px 0 8px 0;}
 .createAccount p {font-size:1.5em;}
 .createAccount .modalCreateButton {padding:5px; margin:10px; font-family:Electrolize; border:none; font-size:1.6em; background:#286c99; color:#ffffff; box-shadow:0 0 14px 2px #999; border-radius:4px;} 
 
-#gotAccount {height:270px; width:44%; margin:14px 3% 0 3%; float:right; background:#286c99; font-family:ubuntu; font-weight:normal; box-shadow:0 0 14px 2px #999; border-radius:4px;}
-#gotAccount h1 {color:#ffffff; text-align:center; margin:29px 0 0 0; font-family:Electrolize;}
-#gotAccount fieldset {padding:0; border:0;}
-#gotAccount input {height:auto; width:90%; margin:10px auto; display:block; border:none; padding:5px 0 5px 5px; font-size:1.6em; border-radius:4px;}
-#gotAccount input.logInModalSubmit {height:auto; width:100px; font-size:1.6em; font-family:Electrolize; color:#ffffff; font-weight:normal; background:#c2976b !important;}
-#gotAccount a {color:#ffffff; font-family:"source sans pro"; font-size:12px; text-align:center; text-decoration:underline; margin:auto; display:block;}
+.gotAccount {height:auto; width:44%;  margin:14px 3% 0 3%; float:right; background:#286c99; font-family:ubuntu; font-weight:normal; box-shadow:0 0 14px 2px #999; border-radius:4px;}
+.gotAccount h1 {color:#ffffff; text-align:center; margin:29px 0 0 0; font-family:Electrolize;}
+.gotAccount fieldset {padding:0; border:0;}
+.gotAccount input {height:auto; width:90%; margin:10px auto; display:block; border:none; padding:5px 0 5px 5px; font-size:1.6em; border-radius:4px;}
+.gotAccount input[type='submit'] {height:auto; width:90%; font-size:1.6em; font-family:Electrolize; color:#ffffff; font-weight:normal; background:#c2976b !important; border:1px solid #cccccc;}
+.gotAccount a {color:#ffffff; font-family:"source sans pro"; font-size:12px; text-align:center; text-decoration:underline; margin:auto; display:block;}
 
 #recoverPasswordContainer .recoverField {margin:5px 0 12px 12px; float:left;}
-
+.recoverPasswordContainer {text-align:center; overflow:hidden;}
+.recoverPasswordContainer legend {width:100%; cursor:pointer;}
+.recoverPasswordContainer legend:hover {color:#E0463A;}
+.recoverPasswordContainer div[data-slide='toggle']{display:none;}
 
 /*************************************************************************************
 createaccountArticle
@@ -734,12 +738,7 @@ createaccountArticle
 .buyerLoggedIn span.hideIfLoggedOut, .buyerLoggedIn a.hideIfLoggedOut{display: inline;} /* ensures inline on span elements */
 
 #createaccountArticle .creatAccount {height:auto; width:960px; margin:20px auto;}
-#gotAccount1 {height:auto; width:300px; float:left; background:#286c99; font-family:ubuntu; font-weight:bold; padding:0 0 20px 0; border-radius:4px;}
-#gotAccount1 h1 {color:#ffffff; text-align:center; margin:29px 0 0 0; font-family:Electrolize;}
-#gotAccount1 fieldset {padding:0; border:0}
-#gotAccount1 input {height:auto; width:90%; margin:10px auto; display:block; border:none; padding:5px; border-radius:4px;}
-#gotAccount1 input[type='submit'] {height:auto; width:100px; font-size:1.6em; font-family:Electrolize; color:#ffffff; font-weight:normal; background:#c2976b !important;}
-#gotAccount1 a {color:#ffffff; font-family:"source sans pro"; font-size:12px; text-align:center; text-decoration:underline; margin:auto; display:block;}
+.gotAccount#gotAccount1 {width:32%; float:left; padding:0 0 20px 0; margin:0;}
 
 .Account {height:auto; width:620px; float:right; font-family:"source sans pro"; font-size:1.2em; font-weight:bold;}
 .Account h1 {font-family:Electrolize; font-weight:bold; margin:0 0 30px 0; color:#286c99;}
