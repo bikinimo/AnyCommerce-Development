@@ -972,7 +972,7 @@ return false;
 			<menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'>
 				<!-- <a href = "javascript:void(0)" onclick = "document.getElementById('light1').style.display='block';document.getElementById('fade').style.display='block'">Tell a Friend</a>  -->
 				<a class='tellFriend pointer' target='_blank' data-bind='useParentData:true; format:bindMailto; extension:store_bmo;'>Tell a Friend</a> 
-				| <a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>Write Review</a>
+			| <a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>Write Review</a>
 				| <a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;">Add to Wishlist</a> 
 			</menu>
 			<table width="97%" border="0" cellspacing="0" cellpadding="0">

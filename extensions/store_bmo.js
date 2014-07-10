@@ -59,7 +59,7 @@ var store_bmo = function(_app) {
 					$.extend(handlePogs.prototype,_app.ext.store_bmo.variations);
 					//_app.u.dump('*** Extending Pogs');
 					
-					_app.templates.homepageTemplate.on('complete.store_bmo',function(event,$context,infoObj) {	
+					_app.templates.homepageTemplate.on('complete.store_bmo',function(event,$context,infoObj) {
 						_app.ext.store_bmo.u.addTabs($('#homepageTabs'));
 						_app.ext.store_bmo.u.addTabs($('#homepageBottomTabs'));
 						_app.ext.store_bmo.u.addTabs($('#homepageSizingTabs'));
@@ -74,6 +74,12 @@ var store_bmo = function(_app) {
 							$context.data('tab4Templated',true);
 //								_app.u.dump('data added?'); _app.u.dump($context.data('tab4Templated'));
 						}
+					});
+					
+					_app.templates.productTemplate.on('complete.store_bmo',function(event,$context,infoObj) {
+						//add tabs to product data.
+						//tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
+						_app.ext.store_bmo.u.addTabs($( ".tabbedProductContent",$context));
 					});
 						
 				//	} else	{
@@ -95,7 +101,7 @@ var store_bmo = function(_app) {
 					//using the template you want to render with ** "matchingProductTemplate" **, using a pointr to the data that was returned ** "datapointer":responseData.datapointer **. 
 					//_app.u.dump('ResponseData pointer'); _app.u.dump(responseData.datapointer);// _app.u.dump($('.prodViewerAddToCartForm ','.match_'+app.data[responseData.datapointer].pid));
 					//$('.match_'+app.data[responseData.datapointer].pid).anycontent({"templateID":"matchingProductTemplate","datapointer":responseData.datapointer}); 
-					responseData.$container.anycontent({"templateID":responseData.loadsTemplate,"datapointer":responseData.datapointer}); 
+					responseData.$container.tlc({"templateid":responseData.loadsTemplate,"datapointer":responseData.datapointer}); 
 				},
 				onError:function(responseData){	
 					_app.u.dump('Error in extension: store_bmo renderMatchingProduct'); // error response goes here if needed
@@ -220,7 +226,7 @@ var store_bmo = function(_app) {
 				else {
 					$('.recentEmpty',$container).hide();
 					$('ul',$container).empty(); //empty product list;
-					$($container.anycontent({data:_app.ext.quickstart.vars.session})); //build product list
+					$($container.tlc({dataset:_app.ext.quickstart.vars.session.recentlyViewedItems,verb:"translate"})); //build product list
 				}
 			},
 			
@@ -624,7 +630,7 @@ var store_bmo = function(_app) {
 				//opens e-mail in default mail provider (new window if web-based)
 				//if info is available will populate subject and body w/ prod name, mfg, & price
 				//if only name, subject will have name, body will be empty. If no content, no subject or body
-			bindMailto : function($tag, data){
+			bindmailto : function($tag, data){
 				//_app.u.dump('data.value:'); _app.u.dump(data.value);
 				if(data.value['%attribs'] && data.value['%attribs']['zoovy:prod_name']) {
 					
@@ -670,9 +676,9 @@ var store_bmo = function(_app) {
 			}, //bindMailto
 		
 				//will combine features list in tab section on prod page for top and bottom products if they are both being added to the page
-			combineFeaturesList : function($tag, data) {
+			combinefeatureslist : function($tag, data) {
 				setTimeout(function(){
-				//	_app.u.dump('input:'); _app.u.dump($('input[type=hidden]',$tag.parent()).val());
+					_app.u.dump('input:'); _app.u.dump($('input[type=hidden]',$tag.parent()).val());
 					var pid = $('input[type=hidden]',$tag.parent()).val(); 
 					var $destination = $('.tabOfFeatures',$tag.parent().parent().parent().parent()); //append new content to container w/ default content
 					
@@ -694,10 +700,10 @@ var store_bmo = function(_app) {
 						else {_app.u.dump('%attribs or zoovy:prod_features were not set for '+pid);}
 					}else {_app.u.dump('appProductGet for '+pid+' did not return as an object');}
 				},500);
-			}, //combineFeaturesList
+			}, //combinefeatureslist
 			
 				//reads prices for both top and bottom pieces and adds them for a total preliminary price
-			customBasePrice : function($tag, data) {
+			custombaseprice : function($tag, data) {
 				var pid = _app.u.makeSafeHTMLId(data.value.pid);
 				var displayPrice = 0;
 				setTimeout(function(){
@@ -715,22 +721,26 @@ var store_bmo = function(_app) {
 			
 				//gets and adds pricing for top & bottom pieces to hidden element, which are then read onChange of form select list
 				//by changePriceDisplayed util function to alter the displayed price according to the selected pieces. 
-			setHiddenPrice : function($tag, data) {
+			sethiddenprice : function($tag, data) {
+	dump('THIS is the hidden input that should hold only the pid as a value:'); dump($('input[type="hidden"]',$tag.parent()));
 				var formDesignator = $tag.attr('data-formDesig'); //used to tell if a form has modified the displayed price
 				var $summaryContainer = $tag.parent().parent().parent().parent();
-				var pid = _app.u.makeSafeHTMLId($('input[type="hidden"]',$tag.parent()).val()); //get pid for this form
+				var pid = _app.u.makeSafeHTMLId($('input[type="hidden"]',$tag.parent()).attr('data-match')); //get pid for this form
+				//var pid = _app.u.makeSafeHTMLId($('input[type="hidden"]',$tag.parent()).val()); //get pid for this form
+	_app.u.dump('--> THIS is the pid that is read from the hidden input (is false because it is read as a 1 and makeSafeHTMLId does not like that):'); _app.u.dump(pid);
 				var prod = _app.data['appProductGet|'+pid]; //get product for this form
-//				_app.u.dump('--> prod'); _app.u.dump(prod);
+				_app.u.dump('--> THIS is the appProductGet that is run from the pid read from the hidden input:'); _app.u.dump(prod);
 				
 					//add base price value to hidden element in each form
 				if(prod && prod['%attribs'] && prod['%attribs']['zoovy:base_price']) {
 					var displayPrice = _app.ext.store_bmo_lto.u.applyLTODiscount(pid,prod['%attribs']['zoovy:base_price']);
 					$tag.attr('data-price',displayPrice); 
 				}
-				else {_app.u.dump('!! _app.ext.store_bmo.renderformats.setHiddenPrice() failed !!');}
-			}, //setHiddenPrice
+				else {_app.u.dump('!! _app.ext.store_bmo.renderformats.sethiddenprice() failed !!'); dump('THIS  is the disignator for which form is being looked at:'); dump(formDesignator); }
+	dump('END OF FUNCTION -------------------------------------------------------------------------------');
+			}, //sethiddenprice
 			
-			loadProd : function($tag, data){
+			loadprod : function($tag, data){
 				var obj = {									// object to hold product id for product
 					"pid" : data.value,
 					"withVariations":1,
@@ -741,7 +751,7 @@ var store_bmo = function(_app) {
 					"callback":"renderMatchingProduct",		// call back function (in callbacks above)
 					"extension":"store_bmo",			// extension that holds call back (this extension you're in)
 					"$container" : $tag,
-					"loadsTemplate" : data.bindData.loadsTemplate
+					"loadsTemplate" : data.bindData.templateid
 				};
 				_app.calls.appProductGet.init(obj, _tag, 'immutable');	// call appProductGet.init on the product id with the callback and callback location
 				
@@ -750,14 +760,14 @@ var store_bmo = function(_app) {
 			},
 			
 			
-			matchATCFormPID : function($tag, data) {
+			matchatcformpid : function($tag, data) {
 				if(typeof _app.data['appProductGet|'+data.value] == 'object') {
 					var pdata = _app.data['appProductGet|'+data.value]['%attribs'];
 					if(_app.u.isSet(pdata['user:matching_piece'])){
 						var matchData = pdata['user:matching_piece'];
 					}
 				}
-				$tag.append("<input type='hidden' name='sku' value='"+matchData+"' />");
+				$tag.append("<input type='hidden' name='sku' value='"+matchData+"' data-match='"+matchData+"' />");
 			},
 		
 			//adds class w/ pid of matching top or bottom of suit for product page that is loaded
@@ -774,7 +784,7 @@ var store_bmo = function(_app) {
 			},
 			
 			//add class w/ pid to be used as a selector for moreOptions section in prod page modal
-			classyId : function($tag, data) {
+			classyid : function($tag, data) {
 				if(data.value.pid){
 					var pid = _app.u.makeSafeHTMLId(data.value.pid)
 					$tag.addClass('anotherElement_'+pid);
@@ -1450,7 +1460,125 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 //while no naming convention is stricly forced, 
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
-			}, //e [app Events]
+		
+			addToCart : function($this, p) {
+				//_app.u.dump('-> store_bmo addToCart');
+				p.preventDefault();
+	
+				var numCalls = 0;
+				$('form', $this).each(function(){
+					//_app.u.dump($(this));
+					var id = $('.zwarn',$(this)).attr('id').split('_'); //get pid from id added render options
+					var pid = id[1]; 		//break pid out of id
+					var $form = $(this); 	//holder for the current form
+					
+					$(this).data('skipvalidation', true); //don't use native app validation
+					var cartObj = _app.ext.store_product.u.buildCartItemAppendObj($(this)); //build cart object 
+					var valid = true; //check this to ensure options selected
+
+					//validate
+					if(pid && $form)	{
+						//copied locally for quick reference.
+						var sogJSON = _app.data['appProductGet|'+pid]['@variations'],
+						formJSON = $form.serializeJSON();
+						console.debug($form.serializeJSON());
+						
+					//	_app.u.dump('BEGIN validate_pogs. Formid ='+formId);
+					
+						if($.isEmptyObject(sogJSON))	{
+							_app.u.dump('no sogs present (or empty object)'); //valid. product may not have sogs.
+							}
+						else if($.isEmptyObject(formJSON))	{
+				//			_app.u.throwGMessage("In store_product.validate.addToCart, formJSON is empty.");
+							} //this shouldn't be empty. if it is, likely $form not valid or on DOM.
+						else	{
+							_app.u.dump(" -> everything is accounted for. Start validating.");	
+							$('.appMessage',$form).empty().remove(); //clear all existing errors/messages.
+						
+							var thisSTID = pid, //used to compose the STID for inventory lookup.
+							inventorySogPrompts = '',//the prompts for sogs with inventory. used to report inventory messaging if inventory checks are performed
+							errors = '', pogid, pogType;
+							
+				//			_app.u.dump(" -> formJSON: "); _app.u.dump(formJSON);
+							
+				//No work to do if there are no sogs. 
+							if(sogJSON)	{
+					//			_app.u.dump('got into the pogs-are-present validation');
+								for(var i = 0; i < sogJSON.length; i++)	{
+									pogid = sogJSON[i]['id']; //the id is used multiple times so a var is created to reduce number of lookups needed.
+									pogType = sogJSON[i]['type']; //the type is used multiple times so a var is created to reduce number of lookups needed.
+						
+									if(sogJSON[i]['optional'] == 1)	{
+										//if the pog is optional, validation isn't needed.			
+										}
+									else if (pogType == 'attribs' || pogType == 'hidden' || pogType == 'readonly' || pogType == 'cb'){
+										//these types don't require validation.
+										}
+						//Okay, validate what's left.
+									else	{
+						//If the option IS required (not set to optional) AND the option value is blank, AND the option type is not attribs (finder) record an error
+										if(formJSON[pogid]){}
+										else	{
+											valid = false;
+											//maybe for later versions to specify exactly what isn't selected
+											//errors += "<li>"+sogJSON[i]['prompt']+"<!--  id: "+pogid+" --><\/li>";
+											}
+										}
+									
+									//compose the STID
+									if(sogJSON[i]['inv'] == 1)	{
+										thisSTID += ':'+pogid+formJSON[pogid];
+										inventorySogPrompts += "<li>"+sogJSON[i]['prompt']+"<\/li>";
+										}
+									
+									}
+								}
+					
+/****************/					
+					//		_app.u.dump('past validation, before inventory validation. valid = '+valid);
+		/*				
+						//if errors occured, report them.
+							 if(valid == false)	{
+					//			_app.u.dump(errors);
+								var errObj = _app.u.youErrObject("Uh oh! Looks like you left something out. Please make the following selection(s):<ul>"+errors+"<\/ul>",'42');
+								errObj.parentID = 'JSONpogErrors_'+pid
+								_app.u.throwMessage(errObj);
+								}
+		*/				//if all options are selected AND checkinventory is on, do inventory check.
+							//else 
+							if(valid == true && typeof zGlobals == 'object' && zGlobals.globalSettings.inv_mode > 1)	{
+						//		alert(thisSTID);
+								if(!$.isEmptyObject(_app.data['appProductGet|'+pid]['@inventory']) && !$.isEmptyObject(_app.data['appProductGet|'+pid]['@inventory'][thisSTID]) && _app.data['appProductGet|'+pid]['@inventory'][thisSTID]['inv'] < 1)	{
+									var errObj = _app.u.youErrObject("We're sorry, but the combination of selections you've made is not available. Try changing one of the following:<ul>"+inventorySogPrompts+"<\/ul>",'42');
+									errObj.parentID = 'JSONpogErrors_'+pid
+									_app.u.throwMessage(errObj);
+									valid = false;
+									}
+						
+								}
+							}
+						} //validation
+					
+					
+					if(valid){ 
+						numCalls++;
+						_app.calls.cartItemAppend.init(cartObj,{},'immutable');	
+					} 
+				}); // form processing
+				if(numCalls > 0){
+					_app.model.destroy('cartDetail');
+					_app.calls.cartDetail.init({'callback':function(rd){
+						showContent('cart',{});
+						}},'immutable');
+					_app.model.dispatchThis('immutable');
+				} else {
+					//Notify user of problem
+					$('.atcPogErrors', $this).anymessage(_app.u.youErrObject("You must select variations for at least one product!",'#'));
+					
+				}
+			}, // addToCart
+		
+		}, //e [app Events]
 			
 		
 

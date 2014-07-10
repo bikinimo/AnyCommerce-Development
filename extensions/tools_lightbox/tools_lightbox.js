@@ -28,6 +28,8 @@ var tools_lightbox = function(_app) {
 			onSuccess : function()	{
 				var r = false;
 				
+		//		TODO: UPDATE LIGHTBOX PLUGIN SO NEWER JQUERY CAN BE USED.
+		//		_app.u.loadResourceFile(['script',0,'extensions/tools_lightbox/lightbox/js/lightbox-2.6.min.js']);
 				_app.u.loadResourceFile(['script',0,'extensions/tools_lightbox/lightbox/js/lightbox.js']);
 				_app.u.loadResourceFile(['css',0,'extensions/tools_lightbox/lightbox/css/lightbox.css','css-lightbox']);
 				//_app.u.loadResourceFile(['css',0,'extensions/tools_lightbox/lightbox/css/screen.css','lightbox-screen']);
@@ -73,41 +75,40 @@ optional:
 	
 	titleAttr - a dot-notation path for de-referencing an attribute for title- ex: "%attribs.zoovy:prod_name"
 ****************************************/
-			lightboxLink: function($tag,data){
+			lightboxlink: function($tag,data){
 			
 					//bikinimo requires images be added here so check for square size condition can be made (that is why there is no <img> in index)
-				if(data.value['%attribs'] && data.bindData.hrefAttr) { 
-					var pdata = data.value['%attribs'];
+				if(data.bindData.data['%attribs'] && data.bindData.hrefattr) {
+					var dataValue = data.bindData.data;
+					var pdata = dataValue['%attribs'];
 					var width = data.bindData.width;
 					var height = data.bindData.height;
 					
 					pdata['user:is_square'] ? height = width : height = height; //make it square if the square attrib is there
 						//after height is determined to be square or not, add image in with the dimensions found.
-					var attrib = data.bindData.hrefAttr.split('.')[0];
-					var zoovyImage = data.bindData.hrefAttr.split('.')[1];
-					if(data.value[attrib][zoovyImage]) {
+					if(data.bindData.hrefattr) {
 						$tag.show();
-						$tag.append(_app.u.makeImage({"name":data.value[attrib][zoovyImage],"w":width,"h":height,"b":"FFFFFF","tag":1}));
+						$tag.append(_app.u.makeImage({"name":data.bindData.hrefattr,"w":width,"h":height,"b":"FFFFFF","tag":1}));
 					}
 				}
 			
-				if(!data.bindData.hrefAttr){
+				if(!data.bindData.hrefattr){
 					_app.u.dump("-> tools_lightbox.renderFormats.lightboxLink NO HREFATTR SPECIFIED");
 					return false;
 					}
 				else {
-					var hrefAttr = data.value;
-					var hrefParams = data.bindData.hrefAttr.split('.');
+			//		var hrefAttr = dataValue;
+			//		var hrefParams = data.bindData.hrefattr.split('.');
 					
-					for(var index in hrefParams){
-						if(hrefAttr[hrefParams[index]]){
-							hrefAttr = hrefAttr[hrefParams[index]];
+			//		for(var index in hrefParams){
+						if(data.bindData.hrefattr){
+							hrefAttr = data.bindData.hrefattr;
 							}
 						else {
 							hrefAttr = false;
-							break;
+			//				break;
 							}
-						}
+			//			}
 					
 					if(!hrefAttr){
 						_app.u.dump("-> tools_lightbox.renderFormats.lightboxLink HREFATTR COULD NOT BE INTERPOLATED FROM DATA OBJECT");
@@ -124,34 +125,34 @@ optional:
 						var href = _app.u.makeImage(imgObj);
 						
 						var rel= 'lightbox';
-						if(data.bindData.groupingAttr){
-							var groupingAttr = data.value;
-							var groupingParams = data.bindData.groupingAttr.split('.');
+						if(data.bindData.groupingattr){
+			//				var groupingAttr = dataValue;
+			//				var groupingParams = data.bindData.groupingattr.split('.');
 							
-							for(var index in groupingParams){
-								if(groupingAttr[groupingParams[index]]){
-									groupingAttr = groupingAttr[groupingParams[index]];
+			//				for(var index in groupingParams){
+			//					if(groupingAttr[groupingParams[index]]){
+									var groupingAttr = data.bindData.groupingattr;
 									}
 								else {
-									groupingAttr = false;
-									break;
+									var groupingAttr = false;
+			//						break;
 									}
-								}
+			//					}
 							if(groupingAttr){
 								rel += "[";
-								if(data.bindData.groupingPrefix){
-									rel += data.bindData.groupingPrefix;
+								if(data.bindData.groupingprefix){
+									rel += data.bindData.groupingprefix;
 									}
 								rel += groupingAttr;
 								rel += "]";								
 								}
 						
 						
-							}
+			//				}
 						
 						var title = false;
 						if(data.bindData.titleAttr){
-							var titleAttr = data.value;
+							var titleAttr = dataValue;
 							var titleParams = data.bindData.titleAttr.split('.');
 							
 							for(var index in titleParams){

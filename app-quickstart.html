@@ -72,15 +72,11 @@ css files should be included before any .js file to ensure they are downloaded i
 <link rel="SHORTCUT ICON" href="images/bikiniMoFavicon.ico" />
 <link rel="ICON" href="images/bikiniMoFavicon.ico" />
 
-<!-- TODO: TEST THIS OUT TO BE SURE IT'S STILL TRUE
-** 201338 -> jquery and jquery ui are pivotal to the functionality of the app. load them first -->
-	<!-- *** LIGHTBOX EXTENSION/PLUGIN DOESN'T LIKE JQUERY 1.10.2, AND REQUIRES 1.8.3 (AS OF 1/10/2014) *** 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
--->
 
 <!-- jquery and jquery ui are pivotal to the functionality of the app. load them early -->
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<!-- *** LIGHTBOX EXTENSION/PLUGIN NEEDS TO BE UPDATED TO ALLOW USE OF JQUERY 1.10.2, AND REQUIRES 1.8.3 UNTIL THAT IS DONE *** 
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
 <script src="controller.js"></script>
 <script src="model.js"></script>
@@ -1007,63 +1003,216 @@ this will likely become more flexible in the future. ###
 
 
 <!-- a template used for a quickview link off of a category page -->
-<div id="productTemplateQuickView">
+<div id="productTemplateQuickView" class="popupshado">
 
-<!-- productListTemplatePopout needs content when you get here!! MARK -->
-
-<table class="prodViewerContainer">
-<tbody><tr>
-	<td class="imageContainer">
-<div>
-
-	<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#tags --legacy; if (is $var --notblank;) {{apply --append;}};" class="tagsContainer"></div>
-	<div data-tlc="bind $var '.pid'; quickstart#addpicslider  --legacy; apply --append;"><img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; apply --img --media=$var --width=240 --height=240 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodBigImage" alt="" height="240" width="240"></div>
-
-</div>
-
-	</td>
-
-	<td class="prodSummaryContainer marginBottom no_underline">
-	<h1 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h1>
-	<h6 data-tlc="bind $var '.pid'; if (is $var --notblank;) {{ format --prepend='Sku#: ';apply --append;}};" class="ztable_row_small stid"></h6>
-
-
-	<div class="priceContainer">
-		<h4 data-tlc="bind $var '.%attribs.zoovy:base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="basePrice"></h4>
-		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_msrp';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='MSRP: ';  apply --append;}};" class="prodMSRP"></h5>
-		<span class="savings">
-			<span data-tlc="bind $var '.pid'; format --prepend='You save: '; quickstart#priceretailsavingsdifference  --legacy; apply --append;" class="savingsDifference"></span>
-			<span data-tlc="bind $var '.pid'; format --prepend='('; format --append=')'; quickstart#priceretailsavingspercentage  --legacy; apply --append;" class="savingsPercentage"></span>
-		</span>
+	<div class="sizebg orangeGradient">
+		<a href="#." onClick="myApp.ext.store_bmo.a.showSizeChart(); return false;">SIZING GUIDE</a>
+		<span>|</span>
+		<a href="#." onClick="myApp.ext.store_bmo.a.showStyleChart(); return false;">STYLE GUIDE</a>
 	</div>
 
-	<div data-tlc="bind $var '.%attribs.zoovy:ship_latency'; format --prepend='Normally ships in '; format --append=' day(s)'; if (is $var --notblank;) {{apply --append;}};" class="latency"></div>
+	<table class="prodViewerContainer">
+	<tbody>
+	<tr>
+		<td class="imageContainer">
+			<a data-tlc="bind $href '.%attribs.zoovy:prod_image1'; bind $var '.'; bind $pid '.pid'; tools_lightbox#lightboxlink --data=$var --hrefattr=$href --groupingattr=$pid --groupingprefix='prodPage_' --width=305 --height=458 --w=500 --h=750 --legacy;" data-width='305' data-height='458'></a>
+	<!-- MARK MAY BE USED LATER ON
+			<div>
+				<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#tags --legacy; if (is $var --notblank;) {{apply --append;}};" class="tagsContainer"></div>
+			</div>
+	-->	
+			<div class="viimgta displayNone" data-tlc="bind $var '.%attribs.youtube:videoid'; if (is $var --notblank;) {{apply --show;}};">
+				<button class='openVideo pointer' onClick="myApp.ext.tools_youtube.a.revealParent($(this));" data-openheight='191'><span>Click here to see product video!</span></button>
+				<button class='closeVideo pointer' onClick="myApp.ext.tools_youtube.a.compressParent($(this));" data-closeheight='20'><span>Click here to hide product video!</span></button>
+				<div data-tlc="bind $var '.%attribs.youtube:videoid'; apply --attrib='data-youtubeid';"></div> 
+			</div>
+			<div class='prodThumbs' align="center">
+				<div class='squareHider displayNone' data-tlc="bind $var '.%attribs.user:is_square'; if (is $var --notblank;) {{apply --show;}};"> <!-- Only wants main image in thumbnails if is square image -->
+					<a data-tlc="bind $href '.%attribs.zoovy:prod_image1'; bind $var '.'; bind $pid '.pid'; tools_lightbox#lightboxlink --data=$var --hrefattr=$href --groupingattr=$pid --groupingprefix='prodPage_' --width=92 --height=145 --w=500 --h=750 --legacy;" class='prodSmallImage displayNone'></a>
+				</div>
+				<a data-tlc="bind $href '.%attribs.zoovy:prod_image2'; bind $var '.'; bind $pid '.pid'; tools_lightbox#lightboxlink --data=$var --hrefattr=$href --groupingattr=$pid --groupingprefix='prodPage_' --width=92 --height=145 --w=500 --h=750 --legacy;" class='prodSmallImage displayNone'></a>
+				<a data-tlc="bind $href '.%attribs.zoovy:prod_image3'; bind $var '.'; bind $pid '.pid'; tools_lightbox#lightboxlink --data=$var --hrefattr=$href --groupingattr=$pid --groupingprefix='prodPage_' --width=92 --height=145 --w=500 --h=750 --legacy;" class='prodSmallImage displayNone'></a>
+				<a data-tlc="bind $href '.%attribs.zoovy:prod_image4'; bind $var '.'; bind $pid '.pid'; tools_lightbox#lightboxlink --data=$var --hrefattr=$href --groupingattr=$pid --groupingprefix='prodPage_' --width=92 --height=145 --w=500 --h=750 --legacy;" class='prodSmallImage displayNone'></a>
+				<a data-tlc="bind $href '.%attribs.zoovy:prod_image5'; bind $var '.'; bind $pid '.pid'; tools_lightbox#lightboxlink --data=$var --hrefattr=$href --groupingattr=$pid --groupingprefix='prodPage_' --width=92 --height=145 --w=500 --h=750 --legacy;" class='prodSmallImage displayNone'></a>
+				<a data-tlc="bind $href '.%attribs.zoovy:prod_image6'; bind $var '.'; bind $pid '.pid'; tools_lightbox#lightboxlink --data=$var --hrefattr=$href --groupingattr=$pid --groupingprefix='prodPage_' --width=92 --height=145 --w=500 --h=750 --legacy;" class='prodSmallImage displayNone'></a>
+				<a data-tlc="bind $href '.%attribs.zoovy:prod_image7'; bind $var '.'; bind $pid '.pid'; tools_lightbox#lightboxlink --data=$var --hrefattr=$href --groupingattr=$pid --groupingprefix='prodPage_' --width=92 --height=145 --w=500 --h=750 --legacy;" class='prodSmallImage displayNone'></a>
+				<a data-tlc="bind $href '.%attribs.zoovy:prod_image8'; bind $var '.'; bind $pid '.pid'; tools_lightbox#lightboxlink --data=$var --hrefattr=$href --groupingattr=$pid --groupingprefix='prodPage_' --width=92 --height=145 --w=500 --h=750 --legacy;" class='prodSmallImage displayNone'></a>
+				<a data-tlc="bind $href '.%attribs.zoovy:prod_image9'; bind $var '.'; bind $pid '.pid'; tools_lightbox#lightboxlink --data=$var --hrefattr=$href --groupingattr=$pid --groupingprefix='prodPage_' --width=92 --height=145 --w=500 --h=750 --legacy;" class='prodSmallImage displayNone'></a>
+				<a data-tlc="bind $href '.%attribs.zoovy:prod_image10'; bind $var '.'; bind $pid '.pid'; tools_lightbox#lightboxlink --data=$var --hrefattr=$href --groupingattr=$pid --groupingprefix='prodPage_' --width=92 --height=145 --w=500 --h=750 --legacy;" class='prodSmallImage displayNone'></a>
+				<a data-tlc="bind $href '.%attribs.zoovy:prod_image11'; bind $var '.'; bind $pid '.pid'; tools_lightbox#lightboxlink --data=$var --hrefattr=$href --groupingattr=$pid --groupingprefix='prodPage_' --width=92 --height=145 --w=500 --h=750 --legacy;" class='prodSmallImage displayNone'></a>
+				<a data-tlc="bind $href '.%attribs.zoovy:prod_image12'; bind $var '.'; bind $pid '.pid'; tools_lightbox#lightboxlink --data=$var --hrefattr=$href --groupingattr=$pid --groupingprefix='prodPage_' --width=92 --height=145 --w=500 --h=750 --legacy;" class='prodSmallImage displayNone'></a>
+				<a data-tlc="bind $href '.%attribs.zoovy:prod_image13'; bind $var '.'; bind $pid '.pid'; tools_lightbox#lightboxlink --data=$var --hrefattr=$href --groupingattr=$pid --groupingprefix='prodPage_' --width=92 --height=145 --w=500 --h=750 --legacy;" class='prodSmallImage displayNone'></a>
+			</div>
+		</td>
 
-	<section class="marginBottom">
-		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
-		<span data-tlc="bind $var '.reviews.total';  if (is $var --notblank;) {{format --prepend=' from ' --append=' reviews' ;apply --append;}};"></span>
-	</section>
-
-	<div data-tlc="bind $var '.%attribs.zoovy:prod_desc'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};"></div>
-
-	</td>
-</tr>
-<tr>
-	<td colspan="2">
-
-	<ul data-tlc="bind $var '.reviews.@reviews'; controller#loop --templateid='productReviewsTemplateDetail'; if (is $var --notblank;) {{apply --append;}};" class="listStyleNone clearfix productReviewsList"></ul>
-
-	</td>
-</tr>
-</tbody></table>
-
-
+		<td class="prodSummaryContainer marginBottom no_underline">
+			<h1 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h1>
+			
+			<div data-tlc="bind $var '.%attribs.user:matching_piece'; if (is $var --notblank;) {{apply --hide;}};">
+				<h3 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='<h5>Only :</h5>';  apply --append;}};" class='basePrice marginBottom' style="text-align:left;"></h3>
+			</div>
+			<div data-tlc="bind $var '.%attribs.user:matching_piece'; if (is $var --notblank;) {{apply --show;}};" class="displayNone">
+				<h5>Only:</h5>
+				<h3 data-tlc="bind $var '.'; store_bmo#custombaseprice --legacy;" data-priceA='1' data-priceB='1' class="customBasePrice marginBottom"></h3>
+			</div>
+			
+			<hgroup class="marginBottom">
+				<h5 data-tlc="bind $var '.pid'; if (is $var --notblank;) {{ format --prepend='Sku: ';apply --append;}};" class='stid'></h5>
+<!--TODO: FIND OUT WHY RETURN IS ONLY 5 ITEMS	<h5 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Mfg: ;'></h5> -->
+				<h5><a href='#' data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if(is $var --notblank;) {{apply --append; format --prepend='#!search/keywords/'; apply --attrib='href';}};"></a></h5>
+				<h5 data-tlc="bind $var '.%attribs.zoovy:prod_mfgid';  if (is $var --notblank;) {{format --prepend='Mfg ID: '; apply --append;}};"></h5>
+			</hgroup>
+<!-- MARK ORIGINAL PRICING INFO FOR REFERENCE UNTIL MATCHING PRICING & ATC FORMS WORK RIGHT.		
+			<h6 data-tlc="bind $var '.pid'; if (is $var --notblank;) {{ format --prepend='Sku: ';apply --append;}};" class="ztable_row_small stid"></h6>
+			<div class="priceContainer">
+				<h4 data-tlc="bind $var '.%attribs.zoovy:base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="basePrice"></h4>
+				<h5 data-tlc="bind $var '.%attribs.zoovy:prod_msrp';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='MSRP: ';  apply --append;}};" class="prodMSRP"></h5>
+				<span class="savings">
+					<span data-tlc="bind $var '.pid'; format --prepend='You save: '; quickstart#priceretailsavingsdifference  --legacy; apply --append;" class="savingsDifference"></span>
+					<span data-tlc="bind $var '.pid'; format --prepend='('; format --append=')'; quickstart#priceretailsavingspercentage  --legacy; apply --append;" class="savingsPercentage"></span>
+				</span>
+			</div>
+-->
+			<div data-tlc="bind $var '.%attribs.zoovy:prod_desc'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class="dis"></div>
+			
+			<table class='marginBottom fullWidth gridTable' data-app-role='childrenSiblingsContainer'>
+				<tbody data-tlc="bind $var '.%attribs.zoovy:grp_children'; store_prodlist#productlist --hideSummary='1' --withReviews='1' --withVariations='1' --withInventory='1' --templateid='limitedTimeOffersTemplate' --legacy;"></tbody>
+			</table>
+<!-- TODO NOT SET, STILL SHOWING... WHY?			
+			<div data-tlc="bind $var '.%attribs.zoovy:ship_latency'; format --prepend='Normally ships in '; format --append=' day(s)'; if (is $var --notblank;) {{apply --append;}};" class="latency marginBottom"></div>
+-->			
+			<div data-tlc="bind $var '.%attribs.user:matching_piece'; if (is $var --notblank) {{apply --hide;}};">
+				<div class='standardATCForm'>
+					<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="quickstart|productAdd2Cart"> <!-- ADD THIS TO SHOW CART INLINE: data-show="inline" -->
+						<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
+						<fieldset data-tlc="bind $var '.'; format --prepend='Quantity: '; store_product#atcquantityinput --defaultvalue='1' --legacy;" class="borderNone" class='borderNone'></fieldset>
+			<!--		<input data-bind='var: product(pid); format:addToCartButton; extension:store_product;' class='galladdtocarti ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone'/> -->
+						<input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy;" value="Add to Cart" class="applyButton addtocartbutton displayNone galladdtocarti" type="submit">
+					</form> 
+				</div>
+			</div>
+<!-- TODO: FIGURE OUT WHY THE HELL THE INPUT VALUE KEEPS COMING BACK AS 1 INSTEAD OF THE PID SET IN THE VALUE ATTRIBUTE -->
+			<div class='displayNone' data-bind='var:product(user:matching_piece); format:showIfSet;'>
+				<div class='customATCForm'>
+				
+					<div class='atcPogErrors'></div>
+				
+					<form data-tlc="bind $var '.pid'; store_product#atcform --legacy;" action='#' data-app-submit="store_bmo|addToCart" class="prodViewerAddToCartForm clearfix"> 
+						<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
+						<fieldset data-tlc="bind $var '.'; format --prepend='Quantity: '; store_product#atcquantityinput --defaultvalue='1' --legacy;" class="borderNone"></fieldset>
+						<div data-tlc="bind $var '.'; store_bmo#sethiddenprice --legacy;" data-formDesig='A' class='formPrice'></div>
+					</form>
+					
+					<form data-tlc="bind $var '.pid'; store_bmo#matchatcformpid --legacy;" action='#' data-app-submit="store_bmo|addToCart" class="prodViewerAddToCartForm clearfix"> 
+						<span data-tlc="bind $var '.%attribs.user:matching_piece'; store_bmo#loadprod --templateid='matchingProductTemplate' --legacy;"></span>
+						<fieldset data-tlc="bind $var '.'; format --prepend='Quantity: '; store_product#atcquantityinput --defaultvalue='1' --legacy;" class='borderNone'></fieldset>
+						<div data-tlc="bind $var '.'; store_bmo#sethiddenprice --legacy;" data-formDesig='B' class='formPrice'></div>
+						<div data-tlc="bind $var '.'; store_bmo#combinefeatureslist --legacy;"></div>
+					</form>
+					<button data-tlc="bind $var '.pid'; store_product#addtocartbutton --legacy;" data-app-submit="store_bmo|addToCart" class="galladdtocarti ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone"></button> 
+				</div>
+			</div>			
+			
+			<div data-tlc="bind $var '.%attribs.zoovy:prod_cpsiawarning'; if(is $var --notblank) {{apply --add --class='marginBottom'}}; quickstart#cpsiawarning  --legacy;"></div>
+			<div data-tlc="bind $var '.%attribs.zoovy:qty_price'; if(is $var --notblank) {{apply --add --class='marginBottom'}}; store_product#quantitydiscounts  --legacy;"></div>
+		
+			<section class="marginBottom clearfix">
+				<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite floatLeft marginRight"></span>
+				<span data-tlc="bind $var '.reviews.total'; if (is $var --notblank;) {{format --prepend=' from ' --append=' reviews'; apply --append;}};" class='floatLeft'></span>
+			</section>
+		
+			<menu data-tlc="bind $var '.pid'; apply --attrib='data-pid';" class="CRMButtonMenu">
+				<a class='tellFriend pointer' target='_blank' data-tlc="bind $var '.'; store_bmo#bindmailto --legacy;">Tell a Friend</a> 
+				&#124; <a href="#" data-app-click="store_crm|productReviewShow">Write Review</a>
+				&#124; <a href="#" data-app-click="quickstart|productAdd2List" data-listid="wishlist">Add to Wishlist</a>
+			</menu>
+			
+			
+			
+			<table width="97%" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+			<td data-tlc="bind $var '.pid'; apply --attrib='data-pid';" colspan="2" class="tabbedProductContentTD prodPageTabs">
+				<div class="tabPaging">
+					<ul>
+						<li data-tlc="bind $var '.%attribs.zoovy:prod_features'; if (is $var --notblank;) {{apply --show;}};" class="prodFeaturesTab displayNone">
+							<a href="#prodfeatures"><span>Features</span></a>
+						</li>
+						<li class='prodReviewsTab'><a href='#prodreviews'><span>Reviews</span></a></li>
+					</ul>
+				</div>
+				<div class="tabingcontent" data-anytab-content="prodfeatures">
+					<div data-tlc="bind $var '.%attribs.zoovy:prod_features'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class='tabOfFeatures'></div>
+				</div>
+				
+				<div class="tabingcontent" data-anytab-content="prodreviews">
+					<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" class="clearfix alignRight">
+						<button class="applyButton floatRight orangeGradient" data-app-click="store_crm|productReviewShow">
+							Write Review <!-- <img src="images/write_review.gif" alt="Write Review" title="Write Review" /> -->
+						</button>
+					</div>
+					<ul data-tlc="bind $var '.reviews.@reviews'; controller#loop --templateid='productReviewsTemplateDetail'; if (is $var --notblank;) {{apply --append;}};" class="listStyleNone clearfix productReviewsList"></ul>
+				</div>
+			</td>
+			</tr>
+			</table>	
+		</td>
+		
+		<td align="right" valign="top">
+			<div onclick='myApp.ext.store_bmo.a.showMoreOptions($(this), $(this).attr("data-pid"))'  data-tlc="bind $var '.pid'; apply --attrib='data-pid';" class="myelement"><img src="images/more_options.gif" /></div>
+		</td>	
+		
+		<td data-tlc="bind $var '.'; store_bmo#classyid --legacy;" align="left" valign="top" class="displayNone">
+			<button onclick='myApp.ext.store_bmo.a.hideMoreOptions($(this), $(this).attr("data-pid"))'  data-tlc="bind $var '.pid'; apply --attrib='data-pid';" class="popoutButton floatRight ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">
+				<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
+			</button>
+			<div class="comparissonsboxCont">
+				<div class="comparissonsbox">
+					<ul>
+						<li data-tlc="bind $var '.%attribs.zoovy:accessory_products'; if (is $var --notblank;) {{apply --show;}};" onclick='myApp.ext.store_bmo.a.showAccessories();' class="displayNone acc selectedList pointer">You may also like</li>
+						<li onclick='myApp.ext.store_bmo.a.showRecentlyViewedItems();' class="rec pointer">Recently viewed</li>
+						<li data-tlc="bind $var '.%attribs.zoovy:related_products'; if (is $var --notblank;) {{apply --show;}};" onclick='myApp.ext.store_bmo.a.showRelated();' class="displayNone comp pointer">Related products</li>
+					</ul>
+				</div>
+				<div class="fullWidth gridTable recentlybox">
+					<div data-tlc="bind $var '.%attribs.zoovy:accessory_products'; store_prodlist#productlist --hideSummary='1' --withReviews='1' --withVariations='1' --withInventory='1' --templateid='productListTemplatePopout' --legacy;" class="accessoriesList"></div>
+					<div id="recentlyViewedItemsContainer" class="displayNone">
+						<div class="displayNone recentEmpty">Hmm, this must be the first item you've viewed...</div>
+						<!-- data for productlist below generated w/ click on Recently veiwed link that runs myApp.ext.store_bmo.a.showRecentlyViewedItems(); -->
+						<ul data-tlc="store_prodlist#productlist --hideSummary='1' --withReviews='1' --withVariations='1' --withInventory='1' --templateid='productListTemplatePopout' --legacy;" class="listStyleNone noPadOrMargin"></ul>
+					</div>
+					<div data-tlc="bind $var '.%attribs.zoovy:related_products'; store_prodlist#productlist --hideSummary='1' --withReviews='1' --withVariations='1' --withInventory='1' --templateid='productListTemplatePopout' --legacy;" class="relatedList"></div>
+				</div>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<ul data-tlc="bind $var '.reviews.@reviews'; controller#loop --templateid='productReviewsTemplateDetail'; if (is $var --notblank;) {{apply --append;}};" class="listStyleNone clearfix productReviewsList"></ul>
+		</td>
+	</tr>
+	</tbody>
+	</table>
 </div><!-- productTemplateQuickView -->
 
 
 
 <ul>
-	<li id='productListTemplatePopout' class='loadingBG productListTemplatePopout'></li>
+	<li id='productListTemplatePopout' class='loadingBG productListTemplatePopout'>
+		<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" onclick="myApp.ext.store_bmo.a.optionsQuickView($(this), $(this).attr('data-pid'));";>
+			<div class="prodThumbContainer floatLeft">
+				<img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank;){{bind $var '.%attribs.zoovy:prod_image1';}}; if(is $var --notblank;){{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
+			</div>
+			<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h5>
+			<!-- <h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext:;'></h6> -->
+			<div data-tlc="bind $var '.%attribs.user:matching_piece'; if (is $var --notblank;) {{apply --hide;}};">
+				<h6 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='<h5>Only :</h5>';  apply --append;}};" class='basePrice marginBottom' style="text-align:left;"></h6>
+			</div>
+			<div data-tlc="bind $var '.%attribs.user:matching_piece'; if (is $var --notblank;) {{apply --show;}};" class="displayNone">
+				<h5>Only:</h5>
+				<h6 data-tlc="bind $var '.'; store_bmo#custombaseprice --legacy;" data-priceA='1' data-priceB='1' class="customBasePrice marginBottom"></h6>
+			</div>
+		</div>
+	</li>
 </ul>
 
 
