@@ -45,7 +45,7 @@ myApp.rq.push(['extension',0,'tools_youtube','extensions/tools_youtube.js']);
 myApp.rq.push(['extension',0,'store_bmo','extensions/store_bmo.js','startExtension']);
 myApp.rq.push(['extension',0,'cart_quickadd','extensions/cart_quickadd/extension.js']);
 myApp.rq.push(['extension',0,'store_bmo_lto','extensions/limited_time_offer/store_bmo_lto.js']);
-myApp.rq.push(['extension',0,'store_filter','extensions/store_filter.js']);
+myApp.rq.push(['extension',0,'store_filter','extensions/store_filter.js','startExtension']);
 
 myApp.rq.push(['script',0,myApp.vars.baseURL+'carouFredSel-6.1.0/jquery.carouFredSel-6.1.0-packed.js']);
 myApp.rq.push(['script',0,myApp.vars.baseURL+'carouFredSel-6.1.0/jquery.carouFredSel-6.1.0.js']);

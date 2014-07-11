@@ -116,57 +116,7 @@ var store_filter = function(_app) {
 		init : {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-				
-			//	_app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(infoObj) {
-			//		_app.u.dump('Store_filter started');
-			//	}]);
-				
-				
-				//Filter Search:
-				_app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(infoObj) {
-					//context for reset button to reload page
-					var $context = $(_app.u.jqSelector('#',infoObj.parentID)); 
-					
-					_app.u.dump("BEGIN categoryTemplate onCompletes for filtering");
-					if(_app.ext.store_filter.filterMap[infoObj.navcat]) {
-						_app.u.dump(" -> safe id DOES have a filter.");
-						
-						_app.ext.store_filter.u.changeLayoutToFilter($context);
-
-						var $page = $(_app.u.jqSelector('#',infoObj.parentID));
-						_app.u.dump(" -> $page.length: "+$page.length);
-						if($page.data('filterAdded'))	{_app.u.dump("filter exists skipping form add");} //filter is already added, don't add again.
-						else {
-							$page.data('filterAdded',true)
-							var $form = $("[name='"+_app.ext.store_filter.filterMap[infoObj.navcat].filter+"']",'#appFilters').clone().appendTo($('.filterContainer',$page));
-							$form.on('submit.filterSearch',function(event) {
-								event.preventDefault()
-								_app.u.dump(" -> Filter form submitted.");
-								_app.ext.store_filter.a.execFilter($form,$page);
-									//put a hold on infinite product list and hide loadingBG for it
-								$page.find("[data-app-role='productList']").data('filtered',true);
-								$page.find("[data-app-role='infiniteProdlistLoadIndicator']").hide();
-							});
-
-							if(typeof _app.ext.store_filter.filterMap[infoObj.navcat].exec == 'function') {
-								_app.ext.store_filter.filterMap[infoObj.navcat].exec($form,infoObj)
-							}
-
-							//make all the checkboxes auto-submit the form.
-							$(":checkbox",$form).off('click.formSubmit').on('click.formSubmit',function() {
-								$form.submit();      
-							});
-						}
-					}
-						
-					//selector for reset button to reload page
-					$('.resetButton', $context).click(function(){
-						$context.empty().remove();
-						showContent('category',{'navcat':infoObj.navcat});
-					});
-
-				}]);
-				
+		
 				
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
@@ -178,6 +128,17 @@ var store_filter = function(_app) {
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
 				_app.u.dump('BEGIN app.ext.store_filter.callbacks.init.onError');
+			}
+		},
+		
+		startExtension : {
+			onSuccess : function() {
+				_app.templates.categoryTemplate.on('complete.store_filter',function(event,$context,infoObj) {
+					_app.ext.store_filter.u.startFilterSearch($context,infoObj);
+				});
+			},
+			onError : function () {
+				_app.u.dump('BEGIN _app.ext.store_filter.callbacks.startExtension.onError');
 			}
 		}
 			
@@ -251,7 +212,7 @@ var store_filter = function(_app) {
 				if(_app.ext.store_filter.u.validateFilterProperties($form)) {
 					_app.u.dump(" -> validated Filter Properties.")
 					var query = {
-						"mode":"elastic-native",
+						"mode":"elastic-search",
 						"size":100,
 						"filter" : _app.ext.store_filter.u.buildElasticFilters($form)
 					}//query
@@ -307,6 +268,46 @@ var store_filter = function(_app) {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+
+			startFilterSearch: function($context, infoObj) {
+				_app.u.dump("BEGIN categoryTemplate onCompletes for filtering");
+				if(_app.ext.store_filter.filterMap[infoObj.navcat]) {
+					_app.u.dump(" -> safe id DOES have a filter.");
+					
+					_app.ext.store_filter.u.changeLayoutToFilter($context);
+
+					var $page = $(_app.u.jqSelector('#',infoObj.parentID));
+					_app.u.dump(" -> $page.length: "+$page.length);
+					if($page.data('filterAdded'))	{_app.u.dump("filter exists skipping form add");} //filter is already added, don't add again.
+					else {
+						$page.data('filterAdded',true)
+						var $form = $("[name='"+_app.ext.store_filter.filterMap[infoObj.navcat].filter+"']",'#appFilters').clone().appendTo($('.filterContainer',$page));
+						$form.on('submit.filterSearch',function(event) {
+							event.preventDefault()
+							_app.u.dump(" -> Filter form submitted.");
+							_app.ext.store_filter.a.execFilter($form,$page);
+								//put a hold on infinite product list and hide loadingBG for it
+							$page.find("[data-app-role='productList']").data('filtered',true);
+							$page.find("[data-app-role='infiniteProdlistLoadIndicator']").hide();
+						});
+
+						if(typeof _app.ext.store_filter.filterMap[infoObj.navcat].exec == 'function') {
+							_app.ext.store_filter.filterMap[infoObj.navcat].exec($form,infoObj)
+						}
+
+						//make all the checkboxes auto-submit the form.
+						$(":checkbox",$form).off('click.formSubmit').on('click.formSubmit',function() {
+							$form.submit();      
+						});
+					}
+				}
+					
+				//selector for reset button to reload page
+				$('.resetButton', $context).click(function(){
+					$context.empty().remove();
+					showContent('category',{'navcat':infoObj.navcat});
+				});
+			},						
 		
 				//a checkbox that is triggered to initially submit the form and load the filter search 
 				//w/ all item_category items for attrib. indicated on input.
