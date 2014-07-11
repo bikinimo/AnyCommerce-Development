@@ -54,7 +54,7 @@ var partner_addthis = function(_app) {
 					_app.u.loadScript(scriptPath);
 					
 					//This is an example of how to add an addthis toolbox to a product page
-					_app.rq.push(['templateFunction','productTemplate','onCompletes',function(infoObj){
+		/*			_app.rq.push(['templateFunction','productTemplate','onCompletes',function(infoObj){
 						var $context = $(_app.u.jqSelector('#',infoObj.parentID));
 						var $toolbox = $('.socialLinks', $context);
 						if($toolbox.hasClass('addThisRendered')){
@@ -73,10 +73,49 @@ var partner_addthis = function(_app) {
 							_app.ext.partner_addthis.u.toolbox($toolbox, infoObj);
 							}
 						}]);
-					return true;
+		*/			return true;
 				},
 				onError : function() {
 					_app.u.dump('BEGIN _app.ext.partner_addthis.callbacks.init.onError');
+				}
+			},
+			
+			startExtension : {
+				onSuccess : function(){
+					dump("BEGIN _app.ext.partner_addthis.callbacks.startExtension.onSuccess");
+	/*				var scriptPath = (document.location.protocol == 'https:' ? 'https:' : 'http:')+'//s7.addthis.com/js/250/addthis_widget.js';
+					if(_app.ext.partner_addthis.vars.addthis_config.username && _app.ext.partner_addthis.vars.addthis_config.username !== ""){
+						scriptPath+= '#username='+_app.ext.partner_addthis.vars.addthis_config.username+'&domready';
+						}
+					else {
+						scriptPath += '#domready';
+						}
+					_app.u.loadScript(scriptPath);
+	*/				
+					//This is an example of how to add an addthis toolbox to a product page
+					_app.templates.productTemplate.on('complete.partner_addthis',function(event,$context,infoObj){
+						var $context = $(_app.u.jqSelector('#',infoObj.parentID));
+						var $toolbox = $('.socialLinks', $context);
+						if($toolbox.hasClass('addThisRendered')){
+							//Already rendered, don't do it again.
+							}
+						else {
+							$toolbox.addClass('addThisRendered').append(
+									'<div id="socialLinks" class="addthis_toolbox addthis_default_style">'
+								+		'<a class="addthis_button_preferred_1"></a>'
+								+		'<a class="addthis_button_preferred_2"></a>'
+								+		'<a class="addthis_button_preferred_3"></a>'
+								+		'<a class="addthis_button_preferred_4"></a>'
+								+		'<a class="addthis_button_compact"></a>'
+								+	'</div>');
+							
+							_app.ext.partner_addthis.u.toolbox($toolbox, infoObj);
+							}
+						});
+					return true;
+				},
+				onError : function() {
+					_app.u.dump('BEGIN _app.ext.partner_addthis.callbacks.startExtension.onError');
 				}
 			}
 		},
