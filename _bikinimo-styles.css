@@ -244,6 +244,11 @@ CUSTOMER PAGES
 
 */
 
+.companyAddress {margin:1em;}
+.companyAddress a, .privacyContact  a {color:#231f20;}
+.companyAddress a:hover, .privacyContact  a:hover {color:#f58d48;}
+.privacyContact {margin:1em auto;}
+.privacyContact  .amend {color:#000000;}
 
 
 /*
