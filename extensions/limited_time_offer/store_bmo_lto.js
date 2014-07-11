@@ -98,14 +98,14 @@ var store_bmo_lto = function(_app) {
 			}, //money
 		
 				//adds a class to $tag parent for css style changes to LTO cart/checkout items
-			hideStuffListLTO : function($tag, data) {
+			hidestufflistlto : function($tag, data) {
 				if(data.value == '%LTO10' || data.value == '%LTO15' || data.value == '%LTO20' || data.value == '%LTO25') {
 					$tag.parent().addClass('ltoItem');
 				}
 			},
 		
 				//checks each item in the cart and adds correct coupon for item's LTO discount if it is the current LTO
-			addCouponLTO : function($tag, data) {
+			addcouponlto : function($tag, data) {
 				var products = [];
 					for(var index in data.value) {
 						if(data.value[index].product[0] != '%') {
