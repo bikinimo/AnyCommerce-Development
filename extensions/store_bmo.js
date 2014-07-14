@@ -98,7 +98,9 @@ var store_bmo = function(_app) {
 					_app.templates.productTemplate.on('complete.store_bmo',function(event,$context,infoObj) {
 						//add tabs to product data.
 						//tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
-						_app.ext.store_bmo.u.addTabs($( ".tabbedProductContent",$context));
+						_app.ext.store_bmo.u.addTabs($(".tabbedProductContentTD",$context));
+						_app.ext.store_bmo.a.showRecentlyViewedItems($(".recentlyViewedItemsContainer",$context));
+						_app.ext.tools_youtube.u.youtubeIframe($context);
 					});
 						
 				//	} else	{
@@ -232,8 +234,8 @@ var store_bmo = function(_app) {
 			},
 		
 				//populates and shows list of recently viewed items in prod page popout on link click
-			showRecentlyViewedItems : function() {
-				var $container = $('#recentlyViewedItemsContainer'); //where the list goes
+			showRecentlyViewedItems : function($container) {
+				//var $container = $('#recentlyViewedItemsContainer'); //where the list goes
 
 					//you can only look at one list at a time
 				$('.accessoriesList','.quickVModal').hide();
@@ -258,7 +260,7 @@ var store_bmo = function(_app) {
 			showAccessories : function() {
 			
 					//you can only look at one list at a time
-				$('#recentlyViewedItemsContainer','.quickVModal').hide();
+				$('.recentlyViewedItemsContainer','.quickVModal').hide();
 				$('.relatedList','.quickVModal').hide();
 				$('.accessoriesList','.quickVModal').show();
 				$('.comparissonsbox ul li','.quickVModal').removeClass('selectedList');
@@ -268,7 +270,7 @@ var store_bmo = function(_app) {
 			showRelated : function() {
 			
 					//you can only look at one list at a time
-				$('#recentlyViewedItemsContainer','.quickVModal').hide();
+				$('.recentlyViewedItemsContainer','.quickVModal').hide();
 				$('.accessoriesList','.quickVModal').hide();
 				$('.relatedList','.quickVModal').show();
 				$('.comparissonsbox ul li','.quickVModal').removeClass('selectedList');

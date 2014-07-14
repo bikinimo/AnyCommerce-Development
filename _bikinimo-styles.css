@@ -223,7 +223,28 @@ PRODUCT DETAIL PAGE (productTemplate)
 .prodPageTabs.tabbedProductContentTD .ui-widget-content .tabingcontent.ui-tabs-panel {border:1px solid #b2b2b2;}
 .tabingcontent.ui-tabs-panel {border-radius:10px 10px 10px 0; float:left; padding:2%; width:96%;}
 .comparissonsboxCont {width:140px;}
-.prodPageTabs .applyButton {border:1px solid #fe7a00; border-radius:4px; color:#ffffff; font-size:90%; padding:0 2px 0 2px;}
+.prodPageTabs .applyButton, .prodPageTabs .applyButton.orangeGradient.inlineRevFix {border:1px solid #fe7a00; border-radius:4px; color:#ffffff; font-size:90%; padding:0 2px 0 2px;}
+.popupshado .secretLink a {font-size:50%; color:#cccccc; text-align:right;}
+
+/*INLINE PRODUCT PAGE*/
+.productPage {width:66%; margin:auto;}
+.productPage .prodViewerContainer {width:80%;}
+.prodPageTabs .applyButton.inlineRevFix.ui-state-default {
+	border:1px solid #fe7a00; border-radius:4px; color:#ffffff; font-size:90%; padding:0 2px 0 2px;
+	background: #ffc100 !important; /* Old browsers */
+	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmYzEwMCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZTdhMDAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+) !important;
+	background: -moz-linear-gradient(top,  #ffc100 0%, #fe7a00 100%) !important; /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffc100), color-stop(100%,#fe7a00)) !important; /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #ffc100 0%,#fe7a00 100%) !important; /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #ffc100 0%,#fe7a00 100%) !important; /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #ffc100 0%,#fe7a00 100%) !important; /* IE10+ */
+	background: linear-gradient(to bottom,  #ffc100 0%,#fe7a00 100%) !important; /* W3C */
+}
+	
+.productPage .extraListContainer {border-top:1px solid #ccc; padding:10px 0 0 0; clear:both;}
+.productPage .extraListContainer li {height:256px; width:150px; margin:4px; float:left;}
+
 
 /****** WRITE REVIEW MODAL ******/
 #reviewFrm label	{display:block; text-align:right; float:left; width:150px;}
