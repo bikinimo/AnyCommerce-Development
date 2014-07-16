@@ -213,6 +213,7 @@ PRODUCT DETAIL PAGE (productTemplate)
 .customATCForm, .standardATCForm	{margin-bottom:24px;}
 .customATCForm input[name="qty"], .standardATCForm input[name="qty"] {width:25px; text-align:center;}
 .customATCForm input[name="qty"].qtyChanged.ui-state-highlight, .standardATCForm input[name="qty"].qtyChanged.ui-state-highlight {color:#ffffff; font-weight:bold;}
+.prodViewerAddToCartForm {margin:0 0 1em 0;}
 .prodViewerAddToCartForm fieldset	{margin:0 0 12px 0;}
 
 .ui-widget-content .CRMButtonMenu a {color:#286C99;}
@@ -278,6 +279,7 @@ SEARCH RESULTS PAGE
 
 */
 
+.resultsHeader.hideInMinimalMode {margin:0 0 1em 0;}
 #categoryTemplate_appcategoriesseparates .searchResultsProduct {display:block !important;}
 #categoryTemplate_appcategoriesseparatesbottoms .searchResultsProduct {display:block !important;}
 
@@ -325,6 +327,7 @@ CART
 .cartZipCodeContainer, .cartAltButtonsContainer, .cartSummaryContainer	{margin-bottom:12px; padding-bottom:12px; border-bottom:1px dotted #efefef;}
 
 .cartStuffContainer	{width:55%; vertical-align:top; padding-right:12px; float:left;}
+.cartStuffContainer .productList > li {min-height:0;}
 .cartSummaryTotalsContainer {width:40%; padding-left:12px; font-size:.8em; float:right;} /* by default, this is the right column */
 
 .checkoutButtonsContainer span	{display:block; float:left; margin:0 12px 12px 0;}

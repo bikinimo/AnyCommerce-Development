@@ -102,6 +102,11 @@ var store_bmo = function(_app) {
 						_app.ext.store_bmo.a.showRecentlyViewedItems($(".recentlyViewedItemsContainer",$context));
 						_app.ext.tools_youtube.u.youtubeIframe($context);
 					});
+					
+					//make sure minicart stays up to date. 
+					_app.ext.store_bmo.vars.mcSetInterval = setInterval(function(){
+						_app.ext.quickstart.u.handleMinicartUpdate({'datapointer':'cartDetail|'+_app.model.fetchCartID()});
+					},4000);
 						
 				//	} else	{
 				//		setTimeout(function(){_app.ext.store_bmo.callbacks.startExtension.onSuccess()},250);
@@ -704,8 +709,8 @@ var store_bmo = function(_app) {
 				//will combine features list in tab section on prod page for top and bottom products if they are both being added to the page
 			combinefeatureslist : function($tag, data) {
 				setTimeout(function(){
-					_app.u.dump('input:'); _app.u.dump($('input[type=hidden]',$tag.parent()).val());
-					var pid = $('input[type=hidden]',$tag.parent()).val(); 
+					_app.u.dump('input:'); _app.u.dump($('input[name="sku"]',$tag.parent()).val());
+					var pid = $('input[name="sku"]',$tag.parent()).val(); 
 					var $destination = $('.tabOfFeatures',$tag.parent().parent().parent().parent()); //append new content to container w/ default content
 					
 						//get the matching product's feature info
@@ -748,41 +753,46 @@ var store_bmo = function(_app) {
 				//gets and adds pricing for top & bottom pieces to hidden element, which are then read onChange of form select list
 				//by changePriceDisplayed util function to alter the displayed price according to the selected pieces. 
 			sethiddenprice : function($tag, data) {
-	dump('THIS is the hidden input that should hold only the pid as a value:'); dump($('input[type="hidden"]',$tag.parent()));
-				var formDesignator = $tag.attr('data-formDesig'); //used to tell if a form has modified the displayed price
-				var $summaryContainer = $tag.parent().parent().parent().parent();
-				var pid = _app.u.makeSafeHTMLId($('input[type="hidden"]',$tag.parent()).attr('data-match')); //get pid for this form
-				//var pid = _app.u.makeSafeHTMLId($('input[type="hidden"]',$tag.parent()).val()); //get pid for this form
-	_app.u.dump('--> THIS is the pid that is read from the hidden input (is false because it is read as a 1 and makeSafeHTMLId does not like that):'); _app.u.dump(pid);
-				var prod = _app.data['appProductGet|'+pid]; //get product for this form
-				_app.u.dump('--> THIS is the appProductGet that is run from the pid read from the hidden input:'); _app.u.dump(prod);
-				
-					//add base price value to hidden element in each form
-				if(prod && prod['%attribs'] && prod['%attribs']['zoovy:base_price']) {
-					var displayPrice = _app.ext.store_bmo_lto.u.applyLTODiscount(pid,prod['%attribs']['zoovy:base_price']);
-					$tag.attr('data-price',displayPrice); 
+		
+				if($('input[name="sku"]',$tag.parent()).val() !== "undefined") {
+					var formDesignator = $tag.attr('data-formDesig'); //used to tell if a form has modified the displayed price
+					var $summaryContainer = $tag.parent().parent().parent().parent();
+					//var pid = _app.u.makeSafeHTMLId($('input[name="sku"]',$tag.parent()).attr('data-match')); //get pid for this form
+					var pid = _app.u.makeSafeHTMLId($('input[name="sku"]',$tag.parent()).val()); //get pid for this form
+					var prod = _app.data['appProductGet|'+pid]; //get product for this form;
+					
+						//add base price value to hidden element in each form
+					dump('kgjoasd;hgodhgvieraogoireh;oI'); dump(pid); dump(prod); dump(prod['%attribs']); dump(prod['%attribs']['zoovy:base_price']);
+					if(prod && prod['%attribs'] && prod['%attribs']['zoovy:base_price']) {
+						var displayPrice = _app.ext.store_bmo_lto.u.applyLTODiscount(pid,prod['%attribs']['zoovy:base_price']);
+						$tag.attr('data-price',displayPrice); 
+					}
+					else {_app.u.dump('!! _app.ext.store_bmo.renderformats.sethiddenprice() failed !!'); }
 				}
-				else {_app.u.dump('!! _app.ext.store_bmo.renderformats.sethiddenprice() failed !!'); dump('THIS  is the disignator for which form is being looked at:'); dump(formDesignator); }
-	dump('END OF FUNCTION -------------------------------------------------------------------------------');
 			}, //sethiddenprice
 			
 			loadprod : function($tag, data){
-				var obj = {									// object to hold product id for product
-					"pid" : data.value,
-					"withVariations":1,
-					"withInventory":1
-				};
-					//console.debug(obj);					// see what was returned in console
-				var _tag = {								// create holder for call back
-					"callback":"renderMatchingProduct",		// call back function (in callbacks above)
-					"extension":"store_bmo",			// extension that holds call back (this extension you're in)
-					"$container" : $tag,
-					"loadsTemplate" : data.bindData.templateid
-				};
-				_app.calls.appProductGet.init(obj, _tag, 'immutable');	// call appProductGet.init on the product id with the callback and callback location
-				
-				//execute calls
-				_app.model.dispatchThis('immutable');
+				//check for matching product. No need to run this if there is no matching product to render (like for a one peice, etc.)
+				if(data.bindData.ismatch) {
+					var obj = {									// object to hold product id for product
+						"pid" : data.value,
+						"withVariations":1,
+						"withInventory":1
+					};
+						//console.debug(obj);					// see what was returned in console
+					var _tag = {								// create holder for call back
+						"callback":"renderMatchingProduct",		// call back function (in callbacks above)
+						"extension":"store_bmo",				// extension that holds call back (this extension you're in)
+						"$container" : $tag,
+						"loadsTemplate" : data.bindData.templateid
+					};
+					_app.calls.appProductGet.init(obj, _tag, 'immutable');	// call appProductGet.init on the product id with the callback and callback location
+					
+					//execute calls
+					_app.model.dispatchThis('immutable');
+				}
+				//just to let someone know there wasn't a matching product found 'in case' there is a problem
+				else { dump('In store_bmo.renderFormats.loadprod and the matching product is undefined') }
 			},
 			
 			
@@ -886,7 +896,7 @@ var store_bmo = function(_app) {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
-			
+		
 			//checks for class anytabs. If not found, adds it and runs anytabs on the passed container element.
 			addTabs : function($container) {
 //				dump('START addTabs ');
@@ -1487,45 +1497,50 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 		
-			addToCart : function($this, p) {
-				//_app.u.dump('-> store_bmo addToCart');
+			addToCart : function($ele, p) {
+//				_app.u.dump('-> store_bmo addToCart');
 				p.preventDefault();
 	
 				var numCalls = 0;
-				$('form', $this).each(function(){
-					//_app.u.dump($(this));
+				var thisCartID = "";
+				$('form', $ele.parent()).each(function(){
+//					dump('THIS form element:'); _app.u.dump($(this));
 					var id = $('.zwarn',$(this)).attr('id').split('_'); //get pid from id added render options
 					var pid = id[1]; 		//break pid out of id
 					var $form = $(this); 	//holder for the current form
 					
 					$(this).data('skipvalidation', true); //don't use native app validation
-					var cartObj = _app.ext.store_product.u.buildCartItemAppendObj($(this)); //build cart object 
+					//the buildCartItemAppendObj needs a _cartid param in the form (we'll use this way at the bottom too).
+					if($("input[name='_cartid']",$form).length) {}
+					else { $form.append("<input type='hidden' name='_cartid' value='"+_app.model.fetchCartID()+"' \/>"); }
+					var cartObj = _app.ext.store_product.u.buildCartItemAppendObj($(this)); //build cart object
 					var valid = true; //check this to ensure options selected
 
 					//validate
 					if(pid && $form)	{
+					
 						//copied locally for quick reference.
 						var sogJSON = _app.data['appProductGet|'+pid]['@variations'],
 						formJSON = $form.serializeJSON();
 						console.debug($form.serializeJSON());
 						
-					//	_app.u.dump('BEGIN validate_pogs. Formid ='+formId);
+//						_app.u.dump('BEGIN validate_pogs. Formid ='+formId);
 					
 						if($.isEmptyObject(sogJSON))	{
-							_app.u.dump('no sogs present (or empty object)'); //valid. product may not have sogs.
+//							_app.u.dump('no sogs present (or empty object)'); //valid. product may not have sogs.
 							}
 						else if($.isEmptyObject(formJSON))	{
-				//			_app.u.throwGMessage("In store_product.validate.addToCart, formJSON is empty.");
+							_app.u.throwGMessage("In store_product.validate.addToCart, formJSON is empty.");
 							} //this shouldn't be empty. if it is, likely $form not valid or on DOM.
 						else	{
-							_app.u.dump(" -> everything is accounted for. Start validating.");	
+//							_app.u.dump(" -> everything is accounted for. Start validating.");	
 							$('.appMessage',$form).empty().remove(); //clear all existing errors/messages.
 						
 							var thisSTID = pid, //used to compose the STID for inventory lookup.
 							inventorySogPrompts = '',//the prompts for sogs with inventory. used to report inventory messaging if inventory checks are performed
 							errors = '', pogid, pogType;
 							
-				//			_app.u.dump(" -> formJSON: "); _app.u.dump(formJSON);
+//							_app.u.dump(" -> formJSON: "); _app.u.dump(formJSON);
 							
 				//No work to do if there are no sogs. 
 							if(sogJSON)	{
@@ -1588,21 +1603,35 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 					
 					if(valid){ 
 						numCalls++;
-						_app.calls.cartItemAppend.init(cartObj,{},'immutable');	
+						thisCartID = cartObj._cartid;
+						cartMessagePush(cartObj._cartid,'cart.itemAppend',_app.u.getWhitelistedObject(cartObj,['sku','pid','qty','quantity','%variations']));
+						_app.ext.cco.calls.cartItemAppend.init(cartObj,{},'immutable');	
 					} 
 				}); // form processing
 				if(numCalls > 0){
-					_app.model.destroy('cartDetail');
-					_app.calls.cartDetail.init({'callback':function(rd){
-						showContent('cart',{});
-						}},'immutable');
+					_app.model.destroy('cartDetail|'+thisCartID);
+					_app.calls.cartDetail.init(thisCartID,{'callback':function(rd){
+						if(_app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+						}
+						else {
+							if($ele.data('show') == 'inline') {
+								document.location.hash = "#!cart";
+							}
+							else {
+								_app.ext.quickstart.u.showCartInModal({'templateID':'cartTemplate'});
+							}
+						}
+					}},'immutable');
 					_app.model.dispatchThis('immutable');
 				} else {
 					//Notify user of problem
-					$('.atcPogErrors', $this).anymessage(_app.u.youErrObject("You must select variations for at least one product!",'#'));
+					$('.atcPogErrors', $ele.parent()).anymessage(_app.u.youErrObject("You must select variations for at least one product!",'#'));
 					
 				}
 			}, // addToCart
+			
+			
 			
 			//copied from app-quickstart.js so additional parameter could be used to assign the error location (for diff. login screens)
 			loginFrmSubmit : function($ele,p)	{
@@ -1636,7 +1665,7 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 			//	_app.u.dump('BEGIN renderOptionSELECT for pog '+pog.id+' and safe id = '+safeid);
 				var pogid = pog.id;
 				var $parentDiv = $("<span \/>");
-				var $selectList = $("<select  class='prodOpt' onChange='_app.ext.store_bmo.a.changePriceDisplayed($(this))'>").attr({"name":pogid});
+				var $selectList = $("<select  class='prodOpt' onChange='myApp.ext.store_bmo.a.changePriceDisplayed($(this))'>").attr({"name":pogid});
 				var i = 0;
 				var len = pog['@options'].length;
 
