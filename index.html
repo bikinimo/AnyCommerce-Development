@@ -1263,6 +1263,7 @@ this will likely become more flexible in the future. ###
 <ul>
 	<li id='productListTemplatePopout' class='loadingBG productListTemplatePopout'>
 		<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" onclick="myApp.ext.store_bmo.a.optionsQuickView($(this), $(this).attr('data-pid'));";>
+			<!-- <div data-tlc="bind $var '.'; store_bmo#hidefromlist --legacy;"></div> -->
 			<div class="prodThumbContainer floatLeft">
 				<img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank;){{bind $var '.%attribs.zoovy:prod_image1';}}; if(is $var --notblank;){{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
 			</div>
