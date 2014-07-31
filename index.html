@@ -711,9 +711,7 @@ the loadingBG class is removed (must be that classname) when the template is tra
 remember to NOT put the button inside the href or two events will occur onclick.
 -->
 <li id="productListTemplate" class="loadingBG"> <!-- onmouseover="$('.quickView',$(this)).show();" onmouseout="$('.quickView').hide();" -->
-	<!-- MARK MAY NEED LATER FOR SEO PURPOSES <a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class="blockLink"></a> -->
-
-	<div class="pointer prominh" data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView">
+	<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView" class="prominh">
 		<div data-tlc="bind $var '.'; store_bmo#hidefromlist --legacy;"></div>
 		<div data-tlc="bind $var '.'; store_bmo#addinfiniteslider --legacy" data-height="210" data-width="150" class="prodThumbContainer floatLeft"></div> <!-- MARK sheight:150; STILL NEED THIS? -->
 		
@@ -728,13 +726,13 @@ remember to NOT put the button inside the href or two events will occur onclick.
 		<div data-tlc="bind $var '.%attribs.user:matching_piece'; if (is $var --notblank) {{apply --show;}};" class="displayNone">
 			<h6 data-tlc="bind $var '.'; store_bmo#matchingbaseprice --legacy;" class="hideInMinimalMode price"></h6>
 		</div>
-	</div>
+	</a>
 	
 	<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" onsubmit="return false" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
 		<input name="qty" value="1" type="hidden">
 		<!-- MARK WHY IS THIS FORM EVEN STILL HERE? <button data-tlc="quickstart#addtocartbutton  --legacy; apply --append;" data-bind="format:addtocartbutton; extension:quickstart; useParentData:true;" class='applyButton'>more details</button> -->
 	</form>
-
+	<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';">Test link, to be removed</a>
 </li>
 
 
@@ -802,8 +800,7 @@ remember to NOT put the button inside the 'href' container or two events will oc
 SANITY -> if you change the height and width of this image, change the .minimalMode .searchResultsProduct in qs_styles.css to match
 -->
 <li id="productListTemplateResults" class="loadingBG searchResultsProduct">
-	
-	<div data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView" onclick="myApp.ext.store_bmo.a.pauseFred($(this).parent().parent());" class="pointer">
+	<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView" onclick="myApp.ext.store_bmo.a.pauseFred($(this).parent().parent());" class="pointer prominh">
 		<div data-tlc="bind $var '.'; store_bmo#hidefromlist --legacy;" data-iselastic='1'></div>
 		<div data-tlc="bind $var '.'; store_bmo#addinfiniteslider --legacy" data-height="210" data-width="150" data-iselastic='1' class="prodThumbContainer floatLeft"></div>
 
@@ -814,8 +811,8 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 		<div data-tlc="bind $var '.matching_piece'; if(is $var --notblank;) {{apply --show;}};" class="displayNone">
 			<h6 data-tlc="bind $var '.'; store_bmo#matchingbaseprice --legacy;" data-iselastic="1" class="hideInMinimalMode price"></h6>
 		</div>
-	</div>
-	<!-- MARK MAY NEED FOR SEO LATER <a class="hideInMinimalMode pointer moreDetails" data-tlc="bind $seoname '.prod_name'; bind $var '.'; store_routing#seoanchor --type='product' --seo --seoname=$seoname; apply --attrib='href';">more details</a> -->
+	</a>
+	<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';">Test link, to be removed.</a>
 </li>
 
 <li id="productListTemplateResultsNoPreview" class="loadingBG searchResultsProduct ">
@@ -1218,7 +1215,6 @@ this will likely become more flexible in the future. ###
 			</td>
 			</tr>
 			</table>	
-			<div class="secretLink"><a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class="blockLink">full product details</a></div>
 		</td>
 		
 		<td align="right" valign="top">

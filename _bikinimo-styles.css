@@ -225,7 +225,6 @@ PRODUCT DETAIL PAGE (productTemplate)
 .tabingcontent.ui-tabs-panel {border-radius:10px 10px 10px 0; float:left; padding:2%; width:96%;}
 .comparissonsboxCont {width:140px;}
 .prodPageTabs .applyButton, .prodPageTabs .applyButton.orangeGradient.inlineRevFix {border:1px solid #fe7a00; border-radius:4px; color:#ffffff; font-size:90%; padding:0 2px 0 2px;}
-.popupshado .secretLink a {font-size:50%; color:#cccccc; text-align:right;}
 
 /*INLINE PRODUCT PAGE*/
 .productPage {width:66%; margin:auto;}
@@ -419,7 +418,7 @@ ul#topnav li span ul li a:hover{color:#34719e; text-decoration:none;}
  !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
 .addtocartipro span{margin:0px; padding:0px; font-size:0px; border:0px !important; background:none !important; height:23px !important; width:83px !important; cursor:pointer; background-image:url(images/add_cart.gif) !important; background-repeat:no-repeat;}
 .addtocartipro .ui-state-default{margin:0 0 0 33px;  border:none !important;background:none !important; display:none; /*padding:0px;  height:23px !important; width:83px !important;*/}
-.prominh{min-height:205px !important; text-align:left;}
+.prominh{min-height:205px !important; text-align:left; text-decoration:none; color:#231f20;}
 .clickab{margin:0px; padding:0px; font-size:26px; font-family:'Abel', serif; color:#F05A24; text-align:center; font-weight:bold;}
 .clickab a{color:#F05A24 !important; text-decoration:none;}
 .clickab a:hover{color:#276b98 !important; text-decoration:none;}
