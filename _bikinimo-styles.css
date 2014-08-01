@@ -668,8 +668,11 @@ z-index:1002; overflow: auto; /*box-shadow: 1px 1px 3px 3px #000000;*/ font-fami
 
 .productListTemplatePopout {height:auto; width:120px; padding:0 10px;}
 .productListTemplatePopout .prodThumbContainer.floatLeft {height:auto; width:auto;}
-.productListTemplatePopout h5 {text-align:center;}
-.productListTemplatePopout h6 {border-bottom:1px solid #b1b1b1; margin:0 0 10px 0; padding:0 0 10px 0; text-align:center;}
+.productListTemplatePopout h5, .productListTemplatePopout .basePrice h5 {text-align:center; font-size:11px; color:#222222;}
+.productListTemplatePopout h6 {border-bottom:1px solid #b1b1b1; margin:0 0 10px 0; padding:0 0 10px 0; text-align:center; color:#f05a24; font-size:13.5px !important;}
+
+.basePrice, .customBasePrice {color:#f05a24; font-size:15.5px !important;}
+.basePrice h5, .customBasePrice h5, .prodSummaryContainer h5 {color:#000; font-size:12px; padding:2px 6px 0 0 ;}
 
 .comparissonsbox{margin:0px; padding:0px; text-align:center; clear:both;}
 .quickVModal .popoutButton {height:20px; width:21px;}

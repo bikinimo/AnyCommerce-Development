@@ -96,6 +96,7 @@ var store_bmo = function(_app) {
 					});
 					
 					_app.templates.productTemplate.on('complete.store_bmo',function(event,$context,infoObj) {
+						_app.ext.store_bmo.u.setInlineHiddenPrice(infoObj,$context);
 						//add tabs to product data.
 						//tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
 						_app.ext.store_bmo.u.addTabs($(".tabbedProductContentTD",$context));
@@ -194,15 +195,15 @@ var store_bmo = function(_app) {
 		
 				//reads prices for each form set by setHiddenPrice renderFormat and changes the displayed price
 				//to the total for each piece selected. (price for top only if only top is selected, etc.)
-			changePriceDisplayed : function() {
+			changePriceDisplayed : function($this) {
 //				_app.u.dump('start change function'); 
-
+				var $parentContainer = $this.closest('form').parent();
 				var everythingPrice = 0;	//will hold total cost of all items to display when no items selected
 				var price = 0;	//will hold the price to display if any items are selected
 					//check each form to see if an item is selected, add form cost to total if yes
-				$('form','.customATCForm').each(function(){
+
+				$('form',$parentContainer).each(function(){
 					everythingPrice += Number($('.formPrice',$(this)).attr('data-price'));
-					
 					var count = 0;	//keeps track of whether or not form has a selection
 					$('select',$(this)).each(function(){
 						if($(this).val()){
@@ -213,8 +214,7 @@ var store_bmo = function(_app) {
 					if(count != 0) {
 						price += Number($('.formPrice',$(this)).attr('data-price'));
 					}
-				}); //each form
-				
+				}); //each form			
 					//if there is a price, an item is selected, change the displayed price to what was calculated
 				if(price != 0) {
 					$('.customBasePrice','.prodSummaryContainer').empty().text(_app.u.formatMoney(price,'$',2,true));
@@ -739,7 +739,8 @@ var store_bmo = function(_app) {
 				var displayPrice = 0;
 				setTimeout(function(){
 						//get price of each item from it's form, and add them for total
-					$('form','.customATCForm',$tag.parent().parent()).each(function(){
+					var $parentContainer = $('.customATCForm',$tag.parent().parent());
+					$('form',$parentContainer).each(function(){
 						displayPrice += Number($('.formPrice',$(this)).attr('data-price'));
 //						_app.u.dump('--> price'); _app.u.dump(displayPrice); 
 					});
@@ -751,7 +752,7 @@ var store_bmo = function(_app) {
 			},
 			
 				//gets and adds pricing for top & bottom pieces to hidden element, which are then read onChange of form select list
-				//by changePriceDisplayed util function to alter the displayed price according to the selected pieces. 
+				//by changePriceDisplayed util function to alter the displayed price according to the selected pieces.
 			sethiddenprice : function($tag, data) {
 		
 				if($('input[name="sku"]',$tag.parent()).val() !== "undefined") {
@@ -759,15 +760,18 @@ var store_bmo = function(_app) {
 					var $summaryContainer = $tag.parent().parent().parent().parent();
 					//var pid = _app.u.makeSafeHTMLId($('input[name="sku"]',$tag.parent()).attr('data-match')); //get pid for this form
 					var pid = _app.u.makeSafeHTMLId($('input[name="sku"]',$tag.parent()).val()); //get pid for this form
-					var prod = _app.data['appProductGet|'+pid]; //get product for this form;
-					
-						//add base price value to hidden element in each form
-					dump('kgjoasd;hgodhgvieraogoireh;oI'); dump(pid); dump(prod); dump(prod['%attribs']); dump(prod['%attribs']['zoovy:base_price']);
-					if(prod && prod['%attribs'] && prod['%attribs']['zoovy:base_price']) {
-						var displayPrice = _app.ext.store_bmo_lto.u.applyLTODiscount(pid,prod['%attribs']['zoovy:base_price']);
-						$tag.attr('data-price',displayPrice); 
-					}
-					else {_app.u.dump('!! _app.ext.store_bmo.renderformats.sethiddenprice() failed !!'); }
+//					setTimeout(function() {	//timeout because appProductGet was coming back undefined on inline product page. 		
+						var prod = _app.data['appProductGet|'+pid]; //get product for this form;
+						
+							//add base price value to hidden element in each form
+						//dump('kgjoasd;hgodhgvieraogoireh;oI'); dump(pid); dump(prod); dump(prod['%attribs']); dump(prod['%attribs']['zoovy:base_price']);
+						if(prod && prod['%attribs'] && prod['%attribs']['zoovy:base_price']) {
+							var displayPrice = _app.ext.store_bmo_lto.u.applyLTODiscount(pid,prod['%attribs']['zoovy:base_price']);
+							$tag.attr('data-price',displayPrice); 
+//							_app.ext.store_bmo.a.changePriceDisplayed(); //since timeout for appProductGet, this was running before the price was set, running again won't hurt.
+						}
+						else {_app.u.dump('!! _app.ext.store_bmo.renderformats.sethiddenprice() failed !!'); }
+//					},500);	
 				}
 			}, //sethiddenprice
 			
@@ -950,6 +954,39 @@ var store_bmo = function(_app) {
 					 return _app.ext.quickstart.a.showContent('',P);
 				});
 			},
+			
+			//for inline prod page that was added for SEO compatibility, needed different timing than modal was using to get necessary data.
+			//gets and adds pricing for top & bottom pieces to hidden element, which are then read onChange of form select list
+			//by changePriceDisplayed util function to alter the displayed price according to the selected pieces.
+			setInlineHiddenPrice : function(infoObj,$context,attempts) {
+				attempts = attempts || 0;
+//				dump("setInlineHiddenPrice infoObj:"); dump(_app.data[infoObj.datapointer]['%attribs']);
+				if(_app.data[infoObj.datapointer] && _app.data[infoObj.datapointer]['%attribs'] && _app.data[infoObj.datapointer]['%attribs']['user:matching_piece']) { 
+//					dump('THIS ITEM HAS A MATCHING PIECE.');
+					var $parentContainer = $('.customATCForm',$context);
+					var displayPrice = 0;
+					$('form',$parentContainer).each(function(){
+						var pid = _app.u.makeSafeHTMLId($('input[name="sku"]',$(this)).val());
+						var prod = _app.data['appProductGet|'+pid];
+						if(prod !== undefined) {
+							//var formDesignator = $('.formPrice',$(this)).attr('data-formDesig');
+							//var $summaryContainer = $('.prodSummaryContainer',$context);
+							if(prod && prod['%attribs'] && prod['%attribs']['zoovy:base_price']) {
+								var hiddenPrice = _app.ext.store_bmo_lto.u.applyLTODiscount(pid,prod['%attribs']['zoovy:base_price']);
+								$('.formPrice',$(this)).attr('data-price',hiddenPrice); 
+								displayPrice += Number(hiddenPrice);
+							}
+							else {_app.u.dump('!! _app.ext.store_bmo.renderformats.sethiddenprice() failed !!'); }
+						}
+						else { setTimeout(function(){ _app.ext.store_bmo.u.setInlineHiddenPrice(infoObj,$context,attempts+1) },250); }
+					});
+					displayPrice = _app.u.formatMoney(displayPrice,'$',2,true);
+					$('.customBasePrice',$context).empty().text(displayPrice);
+				}
+				else { 
+					//dump('Not a matching item move along, nothing to see here.');/* This is a one peice (or other non-matching item) and doesn't need special price display handling */ 
+				} 
+			}, //setInlineHiddenPrice
 			
 			//anyContent to add matching top or bottom to a top or bottom prod page
 			loadMatchingProduct : function(pid) {
