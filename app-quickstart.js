@@ -1092,11 +1092,11 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					if($bg.length)	{
 						$bg.animate({left:$(window).width(),top:$(window).height()},function(){$bg.hide();});
 						}
-
-					$('#appPreView').slideUp(1000,function(){
+//preveiw hiding handled in _app.ext.store_bmo.a.signUpPrompt
+//bmo				$('#appPreView').slideUp(1000,function(){ 
 						$new.show(); //have to show content area here because the slideDown will only make the parent visible
-						$('#appView').slideDown(3000);
-						});
+//bmo					$('#appView').slideDown(3000);
+//bmo					});
 					}
 				else if(infoObj.performTransition == false)	{
 					}
@@ -2558,7 +2558,7 @@ buyer to 'take with them' as they move between  pages.
 				$('#loginSuccessContainer').hide(); //contains 'continue' button.
 				$('#loginMessaging, #recoverPasswordMessaging').empty(); //used for success and fail messaging.
 				$('#loginFormContainer, #recoverPasswordContainer').show(); //contains actual form and password recovery form (second id)
-/*bmo*/			$('#loginFormForModal').dialog({modal:true,height:'auto',minHeight:350,width:($(window).width() > 500) ? 700 : '90%',autoOpen:false,});
+/*bmo*/			$('#loginFormForModal').dialog({modal:true,height:'auto',minHeight:350,width:($(window).width() > 500) ? 700 : '90%',autoOpen:false,show:'fade'});
 				$('#loginFormForModal').dialog('open');
 				
 		

@@ -164,12 +164,10 @@ var _robots = {
 <!-- EDIT PREVIEW HERE!! -------------------------------------------------------------------->				
 				</div>
 				<div id="categorySelector" class="previewButtonCont showSansPreferences displayNone" style="cursor:pointer;">
-<!-- TODO: REWORK QUICKSTART-INIT SO THIS WORKS AGAIN					<div class="categorySelectorButtonContainer floatLeft" onClick="app.u.selectPreference('logMeIn',true);"><span class="categorySelectorButton pointer"><a href="#"><img src="images/preload-login_127x34.png" alt="Log me in" title="Log me in" style="margin:0px;"/></a></span></div>
-					<div class="categorySelectorButtonContainer floatLeft" onClick="app.u.selectPreference('signMeUp',true);"><span class="categorySelectorButton pointer"><a href="#"><img src="images/sign_up.png" alt="Sign Me Up" title="Sign Me Up" /></a></span></div>
-					<div class="categorySelectorButtonContainer floatLeft" onClick="app.u.selectPreference('guest',true); return false;"><span class="categorySelectorButton pointer"><a href="#"><img src="images/continu_guest.png" alt="Continue as Guest" title="Continue as Guest" /></a></span></div>
--->					<div class="categorySelectorButtonContainer floatLeft"><span class="categorySelectorButton pointer"><a href="#"><img src="images/preload-login_127x34.png" alt="Log me in" title="Log me in" style="margin:0px;"/></a></span></div>
-					<div class="categorySelectorButtonContainer floatLeft"><span class="categorySelectorButton pointer"><a href="#"><img src="images/sign_up.png" alt="Sign Me Up" title="Sign Me Up" /></a></span></div>
-					<div class="categorySelectorButtonContainer floatLeft"><span class="categorySelectorButton pointer"><a href="#"><img src="images/continu_guest.png" alt="Continue as Guest" title="Continue as Guest" /></a></span></div>
+					<!-- Run in console, or set in qs-init so show appPreview again myApp.model.dpsSet('quickstart','suppressMkt',false); -->
+					<div class="categorySelectorButtonContainer floatLeft" onclick="myApp.ext.store_bmo.a.signUpPrompt('logMeIn');"><span class="categorySelectorButton pointer"><a href="#"><img src="images/preload-login_127x34.png" alt="Log me in" title="Log me in" style="margin:0px;"/></a></span></div>
+					<div class="categorySelectorButtonContainer floatLeft" onclick="myApp.ext.store_bmo.a.signUpPrompt('signMeUp');"><span class="categorySelectorButton pointer"><a href="#"><img src="images/sign_up.png" alt="Sign Me Up" title="Sign Me Up" /></a></span></div>
+					<div class="categorySelectorButtonContainer floatLeft" onclick="myApp.ext.store_bmo.a.signUpPrompt('guest');"><span class="categorySelectorButton pointer"><a href="#"><img src="images/continu_guest.png" alt="Continue as Guest" title="Continue as Guest" /></a></span></div>
 					<div class="clear"></div>
 				</div>
 				<div id="progressBarContainer" class="">

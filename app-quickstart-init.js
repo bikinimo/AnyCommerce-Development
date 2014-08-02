@@ -79,8 +79,45 @@ myApp.u.showProgress = function(progress)	{
 		if(progress.passZeroResourcesLength == progress.passZeroResourcesLoaded)	{
 			//All pass zero resources have loaded.
 			//the app will handle hiding the loading screen.
-			myApp.u.appInitComplete();
+			dump('ALL PASSZERO RESOURCES ARE LOADED');
+			var showMarketing = true;
+			if(document.location.search) {
+				var uriParams = myApp.u.kvp2Array(document.location.search);
+				if(uriParams.suppressMkt)	{showMarketing = false; dump(" -> marketing suppressed due to URI param.");}
 			}
+			else if(myApp.u.buyerIsAuthenticated()) {
+				showMarketing = false;
+				dump(" -> marketing suppressed because user is authenticated.");
+			}
+			else if(myApp.model.dpsGet('quickstart','suppressMkt')) {
+				showMarketing = false;
+				dump(" -> marketing suppressed due to LS var (user has seen marketing already).");
+			}
+			else {  }
+
+			if(showMarketing) {
+				dump('GOT HERE');
+				//leave the preView open and show some marketing mumbo jumbo.
+				//$(".showSansPreferences").removeClass('displayNone');
+				//$(".previewButtonCont").hide();
+				//$("#previewContent").hide().delay(200).fadeIn(800);
+				$('#progressBarContainer').fadeOut(1000);
+				setTimeout( function() {
+					$(".previewButtonCont").delay(300).fadeIn({duration: 500});
+				}, 500);
+			}
+			else {
+				//close the preView once app is done loading and move along...
+				myApp.u.appInitComplete();
+				$('#appPreView').fadeOut(1000,function(){
+					$('#appView').slideDown(3000);
+				});
+				}
+
+			//this will ensure that the marketing messaging is only shown once on this host/protocol.
+			myApp.model.dpsSet('quickstart','suppressMkt',true);
+
+		}
 		else if(attempt > 200)	{
 			//hhhhmmm.... something must have gone wrong.
 			clearTimeout(progress.passZeroTimeout); //end the resource loading timeout.
