@@ -59,7 +59,7 @@ var store_routing = function(_app) {
 					var tag = routeObj.params.tag.toUpperCase(); 
 					showContent('search',{'elasticsearch':{'filter':{'and':{'filters':[{'term':{'tags':tag}},{'term':{'is_app':'1'}}]}}}})
 				});
-				//shos search results for any product with the attribute that is passed and set to "1", and the is_app attribute
+				//shows search results for any product with the attribute that is passed and set to "1", and the is_app attribute
 				_app.router.addAlias('appattribsearch',		function(routeObj){
 					var elasticsearch = {'filter':{'and':[{'term':{'is_app':'1'}}]}};
 					var fObj = {'term':{}};
@@ -121,30 +121,33 @@ _app.router.appendHash({'type':'match','route':'modal/product/{{pid}}*','callbac
 						var hash = "";
 						var $routeEle = $('[data-routing-hash]',$context);
 						if($routeEle.length) {
+							dump('Whadda you know... there was a routing element');
 							hash = $routeEle.attr('data-routing-hash');
 						}
 						else {
-							switch(infoObj.pageType) {
+							switch(infoObj.pageType) { //for bmo: make all url's lower case.
 								case 'homepage':
 									hash = "#!/";
 									break;
 								case 'product':
-									hash = "#!/product/"+infoObj.pid+"/";
+									//for bmo: append prod_name.html to end of hash
+									hash = "#!/product/"+infoObj.pid.toLowerCase()+"/"+infoObj.name;
 									break;
 								case 'category':
-									hash = "#!/category/"+infoObj.navcat+"/";
+									dump('There was no routing element');
+									hash = "#!/category/"+infoObj.navcat.toLowerCase()+"/";
 									break;
 								case 'static':
 									hash = window.location.hash;
 									break;
 								case 'search':
-									hash = window.location.hash; //"#!/search/"+encodeURIComponent(infoObj.KEYWORDS)+"/"
+									hash = window.location.hash.toLowerCase(); //"#!/search/"+encodeURIComponent(infoObj.KEYWORDS)+"/"
 									break;
 								case 'company':
-									hash = "#!company/"+infoObj.show+"/"
+									hash = "#!company/"+infoObj.show.toLowerCase()+"/"
 									break;
 								case 'customer':
-									hash = "#!customer/"+infoObj.show+"/";
+									hash = "#!customer/"+infoObj.show.toLowerCase()+"/";
 									break;
 								case 'cart':
 									hash = "#!cart/";
@@ -285,19 +288,27 @@ optional params:
 					window.location.href = window.location.href.split("#")[0]+hash;
 					}
 				},
+			cleanURIComponent : function(str){
+				var component = str.replace(/^\s+|\s+$/g, '');
+				//component = component.replace(' ', '-');
+				component = component.replace(/[^a-zA-Z0-9]+/g, '-');
+				return component;
+				},
+	//for bmo: make hash lower case.
 			productAnchor : function(pid, seo){
-				return "#!product/"+pid+"/"+(seo ? encodeURIComponent(seo) : '');
+				//for bmo: append .html to end of seo. 
+				return "#!product/"+pid.toLowerCase()+"/"+(seo ? _app.ext.store_routing.u.cleanURIComponent(seo).toLowerCase() : '')+".html";
 				},
 			categoryAnchor : function(path,seo)	{
-				return "#!category/"+path+((seo) ? "/"+encodeURIComponent(seo) : '');
+				return "#!category/"+path.toLowerCase()+"/"+((seo) ? _app.ext.store_routing.u.cleanURIComponent(seo).toLowerCase() : '');
 				},
 			searchAnchor : function(type,value)	{
 				var r;
 				if(type == 'tag')	{
-					r = '#!search/tag/'+value;
+					r = '#!search/tag/'+value.toLowerCase();
 					}
 				else if(type == 'keywords')	{
-					r = '#!search/keywords/'+value;
+					r = '#!search/keywords/'+value.toLowerCase();
 					}
 // ### FUTURE -> support ability to search for a match on a specific attribute.
 //				else if(type == 'attrib')	{
@@ -306,7 +317,7 @@ optional params:
 				else	{
 					//unrecognized type
 					}
-				return "#!category/"+path+((seo) ? "/"+encodeURIComponent(seo) : '');
+				return "#!category/"+path.toLowerCase()+"/"+((seo) ? _app.ext.store_routing.u.cleanURIComponent(seo).toLowerCase() : '');
 				}
 			}, //u [utilities]
 
