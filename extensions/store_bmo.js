@@ -73,7 +73,11 @@ var store_bmo = function(_app) {
 			startExtension : {
 				onSuccess : function() {
 				//	if(_app.ext.quickstart && _app.ext.quickstart.template){ Revisit using this if trouble w/ extending pogs shows up. 
-						
+					
+					_app.ext.store_search.vars.universalFilters.push({"term":{"is_app":1}});
+					_app.ext.store_search.vars.universalFilters.push({"has_child":{"type":"sku","query":{"range":{"available":{"gte":1}}}}});
+					_app.ext.store_search.vars.universalFilters.push({"not":{"term":{"tags":"IS_DISCONTINUED"}}});
+					
 					_app.u.dump("START store_bmo.callbacks.init.startExtension");
 					$.extend(handlePogs.prototype,_app.ext.store_bmo.variations);
 					//_app.u.dump('*** Extending Pogs');
