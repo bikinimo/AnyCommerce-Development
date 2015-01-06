@@ -295,7 +295,7 @@ _app.u.bindTemplateEvent('customerListsTemplate','complete.customer',function(ev
 			//add the product list ul here because tlc statement has list ID for bind.
 			$("[data-buyerlistid='"+listID+"']",$context).append("<ul data-tlc=\"bind $var '.@"+listID+"'; store_prodlist#productlist  --hideSummary='1' --withReviews='1' --withVariations='1' --withInventory='1' --templateid='productListTemplateBuyerList'  --legacy;\" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>");
 			_app.model.addDispatchToQ({"_cmd":"buyerProductListDetail","listid":listID,"_tag" : {'datapointer':'buyerProductListDetail|'+listID,"listid":listID,'callback':'buyerListAsProdlist','extension':'quickstart', "require":"store_prodlist",'jqObj':$("[data-buyerlistid='"+listID+"'] ul",$context)}},'mutable');
-				}
+			}
 		
 		var data = _app.data[rd.datapointer]['@lists']; //shortcut
 		var L = data.length;
@@ -603,7 +603,7 @@ _app.u.appInitComplete = function()	{
 		if(_app.u.thisNestedExists("zGlobals.thirdParty.facebook.appId") && typeof FB == 'object')	{
 			$('.ocmFacebookComment',$checkout).click(function(){
 				_app.ext.quickstart.thirdParty.fb.postToWall(cartContentsAsLinks);
-				_gaq.push(['_trackEvent','Checkout','User Event','FB message about order']);
+				ga('send','event','Checkout','User Event','FB message about order');
 				window[_app.vars.analyticsPointer]('send', 'event','Checkout','User Event','FB message about order');
 				});
 			}
@@ -665,6 +665,7 @@ _app.router.appendInit({
 					dump(event);
 					$renderedTemplate.on(event.event, event.handler);
 					}
+				}
 			//handleURIChange here will not change the page, but it will execute appropriate events
 			//that's why we pass false for the windowHistoryAction- no pushstate
 			_app.router.handleURIString($existingPage.attr('data-app-uri'), false, {"retrigger" : true});
