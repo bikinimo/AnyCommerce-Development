@@ -233,9 +233,6 @@ document.write = function(v){
 						
 						}}},"mutable"); //used to determine if user is logged in or not.
 					_app.model.dispatchThis('mutable');
-						
-						}}},"mutable"); //used to determine if user is logged in or not.
-					_app.model.dispatchThis('mutable');
 
 					if(!$.support.localStorage)	{
 						_app.model.writeCookie('_cart',cartID); //support browsers w/ localstorage disabled.
@@ -1529,10 +1526,6 @@ $target.tlc({
 					}
 				return r;
 				}, //getUsernameFromCart
-					r = _app.vars.fbUser.email || false;
-					}
-				return r;
-				}, //getUsernameFromCart
 
 
 			handleLoginActions : function()  {
@@ -2336,6 +2329,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 					else	{
 						$modal.trigger('refresh');
 						}
+
 					}
 				else	{
 					_app.u.throwGMessage("ERROR! no templateID passed into showCartInModal. P follows: ");
@@ -2634,13 +2628,6 @@ buyer to 'take with them' as they move between  pages.
 						'gMessage' : true,
 						'message' : "In quickstart.u.showArticle, infoObj.show was not defined."
 						});
-						}
-					}
-				else	{
-					$('#globalMessaging').anymessage({
-						'gMessage' : true,
-						'message' : "In quickstart.u.showArticle, infoObj.show was not defined."
-						});
 					}
 				return r;
 				},
@@ -2860,6 +2847,11 @@ else	{
 
 				}, //showOrderDetails
 	
+
+				
+//_app.ext.quickstart.u.handleMinicartUpdate();			
+			handleMinicartUpdate : function(tagObj)	{
+//				dump("BEGIN quickstart.u.handleMinicartUPdate"); dump(tagObj);
 				var r = false; //what's returned. t for cart updated, f for no update.
 				var $appView = $('#appView');
 				var itemCount = 0;
@@ -2870,144 +2862,22 @@ else	{
 					itemCount = _app.u.isSet(_app.data[tagObj.datapointer].sum.items_count) || 0;
 					subtotal = _app.data[tagObj.datapointer].sum.items_total;
 					total = _app.data[tagObj.datapointer].sum.order_total;
+					}
 				else	{
 					//cart not in memory yet. use defaults.
+					}
+
 				$('.cartItemCount',$appView).text(itemCount);
 				$('.cartSubtotal',$appView).text(_app.u.formatMoney(subtotal,'$',2,false));
 				$('.cartTotal',$appView).text(_app.u.formatMoney(total,'$',2,false));
+
 				//no error for cart data not being present. It's a passive function.
 				return r;
 				},
 
-			getDataFromInfoObj : function(infoObj){
-				//initialized to an empty object, so that we don't return a null pointer
-				var data = {};
-				
-				if(infoObj.datapointer){
-					data = _app.data[infoObj.datapointer];
-						case "product" :
-							data = _app.data['appProductGet|'+infoObj.pid];
-							break;
-						case "homepage" :
-							//both homepage and category share the same infoObj.navcat syntax, so we can cascade
-						case "category" :
-							data = _app.data['appNavcatDetail|'+infoObj.navcat];
-							break;
-						case "customer" :
-							data = _app.data.appBuyerLogin;
-							break;
-						case "company" :
-							//Return an empty object
-							break;
-						case "search" :
-							data = _app.data["appPublicSearch|"+JSON.stringify(infoObj.elasticsearch)];
-							break;
-						case "cart" :
-							//Both cart and checkout can return the cart, so we can cascade
-						case "checkout" :
-							data = _app.data.cartDetail;
-							break;
-						default :
-							//Return an empty object
-							break;
-						}
-					}
-				return data;
-				
-//_app.ext.quickstart.u.handleMinicartUpdate();			
-					sfo._tag = {"datapointer":"appBuyerLogin",'callback':'authenticateBuyer','extension':'quickstart'}
-					_app.model.addDispatchToQ(sfo,"immutable");
-					_app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
-					_app.model.dispatchThis('immutable');
-				},
-			accountPasswordRecoverSubmit : function($ele,p)	{
-				p.preventDefault();
-				if(_app.u.validateForm($ele))	{
-					$ele.showLoading({'message':'Sending request for password recovery.'});
-					_app.model.addDispatchToQ({
-						"_cmd":"appBuyerPasswordRecover",
-						"method":"email",
-						"login":$("[name='login']",$ele).val(),
-						"_tag":{
-							"datapointer":"appBuyerPasswordRecover",
-							'callback':'showMessaging',
-							'message':'Thank you, will receive an email shortly',
-							'jqObj':$ele
-						},"immutable");
-					_app.model.dispatchThis('immutable');
-				return false;
-				},
-	
-			cartShipMethodSelect : function($ele,P)	{
-				P.preventDefault();
-				var $cart = $ele.closest("[data-template-role='cart']");
-				_app.ext.cco.calls.cartSet.init({'_cartid':$cart.data('cartid'),'want/shipping_id':$ele.val()},{},'immutable');
-				$cart.trigger('fetch',{'Q':'immutable'});
-				_app.model.dispatchThis('immutable');
-				return false;
-				},
-			
-			cartMessagePageSend : function($ele,p)	{
-				p.preventDefault();
-				var vars = _app.u.getWhitelistedObject(_app.ext.quickstart.vars.sotw,['pageType','pid','show','navcat','keywords','templateID','uriParams']); //don't need everything in sotw.
-				var cartid = $ele.closest("[data-app-role='cartMessenger']").data('cartid');
-				vars.domain = (document.location.protocol == 'file:') ? _app.vars.testURL : document.domain;
-				_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'view.'+vars.pageType,'vars':vars,'_cartid':cartid,'_tag':{
-					'callback' : function(rd)	{
-						if(_app.model.responseHasErrors(rd)){
-							$('#cartMessenger').anymessage({'message':rd});
-							$("[data-app-role='messageHistory']",'#cartMessenger').append(vars.pageType+" page sent to admin.");
-				_app.model.dispatchThis('passive');
-				return false;
-				},
-			dialogCloseExec : function($ele,p)	{
-				$ele.closest('.ui-dialog-content').dialog('close');
-				return false;
-				},
-			faqDetailShow : function($ele,p)	{
-				p.preventDefault();
-				_app.ext.quickstart.a.showFAQbyTopic($ele.closest('[data-topicid]').data('topicid'));
-				return false;
-				},
-				p.preventDefault();
-//				dump("BEGIN quickstart.u.handleMinicartUPdate"); dump(tagObj);
-				if(orderID)	{
-					_app.ext.cco.u.appendOrderItems2Cart({orderid:orderID,cartid:_app.model.fetchCartID()},function(rd){
-						if(_app.model.responseHasErrors(rd)){
-							$('#globalMessaging').anymessage({'message':rd});
-				if(_app.data[tagObj.datapointer] && _app.data[tagObj.datapointer].sum)	{
-					itemCount = _app.u.isSet(_app.data[tagObj.datapointer].sum.items_count) || 0;
-					subtotal = _app.data[tagObj.datapointer].sum.items_total;
-					total = _app.data[tagObj.datapointer].sum.order_total;
-							}
-						else	{
-							document.location.hash = '#!cart';
-							}
-						});
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':"In quickstart.e.execOrder2Cart, unable to determine orderID",'gMessage':true});
-					}
-				return false;
-				}, //execOrder2Cart
-
-			orderDetailShow : function($ele,p)	{
-				$('.cartSubtotal',$appView).text(_app.u.formatMoney(subtotal,'$',2,false));
-				$('.cartTotal',$appView).text(_app.u.formatMoney(total,'$',2,false));
-				return false;
-				},
-
-				return false;
-				},
 		
-				else	{
-					$("#globalMessaging").anymessage({"message":"In quickstart.e.showContent, no data-hash set on trigger element.","gMessage":true});
-					}
-				return false;
 
-				else	{}
-				return false;
-				},
+
 			
 			getDataFromInfoObj : function(infoObj){
 				//initialized to an empty object, so that we don't return a null pointer
@@ -3015,9 +2885,6 @@ else	{
 				
 				if(infoObj.datapointer){
 					data = _app.data[infoObj.datapointer];
-						else	{
-							if($ele.data('show') == 'inline')	{
-								document.location.hash = '#!cart';
 					}
 				else {
 					switch(infoObj.pageType){
@@ -3046,19 +2913,7 @@ else	{
 						default :
 							//Return an empty object
 							break;
-							}
-						}},'immutable');
-					_app.model.dispatchThis('immutable');
-					
-					}
-				else	{} //do nothing, the validation handles displaying the errors.
-				return false;
-				},
-			productAdd2List : function($ele,p)	{
-				p.preventDefault();
-				var pid = $ele.closest("[data-pid]").data('pid');
-				if($ele.data('listid') && pid)	{
-					_app.ext.quickstart.a.add2BuyerList({sku:pid,'listid':$ele.data('listid')});
+						}
 					}
 				return data;
 				}
@@ -3116,9 +2971,6 @@ else	{
 				_app.model.dispatchThis('immutable');
 				return false;
 				},
-					});
-				return false;
-				}, //showBuyerAddressUpdate
 			
 			cartMessagePageSend : function($ele,p)	{
 				p.preventDefault();
@@ -3140,26 +2992,8 @@ else	{
 				return false;
 				},
 			
-			showBuyerAddressRemove : function($ele, p){
-				p.preventDefault();
-				_app.ext.store_crm.u.showAddressRemoveModal({
-					"addressID" : $ele.closest("address").data('_id'),
-					'addressType' : $ele.closest("[data-app-addresstype]").data('app-addresstype')
-					},function(){
-					$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
-					showContent('customer',{'show':'myaccount'});
-				return false;
-				},
-			
 			dialogCloseExec : function($ele,p)	{
 				$ele.closest('.ui-dialog-content').dialog('close');
-				var templateID = $ele.data('loadstemplate');
-				if(PID && templateID)	{
-					quickView('product',{'templateID':templateID,'pid':PID});
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In quickstart.e.quickviewShow, unable to ascertain PID ["+PID+"] or no data-loadstemplate set on trigger element.","gMessage":true});
-					}
 				return false;
 				},
 			
@@ -3231,27 +3065,15 @@ else	{
 					_app.calls.cartDetail.init(cartObj._cartid,{'callback':function(rd){
 						if(_app.model.responseHasErrors(rd)){
 							$('#globalMessaging').anymessage({'message':rd});
-
-			var uriParams = _app.u.kvp2Array(location.hash.substring(1)) || {};
-			//landing on the admin app, having been redirected after logging in to google.
-			if(uriParams.trigger == 'googleAuth')	{
-				_app.calls.authAdminLogin.init({
-					'authtype' : 'google:id_token',
-					'id_token' : uriParams.id_token
-					},{'datapointer' : 'authAdminLogin','callback':'showHeader','extension':'admin'},'immutable');
-				_app.model.dispatchThis('immutable');
 							}
 						else	{
 							if($ele.data('show') == 'inline')	{
 								document.location.hash = '#!cart';
-						window.return2Domain = function(s,uP){
-							document.location = s.domain+"#trigger=googleAuth&access_token="+uP.access_token+"&id_token="+uP.id_token
 								}
 							else	{
 								_app.ext.quickstart.u.showCartInModal({'templateID':'cartTemplate'});
 								}
 							cartMessagePush(cartObj._cartid,'cart.itemAppend',_app.u.getWhitelistedObject(cartObj,['sku','pid','qty','quantity','%variations']));
-						dump(" -> state was defined but either onReturn ["+state.onReturn+"] was not set or not a function [typeof: "+typeof window[state.onReturn]+"].");
 							}
 						}},'immutable');
 					_app.model.dispatchThis('immutable');
@@ -3302,7 +3124,9 @@ else	{
 					},function(){
 					$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
 					showContent('customer',{'show':'myaccount'});
+					});
 				return false;
+				}, //showBuyerAddressUpdate
 
 			showBuyerAddressAdd : function($ele,p)	{
 				p.preventDefault();
@@ -3311,9 +3135,10 @@ else	{
 					},function(rd){
 					$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
 					showContent('customer',{'show':'myaccount'});
+					});
 				return false;
 				}, //showBuyerAddressAdd
-			
+
 			quickviewShow : function($ele,p)	{
 				p.preventDefault();
 				var PID = $ele.data('pid') || $ele.closest('[data-pid]').attr('data-pid');

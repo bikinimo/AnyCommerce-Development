@@ -34,7 +34,6 @@ var store_tracking = function(_app) {
 				var r = false; 
 				
 				r = true;
-				// _app.u.dump('store_tracking.init.onSuccess')
 
 				return r;
 				},
@@ -44,48 +43,29 @@ var store_tracking = function(_app) {
 			},
 		attachHandlers : {
 			onSuccess : function(){
-				// _app.u.dump('PUSHING store_tracking.onSuccess');
 				_app.ext.order_create.checkoutCompletes.push(function(P){
-
-					// _app.u.dump('BEGIN store_tracking.onSuccess');
-
 					if(P && P.datapointer && _app.data[P.datapointer] && _app.data[P.datapointer].order){
 						var order = _app.data[P.datapointer].order;
 						var plugins = zGlobals.plugins;
-						// note: order is an object that references the raw (public) cart
-						// order.our.xxxx  order[@ITEMS], etc.
-
-						// data will appear in google analytics immediately after adding it (there is no delay)
-
-						// _app.u.dump(order);
-						// _app.u.dump(order.our);
-
-						ga('require', 'ecommerce');
 						
 						//analytics tracking
-						var r = {
-							'id' : order.our.orderid,
-							'revenue' : order.sum.items_total,
+						ga('ecommerce:addTransaction', {
+							'id' : order.orderid,
+							'revenue' : order.sum.item_total,
 							'shipping' : order.sum.shp_total,
 							'tax' : order.sum.tax_total
-							};
-						// _app.u.dump(r);
-						ga('ecommerce:addTransaction',r);
-
+							});
 						for(var i in order['@ITEMS']){
 							var item = order['@ITEMS'][i];
-							// _app.u.dump(item);
 							ga('ecommerce:addItem', {
-								'id' : order.our.orderid,
+								'id' : order.orderid,
 								'name' : item.prod_name,
 								'sku' : item.sku,
 								'price' : item.base_price,
-								'quantity' : item.qty
+								'qty' : item.qty,
 								})
-							};
-
+							}
 						ga('ecommerce:send');
-						_app.u.dump('FINISHED store_tracking.onSuccess (google analytics)');
 						
 						for(var i in plugins){
 							if(_app.ext.store_tracking.trackers[i] && _app.ext.store_tracking.trackers[i].enable){
@@ -111,7 +91,7 @@ var store_tracking = function(_app) {
 						google_conversion_format: "3",
 						google_conversion_color : "ffffff",
 						google_conversion_label : labels[i].replace(/^\s+|\s+$/g, ''), //trims label of whitespace
-						google_remarketing_only : "false"
+						google_remarketing_only : "false",
 						}
 					if(plugin.dynamic_value){
 						globals.google_conversion_value = order.sum.order_total;

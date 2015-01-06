@@ -73,11 +73,6 @@ myApp.u.loadScript(myApp.vars.baseURL+'resources/peg-0.8.0.js',function(){
 'passZeroResourcesLoaded' : [INT],
 'passZeroTimeout' : null //the timeout instance running within loadResources that updates this object. it will run indef unless clearTimeout run here OR all resources are loaded.
 
-		if(progress.passZeroResourcesLength == progress.passZeroResourcesLoaded)	{
-			//All pass zero resources have loaded.
-			//the app will handle hiding the loading screen.
-			myApp.u.appInitComplete();
-		else if(attempt > 150)	{
 */
 myApp.u.showProgress = function(progress)	{
 	function showProgress(attempt)	{
@@ -93,11 +88,6 @@ myApp.u.showProgress = function(progress)	{
 			else if(myApp.u.buyerIsAuthenticated()) {
 				showMarketing = false;
 				dump(" -> marketing suppressed because user is authenticated.");
-//			dump(" -> percentPerInclude: "+percentPerInclude+" and percentComplete: "+percentComplete);
-			$('#appPreViewProgressBar').val(percentComplete);
-			$('#appPreViewProgressText').empty().append(percentComplete+"% Complete");
-			attempt++;
-			setTimeout(function(){showProgress(attempt);},250);
 			}
 			else if(myApp.model.dpsGet('quickstart','suppressMkt')) {
 				showMarketing = false;
@@ -121,18 +111,13 @@ myApp.u.showProgress = function(progress)	{
 				myApp.u.appInitComplete();
 				$('#appPreView').fadeOut(1000,function(){
 					$('#appView').slideDown(3000);
-		//the fb code only works if an appID is set, so don't show banner if not present.				
-		if(myApp.u.thisNestedExists("zGlobals.thirdParty.facebook.appId") && typeof FB == 'object')	{
-			$('.ocmFacebookComment',$checkout).click(function(){
-				myApp.ext.quickstart.thirdParty.fb.postToWall(cartContentsAsLinks);
-				ga('send','event','Checkout','User Event','FB message about order');
-				window[myApp.vars.analyticsPointer]('send', 'event','Checkout','User Event','FB message about order');
 				});
 				}
 
 			//this will ensure that the marketing messaging is only shown once on this host/protocol.
 			myApp.model.dpsSet('quickstart','suppressMkt',true);
 
+		}
 		else if(attempt > 200)	{
 			//hhhhmmm.... something must have gone wrong.
 			clearTimeout(progress.passZeroTimeout); //end the resource loading timeout.
@@ -149,22 +134,11 @@ myApp.u.showProgress = function(progress)	{
 			}
 		}
 	showProgress(0)
-		});
-			}
-		}]);
+	}
 
-	myApp.cmr.push(['goto',function(message,$context){
-		var $history = $("[data-app-role='messageHistory']",$context);
-		$P = $("<P>")
-			.addClass('chat_post')
-			.append("<span class='from'>"+message.FROM+"<\/span> has sent over a "+(message.vars.pageType || "")+" link for you within this store. <span class='lookLikeLink'>Click here<\/span> to view.")
-			.on('click',function(){
-				showContent(myApp.ext.quickstart.u.whatAmIFor(message.vars),message.vars);
-				});
-		$history.append($P);
-		$history.parent().scrollTop($history.height());
-		}]);
 
+//Any code that needs to be executed after the app init has occured can go here.
+//will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
 myApp.u.appInitComplete = function()	{
 //	myApp.u.dump("Executing myAppIsLoaded code...");
 	
@@ -252,7 +226,6 @@ myApp.router.appendInit({
 			myApp.ext.cco.calls.cartSet.init({'want/refer_src':infoObj.uriParams.meta_src,'cartID':_app.model.fetchCartID()},{},'passive');
 			}
 		}
-	});
 	});
 
 

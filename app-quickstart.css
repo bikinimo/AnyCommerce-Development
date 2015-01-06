@@ -23,8 +23,6 @@ Put this high in the doc as a reminder to occassionally re-check if it can be re
 .ui-dialog {
     position: fixed;
 	}
-    position: fixed;
-	}
 
 /*
 loading class. add class to your templates if you want a loading graphic to appear while data is requested. add only to the parent element. 
@@ -103,7 +101,7 @@ and offMenu is toggle off, hiding the change button.
 
 
 
-/* positioning */
+/******* positioning *******/
 
 .floatLeft	{float:left;}
 .floatRight	{float:right;}
@@ -116,7 +114,7 @@ and offMenu is toggle off, hiding the change button.
 .center	{margin:0 auto;}
 
 
-/* aesthetics/usability */
+/****** aesthetics/usability ******/
 
 /* added to buttons (such as place order) when they're disabled to clearly indicate they should not be clicked again. */
 .disabled	{
@@ -181,7 +179,7 @@ and offMenu is toggle off, hiding the change button.
 /* pages like  company and/or customer are in a two column format. by default, a narrow right w/ nav and the main column w/ content. */
 
 .mainColumn	{width:75%;}
-.sideline	{float:right; width:20%; margin:0 0 2em 0;}
+.sideline	{float:right; width:20%; margin:0 0 24px 0px; display:none;}
 .sideline a	{padding:.3em 0; text-decoration:none; display:block;} /* recommend at least 5px vert padding for mobile/pad */
 
 
@@ -206,7 +204,7 @@ a.blockLink {border:none; display:block;}
 
 .listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
 .noPadOrMargin	{padding:0; margin:0;}
-.fluidList li	{float:left; margin:1em; padding:0; display:inline-block;}
+.fluidList li{float:left; margin:1em; padding:0; display:inline-block;}
 
 .quickView	{position:absolute; top:5px; right:5px; z-index:1001;} /* jqui modal has zindex 1002 */
 
@@ -284,7 +282,7 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 
 .variation_attribs	{display:none;} /* don't show finder attributes */
 
-/* REVIEW GFX - used for review summary and in list of reviews on product detail page */
+/****** REVIEW GFX - used for review summary and in list of reviews on product detail page ******/
 
 .reviewSummaryContainer	.numReviews	{line-height:21px; display:inline-block; height:21px; float:left; margin-left:.5em; padding-right:.5em;}
 .reviewSummaryContainer	.numReviews:after	{content:": "}
@@ -364,7 +362,7 @@ CUSTOMER PAGES
 #ordersArticle .ui-accordion-content	{padding:.4em} /* reduce padding here to make a little extra room */
 #ordersArticle .orderContentsTable	{width:100%}
 
-/* ### TODO -> find where this is used and make it responsive */
+
 /* ### TODO -> find where this is used and make it responsive */
 #orderInvoiceSoloPage table	{width:700px;}
 .orderContentsProdlistContainer	{width:500px;}
@@ -376,7 +374,7 @@ CUSTOMER PAGES
 
 #buyerAddresses	{margin-bottom:1em;}
 #buyerAddresses h2	{margin:1em 0; clear:both;}
-#buyerAddresses address	{margin:0 0px 1em 0; float:left; width:90%; display:block; padding:1em;}
+#buyerAddresses address	{margin:0 0px 1em 0; float:left; width:90%; display:block; padding:1em;}}
 
 
 /* buyer lists */
@@ -430,7 +428,6 @@ HELP PAGES
 
 
 
-/*
 /*
 
 CART
