@@ -54,24 +54,11 @@ var store_routing = function(_app) {
 				_app.router.addAlias('checkout', 	function(routeObj){showContent('checkout',	routeObj.params);});
 
 				_app.router.addAlias('search', 		function(routeObj){showContent('search',	routeObj.params);});
-				//shows search result for any product with the tag passed and the is_app attribute
-				_app.router.addAlias('apptagsearch', 		function(routeObj){
-					var tag = routeObj.params.tag.toUpperCase(); 
-					showContent('search',{'elasticsearch':{'filter':{'and':{'filters':[{'term':{'tags':tag}},{'term':{'is_app':'1'}}]}}}})
-				});
-				//shows search results for any product with the attribute that is passed and set to "1", and the is_app attribute
-				_app.router.addAlias('appattribsearch',		function(routeObj){
-					var elasticsearch = {'filter':{'and':[{'term':{'is_app':'1'}}]}};
-					var fObj = {'term':{}};
-					fObj.term[routeObj.params.attrib] = '1';
-					elasticsearch.filter.and.push(fObj);
-					showContent('search',{'elasticsearch':elasticsearch});
-				});
-				
-				_app.router.appendHash({'type':'exact','route':'cart/','callback':function(routeObj){showContent('cart',routeObj.params);}});
+
+
+				_app.router.appendHash({'type':'exact','route':'cart','callback':function(routeObj){showContent('cart',routeObj.params);}});
 				_app.router.appendHash({'type':'exact','route':'home','callback':'homepage'});
 				_app.router.appendHash({'type':'exact','route':'','callback':'homepage'});
-				_app.router.appendHash({'type':'exact','route':'/','callback':'homepage'});
 				_app.router.appendHash({'type':'match','route':'category/{{navcat}}*','callback':'category'});
 				_app.router.appendHash({'type':'match','route':'product/{{pid}}/{{name}}*','callback':'product'});
 				_app.router.appendHash({'type':'match','route':'product/{{pid}}*','callback':'product'});
@@ -82,8 +69,6 @@ var store_routing = function(_app) {
 				_app.router.appendHash({'type':'match','route':'checkout*','callback':'checkout'});
 				_app.router.appendHash({'type':'match','route':'search/tag/{{tag}}*','callback':'search'});
 				_app.router.appendHash({'type':'match','route':'search/keywords/{{KEYWORDS}}*','callback':'search'});
-				_app.router.appendHash({'type':'match','route':'apptag/{{tag}}*','callback':'apptagsearch'}); //elastic search for tag plus is_app
-				_app.router.appendHash({'type':'match','route':'appattrib/{{attrib}}*','callback':'appattribsearch'}); //elastic search for attrib plus is_app
 
 
 /*
@@ -107,84 +92,54 @@ _app.router.appendHash({'type':'match','route':'modal/product/{{pid}}*','callbac
 			},
 		attachEventHandlers : {
 			onSuccess : function(){
-				dump("START store_routing.callbacks.attachEventHandlers.onSuccess");
-				$.merge(_app.ext.seo_robots.vars.pages,[
-	//TODO: Check if there are any more cusome pages that need to be added to robots_seo
-					"#!company/about/",
-					"#!company/contact/"
-				]);
+				_app.templates.homepageTemplate.on('complete.routing', function(event, $context, infoObj){_app.ext.store_routing.u.setHash("#!/");});
 				
-				var callback = function(event, $context, infoObj) {
-					dump("--> store_routing complete event");
-					event.stopPropagation();
-					if(infoObj) {
-						var hash = "";
-						var $routeEle = $('[data-routing-hash]',$context);
-						if($routeEle.length) {
-							dump('Whadda you know... there was a routing element');
-							hash = $routeEle.attr('data-routing-hash');
+				_app.templates.categoryTemplate.on('complete.routing', function(event, $context, infoObj){
+					var hash = "";
+					var $routeEle = $('[data-routing-hash]',$context)
+					if($routeEle.length){
+						hash = $routeEle.attr('data-routing-hash');
 						}
-						else {
-							switch(infoObj.pageType) { //for bmo: make all url's lower case.
-								case 'homepage':
-									hash = "#!/";
-									break;
-								case 'product':
-									//for bmo: append prod_name.html to end of hash
-									hash = "#!/product/"+infoObj.pid.toLowerCase()+"/"+infoObj.name;
-									break;
-								case 'category':
-									dump('There was no routing element');
-									hash = "#!/category/"+infoObj.navcat.toLowerCase()+"/";
-									break;
-								case 'static':
-									hash = window.location.hash;
-									break;
-								case 'search':
-									hash = window.location.hash.toLowerCase(); //"#!/search/"+encodeURIComponent(infoObj.KEYWORDS)+"/"
-									break;
-								case 'company':
-									hash = "#!company/"+infoObj.show.toLowerCase()+"/"
-									break;
-								case 'customer':
-									hash = "#!customer/"+infoObj.show.toLowerCase()+"/";
-									break;
-								case 'cart':
-									hash = "#!cart/";
-									break;
-								case 'checkout':
-									hash = "#!checkout/";
-									break;
-/*	TODO: FIND OUT IF SPECIAL PAGE TYPE FOR FILTER SEARCH CATEGORY IS AVAILABLE									
-											_app.templates.categoryTemplateFilteredSearch.on('complete.routing', function(event, $context, infoObj){
-												var hash = "";
-												var $routeEle = $('[data-routing-hash]',$context)
-												if($routeEle.length){
-													hash = $routeEle.attr('data-routing-hash');
-													}
-												else {
-													hash = "#!/category/"+infoObj.navcat+"/";
-												}
-												_app.ext.store_routing.u.setHash(hash);
-												});
-*/
-							}
-						}
-						_app.ext.store_routing.u.setHash(hash);
+					else {
+						hash = "#!/category/"+infoObj.navcat+"/";
 					}
-				}
-				for(var i in _app.templates) {
-					_app.templates[i].on('complete.routing',callback);
-				}
-				$('#appTemplates').children().each(function(){
-					$(this).on('complete.routing',callback);
-				});
-		
+					_app.ext.store_routing.u.setHash(hash);
+					});
+					
+				_app.templates.categoryTemplateFilteredSearch.on('complete.routing', function(event, $context, infoObj){
+					var hash = "";
+					var $routeEle = $('[data-routing-hash]',$context)
+					if($routeEle.length){
+						hash = $routeEle.attr('data-routing-hash');
+						}
+					else {
+						hash = "#!/category/"+infoObj.navcat+"/";
+					}
+					_app.ext.store_routing.u.setHash(hash);
+					});
+					
+				_app.templates.productTemplate.on('complete.routing', function(event, $context, infoObj){
+					var hash = "";
+					var $routeEle = $('[data-routing-hash]',$context)
+					if($routeEle.length){
+						hash = $routeEle.attr('data-routing-hash');
+						}
+					else {
+						hash = "#!/product/"+infoObj.pid+"/";
+					}
+					dump(hash);
+					_app.ext.store_routing.u.setHash(hash);
+					});
 				
-			},
+				_app.templates.companyTemplate.on('complete.routing', function(event, $context, infoObj){_app.ext.store_routing.u.setHash("#!/company/"+infoObj.show+"/");});
+				_app.templates.customerTemplate.on('complete.routing', function(event, $context, infoObj){_app.ext.store_routing.u.setHash("#!/customer/"+infoObj.show+"/");});
+				_app.templates.searchTemplate.on('complete.routing', function(event, $context, infoObj){_app.ext.store_routing.u.setHash("#!/search/"+encodeURIComponent(infoObj.KEYWORDS)+"/");});
+				_app.templates.cartTemplate.on('complete.routing', function(event, $context, infoObj){if(infoObj.show == "inline"){_app.ext.store_routing.u.setHash("#!/cart/");}});
+				//_app.templates.checkoutTemplate.on('complete.routing', function(event, $context, infoObj){_app.ext.store_routing.u.setHash("#!/checkout/");});
+				},
 			onError : function(){}
-		}	
-	}, //callbacks
+			}
+		}, //callbacks
 
 
 
@@ -275,40 +230,24 @@ optional params:
 
 		u : {
 			setHash : function(hash){
-				dump('setting hash to: '+hash);
-				var $canonical = $('link[rel=canonical]');
-				if(!$canonical.length){
-					dump('NO CANONICAL IN THE DOCUMENT'); dump(hash);
-					$canonical = $('<link rel="canonical" href="" />');
-					$('head').append($canonical);
-				}
-				$canonical.attr('href',hash);
-				if(_app.vars.showContentHashChange) {
+				if(_app.vars.showContentHashChange){
 					dump('forcing a hash change');
 					window.location.href = window.location.href.split("#")[0]+hash;
 					}
 				},
-			cleanURIComponent : function(str){
-				var component = str.replace(/^\s+|\s+$/g, '');
-				//component = component.replace(' ', '-');
-				component = component.replace(/[^a-zA-Z0-9]+/g, '-');
-				return component;
-				},
-	//for bmo: make hash lower case.
 			productAnchor : function(pid, seo){
-				//for bmo: append .html to end of seo. 
-				return "#!product/"+pid.toLowerCase()+"/"+(seo ? _app.ext.store_routing.u.cleanURIComponent(seo).toLowerCase() : '')+".html";
+				return "#!product/"+pid+"/"+(seo ? encodeURIComponent(seo) : '');
 				},
 			categoryAnchor : function(path,seo)	{
-				return "#!category/"+path.toLowerCase()+"/"+((seo) ? _app.ext.store_routing.u.cleanURIComponent(seo).toLowerCase() : '');
+				return "#!category/"+path+((seo) ? "/"+encodeURIComponent(seo) : '');
 				},
 			searchAnchor : function(type,value)	{
 				var r;
 				if(type == 'tag')	{
-					r = '#!search/tag/'+value.toLowerCase();
+					r = '#!search/tag/'+value;
 					}
 				else if(type == 'keywords')	{
-					r = '#!search/keywords/'+value.toLowerCase();
+					r = '#!search/keywords/'+value;
 					}
 // ### FUTURE -> support ability to search for a match on a specific attribute.
 //				else if(type == 'attrib')	{
@@ -317,7 +256,7 @@ optional params:
 				else	{
 					//unrecognized type
 					}
-				return "#!category/"+path.toLowerCase()+"/"+((seo) ? _app.ext.store_routing.u.cleanURIComponent(seo).toLowerCase() : '');
+				return "#!category/"+path+((seo) ? "/"+encodeURIComponent(seo) : '');
 				}
 			}, //u [utilities]
 
