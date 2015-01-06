@@ -999,8 +999,6 @@ fallback is to just output the value.
 					$new = $('<div data-app-uri="'+uri+'"></div>');
 					if(_app.ext.quickstart.pageHandlers[infoObj.pageType]){
 						_app.ext.quickstart.pageHandlers[infoObj.pageType]($new, infoObj, _app.ext.quickstart.pageRequires[infoObj.pageType]);
-							//app.u.dump('--* showContent loadDirectly, appPreferences'); app.u.dump(localStorage.loadDirectly); app.u.dump(localStorage.appPreferences);
-/*bmo*/						SSLlocation += "?"+localStorage.loadDirectly+"&"+localStorage.appPreferences;
 						}
 					else{
 						//404
@@ -1981,14 +1979,6 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 					}
 				}, //showCartInModal
 
-/*bmo*/				if(infoObj.show == 'createaccount') {
-/*bmo*/					app.ext.store_bmo.a.showAccountCreate();
-/*bmo*/					}
-/*bmo*/						case 'createaccount':
-/*bmo*/							app.ext.cco.calls.appCheckoutDestinations.init({},'mutable'); //needed for country list in address entry.
-/*bmo*/							//app.ext.store_bmo.a.showAccountCreate();
-/*bmo*/							break;
-/*bmo*/				case 'createaccount':
 			showPaymentUpdateModal : function(orderid,cartid)	{
 				var $updateDialog = $("<div \/>",{'title':'Payment Update'}).appendTo('body');
 				$updateDialog.dialog({'modal':true,'width':500,'height':500});
@@ -2532,6 +2522,18 @@ else	{
 				}, //showBuyerAddressAdd
 
 			// !!!!! check for use and update
+			showBuyerAddressRemove : function($ele, p){
+				p.preventDefault();
+				_app.ext.store_crm.u.showAddressRemoveModal({
+					"addressID" : $ele.closest("address").data('_id'),
+					'addressType' : $ele.closest("[data-app-addresstype]").data('app-addresstype')
+					},function(){
+					$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
+					showContent('customer',{'show':'myaccount'});
+					});
+				return false;
+				},
+			
 			quickviewShow : function($ele,p)	{
 				p.preventDefault();
 				var PID = $ele.data('pid') || $ele.closest('[data-pid]').attr('data-pid');
