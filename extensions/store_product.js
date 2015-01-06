@@ -241,6 +241,9 @@ addToCart : function (pid,$form){
 	else if($form instanceof jQuery)	{
 		$form.anymessage({'message':'In store_product.validate.addToCart, pid was not passed','gMessage':true});
 		}
+	else if($form instanceof jQuery)	{
+		$form.anymessage({'message':'In store_product.validate.addToCart, pid was not passed','gMessage':true});
+		}
 	else	{
 		_app.u.throwGMessage("in store_product.validate.addToCart, either pid ("+pid+") not set or $form was not passed.");
 		valid = false;
@@ -671,6 +674,12 @@ NOTES
 /*bmo*/						},
 /*bmo*/					});
 					}
+//In the handleTemplateEvents execution, the template instance is 'found'. The init, complete and depart events are NOT on $parent, they're on the template instance.
+					$parent.dialog('option','close',function(){
+//						dump(" -> GOT into the option close callback."); dump(P);
+						P.state = 'depart';
+						_app.renderFunctions.handleTemplateEvents($parent.find("[data-templateid='"+P.templateID+"']:first"),P);
+						});
 					
 //					$parent.dialog('open').append(_app.renderFunctions.createTemplateInstance(P.templateID,P));
 					$parent.dialog('open').append(new tlc().getTemplateInstance(P.templateID).attr('data-pid',P.pid));

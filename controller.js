@@ -64,7 +64,17 @@ function controller(_app)	{
 		_app.vars.cid = null; //gets set on login. ??? I'm sure there's a reason why this is being saved outside the normal  object. Figure it out and document it.
 		_app.vars.fbUser = {};
 
-//used in conjunction with support/admin login. nukes entire local cache.
+				window.sessionStorage.clear();
+				}
+			if($.support.localStorage)	{
+				window.localStorage.clear();
+				}
+			}
+		if(_app.u.getParameterByName('quiet') == 1){
+			_app.u.dump = function(){};
+			}
+		_app.vars.carts = _app.model.dpsGet('app','carts'); //get existing carts. Does NOT create one if none exists. that's app-specific behavior. Don't default to a blank array either. fetchCartID checks memory first.
+		_app.handleSession(); //get existing session or create a new one.
 		if(_app.u.getParameterByName('flush') == 1)	{
 			_app.u.dump(" !!! Flush is enabled. session and local storage get nuked !!!");
 			if($.support.sessionStorage)	{
@@ -76,8 +86,10 @@ function controller(_app)	{
 			}
 		if(_app.u.getParameterByName('quiet') == 1){
 			_app.u.dump = function(){};
-			}
-		
+
+		if (_app.u.getParameterByName('apidomain')) {
+			// ?apidomain=www.domain.com will set jqurl to an alternate source (ex: testing)
+			_app.vars.jqurl = "https://"+_app.u.getParameterByName('apidomain')+":9000/jsonapi/";
 
 		//needs to be after the 'flush' above, or there's no way to flush the cart/session.
 		_app.vars.carts = _app.model.dpsGet('app','carts'); //get existing carts. Does NOT create one if none exists. that's app-specific behavior. Don't default to a blank array either. fetchCartID checks memory first.
@@ -339,7 +351,7 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				_app.u.dump("Attempting to log in");
 				obj._cmd = 'authAdminLogin';
 				obj.authid = obj.password;
-				obj.authtype = 'password';
+				obj.authtype = obj.authtype || 'password';
 // ** 201402 -> md5 is no longer used for login. 
 /*				if(obj.authtype == 'md5')	{
 					_app.vars.userid = obj.userid.toLowerCase();	 // important!
@@ -347,7 +359,6 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 					obj.authid = Crypto.MD5(obj.password+obj.ts);
 					obj.device_notes = "";
 					delete obj.password;
-					}
 */
 				obj._tag = _tag || {};
 				if(obj.persistentAuth)	{obj._tag.datapointer = "authAdminLogin"} //this is only saved locally IF 'keep me logged in' is true OR it's passed in _tag
@@ -565,9 +576,14 @@ _app.u.throwMessage(responseData); is the default error handler.
 					}
 				else	{
 					$('#globalMessage').anymessage({'message':rd});
+				if(rd._rtag && rd._rtag.jqObj && typeof rd._rtag.jqObj == 'object'){
+					rd._rtag.jqObj.hideLoading().anymessage({'message':rd});
 					}
 				}
 			}, //translateSelector
+
+
+	
 
 
 	
@@ -1406,6 +1422,97 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 				
 //				dump(" -> type: "+type);
 				
+			handleCommonPlugins : function($context)	{
+				$('.applyAnycb',$context).anycb();
+				$('.applyAnytable',$context).anytable();
+				$('.toolTip',$context).tooltip();
+				$('.applyAnytabs',$context).anytabs();
+				//will set the title attribute to the placeholder value (if title not already set). useful for places w/ no label and content populated (covering the placeholder value).
+				$(":input[placeholder]",$context).not(['title']).each(function(){
+					$(this).attr('title',$(this).attr('placeholder'));
+					});
+				},
+
+// a utility for converting to jquery button()s.  use applyButton and optionally set some data attributes for text and icons.
+			handleButtons : function($target)	{
+//			_app.u.dump("BEGIN _app.u.handleButtons");
+				if($target && $target instanceof jQuery)	{
+					$('.applyButtonset',$target).each(function(){
+						$(this).buttonset();
+						});
+					$('.applyButton',$target).each(function(index){
+//					_app.u.dump(" -> index: "+index);
+						var $btn = $(this);
+						$btn.button();
+// SANITY -> $btn may NOT be on the DOM when this is run.
+						if($btn.data('icon-primary') && $btn.data('icon-secondary'))	{
+							$btn.button( "option", "icons", { primary: $btn.data('icon-primary'), secondary: $btn.data('icon-secondary')} );
+							}
+						else if($btn.data('icon-primary'))	{
+							$btn.button( "option", "icons", { primary: $btn.data('icon-primary')} );
+							}
+						else if($btn.data('icon-secondary'))	{
+							$btn.button( "option", "icons", { secondary: $btn.data('icon-secondary')} );
+							}
+						else	{} //no icon specified.
+						
+						if($btn.data('text') === false)	{
+							$btn.button( "option", "text", false );
+							}
+						});
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In _app.u.handleButtons, $target was empty or not a valid jquery instance. ","gMessage":true});
+					}
+				},
+//at one point, this was a plugin, but w/ the introduction of multiple app instantiations, that changed.
+//What was the plugin was split into two pieces, the app-event based delegation is here.  The form based is in anyForm
+			addEventDelegation : function($t,vars)	{
+				vars = vars || {};
+				var supportedEvents = new Array("click","change","focus","blur","submit","keyup","keypress");
+
+				function destroyEvents($ele)	{
+					for(var i = 0; i < supportedEvents.length; i += 1)	{
+						$ele.off(supportedEvents[i]+".app");
+						}
+					$ele.removeClass('hasDelegatedEvents').addClass('delegationDestroyed'); //here for troubleshooting purposes.
+					}
+
+				if(vars.destroyEvents || vars == 'destroyEvents')	{
+					destroyEvents($t);
+					}
+				else	{
+					if($t.closest('.hasDelegatedEvents').length >= 1)	{
+						//this element or one of it's parents already has events delegated. don't double up.
+						}
+					else	{
+						//this class is used both to determine if events have already been added AND for some form actions to use in closest.
+						$t.addClass('hasDelegatedEvents'); 
+
+						for(var i = 0; i < supportedEvents.length; i += 1)	{
+							$t.on(supportedEvents[i]+".app","[data-app-"+supportedEvents[i]+"]",function(e,p){
+//								dump(" -> executing event. p: "); dump(p);
+								return _app.u._executeEvent($(e.currentTarget),$.extend(p,e));
+								});
+							}	
+
+						//make sure there are no children w/ delegated events so that event actions are not doubled up.
+						$('.hasDelegatedEvents',$t).each(function(){
+							destroyEvents($(this));
+							});
+						}
+					}
+				}, //addEventDelegation
+
+			_executeEvent : function($CT,ep)	{
+				ep = ep || {};
+				var type = ep.type;
+				if(ep.handleObj && ep.handleObj.origType)	{
+					type = ep.handleObj.origType; //use this if available. ep.type could be 'focusOut' instead of 'blur'.
+					}
+				
+//				dump(" -> type: "+type);
+				
 				var r, actionsArray = $CT.attr('data-app-'+type).split(","), L = actionsArray.length; // ex: admin|something or admin|something, admin|something_else
 				for(var i = 0; i < L; i += 1)	{
 					var	AEF = $.trim(actionsArray[i]).split('|'); //Action Extension Function.  [0] is extension. [1] is Function.
@@ -1418,7 +1525,7 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 							var eventObj = {
 								'hitType' : 		'event',
 								'eventCategory' :	AEF[0],
-								'eventAction' :		AEF[1],
+								'eventAction' :		AEF[1]
 								};
 							if($CT.attr('data-ga-label')){
 								eventObj.eventLabel = $CT.attr('data-ga-label');
@@ -2559,7 +2666,6 @@ name Mod 10 or Modulus 10. */
 				var test = document.createElement('input')
 				if('placeholder' in test) {jQuery.support.placeholder = true};
 
-				}
 			}
 
 		}, //util
@@ -2981,6 +3087,9 @@ return $r;
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In _app.templateFunctions.handleTemplateEvents, $ele is not a valid jQuery instance','gMessage':true});
+					}
+				} //handleTemplateEvents 
+
 					}
 				} //handleTemplateEvents 
 

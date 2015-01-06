@@ -1810,12 +1810,11 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				$form = $ele.closest('form'),
 				cartid = $ele.closest("[data-app-role='checkout']").data('cartid'),
 				$input = $("[name='coupon']",$fieldset);
-					
+				
 /*bmo*/				if(app.ext.store_bmo_lto.u.preventCouponLTO($input.val())) {
 /*bmo*/					$('.couponMessaging',$input.parent()).anymessage({'message':'This coupon cannot be added here.'});
 /*bmo*/					return;
 /*bmo*/				}
-					
 				if($ele.is('button')){$ele.button('disable');}
 
 //update the panel only on a successful add. That way, error messaging is persistent. success messaging gets nuked, but coupon will show in cart so that's okay.
@@ -2307,12 +2306,28 @@ _app.model.addDispatchToQ({
 	},'passive');
 _app.model.dispatchThis('passive');
 				},
+*/					}
+				else	{
+					//didn't get anything or what we got wasn't an array.
+					}
+				},
 			
 			buildPaymentOptionsAsRadios : function(pMethods,payby)	{
 				var
 					$r = $("<p>"), //the children of R are returned (the P is not).
 					L = pMethods.length;
-
+	'_cmd':'appAccidentDataRecorder',
+	'owner' : owner,
+	'app' : '1pc', //if the API call logs the clientid, this won't be necessary.
+	'category' : '@TRACKERS',
+	'scripterr' : err,
+	'_tag':	{
+		'callback':'suppressErrors'
+		}
+	},'passive');
+_app.model.dispatchThis('passive');
+				},
+			
 //ZERO will be in the list of payment options if customer has a zero due (giftcard or paypal) order.
 					if(pMethods[0].id == 'ZERO')	{
 						$r.hide(); //hide payment options.
@@ -2362,10 +2377,48 @@ _app.model.dispatchThis('passive');
 						}	
 				return $r.children();
 				}
-
+								//onClick event is added through an app-event. allows for app-specific events.
+								$("<button>Add</button>")
+									.attr({'title':'Apply this giftcard towards this purchase','data-giftcard-id':pMethods[i].id.split(':')[1]})
+									.button({icons: {primary: "ui-icon-cart"},text: true})
+									.addClass('isGiftcard')
+									.appendTo($label);
+								$label.append(pMethods[i].pretty).appendTo($div);
+								}
+							else if(!_app.vars.thisSessionIsAdmin && pMethods[i].id.indexOf("WALLET") === 0)	{
+								//wallets are in the 'stored payments' section already. If they're shown here too, the input name/value will be duplicated. This duplication causes usability issues.
+								}
+							else	{
+								//onClick event is added through an app-event. allows for app-specific events.
+								// ** 201405 -> the 'checked=checked' needs to occur here for IE8.
+								$label.append("<input type='radio' name='want/payby' value='"+pMethods[i].id+"' "+(pMethods[i].id == payby ? "checked='checked'" : "")+" />");
+								$label.append((pMethods[i].id == 'CREDIT' ? 'Credit Card' : pMethods[i].pretty));
+								if(pMethods[i].icons)	{
+									$.each(pMethods[i].icons.split(' '),function(){
+										$("<span \/>").addClass('paycon '+this).appendTo($label);
+										});
+									}
+								$label.appendTo($div); //keep cc text short. use icons
+								}
+							$div.appendTo($r);
+							}
+						}
+					else	{
+						_app.u.dump("No payment methods are available. This happens if the session is non-secure and CC is the only payment option. Other circumstances could likely cause this to happen too.",'warn');
+						
+						if(document.location.protocol != "https:")	{
+							$r.append("This session is <b>not secure</b>, so credit card payment is not available.");
+							}
+						}
+					if(payby)	{
+						$("input[value='"+payby+"']",$r).closest('label').addClass('selected ui-state-active')
+						}	
+				return $r.children();
+				}
 
 			}, // u/utilities
 
+			}, // u/utilities
 
 
 
@@ -2380,6 +2433,8 @@ _app.model.dispatchThis('passive');
 				sMethods = data.value['@SHIPMETHODS'];
 				if(sMethods && sMethods.length)	{
 					L = sMethods.length;
+						o += "<li class='headerPadding'><label><input type='radio'  name='want/shipping_id' value='"+sMethods[i].id+"' ";
+						o += "/>"+(sMethods[i].pretty ? sMethods[i].pretty : sMethods[i].name)+": <span >"+_app.u.formatMoney(sMethods[i].amount,'$','',false)+"<\/span><\/label><\/li>";
 					for(var i = 0; i < L; i += 1)	{
 						o += "<li class='headerPadding'><label><input type='radio'  name='want/shipping_id' value='"+sMethods[i].id+"' ";
 						o += "/>"+(sMethods[i].pretty ? sMethods[i].pretty : sMethods[i].name)+": <span >"+_app.u.formatMoney(sMethods[i].amount,'$','',false)+"<\/span><\/label><\/li>";

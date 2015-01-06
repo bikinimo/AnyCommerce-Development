@@ -358,9 +358,7 @@ var admin = function(_app) {
 
 		adminSyndicationMacro : {
 			init : function(DST, macros,_tag,Q)	{
-				var r = 0;
 				if(DST && macros && macros.length)	{
-					r = 1;
 					_tag = _tag || {};
 					_tag.datapointer = "adminSyndicationMacro";
 					this.dispatch(DST,macros,_tag,Q);
@@ -662,6 +660,7 @@ _app.rq.push(['script',0,_app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/jH
 					}
 				else if(uriParams.show == 'acreate')	{
 					_app.u.handleAppEvents($('#createAccountContainer'));
+					_app.u.addEventDelegation($('#createAccountContainer'));
 					$('#appPreView').css('position','relative').animate({right:($('body').width() + $("#appPreView").width() + 100)},'slow','',function(){
 						$("#appPreView").hide();
 						$('#createAccountContainer').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
@@ -669,10 +668,23 @@ _app.rq.push(['script',0,_app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/jH
 					}
 				else	{
 					_app.u.handleAppEvents($('#appLogin'));
+					_app.u.addEventDelegation($('#appLogin'));
 					$('#appPreView').css('position','relative').animate({right:($('body').width() + $("#appPreView").width() + 100)},'slow','',function(){
 						$("#appPreView").hide();
 						$('#appLogin').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
 						});
+						
+					if (_app.u.getParameterByName('apidomain')) {
+						$("#appLogin").find('input[name="apidomain"]').val( _app.u.getParameterByName('apidomain') );
+						}
+					if (document.location.protocol == 'file:') {
+						// automatically show the advanced login container
+						// Temporarily disabled
+						// $('#loginAdvancedContainer').removeClass('displayNone').show().animate({'left':'0'},'slow');
+						}
+					
+					
+
 					}
 				if(!$.support['localStorage'])	{
 					$("#globalMessaging").anymessage({"message":"It appears you have localStorage disabled or are using a browser that does not support the feature. Please enable the feature or upgrade your browser","errtype":"youerr","persistent":true});
@@ -680,9 +692,70 @@ _app.rq.push(['script',0,_app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/jH
 				}
 			}, //initExtension
 
+				}
+			}, //initExtension
 
 
 
+
+
+//_rtag.jqObj should be data-app-role='dualModeList'.
+/*
+Execute this on a search button where the results list in a DMI need to be updated.
+$ele is an elmeent anywhere within the DMI. It'll trace up to the parent DMI and work under that umbrella.
+vars should include everything for the dispatch. _cmd is required.
+vars._tag._listpointer is the ID of i the data object of where the list is. ex: in giftcards, @GIFTCARDS. if not set, no 'no results' message is displayed.
+Function does NOT dispatch. 
+
+SANITY -> jqObj should always be the data-app-role="dualModeContainer"
+*/
+
+		DMIUpdateResults : {
+			onSuccess : function(_rtag)	{
+				_rtag = _rtag || {};
+				if(_rtag && _rtag.jqObj && _rtag.datapointer)	{
+
+					var
+						$DMI = _rtag.jqObj,
+						$tbody = $DMI.find("[data-app-role='dualModeListTbody']:first"),
+						bindData = _app.renderFunctions.parseDataBind($tbody.data('bind')), //creates an object of the data-bind params.
+						listpointer = _app.renderFunctions.parseDataVar(bindData['var']),
+						data = _app.data[_rtag.datapointer]; //shortcut.
+//					_app.u.dump('listpointer: '+listpointer);
+//					_app.u.dump('_rtag.datapointer: '+_rtag.datapointer);
+//					_app.u.dump('data[listpointer]: '); _app.u.dump(data[listpointer]);
+					$DMI.hideLoading();
+					$tbody.empty();
+					//data[listpointer] check needs to be a !isemptyobject and NOT a .length check because value could be a hash OR an array.
+					if(listpointer && data && data[listpointer] && !$.isEmptyObject(data[listpointer]))	{
+						//no errors have occured and results are present.
+						$tbody.anycontent({'data':data});
+						_app.u.handleAppEvents($tbody);
+						_app.u.handleButtons($tbody);
+						if(_rtag.message)	{
+							$('.dualModeListMessaging',$DMI).anymessage(_app.u.successMsgObject(_rtag.message));
+							}
+						}
+					else if(listpointer && !$.isEmptyObject(data)  && data[listpointer])	{
+						$('.dualModeListMessaging',$DMI).anymessage({"message":"Your search/filter returned zero results."});
+						}
+					else if(!listpointer)	{
+						$('.dualModeListMessaging',$DMI).anymessage({"message":"In admin.callbacks.DMIUpdateResults.onSuccess, unable to ascertain listpointer.","gMessage":true});
+						}
+					else if(typeof data[listpointer] !== 'object')	{
+						$('.dualModeListMessaging',$DMI).anymessage({"message":"In admin.callbacks.DMIUpdateResults.onSuccess, data[listpointer] is NOT an object.","gMessage":true});
+						}
+					else 	{
+						//should never get here.
+						$('.dualModeListMessaging',$DMI).anymessage({"message":"In admin.callbacks.DMIUpdateResults.onSuccess, an unknown error occured. DEV: see console for details.","gMessage":true});
+						_app.u.dump("$DMI.length: "+$DMI.length);
+						_app.u.dump("$DMI instanceof jQuery: "+($DMI instanceof jQuery));
+						_app.u.dump("$tbody.length: "+$tbody.length);
+						_app.u.dump("listpointer: "+listpointer);
+						_app.u.dump("typeof data: "+typeof data);
+						_app.u.dump("bindData: "); _app.u.dump(bindData);
+//						_app.u.dump("_rtag.jqObj"); _app.u.dump(_rtag.jqObj);
+						}
 
 //_rtag.jqObj should be data-app-role='dualModeList'.
 /*
@@ -905,6 +978,7 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 						showDomains(false); 
 						}
 
+					$ul.appendTo($target); //added last to minimize DOM updates.
 					$ul.appendTo($target); //added last to minimize DOM updates.
 					}
 				else	{
@@ -1264,10 +1338,19 @@ function getIndexByObjValue(arr,key,value)	{
 		graphicURL : function($tag,data)	{
 			$tag.attr('src',"https://"+_app.vars['media-host']+data.value);
 			$tag.wrap("<a href='https://"+_app.vars['media-host']+data.value+"' data-gallery='gallery'>");
+					'text': data.value.DOMAINNAME
+					});
+				}
+			else	{} //nothing to see here. move along.
 			},
 
 		publicURL : function($tag,data)	{
 			$tag.attr('src',"http://"+_app.vars.domain+"/media/merchant/"+_app.vars.username+"/"+data.value);
+			$tag.wrap("<a href='http://"+_app.vars.domain+"/media/merchant/"+_app.vars.username+"/"+data.value+"' data-gallery='gallery'>");
+			},
+
+
+
 			$tag.wrap("<a href='http://"+_app.vars.domain+"/media/merchant/"+_app.vars.username+"/"+data.value+"' data-gallery='gallery'>");
 			},
 
@@ -1588,6 +1671,7 @@ function getIndexByObjValue(arr,key,value)	{
 				
 				
 					r = $D.children();
+					}
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin.u.getPicker, either templateID ["+data.templateID+"] not set or mode blank/invalid ["+data.mode+"]. Mode accepts customer or product.","gMessage":true});
@@ -1983,17 +2067,16 @@ vars.findertype is required. acceptable values are:
 				_app.ext.admin.calls.appResource.init('quickstats/SEBF.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay fixed price
 				_app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //sears
 				
+				_app.model.dispatchThis('mutable');
+				} //showdashboard
+			}, //action
 
 				_app.model.dispatchThis('mutable');
 				} //showdashboard
 			}, //action
 
 
-
-
-
-
-
+////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -2031,6 +2114,10 @@ vars.findertype is required. acceptable values are:
 				_app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.getLastMessageID(),"_tag":{"datapointer":"adminMessagesList|"+_app.ext.admin.u.getLastMessageID(),'callback':'handleMessaging','extension':'admin'}},"immutable");
 				_app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}},'immutable');
 
+				_app.u.addEventDelegation($('#messagesContent'));
+				_app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.getLastMessageID(),"_tag":{"datapointer":"adminMessagesList|"+_app.ext.admin.u.getLastMessageID(),'callback':'handleMessaging','extension':'admin'}},"immutable");
+				_app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}},'immutable');
+				
 				$('.username','#appView').text(_app.vars.userid);
 				
 				var linkFrom = linkFrom = _app.u.getParameterByName('linkFrom');
@@ -2281,6 +2368,8 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 				window.location = 'https://accounts.google.com/o/oauth2/auth?'+$.param(p);
 				},
 
+			
+				},
 			
 			removeFromDOMItemsTaggedForDelete : function($context)	{
 				$('tr.rowTaggedForRemove',$context).each(function(){
@@ -2707,7 +2796,7 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 
 				if (href.substring(0,5) == "/biz/" || href.substring(0,2) == '#!')	{
 					var newHref = _app.vars.baseURL;
-					newHref += href.substring(0,2) == '#!' ? href :'#'+href; //for #! (native apps) links, don't add another hash.
+					newHref += href.substring(0,2) == '#!' ? href :'#!'+href; //for #! (native apps) links, don't add another hash.
 					$a.attr({'title':href,'href':newHref});
 					$a.click(function(event){
 						event.preventDefault();
@@ -3592,6 +3681,23 @@ dataAttribs -> an object that will be set as data- on the panel.
 				if(!$.isEmptyObject(vars.tlc))	{
 					$D.tlc(vars.tlc);
 					}
+				return $D;
+				}, //dialogConfirmRemove
+
+//used for creating a disposable dialog. returns dialog.
+//does NOT open dialog. this allows for customization of the dialog prior to display.
+//this code is pretty modal specific.
+			dialogCreate : function(vars)	{
+				vars = vars || {};
+				vars.title = vars.title || ""; //don't want 'undefind' as title if not set.
+				vars.anycontent = vars.anycontent || true; //default to runing anycontent. if no templateID specified, won't run.
+				vars.handleAppEvents = (vars.handleAppEvents == false) ? false : true; //need to be able to turn this off in case a dialog is appended to a parent.
+
+				var $D = $("<div \/>").attr('title',vars.title);
+				
+				if(!$.isEmptyObject(vars.tlc))	{
+					$D.tlc(vars.tlc);
+					}
 				else if(vars.anycontent && vars.templateID)	{
 //					_app.u.dump(" -> vars: "); _app.u.dump(vars);
 					$D.anycontent(vars);
@@ -3734,9 +3840,15 @@ dataAttribs -> an object that will be set as data- on the panel.
 							'body' : csvData,
 							'filename' : 'product_reviews.csv'
 							});
-						}
+							}
 					else	{
 						$('#globalMessaging').anymessage({"message":"In admin_customer.e.reviewExportExec, data not in memory or has no length.","gMessage":true});
+						}					
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.e.dataExportExec, data-pointer ["+$ele.data('pointer')+"], data-listpointer ["+$ele.data('listpointer')+"] and/or data-filename ["+$ele.data('filename')+"] left blank on trigger element and all are required.","gMessage":true});
+					}
+				},
 						}					
 					}
 				else	{
@@ -3775,6 +3887,16 @@ dataAttribs -> an object that will be set as data- on the panel.
 
 
 			
+//for delegated events. Also triggered by process form.
+// $ele could be the form itself or the button.
+			submitForm : function($ele,p)	{
+				dump("BEGIN admin.e.submitForm");
+				var $form = $ele.closest('form');
+				p.preventDefault();
+				if($ele.data('skipvalidation') || _app.u.validateForm($form))	{					
+					if(_app.ext.admin.a.processForm($form,'immutable',p))	{
+						$form.showLoading({'message':'Updating...'});	
+						_app.model.dispatchThis('immutable');
 //for delegated events. Also triggered by process form.
 // $ele could be the form itself or the button.
 			submitForm : function($ele,p)	{
@@ -3927,12 +4049,45 @@ dataAttribs -> an object that will be set as data- on the panel.
 
 /* login and create account */
 
-			accountLogin : function($btn)	{
-				$btn.button();
-				$btn.off('click.accountLogin').on('click.accountLogin',function(event){
-					event.preventDefault();
-					_app.ext.admin.a.login($btn.closest('form'));
-					});
+			// accountLogin : function($btn)	{
+				// $btn.button();
+				// $btn.off('click.accountLogin').on('click.accountLogin',function(event){
+				
+					// if ($btn.closest('form').find('input[name="apidomain"]').val() != '') {
+						// //window.adminApp.vars.jqurl = "https://"+jqurl+":9000/jsonapi/";
+						// _app.vars.jqurl = "https://"+$btn.closest('form').find('input[name="apidomain"]').val()+":9000/jsonapi/";
+						// }
+					// else if (document.location.protocol == 'file:') {
+						// alert("use advanced login options when running as file://");
+						// }
+						
+	
+					// event.preventDefault();
+					// _app.ext.admin.a.login($btn.closest('form'));
+					// });
+				// },
+			
+			accountLogin : function($form, p)	{
+				p.preventDefault();
+				if ($form.find('input[name="apidomain"]').val() != '') {
+					//window.adminApp.vars.jqurl = "https://"+jqurl+":9000/jsonapi/";
+					
+					_app.vars.jqurl = "http://"+$form.find('input[name="apidomain"]').val()+"/jsonapi/";
+					_app.model.addDispatchToQ({
+						"_cmd" : "appConfig",
+						"_tag" : {
+							"datapointer" : "appConfig",
+							"callback" : function(rd){
+								_app.vars.jqurl = _app.data[rd.datapointer].appSettings.admin_api_url;
+								_app.ext.admin.a.login($form);
+								}
+							}
+						},'immutable');
+					_app.model.dispatchThis('immutable');
+					}
+				else {
+					_app.ext.admin.a.login($form);
+					}
 				},
 			
 			showCreateAccount : function($btn)	{
@@ -3959,6 +4114,22 @@ dataAttribs -> an object that will be set as data- on the panel.
 					})
 				},
 
+			// showLoginAdvanced : function($btn)	{
+				// $btn.off('click.showLoginAdvanced').on('click.showLoginAdvanced',function(event){
+					// $('#loginAdvancedContainer').removeClass('displayNone').show().animate({'left':'0'},'slow');
+					// });
+				// },
+			showLoginAdvanced : function($ele, p)	{
+				p.preventDefault();
+				$('#loginFormContainer .advancedLoginShow').removeClass('displayNone').show();
+				$('#loginFormContainer .advancedLoginHide').hide();
+				},
+			showLoginSimple : function($ele, p)	{
+				p.preventDefault();
+				$('#loginFormContainer .advancedLoginShow').hide();
+				$('#loginFormContainer .advancedLoginHide').show();
+				},
+				
 			execPasswordRecover : function($btn)	{
 				$btn.button();
 				$btn.off('click.execPasswordRecover').on('click.execPasswordRecover',function(event){

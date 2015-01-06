@@ -52,7 +52,6 @@ var partner_addthis = function(_app) {
 						scriptPath += '#domready';
 						}
 					_app.u.loadScript(scriptPath);
-					
 					//This is an example of how to add an addthis toolbox to a product page
 		/*			_app.rq.push(['templateFunction','productTemplate','onCompletes',function(infoObj){
 						var $context = $(_app.u.jqSelector('#',infoObj.parentID));
@@ -74,13 +73,11 @@ var partner_addthis = function(_app) {
 							}
 						}]);
 		*/			return true;
-				},
-				onError : function() {
 					_app.u.dump('BEGIN _app.ext.partner_addthis.callbacks.init.onError');
-				}
-			},
-			
-			startExtension : {
+						}
+					_app.u.loadScript(scriptPath);
+					
+					//This is an example of how to add an addthis toolbox to a product page
 				onSuccess : function(){
 					dump("BEGIN _app.ext.partner_addthis.callbacks.startExtension.onSuccess");
 	/*				var scriptPath = (document.location.protocol == 'https:' ? 'https:' : 'http:')+'//s7.addthis.com/js/250/addthis_widget.js';
@@ -188,6 +185,26 @@ var partner_addthis = function(_app) {
 				case "category" :
 					if(_app.ext.partner_addthis.vars.setTitle){
 						sharingObj.title += data.pretty;
+						}
+					break;
+				case "company" :
+					//no custom behavior
+					break;
+				case "search" :
+					//no custom behavior
+					break;
+				//The following cases should all revert to homepage
+				case "customer" :
+				case "cart" :
+				case "checkout" :
+				case "homepage" :
+				default :
+					sharingObj.url = (document.location.protocol === "https:" ? zGlobals.appSettings.https_app_url : zGlobals.appSettings.http_app_url);
+					break;
+				}
+			if(sharingObj.title === ""){
+				//If no title is provided in the sharing object, it will default back to the window title
+				delete sharingObj.title;
 						}
 					break;
 				case "company" :
