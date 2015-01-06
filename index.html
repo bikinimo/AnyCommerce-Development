@@ -5,7 +5,6 @@
 
 <!-- do not populate or add meta data, the SEO layer will add it -->
 <title>Bikini Bikini Bikini | Swimwear, Swimsuits, Bikinis, Bathing Suits, Women's Clothing | Bikinimo Swimwear | Bikinimo Swimwear</title><!-- this will get populated by the SEO layer -->
-<meta name="description" content="Bikinimo Swimwear offers more than 300 styles of USA Made women's swimwear. Shop women's swimsuits, one-piece bathing suits, cover-ups and women's clothing" >
 
 <!-- used for optional social media extensions -->
 <meta property="og:type" content="" id='ogType' >
@@ -22,7 +21,7 @@
 
 <base href='' /><!-- leave blank so it works for a local file. updated to / if protocol is not file: -->
 
-
+<meta name="description" content="">
 
 <script type="text/javascript">
 var myCreole, baseURL;
@@ -36,12 +35,13 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 ga('create', 'UA-XXXX-Y', 'auto');
 ga('require','linker');
 ga('require','ecommerce', 'ecommerce.js');
-ga('set', {
-	// Replace name below
-	'appName' : 'Bikinimo',
-	'appID' : 'ZMVC',
-	'appVersion' : '201405'
-	});
+// ga('set'.. breaks realtime analytics, only use when running inside android/ios shell
+	//ga('set', {
+		// Replace name below
+	//	'appName' : 'Bikinimo',
+	//	'appID' : 'ZMVC',
+	//	'appVersion' : '201405'
+	//	});
 ga('send','pageview');
 ga('send','screenview');
 
@@ -78,70 +78,57 @@ css files should be included before any .js file to ensure they are downloaded i
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
-<script src="controller.js"></script>
-<script src="model.js"></script>
+<script type="text/javascript" src="controller.js"></script>
+<script type="text/javascript" src="model.js"></script>
 
-<!-- ### TODO -> test how the load process goes w/ these in init. if includes is moved, move the new Parse  -->
-<script src="resources/jquery.ui.anyplugins.js"></script>
-<script type="text/javascript" src="includes.js"></script><!-- contains some polyfills and should be loaded early -->
+<!-- SCRIPTS -->
+<script data-apptimize="embed" type="text/javascript" src="resources/jquery.showloading-v1.0.jt.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="resources/jsonpath.0.8.0.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="resources/tlc.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="resources/peg-0.8.0.js"></script>
 
+<script data-apptimize="embed" type="text/javascript" src="resources/jquery.ui.anyplugins.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="includes.js"></script><!-- contains some polyfills and should be loaded early -->
+
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="resources/anyplugins.css"/>
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="extensions/checkout/styles.css"/>
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="extensions/cart_message/styles.css"/>
+
+<script type="text/javascript">
+$.PromisePipeline = function(){
+	var def = new $.Deferred();
+	var deferreds = [];
+	def.addDeferred = function(d){
+		deferreds.push(d);
+		}
+	def.execute = function(){
+		$.when.apply($,deferreds).done(function(){def.resolve();}).fail(function(){def.reject();});
+		}
+	return def;
+}
+</script>
 
 <script type="text/javascript">
 $(document).ready(function(){
 	var paramStr = window.location.href.replace(window.location.hash, '').split('?')[1];
 	if(!paramStr || paramStr.indexOf('_escaped_fragment_') < 0){
 		window.myApp = new initApp({ <!-- version here -->
-			"release":"201405.20140710185000",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+			"release":"201411.201501061102",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 			"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 			"baseURL":baseURL, //used in non-local mode.
 			"checkoutAuthMode" : "active",//can be passive, active or required
 			"testURL":"http://www.9a34ba.pop.zoovy.net/", //used ONLY if protocol is file: (for testing)
 			"addjQueryPointer" : true,
-			"analyticsPointer" : "ga",
-			"initComplete" : function(){
-				dump(" -> init is complete");
-				myApp.u.loadScript('app-quickstart-init.js',function(){
-					var progress = myApp.u.loadResources(); //the object returns by loadResources will get updated as the resources finish loading.
-					myApp.u.showProgress(progress);
-					});
-				$('#appversion').text(myApp.vars.release);
-				}
+			"analyticsPointer" : "ga"
 			});
-		myApp.vars.initComplete();
 		myCreole = new Parse.Simple.Creole();
+		myApp.u.loadScript('app-quickstart-init.js?_v='+new Date().getTime());
+		$('#appversion').text(myApp.vars.release);		
 		}
 	});
 
 </script>
 
-<script data-apptimize="minify" type="text/javascript">
-var _robots = {
-	hello : function(botStr){
-		_robots._robotGreeting = botStr || true;
-		console.log("Bot saying hello: "+botStr);
-		return "1.0";
-		},
-	next : function(){
-		//This implementation of _robots.next returns a function that simply blocks with a '100' until the app has been fully instantiated
-		_robots.status = function(){
-			if(typeof myApp !== 'undefined' && 
-				typeof myApp.ext !== 'undefined' && 
-				typeof myApp.ext.quickstart !== 'undefined' && 
-				typeof myApp.ext.quickstart.vars !== 'undefined' &&
-				myApp.ext.quickstart.vars.showContentFinished && myApp.ext.quickstart.vars.showContentCompleteFired){
-				return 204;
-				}
-			else{
-				return 100;
-				}
-			}
-		},
-	ready : function(){return false;},
-	goodbye : function(){
-		console.log("Bot saying goodbye: "+botStr);
-		}
-	}
-</script>
 
 </head>
 
@@ -163,21 +150,23 @@ var _robots = {
 					<!-- <div>...Be sure to check your welcome e-mail</div> REMOVED UNTIL EMAIL TEMPLATE IS COMPLETE -->
 <!-- EDIT PREVIEW HERE!! -------------------------------------------------------------------->				
 				</div>
-				<div id="categorySelector" class="previewButtonCont showSansPreferences displayNone" style="cursor:pointer;">
+				<div id="categorySelector" class="previewButtonCont showSansPreferences" style="cursor:pointer;">
 					<!-- Run in console, or set in qs-init so show appPreview again myApp.model.dpsSet('quickstart','suppressMkt',false); -->
 					<div class="categorySelectorButtonContainer floatLeft" onclick="myApp.ext.store_bmo.a.signUpPrompt('logMeIn');"><span class="categorySelectorButton pointer"><a href="#"><img src="images/preload-login_127x34.png" alt="Log me in" title="Log me in" style="margin:0px;"/></a></span></div>
 					<div class="categorySelectorButtonContainer floatLeft" onclick="myApp.ext.store_bmo.a.signUpPrompt('signMeUp');"><span class="categorySelectorButton pointer"><a href="#"><img src="images/sign_up.png" alt="Sign Me Up" title="Sign Me Up" /></a></span></div>
 					<div class="categorySelectorButtonContainer floatLeft" onclick="myApp.ext.store_bmo.a.signUpPrompt('guest');"><span class="categorySelectorButton pointer"><a href="#"><img src="images/continu_guest.png" alt="Continue as Guest" title="Continue as Guest" /></a></span></div>
 					<div class="clear"></div>
 				</div>
-				<div id="progressBarContainer" class="">
-					<div class='alignCenter'>
-						<div id="progressBarOutline">
-							<div id="progressBar"></div>
-						</div>
-						<h2 id='progressText'>PLEASE WAIT WHILE YOUR SHOPPING EXPERIENCE LOADS</h2>
-					</div>
-				</div>
+<!--
+									<div id="progressBarContainer" class="">
+										<div class='alignCenter'>
+											<div id="progressBarOutline">
+												<div id="progressBar"></div>
+											</div>
+											<h2 id='progressText'>PLEASE WAIT WHILE YOUR SHOPPING EXPERIENCE LOADS</h2>
+										</div>
+									</div>
+-->
 			</div>
 		</div>
 	</div>
@@ -3127,6 +3116,222 @@ put all filters into the appFilters container.
 </div> <!-- //Filter search forms -->
 
 
+<script type="text/pegjs" id="pegjs">
+dataTLC
+ = grammar+
+
+grammar
+ = _ cmd:(IfStatement) _ lb* { return cmd; }
+ / _ cmd:(WhileLoopStatement) _ lb* { return cmd; }
+ / _ cmd:(ForeachLoopStatement) _ lb* { return cmd; }
+ / _ cmd:(BindStatement) _ lb* { return cmd; } 
+ / _ cmd:(SetStatement) _ lb* { return cmd; } 
+ / _ cmd:(ExportStatement) _ lb* { return cmd; } 
+ / _ cmd:(command) _ lb* { return cmd; }
+
+command
+ = _ module:([a-z_]+ "#")? cmd:[a-z?]+ args:((ws+ value)+)? _ lb* {
+     return {
+       type: "command",
+       module: module ? module[0].join("") : "core",
+       name: cmd.join("").toLowerCase(),
+       args: args ? args.map(function(a) { return a[1] }) : null
+     }
+   }
+
+
+// ** BIND **
+// bind $var 'something'; (jsonpath lookup)
+// bind $var $someothervar; (jsonpath lookup)
+// bind $var ~tag; (returns tag id/path)
+// bind ~tag '#tagid'; jQuery('#tagid')
+// bind ~tag $tagid jQuery($tagid)
+BindStatement
+ = "bind" _ set:(variable / tag) _ src:(variable / scalar / tag) _ lb+ {
+  return { type:"BIND", Set:set, Src:src }
+  }
+
+
+// ** EXPORT **
+// export 'key' --dataset=$var
+// export '%key' --dataset=$var
+ExportStatement
+= "export" _ set:(scalar / variable) args:(ws+ value)+ _ lb+ {
+  return { type:"EXPORT", Set:set, args: args ? args.map(function(a) { return a[1] }) : null } 
+  }
+
+// ** SET ** 
+// set $dst $src --path='.xyz';
+SetStatement
+ = "set" _ set:(variable / tag) _ src:(variable / scalar / tag / boolean / integer) args:((ws+ value)+)? _ lb+ {
+  return { type:"SET", Set:set, Src:src, args: args ? args.map(function(a) { return a[1] }) : null }
+  }
+
+// if (command) {{ }} else {{ }};
+IfStatement
+  = "if" _ "(" _ condition:command _ ")" _ ifStatement:Block elseStatement:(_ "else" _ Block)? _ lb+ {
+      return ({
+        type: "IF",
+        When: condition,
+        IsTrue: ifStatement,
+        IsFalse: elseStatement !== null ? elseStatement[3] : null
+      });
+   }
+
+// while (something) {{ inner loop }};
+WhileLoopStatement
+  = "while" _ "(" _ condition:command _ ")" _ whileStatement:Block lb+ {
+      return ({
+        type: "WHILE",
+        While: condition,
+        Loop: whileStatement,
+      });
+   }
+
+
+// foreach $item in $items {{ inner loop }};
+ForeachLoopStatement
+  = "foreach" _ set:(variable) _ "in" _ members:(variable) _ loop:Block lb+ {
+      return ({
+        type: "FOREACH",
+        Set: set,
+        Members: members,
+        Loop: loop,
+      });
+   }
+
+
+Block
+  = "{{" _ statements:(StatementList _)? "}}" {
+      return {
+        type: "Block",
+        statements: statements !== null ? statements[0][0] : []
+      };
+    }
+
+StatementList
+  = head:Statement tail:(_ Statement)* {
+      var result = [head];
+      for (var i = 0; i < tail.length; i++) {
+        result.push(tail[i][1]);
+      }
+      return result;
+    }
+
+Statement
+  = Block
+  / grammar+
+
+
+/* value types */
+
+// ~tag is a reference to a jquery object
+tag
+ = "~" tag:([a-zA-Z]+) {
+   // tag table should maintain reference to tags on DOM
+   return { type:"tag", tag:tag.join(""), jq:null }
+   }
+
+boolean
+ = "true" {return{ "type":"boolean", "value": true }}
+ / "false" {return{ "type":"boolean", "value": false }}
+
+// longopt start with a --
+longopt
+ = "--" k:([a-zA-Z]+) "=" v:( value ) {
+    return {
+       type: "longopt",
+       key: k.join(""),
+       value: v
+       }
+    }
+ / "--" k:([a-zA-Z]+) {
+    return {
+      type: "longopt",
+      key: k.join(""),
+      value: null
+      }
+    }
+
+
+// scalar (string)
+// NOTE: at this point there is no way to escape a ' in a string.
+//
+scalar
+ = "'" v:([^']*) "'" {
+     return {
+       type: "scalar",
+       value: v.join("")
+     }
+   }
+
+// Variables can't start with a number
+variable
+ = "$" v:([a-zA-Z0-9_]*) {
+     return {
+       type: "variable",
+       value: v.join("")
+     }
+   }
+
+integer
+  = digits:[0-9]+ {
+      return {
+        type: "integer",
+        value: parseInt(digits.join(""), 10)
+      }
+    }
+
+hexcolor
+  = "#" v:([A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9]) {
+     return { type:"hexcolor", value: v.join("") }
+     }
+
+additive
+  = left:muldiv _ sign:[+-] _ right:additive {
+      return {
+        type: "command",
+        name:sign,
+        args:[left,right]
+      }
+    }
+  / muldiv
+
+muldiv
+  = left:primary _ sign:[*/] _ right:muldiv {
+      return {
+        type: "command",
+        name: sign,
+        args:[left, right]
+      }
+    }
+  / primary
+
+primary
+  = (variable / integer)
+  / "(" _ additive:additive _ ")" { return additive; }
+
+value
+ = longopt / variable / integer / scalar / boolean / tag / hexcolor / additive
+
+// /* i am a comment (i can only appear before a command) */
+comment
+  = "/*" (!"*/" SourceCharacter)* "*/" { return{}; }
+
+SourceCharacter
+  = .
+
+ws
+ = [ \t\n\r]
+
+_
+ = (ws / comment)*
+
+lb
+ = ";"
+
+
+</script>
 
 
 </body>
