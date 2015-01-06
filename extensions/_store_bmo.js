@@ -184,21 +184,7 @@ var store_bmo = function(_app) {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
-			
-			//hides appPreview on user selection of 1 of the 3 options
-			signUpPrompt : function(preference) {
-				$('#appPreView').fadeOut(1000,function(){
-					$('#appView').slideDown(3000);
-				});
-				switch(preference) {
-					case 'logMeIn'	: setTimeout(function() { _app.ext.quickstart.u.showLoginModal(); },1000); break;
-					case 'signMeUp' : setTimeout(function() { _app.ext.store_bmo.a.showAccountCreate(); },1000); break;
-					case 'guest' 	: /* not much to do here, load as normal */ break;
-					default 		: dump('Error in _app.ext.store_bmo.a.signUpPromt'); //There are only three option button, if we are here something is wrong.
-				}
-				dump('Preference selected: '+preference); 
-			},
-			
+
 			//slides any element w/ data-slide, in the parent of the container passed, up and down (added mainly for account recovery on login/acct creation)
 			togglerecover : function($tag) {
 				$("[data-slide='toggle']",$tag.parent()).slideToggle();
@@ -1552,6 +1538,23 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 //while no naming convention is stricly forced, 
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
+		
+			//hides appPreview on user selection of 1 of the 3 options
+			signUpPrompt : function($ele,p) {
+				p.preventDefault()
+				var preference = $ele.attr('data-bmo-preference');
+				$('#appPreView').fadeOut(1000,function(){
+					$('#appView').slideDown(3000);
+				});
+				switch(preference) {
+					case 'login'	: setTimeout(function() { _app.ext.quickstart.u.showLoginModal(); },1000); break;
+					case 'signup' : setTimeout(function() { _app.ext.store_bmo.a.showAccountCreate(); },1000); break;
+					case 'guest' 	: /* not much to do here, load as normal */ break;
+					default 		: dump('Error in _app.ext.store_bmo.e.signUpPromt'); //There are only three option button, if we are here something is wrong.
+				}
+				dump('Preference selected: '+preference); 
+				return false;
+			},
 		
 			addToCart : function($ele, p) {
 //				_app.u.dump('-> store_bmo addToCart');

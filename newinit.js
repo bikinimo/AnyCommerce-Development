@@ -10,13 +10,24 @@ _app.u.loadScript(configURI,function(){
 	_app.vars.domain = zGlobals.appSettings.sdomain; //passed in ajax requests.
 	_app.vars.jqurl = (document.location.protocol === 'file:') ? _app.vars.testURL+'jsonapi/' : '/jsonapi/';
 	
-	var startupRequires = ['quickstart'];
+	var startupRequires = ['quickstart','store_bmo'];
 	
 	_app.require(startupRequires, function(){
 		setTimeout(function(){$('#appView').removeClass('initFooter');}, 1200);
 		_app.ext.quickstart.callbacks.startMyProgram.onSuccess();
 		});
 	}); //The config.js is dynamically generated.
+	
+	/*	
+CUSTOM CONTENT
+*/	
+
+	_app.extend({
+		"namespace" : "store_bmo",
+		"filename" : "extensions/_store_bmo.js"
+	});
+
+//END CUSTOM CONTENT
 	
 _app.extend({
 	"namespace" : "quickstart",
