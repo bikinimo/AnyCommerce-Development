@@ -32,28 +32,7 @@ var store_routing = function(_app) {
 		init : {
 			onSuccess : function()	{
 				var r = false; 
-				
-				if(_app.u.getParameterByName('seoRequest')){
-					_app.vars.showContentHashChange = true;
-					_app.vars.ignoreHashChange = true;
-					}
-				
-				
-				_app.router.addAlias('homepage', 	function(routeObj){showContent('homepage',	routeObj.params);});
-				_app.router.addAlias('category', 	function(routeObj){
-					//* 201403 -> chrome on iOS doesn't like /. in hashbang.
-					if(routeObj.params && routeObj.params.navcat && routeObj.params.navcat.charAt(0) != '.')	{
-						routeObj.params.navcat = '.'+routeObj.params.navcat;
-						}
-					showContent('category',	routeObj.params);
-					});
 
-				_app.router.addAlias('product', 	function(routeObj){showContent('product',	routeObj.params);});
-				_app.router.addAlias('company', 	function(routeObj){showContent('company',	routeObj.params);});
-				_app.router.addAlias('customer', 	function(routeObj){showContent('customer',	routeObj.params);});
-				_app.router.addAlias('checkout', 	function(routeObj){showContent('checkout',	routeObj.params);});
-
-				_app.router.addAlias('search', 		function(routeObj){showContent('search',	routeObj.params);});
 				//shows search result for any product with the tag passed and the is_app attribute
 				_app.router.addAlias('apptagsearch', 		function(routeObj){
 					var tag = routeObj.params.tag.toUpperCase(); 
@@ -67,36 +46,11 @@ var store_routing = function(_app) {
 					elasticsearch.filter.and.push(fObj);
 					showContent('search',{'elasticsearch':elasticsearch});
 				});
-				
-				_app.router.appendHash({'type':'exact','route':'cart/','callback':function(routeObj){showContent('cart',routeObj.params);}});
-				_app.router.appendHash({'type':'exact','route':'home','callback':'homepage'});
-				_app.router.appendHash({'type':'exact','route':'','callback':'homepage'});
+
+
 				_app.router.appendHash({'type':'exact','route':'/','callback':'homepage'});
-				_app.router.appendHash({'type':'match','route':'category/{{navcat}}*','callback':'category'});
-				_app.router.appendHash({'type':'match','route':'product/{{pid}}/{{name}}*','callback':'product'});
-				_app.router.appendHash({'type':'match','route':'product/{{pid}}*','callback':'product'});
-				_app.router.appendHash({'type':'match','route':'company/{{show}}*','callback':'company'});
-				_app.router.appendHash({'type':'exact','route':'company','callback':'company'});
-				_app.router.appendHash({'type':'match','route':'customer/{{show}}*','callback':'customer'});
-				_app.router.appendHash({'type':'exact','route':'customer','callback':'company'});
-				_app.router.appendHash({'type':'match','route':'checkout*','callback':'checkout'});
-				_app.router.appendHash({'type':'match','route':'search/tag/{{tag}}*','callback':'search'});
-				_app.router.appendHash({'type':'match','route':'search/keywords/{{KEYWORDS}}*','callback':'search'});
 				_app.router.appendHash({'type':'match','route':'apptag/{{tag}}*','callback':'apptagsearch'}); //elastic search for tag plus is_app
 				_app.router.appendHash({'type':'match','route':'appattrib/{{attrib}}*','callback':'appattribsearch'}); //elastic search for attrib plus is_app
-
-
-/*
-some other things we could do
-_app.router.appendHash({'type':'match','route':'quickview/product/{{pid}}*','callback':function(routeObj){
-	quickview('product',routeObj.params);
-	}});
-
-or a more generic one, like so:
-_app.router.appendHash({'type':'match','route':'modal/product/{{pid}}*','callback':function(routeObj){
-	quickview('product',routeObj.params);
-	}});
-*/
 				r = true;
 
 				return r;
@@ -104,16 +58,12 @@ _app.router.appendHash({'type':'match','route':'modal/product/{{pid}}*','callbac
 			onError : function()	{
 				_app.u.dump('BEGIN store_routing.callbacks.init.onError');
 				}
-			},
-		attachEventHandlers : {
-			onSuccess : function(){
 				dump("START store_routing.callbacks.attachEventHandlers.onSuccess");
 				$.merge(_app.ext.seo_robots.vars.pages,[
 	//TODO: Check if there are any more cusome pages that need to be added to robots_seo
 					"#!company/about/",
 					"#!company/contact/"
 				]);
-				
 				var callback = function(event, $context, infoObj) {
 					dump("--> store_routing complete event");
 					event.stopPropagation();
@@ -123,7 +73,6 @@ _app.router.appendHash({'type':'match','route':'modal/product/{{pid}}*','callbac
 						if($routeEle.length) {
 							dump('Whadda you know... there was a routing element');
 							hash = $routeEle.attr('data-routing-hash');
-						}
 						else {
 							switch(infoObj.pageType) { //for bmo: make all url's lower case.
 								case 'homepage':
@@ -182,7 +131,6 @@ _app.router.appendHash({'type':'match','route':'modal/product/{{pid}}*','callbac
 		
 				
 			},
-			onError : function(){}
 		}	
 	}, //callbacks
 
@@ -244,7 +192,8 @@ optional params:
 					
 					case 'category':
 						r = true;
-						data.globals.binds[data.globals.focusBind] = _app.ext.store_routing.u.categoryAnchor(data.value.path, (args.seo ? data.value.pretty : ''));
+						var seo = args.seo || data.value.pretty;
+						data.globals.binds[data.globals.focusBind] = _app.ext.store_routing.u.categoryAnchor(data.value.path, seo);
 						break;
 					
 					default:
@@ -255,22 +204,6 @@ optional params:
 				} //seolink
 
 			},
-		
-		renderFormats : {
-			productLink : function($tag, data){
-				var href="#!product/";
-				if(data.bindData.useParentData){
-					href += data.value.pid+"/";
-					if(data.bindData.seoattr){
-						href += data.value["%attribs"][data.bindData.seoattr];
-						}
-					}
-				else {
-					href += data.value+"/";
-					}
-				$tag.attr('href',href);
-				}
-			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		u : {
@@ -284,9 +217,6 @@ optional params:
 				}
 				$canonical.attr('href',hash);
 				if(_app.vars.showContentHashChange) {
-					dump('forcing a hash change');
-					window.location.href = window.location.href.split("#")[0]+hash;
-					}
 				},
 			cleanURIComponent : function(str){
 				var component = str.replace(/^\s+|\s+$/g, '');
@@ -301,6 +231,9 @@ optional params:
 				},
 			categoryAnchor : function(path,seo)	{
 				return "#!category/"+path.toLowerCase()+"/"+((seo) ? _app.ext.store_routing.u.cleanURIComponent(seo).toLowerCase() : '');
+					path = path.substr(1);
+					}
+				return "/category/"+path+"/"+((seo) ? _app.ext.store_routing.u.cleanURIComponent(seo) : '');
 				},
 			searchAnchor : function(type,value)	{
 				var r;
@@ -312,7 +245,7 @@ optional params:
 					}
 // ### FUTURE -> support ability to search for a match on a specific attribute.
 //				else if(type == 'attrib')	{
-//					r = '#!search/attrib/' ... some key value pair.
+//					r = '/search/attrib/' ... some key value pair.
 //					}
 				else	{
 					//unrecognized type
