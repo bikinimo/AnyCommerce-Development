@@ -128,7 +128,7 @@ $(document).ready(function(){
 	<div class='appMessaging'></div>
 
 	<div id='loginFormContainer'>
-		<form name='merchantLogin' id='merchantLogin' action='#' class='clearfix marginBottom' data-app-submit="admin|accountLogin">
+		<form name='merchantLogin' id='merchantLogin' action='#' class='clearfix marginBottom'>
 		<input type='hidden' name='authtype' value='password' /><!-- required for the 'call' -->
 		<fieldset class='labelsAsBreaks alignedInputs'>
 			<legend>Merchant Login</legend>
@@ -137,15 +137,6 @@ $(document).ready(function(){
 				<input placeholder='login' type='text' name='userid' value='' required='required' class='textbox' />
 				<input placeholder='password' type='password' name='password' value=''  required='required' class='textbox' />
 				<button class='loginbutton' data-app-event="admin|accountLogin">login</button>
-			</div>
-					<input name='authtoken' class='textbox' type='text' value='' placeholder='authtoken'/>
-				</div> -->
-				<button class='loginbutton' >login</button>				
-				<div class='advancedLoginShow displayNone'>
-					<!-- advanced login -->
-					API Domain:
-					<input placeholder='www.domain.com' type='text' name='apidomain' value='' class='textbox' />
-				</div>
 			</div>
 			
 			<div class='clearfix'>
@@ -156,15 +147,6 @@ $(document).ready(function(){
 			<div class='clearfix marginBottom'>
 				<div class='lookLikeLink hint floatRight' data-app-event="admin|showPasswordRecover">Recover Password</div>
 				<div class="hint"><a href='/201401/app-admin.html'> &#187; Use previous version</a></div>
-			</div>
-
-
-			<!--
-			<div class='clearfix marginBottom alignCenter'>
-				<div class='marginBottom hint'> - or - </div>
-				<span data-app-event="admin|googleLogin" class='threePLSprite google'></span>
-			</div>
-			-->
 			</div>
 
 
