@@ -31,7 +31,7 @@ var admin_tools = function(_app) {
 		init : {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/tools.html',theseTemplates);
+				// _app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/tools.html',theseTemplates);
 
 				_app.formatRules.validateJSON = function($input,$err){
 					var valid = true;
@@ -77,7 +77,7 @@ var admin_tools = function(_app) {
 					maxDate : 0,
 					dateFormat : 'yymmdd'
 					});
-				_app.u.handleAppEvents($target,{'$form':$('#productPowerToolForm'),'$dataTbody':$("[data-app-role='powertoolSelectedActionsContainer'] tbody",$target)});
+				_app.u.handleAppEvents($target,{'$form':$('form[name=productPowerToolForm]'),'$dataTbody':$("[data-app-role='powertoolSelectedActionsContainer'] tbody",$target)});
 //				$("input",$picker).each(function(){});
 				},
 			
@@ -498,12 +498,12 @@ var admin_tools = function(_app) {
 					var	$form = $btn.closest('form');
 					
 					if(_app.ext.admin.u.validatePicker($form))	{
-						if($('#powerToolActionListTbody tr').not('.rowTaggedForRemove').length)	{
+						if($('form[name=powerToolActionListTbody] tr').not('.rowTaggedForRemove').length)	{
 							obj = {
 								'%vars' : {
 									'GUID' : _app.u.guidGenerator(),
 									'product_selectors' : _app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form)),
-									'actions' : _app.ext.admin_tools.u.powertoolActions2KVP($('#powerToolActionListTbody'))
+									'actions' : _app.ext.admin_tools.u.powertoolActions2KVP($('form[name=powerToolActionListTbody]'))
 									},
 								'type' : 'UTILITY/PRODUCT_POWERTOOL'
 								}
@@ -711,7 +711,7 @@ var admin_tools = function(_app) {
 						}
 					else	{
 						keys.push($(this).data('id'));
-						json.push(_app.u.getWhitelistedObject($(this).data(),['id','title','index','type','options']));
+						json.push(_app.u.getWhitelistedObject($(this).data(),['id','title','index','cart','type','options']));
 						}
 					})
 				_app.model.addDispatchToQ({
