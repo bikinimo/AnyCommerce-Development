@@ -10,7 +10,7 @@ _app.u.loadScript(configURI,function(){
 	_app.vars.domain = zGlobals.appSettings.sdomain; //passed in ajax requests.
 	_app.vars.jqurl = (document.location.protocol === 'file:') ? _app.vars.testURL+'jsonapi/' : '/jsonapi/';
 	
-	var startupRequires = ['quickstart','store_bmo'];
+	var startupRequires = ['quickstart','store_bmo','store_prodlist','store_product'];
 	
 	_app.require(startupRequires, function(){
 		setTimeout(function(){$('#appView').removeClass('initFooter');}, 1200);
@@ -21,10 +21,25 @@ _app.u.loadScript(configURI,function(){
 	/*	
 CUSTOM CONTENT
 */	
+//lookin for something?
+// 	homepage coupler:	_app.couple('quickstart','addPageHandler',{
+
 
 	_app.extend({
 		"namespace" : "store_bmo",
 		"filename" : "extensions/_store_bmo.js"
+	});
+	
+	_app.extend({
+		"namespace" : "bmo_homepage",
+		"filename" : "extensions/_bmo_homepage.js"
+	});
+	
+	_app.u.bindTemplateEvent('homepageTemplate', 'complete.store_bmo',function(event,$context,infoObj) {
+		_app.ext.store_bmo.u.addTabs($('[data-bmo="homepagetabs"]',$context));
+		_app.ext.store_bmo.u.addTabs($('#homepageBottomTabs'));
+		_app.ext.store_bmo.u.addTabs($('#homepageSizingTabs'));
+//		_app.ext.bmo_homepage.u.loadProductsAsList($context,$('[data-bmo="limited-time-offer"]', $context));
 	});
 
 //END CUSTOM CONTENT
@@ -461,7 +476,7 @@ _app.extend({
 	
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "homepage",
-	"require" : ['store_navcats','templates.html','store_routing'],
+	"require" : ['store_navcats','templates.html','store_routing','bmo_homepage'],
 	"handler" : function($container, infoObj, require){
 		infoObj.deferred = $.Deferred();
 		infoObj.defPipeline.addDeferred(infoObj.deferred);

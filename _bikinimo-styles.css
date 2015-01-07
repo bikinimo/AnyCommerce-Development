@@ -151,7 +151,7 @@ ul li{ list-style-type:none;}
 .madebox1 .giftCardLink{text-align:center; color:#ec1c24; display:block; text-decoration:underline;} 
 .madebox1 .giftCardLink:hover{text-decoration:none;}
 
-#homepageTabs {margin:3px 0 0 0; width:962px; float:left;}
+.homeTemplate [data-bmo="homepagetabs"] {margin:3px 0 0 0; width:962px; float:left;}
 /*Middle Close*/
 
 /*Footer Start*/

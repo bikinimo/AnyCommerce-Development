@@ -83,9 +83,6 @@ var store_bmo = function(_app) {
 					//_app.u.dump('*** Extending Pogs');
 					
 					_app.templates.homepageTemplate.on('complete.store_bmo',function(event,$context,infoObj) {
-						_app.ext.store_bmo.u.addTabs($('#homepageTabs'));
-						_app.ext.store_bmo.u.addTabs($('#homepageBottomTabs'));
-						_app.ext.store_bmo.u.addTabs($('#homepageSizingTabs'));
 						
 						_app.ext.store_bmo.u.runHomeCarouselTab1($context);
 						_app.ext.store_bmo.u.runHomeCarouselTab2($context);
@@ -908,8 +905,8 @@ var store_bmo = function(_app) {
 		
 			//checks for class anytabs. If not found, adds it and runs anytabs on the passed container element.
 			addTabs : function($container) {
-//				dump('START addTabs ');
 				if(!$container.hasClass('anytabs')){
+				dump('START addTabs ');
 					$container.addClass('anytabs').anytabs();
 				}
 			},
