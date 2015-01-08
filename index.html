@@ -135,7 +135,7 @@ $(document).ready(function(){
 <body>
 
 <!-- what is displayed onLoad until the view is loaded -->
-<div id='appPreView'>
+<div id='appPreView' class='displayNone'>
 	<div class="loderwrapper">
 		<div class="lodemid">
 			<div id="previewLogo"> <img src="images/loaderlogo.png" /> </div>
@@ -203,16 +203,16 @@ ANIMATION TESTING
 		
 		<div class="header">
 			<div class="headerone">
-				<div class="headerleft"><a href="#!/"><img src="images/bikinimo_app_logo.png" alt="Bikinimo Swimwear" border="0" title="Bikinimo Swimwear" /></a></div>
+				<div class="headerleft"><a href="/"><img src="images/bikinimo_app_logo.png" alt="Bikinimo Swimwear" border="0" title="Bikinimo Swimwear" /></a></div>
 				<div class="headerright">
 					<div class="headerright1">
 						<div class="topsecmenu">
 							<div class="contactsec"> 
-								<a href="#!company/contact/">Contact</a>
+								<a href="/contact_us/">Contact</a>
 								<span>|</span>
-								<a href="#!company/faq/">FAQ</a>
+								<a href="/frequently_asked_questions/">FAQ</a>
 								<span>|</span>
-								<a href="#!customer/myaccount/">My Account</a>
+								<a href="/my_account/">My Account</a>
 								<span>|</span>
 								<a href="#!customer/myaccount/">
 									<span class="loginShow username"></span>
@@ -220,10 +220,10 @@ ANIMATION TESTING
 								<span class="loginShow"> 
 									<a href="#!customer/logout/">Log Out</a>
 								</span>
-								<div class="loginHide giftCardLink pointer" onclick="myApp.ext.quickstart.u.showLoginModal()">Login</div><br />
+								<div class="loginHide giftCardLink pointer" data-app-click="store_bmo|showmodallogin">Login</div><br />
 								<div class='giftCardLink pointer' onclick="quickView('product',{'templateID':'productTemplateQuickView','pid':'GC1000'});">Gift Cards</div>
 								<span>|</span>
-								<div class="giftCardLink pointer" onclick="myApp.ext.store_bmo.a.showSizeChart()">Sizing Guide</div>
+								<div class="giftCardLink pointer" data-app-click="store_bmo|showChart" data-bmo-template="sizingGuideTemplate" data-bmo-title="Sizing Guide" data-height=550 data-width=800 data-add-tabs="true">Sizing Guide</div>
 							</div>
 							<div class="cartsec">
 								<!-- INLINE CART LINK:
@@ -233,7 +233,7 @@ ANIMATION TESTING
 									<span class="shopingbag">Items in Your Shopping Bag</span>
 								</a>
 								-->
-								<div class="giftCardLink pointer" onClick="myApp.ext.quickstart.u.showCartInModal({'templateID':'cartTemplate'});">
+								<div class="giftCardLink pointer" data-app-click="store_bmo|showmodalcart">
 									<img src="images/cartimg.gif" align="top" alt="" />
 									<span class="cartItemCount"></span>
 									<span class="shopingbag">Items in Your Shopping Bag</span>
@@ -274,51 +274,51 @@ ANIMATION TESTING
 		</div>
 		<div class="navsection blueGradient">
 			<ul id="topnav">
-				<li><a href="#!category/.app-categories.bikini_sets">Bikini Sets</a> 
+				<li><a href="/category/.app-categories.bikini_sets">Bikini Sets</a> 
 					<span>
 						<ul>
-							<li><a href="#!category/.app-categories.bikini_sets.top_shelf">Top Shelf</a></li>
-							<li><a href="#!category/.app-categories.bikini_sets.prints">Prints</a></li>
-							<li><a href="#!category/.app-categories.bikini_sets.solids">Solids</a></li>
+							<li><a href="/category/.app-categories.bikini_sets.top_shelf">Top Shelf</a></li>
+							<li><a href="/category/.app-categories.bikini_sets.prints">Prints</a></li>
+							<li><a href="/category/.app-categories.bikini_sets.solids">Solids</a></li>
 						</ul>
 						<ul>
-							<li><a href="#!category/.app-categories.bikini_sets.crochet">Crochet</a></li>
-							<li><a href="#!category/.app-categories.bikini_sets.thongs_and_strings">Thongs & Strings</a></li>
-							<li><a href="#!category/.app-categories.bikini_sets.gauze">Gauze</a></li>
+							<li><a href="/category/.app-categories.bikini_sets.crochet">Crochet</a></li>
+							<li><a href="/category/.app-categories.bikini_sets.thongs_and_strings">Thongs & Strings</a></li>
+							<li><a href="/category/.app-categories.bikini_sets.gauze">Gauze</a></li>
 						</ul>
 						<ul>
-							<li><a href="#!category/.app-categories.bikini_sets.metallic">Metallic</a></li>
-							<li><a href="#!category/.app-categories.bikini_sets.sheer">Sheer</a></li>
-							<li><a href="#!category/.app-categories.bikini_sets.skirted">Skirted</a></li>
+							<li><a href="/category/.app-categories.bikini_sets.metallic">Metallic</a></li>
+							<li><a href="/category/.app-categories.bikini_sets.sheer">Sheer</a></li>
+							<li><a href="/category/.app-categories.bikini_sets.skirted">Skirted</a></li>
 						</ul>
 						<ul>
-							<li><a href="#!category/.app-categories.bikini_sets.sport">Sport</a></li>
-							<li><a href="#!category/.app-categories.bikini_sets.underwire">Underwire</a></li>
+							<li><a href="/category/.app-categories.bikini_sets.sport">Sport</a></li>
+							<li><a href="/category/.app-categories.bikini_sets.underwire">Underwire</a></li>
 						</ul>
 					</span> 
 				</li>
 				<li>
-					<a href="#!category/.app-categories.separates">Separates</a>
+					<a href="/category/.app-categories.separates">Separates</a>
 					<span class='separatesDrop'>
 						<ul>
-							<li><a href="#!category/.app-categories.separates.tops">Tops</a></li>
-							<li><a href="#!category/.app-categories.separates.bottoms">Bottoms</a></li>
+							<li><a href="/category/.app-categories.separates.tops">Tops</a></li>
+							<li><a href="/category/.app-categories.separates.bottoms">Bottoms</a></li>
 						</ul>
 					</span>
 				</li>
-				<li><a href="#!category/.app-categories.tankinis">Tankinis</a></li>
-				<li><a href="#!category/.app-categories.swim_dresses">Swim Dresses</a></li>
-				<li><a href="#!category/.app-categories.one_pieces">One Pieces</a></li>
-				<li><a href="#!category/.app-categories.cover_ups">Cover Ups</a></li>
-				<li><a href="#!category/.app-categories.dresses">Dresses</a></li>
-				<li><a href="#!category/.app-categories.sleepwear">Sleepwear</a></li>
-				<li><a href="#!category/.app-categories.accessories">Accessories</a></li>
+				<li><a href="/category/.app-categories.tankinis">Tankinis</a></li>
+				<li><a href="/category/.app-categories.swim_dresses">Swim Dresses</a></li>
+				<li><a href="/category/.app-categories.one_pieces">One Pieces</a></li>
+				<li><a href="/category/.app-categories.cover_ups">Cover Ups</a></li>
+				<li><a href="/category/.app-categories.dresses">Dresses</a></li>
+				<li><a href="/category/.app-categories.sleepwear">Sleepwear</a></li>
+				<li><a href="/category/.app-categories.accessories">Accessories</a></li>
 			</ul>
 		</div>
 		<div class="sizebg pointer orangeGradient">
-			<div onClick="myApp.ext.store_bmo.a.showSizeChart(); return false">SIZING GUIDE</div>
+			<div data-app-click="store_bmo|showChart" data-bmo-template="sizingGuideTemplate" data-bmo-title="Sizing Guide" data-height=550 data-width=800 data-add-tabs="true">SIZING GUIDE</div>
 			<span>|</span>
-			<div onClick="myApp.ext.store_bmo.a.showStyleChart(); return false">STYLE GUIDE</div>
+			<div data-app-click="store_bmo|showChart" data-bmo-template="styleGuideTemplate" data-bmo-title="Style Guide" data-height=550 data-width=800 data-add-tabs="true">STYLE GUIDE</div>
 		</div>
 		
 		
@@ -332,24 +332,24 @@ ANIMATION TESTING
 				<div class="custmser">
 					<h1>Customer Service</h1>
 					<ul>
-						<li><a href="#!company/contact/">Contact Us</a></li>
-						<li><a href="#!company/return/">Policies</a></li>
-						<li><a href="#!company/faq/">FAQ</a></li>
-						<li><a href="#" onClick="myApp.ext.store_bmo.a.showSizeChart(); return false">Sizing Guide</a></li>
+						<li><a href="/contact_us/">Contact Us</a></li>
+						<li><a href="/return_policy/">Policies</a></li>
+						<li><a href="/frequently_asked_questions/">FAQ</a></li>
+						<li class="pointer cartLink" data-app-click="store_bmo|showChart" data-bmo-template="sizingGuideTemplate" data-bmo-title="Sizing Guide" data-height=550 data-width=800 data-add-tabs="true">Sizing Guide</li>
 					</ul>
 					<ul>
 						<li><a href="#!customer/myaccount/">My Account</a></li>
 						<li><a href="#!customer/orders/">Order Status</a></li>
 						<li><a href="#!customer/myaccount/">Email Preferences</a></li>
-						<li><a href="#" onClick="myApp.ext.store_bmo.a.showStyleChart(); return false">Style Guide</a></li>
+						<li class="pointer cartLink" data-app-click="store_bmo|showChart" data-bmo-template="styleGuideTemplate" data-bmo-title="Style Guide" data-height=550 data-width=800 data-add-tabs="true">Style Guide</li>
 					</ul>
 					<ul style="margin:0PX;">
-						<li class="pointer cartLink" onClick="myApp.ext.quickstart.u.showCartInModal({'templateID':'cartTemplate'});">View Cart</li>
+						<li class="pointer cartLink" data-app-click="store_bmo|showmodalcart">View Cart</li>
 						<!-- INLINE CART LINK:
-						<li><a href="#!cart/">View Cart</a></li>
+						<li><a href="/cart/">View Cart</a></li>
 						-->
-						<li><a href="#!checkout/">Checkout</a></li>
-						<li><a href="#!company/privacy/">Privacy Policy</a></li>
+						<li><a href="/checkout/">Checkout</a></li>
+						<li><a href="/privacy_policy/">Privacy Policy</a></li>
 					</ul>
 				</div>
 				<div class="socialmedia">
@@ -382,7 +382,7 @@ ANIMATION TESTING
 <input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Subscribe' />
 </form>
 </div>-->
-					<form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
+					<form action='#' name='subscribeFrm' data-app-submit="store_bmo|newslettersignup">
 						<input type="email" class="fullinpbox" required='required' name='login' value='' placeholder='email address' />
 						<br/>
 						<input type="text" class="fullinpbox" required='required' name='fullname' placeholder='full name' />
@@ -470,7 +470,8 @@ ANIMATION TESTING
 		<div id="gotAccount" class='gotAccount'> 
 			<h1 class='smallcaps'>Welcome Back</h1>
 			<!-- Third parameter is id of message destination -->
-			<form action='#' data-app-submit='store_bmo|loginFrmSubmit' id='modalLoginForm'>
+			<!-- <form action='#' data-app-submit='store_bmo|loginFrmSubmit' id='modalLoginForm'></form> -->
+			<form action='#' data-app-submit='quickstart|accountLoginSubmit' id='modalLoginForm'>
 				<input type='hidden' name='method' value='unsecure'>
 				<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
 				<fieldset>
@@ -503,7 +504,14 @@ ANIMATION TESTING
 		<button class='ui-button-text ui-button ui-state-default ui-corner-all ' id='modalLoginContinueButton' data-app-click="quickstart|dialogCloseExec">Continue</button>
 	</div>
 
-</div>
+</div> <!-- //loginFormForModal -->
+
+
+<!-- sizingGuideTemplate gets added here -->
+<div data-bmo-chart="sizingGuideTemplate" class="displayNone"></div>
+
+<!-- styleGuideTemplate gets added here -->
+<div data-bmo-chart="styleGuideTemplate" class="displayNone"></div>
 
 
 
@@ -514,11 +522,11 @@ ANIMATION TESTING
 <ul class='debugQuickLinks'>
 	<li>Store Links
 	<ul>
-		<li><a href='#!home'>Homepage</a></li>
+		<li><a href='/home'>Homepage</a></li>
 		<li><a href='#!customer/orders'>Orders</a></li>
-		<li><a href='#!cart' >Cart</a></li>
+		<li><a href='/cart' >Cart</a></li>
 		<li><a href='#!company'>Returns</a></li>
-		<li><a href='#!company/privacy'>Privacy</a></li>
+		<li><a href='/privacy_policy/'>Privacy</a></li>
 		<li><a href='#' onClick="return quickView('category',{'navcat':'.air_fresheners','templateID':'categoryTemplate'});">Cat in Modal</a></li>
 	</ul>
 	</li>

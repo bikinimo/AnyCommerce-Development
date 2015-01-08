@@ -186,14 +186,7 @@ var store_bmo = function(_app) {
 			togglerecover : function($tag) {
 				$("[data-slide='toggle']",$tag.parent()).slideToggle();
 			},
-		
-				//pass a class or id name, a string "class" for type if it's a class, any other for an id, and the parent tag as a $object
-			scrollTo : function(name, type, $parent) {
-				var type = type == 'class' ? '.' : '#'; //is the element a class or an id
-					
-				$('html,body').animate({ scrollTop: $(type + name,$parent).offset().top }, 'slow'); //scroll to it
-			},
-		
+
 				//reads prices for each form set by setHiddenPrice renderFormat and changes the displayed price
 				//to the total for each piece selected. (price for top only if only top is selected, etc.)
 			changePriceDisplayed : function($this) {
@@ -499,16 +492,6 @@ var store_bmo = function(_app) {
 				_app.ext.store_bmo.u.setTime();
 			},
 			
-			showSizeChart : function() {
-				dump('START show size chart');
-				$('#sizingGuideTemplate').dialog({'modal':'true', 'title':'Sizing Guide','width':800, 'height':550});
-			},
-			
-			showStyleChart : function() {
-				dump('START show style chart');
-				$('#styleGuideTemplate').dialog({'modal':'true', 'title':'Style Guide','width':800, 'height':550});
-			},
-		
 			pauseFred : function($this) {
 				//_app.u.dump('gothere');
 				$this.trigger('stop');
@@ -1706,7 +1689,45 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 				}
 				else	{} //validateForm will handle the error display.
 				return false;
-			} //loginFrmSubmit
+			}, //loginFrmSubmit
+			
+			//set data-bmo-goto with a class or id name, will scroll to that element w/in the parent of $ele
+			scrollhere : function($ele,p) {
+				p.preventDefault();
+				var name = $ele.attr("data-bmo-goto");
+				$('html,body').animate({ scrollTop: $(name,$ele.parent()).offset().top }, 'slow'); //scroll to it
+				return false;
+			},
+			
+			//adds require for cco so that it doesn't have to be a startup require, then calls modal cart from quickstart
+			showmodalcart : function($ele,p) {
+				p.preventDefault();
+				var require = ['cco'];
+				_app.require(require,function() {
+					_app.ext.quickstart.u.showCartInModal({'templateID':'cartTemplate'});
+				});
+				return false;
+			},
+			
+			showmodallogin : function($ele,p) {
+				p.preventDefault();
+				_app.ext.quickstart.u.showLoginModal();
+				return false;
+			},
+			
+			//pass templateid, title, width, & height as data- attribs to show template in modal. 
+			//Add data-add-tabs="true" and tabs will be run the element w/ data-bmo-tabs="thisTemplate" (must match what is passed as thisTemplate)
+			//made for size/style charts but could be used for more later.
+			showChart : function($ele,p) {
+				p.preventDefault();
+//				dump('STARTshowChart');
+				var thisTemplate = $ele.attr("data-bmo-template");
+				var $parent = $("[data-bmo-chart='"+thisTemplate+"']");
+				$parent.empty().tlc({verb:"transmogrify", templateid:thisTemplate});
+				if($ele.attr("data-add-tabs")) { _app.ext.store_bmo.u.addTabs($("[data-bmo-tabs='"+thisTemplate+"']")); }
+				$parent.dialog({'modal':'true', 'title':$ele.attr("data-bmo-title"),'width':$ele.attr("data-width"), 'height':$ele.attr("data-width")});
+				return false;
+			}
 		
 		}, //e [app Events]
 			

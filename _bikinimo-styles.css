@@ -824,9 +824,9 @@ label.break	{display:block; margin:0 0 4px 6px; color:#276B98; padding:0 0 0 23p
 returnArticle (also contains shipping info. for now)
 *************************************************************************************/
 
-#returnArticle {margin:0 50px; font-family:electrolize;}
-#returnArticle h1 {margin:10px 0; color:#666666;}
-#returnArticle ul li {list-style-type:disc; margin:10px 0 0 0;}
+.articleWrapper {margin:0 50px; font-family:electrolize;}
+.returnArticle h1 {margin:10px 0; color:#666666;}
+.returnArticle ul li {list-style-type:disc; margin:10px 0 0 0;}
 .returnContent {margin:0 50px; font-family:ubuntu;} 
 .returnContent p {color:#000000; font-weight:normal; line-height:18px;}
 

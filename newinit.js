@@ -36,9 +36,8 @@ CUSTOM CONTENT
 	});
 	
 	_app.u.bindTemplateEvent('homepageTemplate', 'complete.store_bmo',function(event,$context,infoObj) {
-		_app.ext.store_bmo.u.addTabs($('[data-bmo="homepagetabs"]',$context));
-		_app.ext.store_bmo.u.addTabs($('#homepageBottomTabs'));
-		_app.ext.store_bmo.u.addTabs($('#homepageSizingTabs'));
+		dump('homepage infoObj'); dump(infoObj);
+		_app.ext.store_bmo.u.addTabs($("[data-bmo-tabs='homepagetabs']",$context));
 //		_app.ext.bmo_homepage.u.loadProductsAsList($context,$('[data-bmo="limited-time-offer"]', $context));
 	});
 
