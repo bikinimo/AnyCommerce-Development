@@ -16,6 +16,7 @@ ul li{ list-style-type:none;}
 .fr{float:right;}
 .cb{clear:both;}
 .visibilityHidden {visibility:hidden;}
+.hangingIndent {display:block; padding-left:20px; text-indent:-20px;}
 
 /* messaging css. some error css is defined in the jqueryui styles */
 .appMessage P	{padding:0; margin:0;} /* used in app messaging for warnings, alerts, successes, etc */
@@ -811,7 +812,7 @@ Layered search styles
 .numItemsOnList {background-color:#3bb3c3; width:67px; height:auto; border:none; color:#ffffff; background-image:url(images/sprites-500x500.png); background-position:-455px -183px;}
 .numItemsOnList option {text-align:center;}
 .categoryTemplateContainer {height:auto; width:761px;}
-label.break	{display:block; margin:0 0 4px 6px; color:#276B98; padding:0 0 0 23px; text-indent:-23px;}
+.filterContainer label {display:block; margin:0 0 4px 6px; color:#276B98; padding:0 0 0 23px; text-indent:-23px;}
 .layeredSearch	{height:auto; width:148px; margin:16px 0 16px 37px; color:#000000;}
 .layeredSearch legend	{font-size:1.0em; font-family:electrolize;  font-weight:normal; text-align:center; border:none; margin:0 0 4px 0; padding:0 5px; color:#F05A24;}
 .layeredSearch fieldset {border:1px solid #b1b1b1; border-radius:5px; margin-bottom:12px;}

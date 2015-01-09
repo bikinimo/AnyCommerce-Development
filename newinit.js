@@ -40,6 +40,116 @@ CUSTOM CONTENT
 		_app.ext.store_bmo.u.addTabs($("[data-bmo-tabs='homepagetabs']",$context));
 //		_app.ext.bmo_homepage.u.loadProductsAsList($context,$('[data-bmo="limited-time-offer"]', $context));
 	});
+	
+//FILTERED SEARCH IS HERE:
+	_app.extend({
+		"namespace" : "store_filter",
+		"filename" : "extensions/_store_filter.js"
+	});
+	createPagesRootFilter('bikini-sets');
+//	createPagesSubcatSubfilter('ncaa-team-apparel-merchandise');	
+	function createPagesRootFilter(root){
+		_app.router.appendHash({'type':'exact','route':'/'+root+'/','pagefilter':root,'callback':'filter'});
+		_app.couple('store_filter','pushFilterPage',{id:root,jsonPath:"filters/"+root+".json"});
+	}
+//	function createPagesSubcatSubfilter(root){
+//		_app.router.appendHash({'type':'match','route':'/'+root+'/{{id}}/','pagefilter':root,'callback':'filter'});
+//	}
+	_app.router.addAlias('filter', function(routeObj){
+		_app.require(['store_filter','store_search','store_routing','prodlist_infinite','store_prodlist', 'templates.html'], function(){
+			//decides if filter JSON is in local var or if it needs to be retrieved
+			var filterpage = routeObj.pagefilter;
+			routeObj.params.templateID = "filteredSearchTemplate";
+	setTimeout(function(){
+			if(_app.ext.store_filter.filterData[filterpage]){
+				dump('We are using showPage....');
+				showPage(routeObj,filterpage);
+			}
+			else {
+				dump('We are using loadPage....');
+				loadPage(
+					filterpage, 
+					function(){showPage(routeObj,filterpage);}, 
+					function(){_app.router.handleURIChange('/404');}
+				);
+			}
+	},1000);
+		});
+	});
+	function showPage(routeObj,parentID){
+//		dump('START showPage'); dump(routeObj); dump('showPage parentID'); dump(parentID); dump('showPage filterData.parentID'); dump(_app.ext.store_filter.filterData);
+	//	routeObj.params.dataset = $.extend(true, {}, $.grep(_app.ext.store_filter.filterData,function(e,i){
+	//		return e == routeObj.params.id;	//gets mid level data
+	//	})[0]);
+		routeObj.params.dataset = $.extend(true, {}, _app.ext.store_filter.filterData[parentID]);
+//		dump('routeObj.params.dataset');  dump(routeObj.params.dataset);
+		
+		var optStrs = routeObj.params.dataset.optionList;
+		routeObj.params.dataset.options = routeObj.params.dataset.options || {};
+		for(var i in optStrs){
+			dump('optStrs[i]'); dump(optStrs[i]);			
+			var o = optStrs[i];
+			if(_app.ext.store_filter.vars.elasticFields[o]){
+				routeObj.params.dataset.options[o] = $.extend(true, {}, _app.ext.store_filter.vars.elasticFields[o]);
+				if(routeObj.searchParams && routeObj.searchParams[o]){
+					var values = routeObj.searchParams[o].split('|');
+					for(var i in routeObj.params.dataset.options[o].options){
+						var option = routeObj.params.dataset.options[o].options[i];
+						if($.inArray(option.v, values) >= 0){
+							option.checked = "checked";
+						}
+					}
+				}
+			}
+			else {
+				dump("Unrecognized option "+o+" on filter page "+routeObj.params.id);
+			}
+		}
+		routeObj.params.dataset.breadcrumb = [parentID,routeObj.params.id]	
+		routeObj.params.pageType = 'static'
+		_app.ext.quickstart.a.showContent(routeObj.value,routeObj.params);
+	};
+	function loadPage(id, successCallback, failCallback){
+		console.log(id);
+//		dump("store_filter.vars.filterPageLoadQueue:"); dump(_app.ext.store_filter.vars.filterPageLoadQueue);
+		var pageObj = _app.ext.store_filter.vars.filterPageLoadQueue[id];
+		if(pageObj){
+//			dump("GETTING JSON IN LOAD PAGE");
+			$.getJSON(pageObj.jsonPath+"?_v="+(new Date()).getTime(), function(json){
+//				dump(json);
+//				dump('and this is the page object:'); dump(pageObj);
+				_app.ext.store_filter.filterData[pageObj.id] = json;
+//				dump("filter data after json assigned"); dump(_app.ext.store_filter.filterData);
+				if(typeof successCallback == 'function'){ successCallback(); }
+			})
+			.fail(function(){
+				dump("FILTER DATA FOR PAGE: "+pageObj.id+" UNAVAILABLE AT PATH: "+pageObj.jsonPath);
+				if(typeof failCallback == 'function'){ failCallback(); }
+			});
+		}
+		else {
+			if(typeof failCallback == 'function'){ failCallback(); }
+		}
+	};
+	_app.u.bindTemplateEvent('filteredSearchTemplate', 'complete.filter',function(event, $context, infoObj){
+		if(infoObj.deferred){
+			$('form.filterList',$context).data('deferred', infoObj.deferred);
+		}
+		if(!$context.attr('data-filter-rendered')){
+			var $form = $('form.filterListTemplate', $context);
+			function submitForm(){
+				if($form.attr('data-filter-base')){
+					$form.trigger('submit');
+				}
+				else {
+	//				 dump('gotta wait');
+					setTimeout(submitForm,100);
+				}
+			}
+			setTimeout(submitForm,0);
+		}
+	});
+	
 
 //END CUSTOM CONTENT
 	

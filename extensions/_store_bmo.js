@@ -571,6 +571,71 @@ var store_bmo = function(_app) {
 			
 		tlcFormats : {
 		
+			dump : function(data,thisTLC) {
+				dump("+++++++++ Is this what you were looking for?"); dump(data.globals.binds.var);
+			},
+		
+/* FILTER SEARCH TLC */			
+			//adds filter data to the page form for filtering
+			filterform : function(data, thisTLC) {
+				var $context = data.globals.tags[data.globals.focusTag];
+				
+				var $fc = $('#filterContainer');
+				var $fl = $('#filterList', $fc);
+				$fl.removeData().empty();
+				
+				$fl.data('dataset',data.value);
+				$fl.tlc({'dataset':data.value, 'templateid':'filterListTemplate'});
+				$('button', $fl).button();
+				
+				$('form',$fl).data('jqContext',$context);
+				
+				//$('form', $fl).trigger('submit');
+			},
+
+			filterrangebox : function(data, thisTLC){
+				var args = thisTLC.args2obj(data.command.args, data.globals);
+				if(typeof args.filterType === "undefined"){
+					args.filterType = 'rangebox';
+					}
+				if(args.index){
+					
+					var range = data.globals.binds[data.globals.focusBind];
+					range.min = range.min || 0;
+					range.step = range.step || 1;
+					var $tag = data.globals.tags[data.globals.focusTag];
+
+					$tag.attr('data-filter-index',args.index);
+					$tag.attr('data-filter-type',args.filterType);
+					$tag.attr('data-values',range.min+"|"+range.max);
+					
+					dump(range.min); dump(range.max); dump(range.min+"|"+range.max);
+					
+					$('[data-price]',$tag).each(function() {
+						$(this).on('change',function(event) {
+							if($(this).prop('checked') === true) {
+								$tag.attr('data-values',$(this).data('price'));
+								$('[data-price]',$tag).each(function(){ $(this).removeClass('active') });
+								$(this).addClass('active');
+								$('[data-price]',$tag).each(function(){ if(!$(this).hasClass('active')) { $(this).prop('checked',false) } });
+							}
+							else {
+								$('[data-price]',$tag).each(function(){ $(this).removeClass('active') });
+								$tag.attr('data-values',range.min+"|"+range.max);
+							}
+							_app.ext.store_filter.e.execFilteredSearch($(this).closest('form'), event);
+							dump('you clicked the option w/ price: '); dump($(this).data('price'));
+						});
+					});
+
+				}
+				else {
+					return false;
+					}
+				return true;
+				},
+
+// OTHER TLC			
 			searchbyobject: function(data,thisTLC) {
 				var argObj = thisTLC.args2obj(data.command.args,data.globals); //this creates an object of the args
 					//check if there is a $var value to replace in the filter object (THERE IS PROBABLY A BETTER WAY TO DO THIS)

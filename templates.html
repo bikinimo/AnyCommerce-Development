@@ -147,9 +147,105 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 
 
+<div id="filteredSearchTemplate" data-tlc="store_bmo#filterform;" data-filter="parent" class="filteredSearchTemplate">
+	<span class="displayNone" data-tlc="bind $title '.page-title'; apply --attrib='data-seo-title';"></span>
+	<span class="displayNone" data-tlc="bind $desc '.page-description'; apply --attrib='data-seo-desc';"></span>
+<!-- TODO : decide if bc is needed... 
+	<div class="filterBreadCrumb" data-tlc="bind $bc '.breadcrumb'; store_cc#addbreadcrumb;"></div>
+-->	
+	<h1 data-tlc="bind $title '.name'; apply --append;"></h1>
+<!-- TODO : ponder this for mobile. 	
+	<div data-tlc="store_cc#showmobilefiltercontainer;">
+		FILTERS
+		<span class="sprite"></span>
+	</div>
+-->
+	<!-- THIS ELEMENT USED IF THE FILTER WILL NOT BE ON THE PAGE ITSELF (slides out from side for instance).
+	<div id="filterContainer">
+		<div id="showFilterBtn" class="pointer" onClick="$(this).parent().toggleClass('expand');"></div>
+		<div id="filterListContainer">
+			<div class="alignCenter">
+				<img src="images/filter_title_185x43.png" />
+			</div>
+			<div id="filterList"></div>
+		</div>
+	</div>
+	-->	
+	<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='filterFacetsTemplate'; apply --append;" data-parent-filter-hider=1 class="filterContainer filterListTranslator openFilters"></div>
+
+	<ul data-filter="resultsList" class="listStyleNone fluidList noPadOrMargin productList"></ul>
+</div>
 
 
 
+<div id="filterFacetsTemplate">
+	<div data-tlc="bind $var '.'; store_bmo#dump;"></div>
+	<form onSubmit="return false;" data-app-submit="store_filter|execFilteredSearch" data-tlc="bind $bf '.baseFilter'; stringify; apply --attrib='data-filter-base';" class="layeredSearch filterListTemplate">
+		
+		<fieldset data-tlc="bind $var '.options.base_price'; if(is $var --blank;){{apply --tag --remove;}};" class="filterGroup priceFilter marginBottom filterOpen">
+			<legend class="filterGroupTitle">Price<span class="sprite"></span></legend>
+			<div class="filterHider" data-filter-hider=1>
+				<div data-filter-range-mult="100" data-tlc="bind $range '.options.base_price'; if(is $range --notblank;){{store_bmo#filterrangebox --index='base_price';}};">
+					<div><label><input type="checkbox" data-price="0|24.99" />&#36;0.00 - &#36;24.99</label></div>
+					<div><label><input type="checkbox" data-price="25|49.99">&#36;25.00 - &#36;49.99</label></div>
+					<div><label><input type="checkbox" data-price="50|74.99">&#36;50.00 - &#36;74.99</label></div>
+					<div><label><input type="checkbox" data-price="75|max">&#36;75.00 &#43;</label></div>
+				</div>
+			</div>
+		</fieldset>
+		
+		<!-- SIZE FILTERS: These custom filters are declared in the init file: data-filter-type="custom" data-filter-custom="sizeLarge" -->
+		<fieldset data-tlc="bind $var '.suppressSize'; if(is $var --notblank;){{apply --hide --tag;}};" class="filterGroup marginBottom filterOpen">
+			<legend class="filterGroupTitle">Sizes<span class="sprite"></span></legend>
+			<div class="filterHider" data-filter-hider=1>
+				<div class="filterCheckboxList">
+					<label class="hangingIndent">
+						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="sizeSmall" name="sizeSmall">
+						Small
+					</label>
+					<label class="hangingIndent">
+						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="sizeMed" name="sizeMed">
+						Medium
+					</label>
+					<label class="hangingIndent">
+						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="sizeLarge" name="sizeLarge">
+						Large
+					</label>
+					<label class="hangingIndent">
+						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="sizeXLarge" name="sizeXLarge">
+						Extra&#45;Large
+					</label>
+				</div>
+			</div>
+		</fieldset>
+		
+		<fieldset data-tlc="bind $var '.options.user:app_color1'; if(is $var --blank;){{apply --hide;}};" class="filterGroup marginBottom filterOpen">
+<!-- TODO : format the filters... 
+			<div data-tlc="store_cc#showfilter;" data-filterview='1' data-top='0' class="filterGroupTitle greyGradient">Shop By<span class="sprite"></span></div>
+-->			
+			<legend class="filterGroupTitle">Colors<span class="sprite"></span></legend>
+			<div class="filterHider" data-filter-hider=1>
+				<div class="filterCheckboxList" 
+					data-tlc="bind $index '.options.user:app_color1.index';
+						bind $cbl '.options.user:app_color1.options'; 
+						store_filter#filtercheckboxlist --index=$index;">
+				</div>
+			</div>
+		</fieldset>
+		
+		<fieldset data-tlc="bind $var '.options.user:suit_style1'; if(is $var --blank;){{apply --hide;}};" class="filterGroup marginBottom filterOpen">
+			<legend class="filterGroupTitle">Types<span class="sprite"></span></legend>
+			<div class="filterHider" data-filter-hider=1>
+				<div class="filterCheckboxList" 
+					data-tlc="bind $index '.options.user:suit_style1.index';
+						bind $cbl '.options.user:suit_style1.options'; 
+						store_filter#filtercheckboxlist --index=$index;">
+				</div>
+			</div>
+		</fieldset>
+		
+	</form>
+</div>
 
 
 

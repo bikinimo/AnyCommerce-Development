@@ -17,7 +17,7 @@
 ************************************************************** */
 
 
-var store_filter = function(_app) {
+var old_store_filter = function(_app) {
 	var theseTemplates = new Array('');
 	var r = {
 	
