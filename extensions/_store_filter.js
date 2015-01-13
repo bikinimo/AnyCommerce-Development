@@ -182,7 +182,7 @@ var store_filter = function(_app) {
 				var $page = $form.closest('[data-filter=parent]');
 				p.preventDefault();
 				var $resultsContainer = $page.closest('[data-filter=parent]').find('[data-filter=resultsList]');
-				dump($form.attr('data-filter-base'));
+//				dump("data-filter-base ==="); dump($form.attr('data-filter-base'));
 				var filterBase = JSON.parse($form.attr('data-filter-base'));
 				var elasticsearch = {
 					"filter" : {
@@ -241,13 +241,43 @@ var store_filter = function(_app) {
 							filter.or.push(f);
 							}
 						});
-					
 					if(filter.or.length > 0){
 						elasticsearch.filter.and.push(filter);
 						}
 					else {
 						}
 					});
+				$('[data-filter-type=checkboxListMulti]', $form).each(function(){
+					var itterate = $(this).closest("[data-mulitfilter-count]").attr("data-mulitfilter-count"); dump(itterate); //get the qty of this attrib's multiples
+					var filter = {"or" : []};
+					$('[data-filter=count]', $(this)).empty();
+					$('input[data-filter=filterCheckbox]', $(this)).each(function(){
+						var index = $(this).closest('[data-filter-index]').attr('data-filter-index');
+						var indexBase = index.substring(0,index.length-1);
+						for(var i = 1; i <= itterate; i++) {
+							index = indexBase + i;
+//							dump(index);
+							if(!elasticsearch.facets[index]){
+								//elasticsearch.facets[index] = {"terms" : {"field":index}}
+								//elasticsearch.facets[index] = {"terms" : {"field":index,"all_terms":true}}
+								elasticsearch.facets[index] = {"terms" : {"field":index,"size":2000}}
+								}
+							if($(this).is(":checked")){
+								var f = {"term" : {}};
+								for(var j = 1; j <= itterate; j++) {
+									f.term[index] = $(this).attr('name');
+									filter.or.push(f);
+									}
+								}
+							}
+						});
+					if(filter.or.length > 0){
+						elasticsearch.filter.and.push(filter);
+						}
+					else {
+						}
+					});
+				
 				
 				var es;
 				if(!elasticsearch.sort){
@@ -291,20 +321,73 @@ var store_filter = function(_app) {
 								$('input', $(this)).each(function(){
 									var index = $(this).closest('[data-filter-index]').attr('data-filter-index');
 									var val = $(this).attr('name');
-									
 									var $fg = $(this).closest('.filterGroup')
 									var $ic = $(this).closest('[data-filter=inputContainer]');
-									
 									var summary = $.grep(_app.data[rd.datapointer].facets[index].terms, function(e, i){
 						//				return e.term === val;
 										return e.term === val.toLowerCase(); 
-										})[0];
+										})[0];						
 									if(summary || $(this).prop('checked')){
 										summary = summary || {count:0};
 										$fg.show();
 										$ic.show();
 										$ic.addClass('show');
 										$('[data-filter=count]', $ic).text("("+summary.count+")");
+										$(this).closest("fieldset").show();
+										}
+									else {
+										if($fg.hasClass('countHideImmune')){/*Don't hide it if it's immune*/}
+										else{
+											$ic.hide();
+											$ic.removeClass('show');
+											//$(this).prop('checked',false);
+											if($('[data-filter=inputContainer].show',$fg).length < 1){
+												$fg.hide();
+												}
+											}
+										}
+									});
+								
+								});
+							$('[data-filter-type=checkboxListMulti]',rd.filterList).each(function(){
+								$('input', $(this)).each(function(){
+									var itterate = $(this).closest("[data-mulitfilter-count]").attr("data-mulitfilter-count");  //get the qty of this attrib's multiples
+									var index = $(this).closest('[data-filter-index]').attr('data-filter-index');
+									var indexBase = index.substring(0,index.length-1); //holds the index w/out multiple number for use in loop
+									var val = $(this).attr('name');
+									var $fg = $(this).closest('.filterGroup')
+									var $ic = $(this).closest('[data-filter=inputContainer]');
+//					dump("appPublicSearch rd.datapointer.facets"); dump(_app.data[rd.datapointer].facets);
+									var intermediateSummary = {"count":0,"term":""}; //holds the counts/terms in the loop, if it has a count after turns into summary
+									
+									//loop through each attrib multiple and check for a count of the current term. (red for app_color1, app_color2, etc.)
+									for(var i = 1; i <=itterate; i++) {
+										index = indexBase + i; //this multiple of index
+//					dump("appPublicSearch index"); dump(index);
+										var thisSummary = $.grep(_app.data[rd.datapointer].facets[index].terms, function(e, i){
+							//				return e.term === val;
+											return e.term === val.toLowerCase(); 
+											})[0];
+										//add count and term to temp value holder if they were found w/ grep
+										if (thisSummary) {
+											intermediateSummary.count += thisSummary.count;
+											intermediateSummary.term = thisSummary.term;
+											} 
+										}
+									if(intermediateSummary.count !== 0) {
+										var summary = {};
+										summary.count = intermediateSummary.count;
+										summary.term = intermediateSummary.term;
+										}
+		//past this point is the same as for regular checkboxes.
+//					dump("appPublicSearch summary"); dump(summary);
+									if(summary || $(this).prop('checked')){
+										summary = summary || {count:0};
+										$fg.show();
+										$ic.show();
+										$ic.addClass('show');
+										$('[data-filter=count]', $ic).text("("+summary.count+")");
+										$(this).closest("fieldset").show();
 										}
 									else {
 										if($fg.hasClass('countHideImmune')){/*Don't hide it if it's immune*/}

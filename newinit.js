@@ -46,6 +46,33 @@ CUSTOM CONTENT
 		"namespace" : "store_filter",
 		"filename" : "extensions/_store_filter.js"
 	});
+
+	//add custom filter options for size
+	var sizeArray = [
+		{'id' : 'sizeXSmall','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(AY00).*"}}]}}}},
+		{'id' : 'sizeSmall','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(AY01).*"}}]}}}},
+		{'id' : 'sizeMed','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(AY02).*"}}]}}}},
+		{'id' : 'sizeLarge','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(AY03).*"}}]}}}},
+		{'id' : 'sizeXLarge','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(AY04).*"}}]}}}},
+		{'id' : 'size1XLarge','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(AY05).*"}}]}}}},
+		{'id' : 'size2XLarge','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(AY06).*"}}]}}}},
+		{'id' : 'size3XLarge','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(AY07).*"}}]}}}},
+		{'id' : 'size2','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(A80U).*"}}]}}}},
+		{'id' : 'size4','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(A80V).*"}}]}}}},
+		{'id' : 'size6','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(A80W).*"}}]}}}},
+		{'id' : 'size8','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(A80X).*"}}]}}}},
+		{'id' : 'size10','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(A80Y).*"}}]}}}},
+		{'id' : 'size12','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(A80Z).*"}}]}}}},
+		{'id' : 'size14','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(A810).*"}}]}}}},
+		{'id' : 'size16','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(A811).*"}}]}}}},
+		{'id' : 'size18','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(A812).*"}}]}}}},
+		{'id' : 'size20','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(A813).*"}}]}}}}
+	];
+	for(index in sizeArray.length) {
+		_app.couple('store_filter','pushCustomFilter',sizeArray[index]);
+	}
+		
+	
 	createPagesRootFilter('bikini-sets');
 //	createPagesSubcatSubfilter('ncaa-team-apparel-merchandise');	
 	function createPagesRootFilter(root){
@@ -55,6 +82,7 @@ CUSTOM CONTENT
 //	function createPagesSubcatSubfilter(root){
 //		_app.router.appendHash({'type':'match','route':'/'+root+'/{{id}}/','pagefilter':root,'callback':'filter'});
 //	}
+
 	_app.router.addAlias('filter', function(routeObj){
 		_app.require(['store_filter','store_search','store_routing','prodlist_infinite','store_prodlist', 'templates.html'], function(){
 			//decides if filter JSON is in local var or if it needs to be retrieved
@@ -76,6 +104,7 @@ CUSTOM CONTENT
 	},1000);
 		});
 	});
+	
 	function showPage(routeObj,parentID){
 //		dump('START showPage'); dump(routeObj); dump('showPage parentID'); dump(parentID); dump('showPage filterData.parentID'); dump(_app.ext.store_filter.filterData);
 	//	routeObj.params.dataset = $.extend(true, {}, $.grep(_app.ext.store_filter.filterData,function(e,i){
@@ -87,7 +116,7 @@ CUSTOM CONTENT
 		var optStrs = routeObj.params.dataset.optionList;
 		routeObj.params.dataset.options = routeObj.params.dataset.options || {};
 		for(var i in optStrs){
-			dump('optStrs[i]'); dump(optStrs[i]);			
+//			dump('optStrs[i]'); dump(optStrs[i]);			
 			var o = optStrs[i];
 			if(_app.ext.store_filter.vars.elasticFields[o]){
 				routeObj.params.dataset.options[o] = $.extend(true, {}, _app.ext.store_filter.vars.elasticFields[o]);
@@ -109,6 +138,7 @@ CUSTOM CONTENT
 		routeObj.params.pageType = 'static'
 		_app.ext.quickstart.a.showContent(routeObj.value,routeObj.params);
 	};
+	
 	function loadPage(id, successCallback, failCallback){
 		console.log(id);
 //		dump("store_filter.vars.filterPageLoadQueue:"); dump(_app.ext.store_filter.vars.filterPageLoadQueue);
@@ -131,6 +161,7 @@ CUSTOM CONTENT
 			if(typeof failCallback == 'function'){ failCallback(); }
 		}
 	};
+	
 	_app.u.bindTemplateEvent('filteredSearchTemplate', 'complete.filter',function(event, $context, infoObj){
 		if(infoObj.deferred){
 			$('form.filterList',$context).data('deferred', infoObj.deferred);

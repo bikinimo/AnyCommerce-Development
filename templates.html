@@ -147,7 +147,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 
 
-<div id="filteredSearchTemplate" data-tlc="store_bmo#filterform;" data-filter="parent" class="filteredSearchTemplate">
+<div id="filteredSearchTemplate" data-tlc="store_bmo#filterform;" data-filter="parent" class="gallpagebor filteredSearchTemplate">
 	<span class="displayNone" data-tlc="bind $title '.page-title'; apply --attrib='data-seo-title';"></span>
 	<span class="displayNone" data-tlc="bind $desc '.page-description'; apply --attrib='data-seo-desc';"></span>
 <!-- TODO : decide if bc is needed... 
@@ -179,7 +179,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 
 <div id="filterFacetsTemplate">
-	<div data-tlc="bind $var '.'; store_bmo#dump;"></div>
+	
 	<form onSubmit="return false;" data-app-submit="store_filter|execFilteredSearch" data-tlc="bind $bf '.baseFilter'; stringify; apply --attrib='data-filter-base';" class="layeredSearch filterListTemplate">
 		
 		<fieldset data-tlc="bind $var '.options.base_price'; if(is $var --blank;){{apply --tag --remove;}};" class="filterGroup priceFilter marginBottom filterOpen">
@@ -195,51 +195,115 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		</fieldset>
 		
 		<!-- SIZE FILTERS: These custom filters are declared in the init file: data-filter-type="custom" data-filter-custom="sizeLarge" -->
-		<fieldset data-tlc="bind $var '.suppressSize'; if(is $var --notblank;){{apply --hide --tag;}};" class="filterGroup marginBottom filterOpen">
+		<fieldset data-tlc="bind $var '.hasTextSize'; if(is $var --notblank;){{apply --show --tag;}};" class="displayNone filterGroup marginBottom filterOpen">
 			<legend class="filterGroupTitle">Sizes<span class="sprite"></span></legend>
 			<div class="filterHider" data-filter-hider=1>
 				<div class="filterCheckboxList">
 					<label class="hangingIndent">
+						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="sizeXSmall" name="sizeXSmall">
+						XS
+					</label>
+					<label class="hangingIndent">
 						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="sizeSmall" name="sizeSmall">
-						Small
+						S
 					</label>
 					<label class="hangingIndent">
 						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="sizeMed" name="sizeMed">
-						Medium
+						M
 					</label>
 					<label class="hangingIndent">
 						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="sizeLarge" name="sizeLarge">
-						Large
+						L
 					</label>
 					<label class="hangingIndent">
 						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="sizeXLarge" name="sizeXLarge">
-						Extra&#45;Large
+						XL
+					</label>
+					<label class="hangingIndent">
+						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="sizeXLarge" name="size1XLarge">
+						1X
+					</label>
+					<label class="hangingIndent">
+						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="sizeXLarge" name="size2XLarge">
+						2X
+					</label>
+					<label class="hangingIndent">
+						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="sizeXLarge" name="size3XLarge">
+						3X
 					</label>
 				</div>
 			</div>
 		</fieldset>
 		
-		<fieldset data-tlc="bind $var '.options.user:app_color1'; if(is $var --blank;){{apply --hide;}};" class="filterGroup marginBottom filterOpen">
-<!-- TODO : format the filters... 
-			<div data-tlc="store_cc#showfilter;" data-filterview='1' data-top='0' class="filterGroupTitle greyGradient">Shop By<span class="sprite"></span></div>
--->			
-			<legend class="filterGroupTitle">Colors<span class="sprite"></span></legend>
+		<!-- SIZE FILTERS: These custom filters are declared in the init file: data-filter-type="custom" data-filter-custom="sizeLarge" -->
+		<fieldset data-tlc="bind $var '.hasNumSize'; if(is $var --notblank;){{apply --show --tag;}};" class="displayNone filterGroup marginBottom filterOpen">
+			<legend class="filterGroupTitle">Sizes<span class="sprite"></span></legend>
 			<div class="filterHider" data-filter-hider=1>
-				<div class="filterCheckboxList" 
-					data-tlc="bind $index '.options.user:app_color1.index';
-						bind $cbl '.options.user:app_color1.options'; 
-						store_filter#filtercheckboxlist --index=$index;">
+				<div class="filterCheckboxList">
+					<label class="hangingIndent">
+						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="size2" name="size2">
+						2
+					</label>
+					<label class="hangingIndent">
+						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="size4" name="size4">
+						4
+					</label>
+					<label class="hangingIndent">
+						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="size6" name="size6">
+						6
+					</label>
+					<label class="hangingIndent">
+						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="size8" name="size8">
+						8
+					</label>
+					<label class="hangingIndent">
+						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="size10" name="size10">
+						10
+					</label>
+					<label class="hangingIndent">
+						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="size12" name="size12">
+						12
+					</label>
+					<label class="hangingIndent">
+						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="size14" name="size14">
+						14
+					</label>
+					<label class="hangingIndent">
+						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="size16" name="size16">
+						16
+					</label>
+					<label class="hangingIndent">
+						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="size18" name="size18">
+						18
+					</label>
+					<label class="hangingIndent">
+						<input type="checkbox" data-app-change="store_filter|submitcheckbox" data-filter-type="custom" data-filter-custom="size20" name="size20">
+						20
+					</label>
 				</div>
 			</div>
 		</fieldset>
 		
-		<fieldset data-tlc="bind $var '.options.user:suit_style1'; if(is $var --blank;){{apply --hide;}};" class="filterGroup marginBottom filterOpen">
+		<fieldset data-mulitfilter-count=10 class="displayNone filterGroup marginBottom filterOpen">
+				<!-- data-tlc="bind $var '.options.user:app_color1'; if(is $var - -blank;){{apply - -hide;}};" use this tlc for single checkboxlist -->
+			<legend class="filterGroupTitle">Colors<span class="sprite"></span></legend>
+			<div class="filterHider" data-filter-hider=1>
+				<div class="filterCheckboxList" 
+					data-tlc="bind $index'.options.user:app_color1.index';
+						bind $cbl '.options.user:app_color1.options'; 
+						store_filter#filtercheckboxlist --filterType='checkboxListMulti' --index=$index;"> <!-- remove filterType= for single checkbox list  -->
+				</div>
+			</div>
+		</fieldset>
+		
+		<fieldset data-mulitfilter-count=8 class="displayNone filterGroup marginBottom filterOpen">
+		<div data-tlc="bind $var '.options.user:suit_style8'; store_bmo#dump;"></div>
 			<legend class="filterGroupTitle">Types<span class="sprite"></span></legend>
 			<div class="filterHider" data-filter-hider=1>
 				<div class="filterCheckboxList" 
 					data-tlc="bind $index '.options.user:suit_style1.index';
 						bind $cbl '.options.user:suit_style1.options'; 
-						store_filter#filtercheckboxlist --index=$index;">
+						store_filter#filtercheckboxlist --filterType='checkboxListMulti' --index=$index;">
 				</div>
 			</div>
 		</fieldset>

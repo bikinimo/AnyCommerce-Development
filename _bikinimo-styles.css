@@ -658,7 +658,7 @@ z-index:1002; overflow: auto; /*box-shadow: 1px 1px 3px 3px #000000;*/ font-fami
 .closeVideo span {opacity:0;}
 .anytabs .ui-corner-tr{border-top-right-radius:0px !important;} 
 .mpControlContainer{display:none;}
-.gallpagebor{border:1px solid #b1b1b1; margin:0px; padding:0px; border-radius:10px;}
+.gallpagebor{border:1px solid #b1b1b1; margin:0; padding:20px 0 0 0; border-radius:10px; display:inline-block;}
 .proborview li{margin:0px; padding:10px !important; border:1px solid #CCC !important; min-height:50px !important;}
  
 /*.ui-resizable .ui-dialog-titlebar{background:#FFFFFF !important; border:0px !important;}

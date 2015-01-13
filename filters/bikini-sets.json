@@ -2,6 +2,7 @@
 	"id" 				: "bikini-sets",
 	"title" 			: "Bikini Sets",
 	"desc" 			: "Find the perfect bikini set. We have the newest and hottest styles, and many holiday promotions! ",
+	"hasTextSize": "true",
 	"baseFilter" 	: {
 		"or" : [
 			{
