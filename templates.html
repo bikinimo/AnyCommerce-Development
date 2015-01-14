@@ -15,7 +15,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				<div class='errorLTO'></div>
 			</div>
 		</div>
-		<div data-bmo-tabs="homepagetabs">
+		<div data-bmo-tabs="homepagetabs" class="clearfix">
 			<ul class="alignCenter navtopsiz">
 				<li class='homeTab1'><a href='#newrelease'>New Releases</a></li>
 				<li class='homeTab2'><a href='#whatshot'>What's Hot</a></li>
@@ -24,9 +24,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			</ul>
 			<div data-anytab-content='newrelease'>
 				<div class="carouselCont1">
-				<!--
-					<ul id="carCat3" data-tlc="store_bmo#searchbyobject --filter='{&quot;size&quot;:&quot;40&quot;,&quot;mode&quot;:&quot;elastic-search&quot;,&quot;filter&quot;:{&quot;and&quot;:{&quot;filters&quot;:[{&quot;term&quot;:{&quot;tags&quot;:&quot;IS_NEWARRIVAL&quot;}},{&quot;term&quot;:{&quot;is_app&quot;:&quot;1&quot;}}]}}}' --templateid='productListTemplateResults';" class='listStyleNone fluidList clearfix noPadOrMargin productList1 spangtsta'></ul> 
-				-->
+					<ul data-tlc="quickstart#searchbytag --tag='IS_NEWARRIVAL' --size='40' --templateid='productListTemplateResults';" class='listStyleNone fluidList clearfix noPadOrMargin productList1 spangtsta'></ul>
 					<div class="clear"></div>
 				</div>
 				<img src="images/scroll_left.gif" class="pointer caroPrev1" alt="left" /> 
@@ -35,10 +33,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			</div>
 			<div data-anytab-content='whatshot'>
 				<div class="carouselCont2">
-				<!--
-					<ul id="carCat2" data-tlc="store_bmo#searchbyobject --filter='{&quot;size&quot;:&quot;40&quot;,&quot;mode&quot;:&quot;elastic-search&quot;,&quot;filter&quot;:{&quot;and&quot;:{&quot;filters&quot;:[{&quot;term&quot;:{&quot;tags&quot;:&quot;IS_BESTSELLER&quot;}},{&quot;term&quot;:{&quot;is_app&quot;:&quot;1&quot;}}]}}}' --templateid='productListTemplateResults';" class='listStyleNone fluidList clearfix noPadOrMargin productList2'></ul> 
-				-->
-					<!-- <ul id="carCat2" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"Whats Hot "}},"filter":{"not":{"term":{"tags":"IS_BESTSELLERS"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList2'></ul> -->
+					<ul data-tlc="quickstart#searchbytag --tag='IS_BESTSELLER' --size='40' --templateid='productListTemplateResults';" class='listStyleNone fluidList clearfix noPadOrMargin productList2'></ul>
 					<div class="clear"></div>
 				</div>
 				<img src="images/scroll_left.gif" class="pointer caroPrev2" alt="left" /> 
@@ -47,9 +42,9 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			</div>
 			<div data-anytab-content='supersexy'>
 				<div class="carouselCont3">	
-				<!--	
-					<ul id="carCat4" data-tlc="store_bmo#searchbyobject --filter='{&quot;size&quot;:&quot;40&quot;,&quot;mode&quot;:&quot;elastic-search&quot;,&quot;filter&quot;:{&quot;and&quot;:{&quot;filters&quot;:[{&quot;term&quot;:{&quot;super_sexy&quot;:&quot;1&quot;}},{&quot;term&quot;:{&quot;is_app&quot;:&quot;1&quot;}}]}}}' --templateid='productListTemplateResults';" class='listStyleNone fluidList clearfix noPadOrMargin productList3'></ul> 
-				-->	
+					<ul data-tlc="bmo_homepage#searchbyobject " class='listStyleNone fluidList clearfix noPadOrMargin productList3'
+						data-bmo-templateid="productListTemplateResults" data-bmo-search-tag="super_sexy" 
+						data-search-object='{"size":"40","mode":"elastic-search","filter":{"term":{"super_sexy":"1"}}}'></ul>
 					<div class="clear"></div>
 				</div>
 				<img src="images/scroll_left.gif" class="pointer caroPrev3" alt="left" /> 
@@ -58,7 +53,13 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			</div>
 			<div data-anytab-content='accessories'>
 				<div class="carouselCont4">
-					<div id="carCat6"></div> <!-- This content placed through renderProductsAsList function in store_bmo ext-->
+					<div data-tlc="bmo_homepage#searchbyobject" 
+						data-bmo-templateid="productListTemplateResults" data-bmo-search-tag="accessories" 
+						data-search-object='{"size":"10","mode":"elastic-search","filter":{"or":{"filters":[{"term":{"item_category1":"accessorie"}},
+							{"term":{"item_category2":"accessorie"}},{"term":{"item_category3":"accessorie"}},{"term":{"item_category4":"accessorie"}},
+							{"term":{"item_category5":"accessorie"}},{"term":{"item_category6":"accessorie"}},{"term":{"item_category7":"accessorie"}},
+							{"term":{"item_category7":"accessorie"}}]}}}'>
+					</div> <!-- This content placed through renderProductsAsList function in store_bmo ext-->
 					<div class="clear"></div> 
 				</div>
 				<img src="images/scroll_left.gif" class="pointer caroPrev4" alt="left" /> 
@@ -94,10 +95,9 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 
 <div id='limitedTimeOffersTemplate' class="perbox">
-	<div data-tlc="bind $var '.'; bmo_homepage#countdowncheck;"></div> 
-	<div class="perboxleft" data-tlc="bind $var '.'; store_bmo#addinfiniteslider --legacy;">
-		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --img --media=$var --width=153 --height=231 --bgcolor='#ffffff' --replace;}};" src='blank.gif' alt="" width='153' height='231' />
-	</div>
+	<div data-tlc="bind $var '.'; bmo_homepage#countdowncheck;"></div>
+		<!-- image added in addinfiniteslider below -->
+	<div class="perboxleft" data-tlc="bind $var '.'; store_bmo#addinfiniteslider --legacy;" data-width=153 data-height=231></div>
 	<div class="perboxright">
 		<h1 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h1>
 		<div data-tlc="bind $var '.%attribs.user:matching_piece'; if (is $var --notblank;) {{apply --hide;}};">

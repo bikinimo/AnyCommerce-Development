@@ -81,7 +81,8 @@ var bmo_homepage = function(_app) {
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		tlcFormats : {
-			
+
+//LTO TLC		
 			//gets last item in $limited-time-offer and sets a data attribute w/ its pid to be read in countdownCheck().
 			defaultlto : function(data,thisTLC) {
 				var list = data.globals.binds.var;
@@ -175,7 +176,28 @@ var bmo_homepage = function(_app) {
 				}
 				else {} //is not yet or already past it's limited time offer status, hidden by default so do nada.
 				}
-			} //islto
+			}, //islto
+			
+//TAB SECTION TLC
+			//accepts a json object as a parameter for an appPublicProductSearch. Also accepts a templateid, a search tag for datepointer naming,
+			//and can replace an value in the search object with a var by including "replacify" as the value for that item (add of course, passing a var). 
+			searchbyobject: function(data,thisTLC) {
+				//var argObj = thisTLC.args2obj(data.command.args,data.globals); //this creates an object of the args
+				var $tag = data.globals.tags[data.globals.focusTag];
+				var searchObj = $tag.attr("data-search-object");
+		dump('searchbyobject'); dump(searchObj);
+				var thisReplace = data.globals.binds.var;
+				var thisTemplate = $tag.attr("data-bmo-templateid");
+				var searchTag = $tag.attr("data-bmo-search-tag");
+					//check if there is a $var value to replace in the filter object (THERE IS PROBABLY A BETTER WAY TO DO THIS)
+				if(thisReplace) {searchObj = searchObj('replacify',thisReplace);}
+//				dump(thisReplace);
+				var query = JSON.parse(searchObj);
+//				dump('----search by tag'); dump(thisReplace); dump(searchObj); dump(query); dump(searchTag);
+				_app.ext.store_search.calls.appPublicProductSearch.init(query,$.extend({'datapointer':'appPublicSearch|tag|'+searchTag,'templateID':thisTemplate,'extension':'store_search','callback':'handleElasticResults','list':$tag},searchObj));
+				_app.model.dispatchThis('mutable');
+				return false; //in this case, we're off to do an ajax request. so we don't continue the statement.
+			}
 			
 		}, //tlcFormats
 		
@@ -248,7 +270,8 @@ var bmo_homepage = function(_app) {
 //utilities are typically functions that are executed by an event or action.
 //any functions that are recycled should be here.
 		u : {
-		
+
+//MAY NOT NEED THIS FUNCTION ANYMORE. REMOVE IF NOT USED LATER		
 			//loads product lists in hompage carousels. Carousel & Template are loaded in callback according to what is passed in the data-attrib. 	
 			//context and loading container are also passed in data-attribs. 
 			loadProductsAsList :function($context, $container) {
@@ -272,7 +295,7 @@ var bmo_homepage = function(_app) {
 				}
 				else { /* already rendered, don't render again.*/ _app.ext.beachmall_homepage.u.pickCarousel(carousel, $context); }
 			}, //loadProductsAsList
-			
+//LTO UTIL			
 				//checks the coupon field in checkout for entry of an LTO coupon. If it is, returns true to reject the entry in orderCreate:execCouponAdd.
 			preventCouponLTO : function(input) {
 				var r = false; //what is returned, true if coupon is LTO
@@ -366,6 +389,58 @@ var bmo_homepage = function(_app) {
 					setTimeout(function(){_app.ext.bmo_homepage.u.countdown($context,prodTime);},1000);
 				}
 			}, //countdown
+			
+//CAROUSEL UTIL
+			//each home carousel is defferentiatied w/ a number on classes, this number is represented as the passed var "num"
+			runHomeCarouselTab : function($context, num) {
+				var $target = $('.productList'+num,$context);
+				if($target.data('isCarousel')) {} //only make it a carousel once.
+				else {
+					$target.data('isCarousel',true);
+					//for whatever reason, caroufredsel needs to be executed after a moment.
+					setTimeout(function(){
+						$target.carouFredSel({
+							width	: 920,
+							height	: 265,
+							items	: 
+							{
+								minimum 	: 1
+							},
+							auto	: 
+							{
+								items			: 1,
+								duration		: 3000,
+								easing			: 'linear',
+								timeoutDuration	: 0,
+								pauseOnHover	: 'immediate'
+							},
+							prev	: '.caroPrev'+num,
+							next	: '.caroNext'+num,
+						}).trigger('play');
+					},2000);
+					
+					//previous button hover action
+					$('.caroPrev'+num, $context).hover(function(){
+						$target.trigger('configuration', ['direction','right']);
+						$target.trigger('play');
+					}).click(function(){
+						return false;
+					});
+					
+					//next button hover action
+					$('.caroNext'+num, $context).hover(function(){
+						$target.trigger('configuration', ['direction','left']);
+						$target.trigger('play');
+					}).click(function(){
+						return false;
+					});
+					
+					$('.homeTab'+num, $context).hover(function(){
+						$target.trigger('configuration', ['direction','left']);
+						$target.trigger('play');
+					});
+				}
+			},
 				
 		}, //u [utilities]
 

@@ -81,20 +81,7 @@ var store_bmo = function(_app) {
 					_app.u.dump("START store_bmo.callbacks.init.startExtension");
 					$.extend(handlePogs.prototype,_app.ext.store_bmo.variations);
 					//_app.u.dump('*** Extending Pogs');
-					
-					_app.templates.homepageTemplate.on('complete.store_bmo',function(event,$context,infoObj) {
-						
-						_app.ext.store_bmo.u.runHomeCarouselTab1($context);
-						_app.ext.store_bmo.u.runHomeCarouselTab2($context);
-						_app.ext.store_bmo.u.runHomeCarouselTab3($context);
-							//make sure tab4 only anycontents the accessories product list once. 
-						if(!$context.data('tab4Templated')){
-							_app.ext.store_bmo.u.loadProductsAsList('.app-categories.accessories');
-							//_app.ext.store_bmo.u.runHomeCarouselTab4($context); call moved to renderProductsAsList
-							$context.data('tab4Templated',true);
-//								_app.u.dump('data added?'); _app.u.dump($context.data('tab4Templated'));
-						}
-					});
+
 					
 					_app.templates.productTemplate.on('complete.store_bmo',function(event,$context,infoObj) {
 						_app.ext.store_bmo.u.setInlineHiddenPrice(infoObj,$context);
@@ -157,20 +144,7 @@ var store_bmo = function(_app) {
 				onError : function(rd) {
 					_app.u.dump('Error in extenstion: store_bmo rendermatchingBasePrice. Response data follows:'); _app.u.dump(rd);
 				}
-			}, //rendermatchingBasePrice
-			
-			renderProductsAsList : {
-				onSuccess : function(responseData) {
-			//		_app.u.dump(_app.data[responseData.datapointer]);
-					$('#carCat6','.homeTemplate').tlc({"templateid":"tab4Template","datapointer":responseData.datapointer});
-					//$('#carCat6','.homeTemplate').anycontent({"templateID":"tab4Template","dataset":responseData.datapointer});
-					_app.ext.store_bmo.u.runHomeCarouselTab4($('.homeTemplate'));
-				},
-				onError : function(responseData){
-					_app.u.dump('Error in extension: store_bmo_ renderProductsAsList');
-					_app.u.dump(responseData);
-				}
-			}
+			} //rendermatchingBasePrice
 			
 		}, //callbacks
 
@@ -633,20 +607,7 @@ var store_bmo = function(_app) {
 					return false;
 					}
 				return true;
-				},
-
-// OTHER TLC			
-			searchbyobject: function(data,thisTLC) {
-				var argObj = thisTLC.args2obj(data.command.args,data.globals); //this creates an object of the args
-					//check if there is a $var value to replace in the filter object (THERE IS PROBABLY A BETTER WAY TO DO THIS)
-				if(argObj.replacify) {argObj.filter = argObj.filter.replace('replacify',data.value);}
-	//			dump(argObj.replacify);
-				var query = JSON.parse(argObj.filter);
-	//	dump('----search by tag'); dump(data.value); dump(argObj.filter); dump(query);
-				_app.ext.store_search.calls.appPublicProductSearch.init(query,$.extend({'datapointer':'appPublicSearch|tag|'+argObj.tag,'templateID':argObj.templateid,'extension':'store_search','callback':'handleElasticResults','list':data.globals.tags[data.globals.focusTag]},argObj));
-				_app.model.dispatchThis('mutable');
-				return false; //in this case, we're off to do an ajax request. so we don't continue the statement.
-			}
+				},		
 			
 		},
 
@@ -984,18 +945,7 @@ var store_bmo = function(_app) {
 			//	_app.u.dump(_app.ext.quickstart.vars.session);
 			//	_app.u.dump('modal pid:'); _app.u.dump(pid);
 			}, //addRecentlyViewedItems
-				
-			//loads product in hompage accessories tab	
-			loadProductsAsList :function(passedCat) {
-				var _tag = {
-					"callback":"renderProductsAsList",
-					"extension":"store_bmo"
-				}
-				//_app.calls.appNavcatDetail.init(passedCat, _tag,'immutable');
-				_app.calls.appNavcatDetail.init({"path":passedCat,"detail":"more"},_tag,"immutable");
-				_app.model.dispatchThis('immutable');
-			}, //loadProductsAsList
-		
+
 			//replacement for bindByAnchor href to make crawlable links. (works everywhere)
 			bindOnclick : function() {
 				$('body').off('click', 'a[data-onclick]').on('click', 'a[data-onclick]', function(event){
@@ -1303,212 +1253,8 @@ var store_bmo = function(_app) {
 				return r;
 			}, //yyyymmdd2Pretty 
 			
-			runHomeCarouselTab1 : function($context) {
-				var $target = $('.productList1',$context);
-				if($target.data('isCarousel')) {} //only make it a carousel once.
-				else {
-					$target.data('isCarousel',true);
-					//for whatever reason, caroufredsel needs to be executed after a moment.
-					setTimeout(function(){
-						$target.carouFredSel({
-							width	: 920,
-							height	: 265,
-							items	: 
-							{
-								minimum 	: 1
-							},
-							auto	: 
-							{
-								items			: 1,
-								duration		: 3000,
-								easing			: 'linear',
-								timeoutDuration	: 0,
-								pauseOnHover	: 'immediate'
-							},
-							prev	: '.caroPrev1',
-							next	: '.caroNext1',
-						}).trigger('play');
-					},2000);
-					
-					//previous button hover action
-					$('.caroPrev1', $context).hover(function(){
-						$target.trigger('configuration', ['direction','right']);
-						$target.trigger('play');
-					}).click(function(){
-						return false;
-					});
-					
-					//next button hover action
-					$('.caroNext1', $context).hover(function(){
-						$target.trigger('configuration', ['direction','left']);
-						$target.trigger('play');
-					}).click(function(){
-						return false;
-					});
-					
-					$('.homeTab1', $context).hover(function(){
-						$target.trigger('configuration', ['direction','left']);
-						$target.trigger('play');
-					});
-				}
-			},
-			
-			runHomeCarouselTab2 : function($context) {
-				var $target = $('.productList2',$context);
-				if($target.data('isCarousel')) {} //only make it a carousel once.
-				else {
-					$target.data('isCarousel',true);
-					//for whatever reason, caroufredsel needs to be executed after a moment.
-					setTimeout(function(){
-						$target.carouFredSel({
-							width	: 920,
-							height	: 265,
-							items	: 
-							{
-								minimum 	: 1
-							},
-							auto	: 
-							{
-								items			: 1,
-								duration		: 3000,
-								easing			: 'linear',
-								timeoutDuration	: 0,
-								pauseOnHover	: 'immediate'
-							},
-							prev	: '.caroPrev2',
-							next	: '.caroNext2',
-						}).trigger('play');
-					},2000);
-					
-					//previous button hover action
-					$('.caroPrev2', $context).hover(function(){
-						$target.trigger('configuration', ['direction','right']);
-						$target.trigger('play');
-					}).click(function(){
-						return false;
-					});
-					
-					//next button hover action
-					$('.caroNext2', $context).hover(function(){
-						$target.trigger('configuration', ['direction','left']);
-						$target.trigger('play');
-					}).click(function(){
-						return false;
-					});
-					
-					$('.homeTab2', $context).hover(function(){
-						$target.trigger('configuration', ['direction','left']);
-						$target.trigger('play');
-					});
-				}
-			},
-			
-			runHomeCarouselTab3 : function($context) {
-				var $target = $('.productList3',$context);
-				if($target.data('isCarousel')) {} //only make it a carousel once.
-				else {
-					$target.data('isCarousel',true);
-					//for whatever reason, caroufredsel needs to be executed after a moment.
-					setTimeout(function(){
-						$target.carouFredSel({
-							width	: 920,
-							height	: 265,
-							items	: 
-							{
-								minimum 	: 1
-							},
-							auto	: 
-							{
-								items			: 1,
-								duration		: 3000,
-								easing			: 'linear',
-								timeoutDuration	: 0,
-								pauseOnHover	: 'immediate'
-							},
-							prev	: '.caroPrev3',
-							next	: '.caroNext3',
-						}).trigger('play');
-					},2000);
-					
-					//previous button hover action
-					$('.caroPrev3', $context).hover(function(){
-						$target.trigger('configuration', ['direction','right']);
-						$target.trigger('play');
-					}).click(function(){
-						return false;
-					});
-					
-					//next button hover action
-					$('.caroNext3', $context).hover(function(){
-						$target.trigger('configuration', ['direction','left']);
-						$target.trigger('play');
-					}).click(function(){
-						return false;
-					});
-										
-					$('.homeTab3', $context).hover(function(){
-						$target.trigger('configuration', ['direction','left']);
-						$target.trigger('play');
-					});
-				}
-			},
-			
-			runHomeCarouselTab4 : function($context) {
-				var $target = $('.productList4',$context);
-				if($target.data('isCarousel')) {} //only make it a carousel once.
-				else {
-					$target.data('isCarousel',true);
-					//for whatever reason, caroufredsel needs to be executed after a moment.
-					setTimeout(function(){
-						$target.carouFredSel({
-							width	: 920,
-							height	: 265,
-							items	: 
-							{
-								minimum 	: 1
-							},
-							auto	: 
-							{
-								items			: 1,
-								duration		: 3000,
-								easing			: 'linear',
-								timeoutDuration	: 0,
-								pauseOnHover	: 'immediate'
-							},
-							prev	: '.caroPrev4',
-							next	: '.caroNext4',
-						}).trigger('play');
-					},2000);
-					
-					//previous button hover action
-					$('.caroPrev4', $context).hover(function(){
-						$target.trigger('configuration', ['direction','right']);
-						$target.trigger('play');
-					}).click(function(){
-						return false;
-					});
-					
-					//next button hover action
-					$('.caroNext4', $context).hover(function(){
-						$target.trigger('configuration', ['direction','left']);
-						$target.trigger('play');
-					}).click(function(){
-						return false;
-					});
-										
-					$('.homeTab4', $context).hover(function(){
-						$target.trigger('configuration', ['direction','left']);
-						$target.trigger('play');
-					});
-				}
-			},
 			
 
-		
-		
-		
-		
-		
 /*******UTIL FUNCTIONS THAT WILL POSSIBLY BE USEFULL, BUT NOT PART OF APP YET	
 			setTitle : function(title) {
 				if(title && typeof title === "string") {

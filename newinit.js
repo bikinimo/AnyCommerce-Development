@@ -38,7 +38,10 @@ CUSTOM CONTENT
 	_app.u.bindTemplateEvent('homepageTemplate', 'complete.store_bmo',function(event,$context,infoObj) {
 		dump('homepage infoObj'); dump(infoObj);
 		_app.ext.store_bmo.u.addTabs($("[data-bmo-tabs='homepagetabs']",$context));
-//		_app.ext.bmo_homepage.u.loadProductsAsList($context,$('[data-bmo="limited-time-offer"]', $context));
+		_app.ext.bmo_homepage.u.runHomeCarouselTab($context,"1");
+		_app.ext.bmo_homepage.u.runHomeCarouselTab($context,"2");
+		_app.ext.bmo_homepage.u.runHomeCarouselTab($context,"3");
+		_app.ext.bmo_homepage.u.runHomeCarouselTab($context,"4");	
 	});
 	
 //FILTERED SEARCH IS HERE:
@@ -616,7 +619,7 @@ _app.extend({
 	
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "homepage",
-	"require" : ['store_navcats','templates.html','store_routing','bmo_homepage'],
+	"require" : ['store_navcats','templates.html','store_routing','bmo_homepage','store_search'],
 	"handler" : function($container, infoObj, require){
 		infoObj.deferred = $.Deferred();
 		infoObj.defPipeline.addDeferred(infoObj.deferred);
