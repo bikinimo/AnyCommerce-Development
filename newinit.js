@@ -668,6 +668,9 @@ _app.couple('store_search','addUniversalFilter',{
 _app.couple('store_search','addUniversalFilter',{
 	'filter' : {"not":{"term":{"tags":"IS_DISCONTINUED"}}}
 	});
+_app.couple('store_search','addUniversalFilter',{
+	'filter' : {"term":{"is_app":"1"}}
+	});
 				
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "search",

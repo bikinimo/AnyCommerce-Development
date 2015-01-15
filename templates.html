@@ -24,7 +24,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			</ul>
 			<div data-anytab-content='newrelease'>
 				<div class="carouselCont1">
-					<ul data-tlc="quickstart#searchbytag --tag='IS_NEWARRIVAL' --size='40' --templateid='productListTemplateResults';" class='listStyleNone fluidList clearfix noPadOrMargin productList1 spangtsta'></ul>
+					<ul data-tlc="quickstart#searchbytag --tag='IS_NEWARRIVAL' --size='40' --templateid='productListTemplateResultsNoPreview';" class='listStyleNone fluidList clearfix noPadOrMargin productList1 spangtsta'></ul>
 					<div class="clear"></div>
 				</div>
 				<img src="images/scroll_left.gif" class="pointer caroPrev1" alt="left" /> 
@@ -33,7 +33,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			</div>
 			<div data-anytab-content='whatshot'>
 				<div class="carouselCont2">
-					<ul data-tlc="quickstart#searchbytag --tag='IS_BESTSELLER' --size='40' --templateid='productListTemplateResults';" class='listStyleNone fluidList clearfix noPadOrMargin productList2'></ul>
+					<ul data-tlc="quickstart#searchbytag --tag='IS_BESTSELLER' --size='40' --templateid='productListTemplateResultsNoPreview';" class='listStyleNone fluidList clearfix noPadOrMargin productList2'></ul>
 					<div class="clear"></div>
 				</div>
 				<img src="images/scroll_left.gif" class="pointer caroPrev2" alt="left" /> 
@@ -43,7 +43,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<div data-anytab-content='supersexy'>
 				<div class="carouselCont3">	
 					<ul data-tlc="bmo_homepage#searchbyobject " class='listStyleNone fluidList clearfix noPadOrMargin productList3'
-						data-bmo-templateid="productListTemplateResults" data-bmo-search-tag="super_sexy" 
+						data-bmo-templateid="productListTemplateResultsNoPreview" data-bmo-search-tag="super_sexy" 
 						data-search-object='{"size":"40","mode":"elastic-search","filter":{"term":{"super_sexy":"1"}}}'></ul>
 					<div class="clear"></div>
 				</div>
@@ -53,13 +53,13 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			</div>
 			<div data-anytab-content='accessories'>
 				<div class="carouselCont4">
-					<div data-tlc="bmo_homepage#searchbyobject" 
-						data-bmo-templateid="productListTemplateResults" data-bmo-search-tag="accessories" 
+					<ul data-tlc="bmo_homepage#searchbyobject" class='listStyleNone fluidList clearfix noPadOrMargin productList4'
+						data-bmo-templateid="productListTemplateResultsNoPreview" data-bmo-search-tag="accessories" 
 						data-search-object='{"size":"10","mode":"elastic-search","filter":{"or":{"filters":[{"term":{"item_category1":"accessorie"}},
 							{"term":{"item_category2":"accessorie"}},{"term":{"item_category3":"accessorie"}},{"term":{"item_category4":"accessorie"}},
 							{"term":{"item_category5":"accessorie"}},{"term":{"item_category6":"accessorie"}},{"term":{"item_category7":"accessorie"}},
 							{"term":{"item_category7":"accessorie"}}]}}}'>
-					</div> <!-- This content placed through renderProductsAsList function in store_bmo ext-->
+					</ul>
 					<div class="clear"></div> 
 				</div>
 				<img src="images/scroll_left.gif" class="pointer caroPrev4" alt="left" /> 
@@ -487,16 +487,22 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 </li>
 
 <li id="productListTemplateResultsNoPreview" class="loadingBG searchResultsProduct ">
-	<a data-tlc="bind $var '.'; store_routing#seoanchor --type='product' --seo; apply --attrib='href';" class="pointer">
-		<div class="prodThumbContainer">
-		<img data-tlc="bind $var '.images.0'; if (is $var --notblank;) {{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
+	<a data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView" onclick="myApp.ext.store_bmo.a.pauseFred($(this).parent().parent());" class="pointer prominh">
+	<!-- <a data-tlc="bind $var '.'; store_routing#seoanchor --type='product' --seo; apply --attrib='href';" class="pointer"> -->
+		<div data-tlc="bind $var '.'; store_bmo#hidefromlist --legacy;" data-iselastic='1'></div>
+		<div data-tlc="bind $var '.'; store_bmo#addinfiniteslider --legacy" data-height="210" data-width="150" data-iselastic='1' class="prodThumbContainer floatLeft"></div>
+
+		<h5 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{format --truncate='38'; apply --append;}};" class="hideInMinimalMode"></h5>
+		
+		<div data-tlc="bind $var '.matching_piece'; if (is $var --notblank;) {{apply --hide;}};">
+			<h6 data-tlc="bind $var '.base_price';  if (is $var --notblank;) {{math --div='100'; format --currency='USD'; apply --add --class='price'; apply --append;}};" class="hideInMinimalMode"></h6>
 		</div>
-
-		<h5 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};" class="hideInMinimalMode"></h5>
-
-		<h6 data-tlc="bind $var '.base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="hideInMinimalMode"></h6>
+		<div data-tlc="bind $var '.matching_piece'; if(is $var --notblank;) {{apply --show;}};" class="displayNone">
+			<h6 data-tlc="bind $var '.'; store_bmo#matchingbaseprice --legacy;" data-iselastic="1" class="hideInMinimalMode price"></h6>
+		</div>
 	</a>
-	<a class="hideInMinimalMode pointer moreDetails" data-tlc="bind $seoname '.prod_name'; bind $var '.'; store_routing#seoanchor --type='product' --seo --seoname=$seoname; apply --attrib='href';">more details</a>
+	<!-- a data-tlc="bind $seoname '.prod_name'; bind $var '.'; store_routing#seoanchor --type='product' --seo --seoname=$seoname; apply --attrib='href';">more details</a> -->
+	<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';">Test link, to be removed.</a>
 </li>
 </ul>
 
