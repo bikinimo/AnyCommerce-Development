@@ -87,15 +87,18 @@ css files should be included before any .js file to ensure they are downloaded i
 <script data-apptimize="embed" type="text/javascript" src="resources/tlc.js"></script>
 <script data-apptimize="embed" type="text/javascript" src="resources/peg-0.8.0.js"></script>
 
-<script type="text/javascript" src="resources/jquery.infinitecarousel3.js"></script>
-<script type="text/javascript" src="carouFredSel-6.1.0/jquery.carouFredSel-6.1.0-packed.js"></script>
-
 <script data-apptimize="embed" type="text/javascript" src="resources/jquery.ui.anyplugins.js"></script>
 <script data-apptimize="embed" type="text/javascript" src="includes.js"></script><!-- contains some polyfills and should be loaded early -->
 
 <link data-apptimize="embed" rel="stylesheet" type="text/css" href="resources/anyplugins.css"/>
 <link data-apptimize="embed" rel="stylesheet" type="text/css" href="extensions/checkout/styles.css"/>
 <link data-apptimize="embed" rel="stylesheet" type="text/css" href="extensions/cart_message/styles.css"/>
+
+<script type="text/javascript" src="resources/jquery.infinitecarousel3.js"></script>
+<script type="text/javascript" src="carouFredSel-6.1.0/jquery.carouFredSel-6.1.0-packed.js"></script>
+<script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>
+<script type="text/javascript" src="extensions/tools_lightbox/lightbox/js/lightbox.js"></script>
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="extensions/tools_lightbox/lightbox/css/lightbox.css"/>
 
 <script type="text/javascript">
 $.PromisePipeline = function(){
@@ -224,7 +227,7 @@ ANIMATION TESTING
 									<a href="#!customer/logout/">Log Out</a>
 								</span>
 								<div class="loginHide giftCardLink pointer" data-app-click="store_bmo|showmodallogin">Login</div><br />
-								<div class='giftCardLink pointer' onclick="quickView('product',{'templateID':'productTemplateQuickView','pid':'GC1000'});">Gift Cards</div>
+								<div data-app-click="store_bmo|quickview" data-loadstemplate="productTemplateQuickView" data-pid="GC1000" class="giftCardLink pointer">Gift Cards</div>
 								<span>|</span>
 								<div class="giftCardLink pointer" data-app-click="store_bmo|showChart" data-bmo-template="sizingGuideTemplate" data-bmo-title="Sizing Guide" data-height=550 data-width=800 data-add-tabs="true">Sizing Guide</div>
 							</div>
@@ -516,6 +519,9 @@ ANIMATION TESTING
 
 <!-- styleGuideTemplate gets added here -->
 <div data-bmo-chart="styleGuideTemplate" class="displayNone"></div>
+
+<!-- emailAFriendTemplate gets added here -->
+<div data-email="friend" class="displayNone"></div>
 
 
 

@@ -24,15 +24,29 @@ CUSTOM CONTENT
 //lookin for something?
 // 	homepage coupler:	_app.couple('quickstart','addPageHandler',{
 
+	setTimeout(function() {
+		$.extend(handlePogs.prototype,_app.ext.store_bmo.variations);
+	},500);
 
 	_app.extend({
 		"namespace" : "store_bmo",
 		"filename" : "extensions/_store_bmo.js"
 	});
-	
 	_app.extend({
 		"namespace" : "bmo_homepage",
 		"filename" : "extensions/_bmo_homepage.js"
+	});
+	_app.extend({
+		"namespace" : "bmo_product",
+		"filename" : "extensions/_bmo_product.js"
+	});
+	_app.extend({
+		"namespace" : "tools_lightbox",
+		"filename" : "extensions/tools_lightbox/tools_lightbox.js"
+	});
+	_app.extend({
+		"namespace" : "tools_youtube",
+		"filename" : "extensions/tools_youtube.js"
 	});
 	
 	_app.u.bindTemplateEvent('homepageTemplate', 'complete.store_bmo',function(event,$context,infoObj) {

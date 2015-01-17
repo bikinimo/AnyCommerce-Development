@@ -134,69 +134,29 @@ var bmo_homepage = function(_app) {
 				}
 			}, //countdowncheck
 			
-			//same as regular money function but checks if product is an LTO and applies discount to displayed price if so (just for display)
-			ltomoney : function(data, thisTLC)	{
-				var basePrice = data.globals.binds.var;
-				var $tag = data.globals.tags[data.globals.focusTag];
-	//			_app.u.dump('BEGIN ltomoney');
-				var amount = $tag.data("iselastic") ? (basePrice / 100) : basePrice;
-				if(!$tag.attr('data-nodiscount') == 1) {
-					amount = _app.ext.bmo_homepage.u.applyLTODiscount($tag.parent().attr('data-pid'),amount);
-				}	
-				if(amount)	{
-	//				dump($tag.attr('data-currecny')); dump($tag.attr('data-hide-zero'));
-					var r,o,sr;
-					r = _app.u.formatMoney(amount,$tag.attr('data-currecny'),'',$tag.attr('data-hide-zero'));
-	//					_app.u.dump(' -> attempting to use var. value: '+data.value);
-	//					_app.u.dump(' -> currencySign = "'+data.bindData.currencySign+'"');
-					var preText = $tag.attr('data-pretext') ? $tag.attr('data-pretext')+" " : ""; 
-
-					//if the value is greater than .99 AND has a decimal, put the 'change' into a span to allow for styling.
-					if(r.indexOf('.') > 0)	{
-	//					_app.u.dump(' -> r = '+r);
-						sr = r.split('.');
-						o = sr[0];
-						o = preText + o;
-						if(sr[1])	{o += '<span class="cents">.'+sr[1]+'<\/span>'}
-						$tag.html(o);
-					}
-					else	{
-						$tag.html(preText + r);
-					}
-				}
-			}, //ltomoney
-			
-			//shows "regular price" in product listing if the product is the current LTO item.
-			islto : function(data, thisTLC) {
-				var lto = data.globals.binds.var;
-				var $tag = data.globals.tags[data.globals.focusTag];
-				if(lto) {
-				if(_app.ext.bmo_homepage.u.isTheLTO(lto)) {
-					$tag.show(); //the product is the limited time offer item for now, show it.
-				}
-				else {} //is not yet or already past it's limited time offer status, hidden by default so do nada.
-				}
-			}, //islto
+			//ltomoney and islto functions are in store_bmo since they are used on more than homepage.	
 			
 //TAB SECTION TLC
 			//accepts a json object as a parameter for an appPublicProductSearch. Also accepts a templateid, a search tag for datepointer naming,
 			//and can replace an value in the search object with a var by including "replacify" as the value for that item (add of course, passing a var). 
 			searchbyobject: function(data,thisTLC) {
-				//var argObj = thisTLC.args2obj(data.command.args,data.globals); //this creates an object of the args
-				var $tag = data.globals.tags[data.globals.focusTag];
-				var searchObj = $tag.attr("data-search-object");
-		dump('searchbyobject'); dump(searchObj);
-				var thisReplace = data.globals.binds.var;
-				var thisTemplate = $tag.attr("data-bmo-templateid");
-				var searchTag = $tag.attr("data-bmo-search-tag");
-					//check if there is a $var value to replace in the filter object (THERE IS PROBABLY A BETTER WAY TO DO THIS)
-				if(thisReplace) {searchObj = searchObj('replacify',thisReplace);}
-//				dump(thisReplace);
-				var query = JSON.parse(searchObj);
-//				dump('----search by tag'); dump(thisReplace); dump(searchObj); dump(query); dump(searchTag);
-				_app.ext.store_search.calls.appPublicProductSearch.init(query,$.extend({'datapointer':'appPublicSearch|tag|'+searchTag,'templateID':thisTemplate,'extension':'store_search','callback':'handleElasticResults','list':$tag},searchObj));
-				_app.model.dispatchThis('mutable');
-				return false; //in this case, we're off to do an ajax request. so we don't continue the statement.
+				setTimeout(function() {
+					//var argObj = thisTLC.args2obj(data.command.args,data.globals); //this creates an object of the args
+					var $tag = data.globals.tags[data.globals.focusTag];
+					var searchObj = $tag.attr("data-search-object");
+	//				dump('searchbyobject'); dump(searchObj);
+					var thisReplace = data.globals.binds.var;
+					var thisTemplate = $tag.attr("data-bmo-templateid");
+					var searchTag = $tag.attr("data-bmo-search-tag");
+						//check if there is a $var value to replace in the filter object (THERE IS PROBABLY A BETTER WAY TO DO THIS)
+					if(thisReplace) {searchObj = searchObj('replacify',thisReplace);}
+	//				dump(thisReplace);
+					var query = JSON.parse(searchObj);
+	//				dump('----search by tag'); dump(thisReplace); dump(searchObj); dump(query); dump(searchTag);
+					_app.ext.store_search.calls.appPublicProductSearch.init(query,$.extend({'datapointer':'appPublicSearch|tag|'+searchTag,'templateID':thisTemplate,'extension':'store_search','callback':'handleElasticResults','list':$tag},searchObj));
+					_app.model.dispatchThis('mutable');
+					return false; //in this case, we're off to do an ajax request. so we don't continue the statement.
+				},0);
 			}
 			
 		}, //tlcFormats
@@ -234,7 +194,7 @@ var bmo_homepage = function(_app) {
 								else {
 									var prod = _app.data[rd.datapointer];
 									if(prod['%attribs'] && prod['%attribs']['user:limited_time_offer'] && prod['%attribs']['zoovy:prod_promoclass']) {
-										if(_app.ext.store_bmo_lto.u.isTheLTO(prod['%attribs']['user:limited_time_offer'])) {
+										if(_app.ext.store_bmo.u.isTheLTO(prod['%attribs']['user:limited_time_offer'])) {
 											var discount = _app.ext.store_bmo_lto.u.qtyOfDiscountLTO(prod['%attribs']);
 //												_app.u.dump('LTO'+discount);
 											if(discount) {
@@ -318,44 +278,7 @@ var bmo_homepage = function(_app) {
 				}
 				return discount;
 			},
-		
-				//checks to see if item's LTO time falls into the current time, returns true if so.
-			isTheLTO : function(limited_time_offer) {
-				var r = false;
-				var ltoStartTime = limited_time_offer.split('.')[0];
-				var ltoEndTime = limited_time_offer.split('.')[1];
-				var d = new Date(_app.ext.store_bmo.u.makeUTCTimeMS());
-				var nowTime = _app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d);
-				
-				if(ltoStartTime && ltoEndTime && ltoStartTime < nowTime && ltoEndTime > nowTime) {
-					r = true; //the product is the limited time offer item for now.
-				}
-				else {}  //is not yet or already past it's limited time offer status.
-				
-				return r;
-			},
-		
-				//applies LTO discount to product price if it has one, and 
-			applyLTODiscount : function(pid, amount) {
-				if(pid) {
-					pid = _app.u.makeSafeHTMLId(pid);
-					var prod = _app.data['appProductGet|'+pid];
-					var discount = 0; //if no discount, multiply by 0 will keep price the same
-				
-						//if the product has a limited time offer and any discount the displayed price needs to be changed
-					if(prod && prod['%attribs'] && prod['%attribs']['user:limited_time_offer'] && prod['%attribs']['zoovy:prod_promoclass']) {
-						prod = prod['%attribs'];
-						if(_app.ext.bmo_homepage.u.isTheLTO(prod['user:limited_time_offer'])) {
-							discount = _app.ext.bmo_homepage.u.qtyOfDiscountLTO(prod) * 0.01;
-						}
-					} //end discount if
 
-					amount = amount - (amount * discount);
-				}
-				
-				return amount;
-			},
-		
 				//runs countdown timer against current time and passed argument of product lto end time
 			countdown : function($context, prodTime) {
 				var endTime = new Date(_app.ext.store_bmo.u.yyyymmdd2Pretty(prodTime));

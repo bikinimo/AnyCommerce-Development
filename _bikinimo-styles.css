@@ -217,8 +217,7 @@ PRODUCT DETAIL PAGE (productTemplate)
 .prodViewerAddToCartForm {margin:0 0 1em 0;}
 .prodViewerAddToCartForm fieldset	{margin:0 0 12px 0;}
 
-.ui-widget-content .CRMButtonMenu a {color:#286C99;}
-.CRMButtonMenu .tellFriend {text-decoration:underline;}
+.ui-widget-content .CRMButtonMenu span {color:#286C99; text-decoration:underline;}
 
 .pogType_attribs	{display:none;} /* don't show finder attributes */
 

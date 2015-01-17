@@ -38,7 +38,7 @@ var tools_youtube = function(_app) {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 
-				_app.u.loadResourceFile(['script',0,'https://www.youtube.com/iframe_api']);
+				//_app.u.loadResourceFile(['script',0,'https://www.youtube.com/iframe_api']);
 				
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
@@ -60,32 +60,7 @@ var tools_youtube = function(_app) {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
-		
-				//animates height of parent element to reveal additional contents, while hiding action container
-			revealParent : function($tag) {			
-//				_app.u.dump('open ----------------------------');
-				var oHeight = $tag.data('openheight');
-				$tag.css('display','none');
-				$('span',$tag).css('opacity','0');
-				$('.closeVideo',$tag.parent()).css({'display':'block','background-color':'#F05A24'});
-				$('.closeVideo span',$tag.parent()).animate({opacity:1},500)
-				$tag.parent().animate({height:oHeight + 'px'},1000);
-			},
 			
-				//animates height of parent element to hide additional contents, while hiding action container
-			compressParent : function($tag) {
-//				_app.u.dump('-> close');
-				var cHeight = $tag.data('closeheight');
-				var ytVideoID = $tag.parent().children('[data-youtubeid]').attr('data-youtubeid');
-				_app.u.dump(ytVideoID);
-				$tag.css('display','none');
-				$('span',$tag).css('opacity','0');
-				$('.openVideo',$tag.parent()).css({'display':'block','background-color':'#54A7E1'});
-				$('.openVideo span',$tag.parent()).animate({opacity:1},500)
-				$tag.parent().animate({height:cHeight + 'px'},1000);
-				_app.ext.tools_youtube.vars.players[ytVideoID].pauseVideo();
-			},
-
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -173,6 +148,36 @@ var tools_youtube = function(_app) {
 //while no naming convention is stricly forced, 
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
+			
+			//animates height of parent element to reveal additional contents, while hiding action container
+			revealParent : function($ele,p) {			
+				p.preventDefault();
+//				_app.u.dump('open ----------------------------');
+				var oHeight = $ele.data('openheight');
+				$ele.css('display','none');
+				$('span',$ele).css('opacity','0');
+				$('.closeVideo',$ele.parent()).css({'display':'block','background-color':'#F05A24'});
+				$('.closeVideo span',$ele.parent()).animate({opacity:1},500)
+				$ele.parent().animate({height:oHeight + 'px'},1000);
+				return false;
+			},
+			
+			//animates height of parent element to hide additional contents, while hiding action container
+			compressParent : function($ele,p) {
+				p.preventDefault();
+//				_app.u.dump('-> close');
+				var cHeight = $ele.data('closeheight');
+				var ytVideoID = $ele.parent().children('[data-youtubeid]').attr('data-youtubeid');
+//				_app.u.dump(ytVideoID);
+				$ele.css('display','none');
+				$('span',$ele).css('opacity','0');
+				$('.openVideo',$ele.parent()).css({'display':'block','background-color':'#54A7E1'});
+				$('.openVideo span',$ele.parent()).animate({opacity:1},500)
+				$ele.parent().animate({height:cHeight + 'px'},1000);
+				_app.ext.tools_youtube.vars.players[ytVideoID].pauseVideo();
+				return false;
+			},
+			
 			} //e [app Events]
 		} //r object.
 	return r;

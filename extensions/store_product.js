@@ -704,7 +704,7 @@ NOTES
 /*bmo*/							$('.productList2').trigger('play',true);
 /*bmo*/							$('.productList3').trigger('play',true);
 /*bmo*/							$('.productList4').trigger('play',true);
-/*bmo*/							_app.ext.store_bmo.u.addRecentlyViewedItems();
+/*bmo*/							_app.ext.bmo_product.u.addRecentlyViewedItems();
 /*bmo*/							$(this).empty(); //removed everything (mainly to kill youtube video in case it's still playing).
 /*bmo*/						},
 /*bmo*/					});

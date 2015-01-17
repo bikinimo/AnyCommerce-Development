@@ -74,14 +74,7 @@ var store_bmo = function(_app) {
 				onSuccess : function() {
 				//	if(_app.ext.quickstart && _app.ext.quickstart.template){ Revisit using this if trouble w/ extending pogs shows up. 
 					
-					_app.ext.store_search.vars.universalFilters.push({"term":{"is_app":1}});
-					_app.ext.store_search.vars.universalFilters.push({"has_child":{"type":"sku","query":{"range":{"available":{"gte":1}}}}});
-					_app.ext.store_search.vars.universalFilters.push({"not":{"term":{"tags":"IS_DISCONTINUED"}}});
-					
 					_app.u.dump("START store_bmo.callbacks.init.startExtension");
-					$.extend(handlePogs.prototype,_app.ext.store_bmo.variations);
-					//_app.u.dump('*** Extending Pogs');
-
 					
 					_app.templates.productTemplate.on('complete.store_bmo',function(event,$context,infoObj) {
 						_app.ext.store_bmo.u.setInlineHiddenPrice(infoObj,$context);
@@ -132,7 +125,6 @@ var store_bmo = function(_app) {
 					if(_app.data[rd.datapointer]['%attribs']['user:limited_time_offer']) {
 						dataObj.lto = _app.data[rd.datapointer]['%attribs']['user:limited_time_offer'];
 					}
-					
 					dataObj.combinedTotal = Number(origPrice) + Number(matchPrice);
 					dataObj.pid = _app.u.makeSafeHTMLId(rd.datapointer.split('|')[1]);
 					rd.$container.tlc({"templateid":rd.loadsTemplate,"dataset":dataObj});
@@ -161,51 +153,6 @@ var store_bmo = function(_app) {
 				$("[data-slide='toggle']",$tag.parent()).slideToggle();
 			},
 
-				//reads prices for each form set by setHiddenPrice renderFormat and changes the displayed price
-				//to the total for each piece selected. (price for top only if only top is selected, etc.)
-			changePriceDisplayed : function($this) {
-//				_app.u.dump('start change function'); 
-				var $parentContainer = $this.closest('form').parent();
-				var everythingPrice = 0;	//will hold total cost of all items to display when no items selected
-				var price = 0;	//will hold the price to display if any items are selected
-					//check each form to see if an item is selected, add form cost to total if yes
-
-				$('form',$parentContainer).each(function(){
-					everythingPrice += Number($('.formPrice',$(this)).attr('data-price'));
-					var count = 0;	//keeps track of whether or not form has a selection
-					$('select',$(this)).each(function(){
-						if($(this).val()){
-							count++;
-						}
-					}); //select each value
-
-					if(count != 0) {
-						price += Number($('.formPrice',$(this)).attr('data-price'));
-					}
-				}); //each form			
-					//if there is a price, an item is selected, change the displayed price to what was calculated
-				if(price != 0) {
-					$('.customBasePrice','.prodSummaryContainer').empty().text(_app.u.formatMoney(price,'$',2,true));
-					
-				} else {
-						//otherwise nothing is selected, display the total cost for all pieces 
-					$('.customBasePrice','.prodSummaryContainer').empty().text(_app.u.formatMoney(everythingPrice,'$',2,true));
-				}
-			}, //changePriceDisplayed
-			
-				//opens items from prod page pop out into modal, also adds them to recently viewed session var
-			optionsQuickView : function($this, pid) {
-				var $modal = $('.popupshado','.quickVModal');
-				var $product = $('.prodViewerContainer','.quickVModal');
-				var sourcePID = _app.u.makeSafeHTMLId($modal.attr('data-pid'));
-				
-				_app.ext.store_bmo.u.addRecentlyViewedItems();	//record pop out item as viewed
-				_app.ext.store_bmo.a.hideMoreOptions($this, sourcePID);	//close pop out
-
-				$product.animate({'opacity':'0'},550);	//make removal of shown product pretty
-				setTimeout(function(){quickView('product',{'templateID':'productTemplateQuickView','pid':pid});},550);	//open new product
-			},
-		
 				//populates and shows list of recently viewed items in prod page popout on link click
 			showRecentlyViewedItems : function($container) {
 				//var $container = $('#recentlyViewedItemsContainer'); //where the list goes
@@ -429,27 +376,7 @@ var store_bmo = function(_app) {
 					'left'	:'-430px',
 				},500);
 			},
-			
-			hideMoreOptions : function($this, pid) {
-				var _pid = _app.u.makeSafeHTMLId(pid);
-		
-				$('.anotherElement_'+_pid).animate({
-					'width':'0px'
-					},500, function() {
-						$(this).hide();
-					});
-				
-				$('.quickVModal').animate({
-					'margin':'0 50%',
-					'left'	:'-360px',
-				},500,function(){$('.myelement','.quickVModal').show().css('opacity','0').animate({'opacity':'1'},500);});
-				
-				setTimeout(function(){
-					$('.quickVModal').removeClass('anotherElement');
-					$('.anotherElement_'+_pid).removeClass('anotherElement');
-				},1000);
-			},
-			
+	
 			showAccountCreate : function() {
 				$('#createaccountTemplate').dialog({
 					modal	: true,
@@ -608,8 +535,74 @@ var store_bmo = function(_app) {
 					}
 				return true;
 				},		
+				
+			//same as regular money function but checks if product is an LTO and applies discount to displayed price if so (just for display)
+			ltomoney : function(data, thisTLC)	{
+				var basePrice = data.globals.binds.var;
+				var $tag = data.globals.tags[data.globals.focusTag];
+//				_app.u.dump('BEGIN ltomoney');
+				var amount = $tag.data("iselastic") ? (basePrice / 100) : basePrice;
+				if(!$tag.attr('data-nodiscount') == 1) {
+					amount = _app.ext.store_bmo.u.applyLTODiscount($tag.parent().attr('data-pid'),amount);
+				}	
+				if(amount)	{
+	//				dump($tag.attr('data-currecny')); dump($tag.attr('data-hide-zero'));
+					var r,o,sr;
+					r = _app.u.formatMoney(amount,$tag.attr('data-currecny'),'',$tag.attr('data-hide-zero'));
+	//					_app.u.dump(' -> attempting to use var. value: '+data.value);
+	//					_app.u.dump(' -> currencySign = "'+data.bindData.currencySign+'"');
+					var preText = $tag.attr('data-pretext') ? $tag.attr('data-pretext')+" " : ""; 
+
+					//if the value is greater than .99 AND has a decimal, put the 'change' into a span to allow for styling.
+					if(r.indexOf('.') > 0)	{
+	//					_app.u.dump(' -> r = '+r);
+						sr = r.split('.');
+						o = sr[0];
+						o = preText + o;
+						if(sr[1])	{o += '<span class="cents">.'+sr[1]+'<\/span>'}
+						$tag.html(o);
+					}
+					else	{
+						$tag.html(preText + r);
+					}
+				}
+			}, //ltomoney
 			
-		},
+			//shows "regular price" in product listing if the product is the current LTO item.
+			islto : function(data, thisTLC) {
+				var lto = data.globals.binds.var;
+				var $tag = data.globals.tags[data.globals.focusTag];
+				if(lto) {
+				if(_app.ext.store_bmo.u.isTheLTO(lto)) {
+					$tag.show(); //the product is the limited time offer item for now, show it.
+				}
+				else {} //is not yet or already past it's limited time offer status, hidden by default so do nada.
+				}
+			}, //islto
+
+			//checks for matching piece attrib in prod list item and sets sum of prices on list item if found. 
+			matchingbaseprice : function(data,thisTLC) {
+//				dump('START matchingbaseprice');
+				var pdata = data.globals.binds.var;
+				var $tag = data.globals.tags[data.globals.focusTag];
+				var basePrice = ($tag.attr('data-iselastic')) ? pdata.base_price/100 : pdata['%attribs']['zoovy:base_price'];
+				var match = _app.u.makeSafeHTMLId(($tag.attr('data-iselastic')) ? pdata.matching_piece : pdata['%attribs']['user:matching_piece']);
+				if(match) {		
+					var obj = { pid : match };
+					var _tag = {
+						"callback"				:"rendermatchingBasePrice",		
+						"extension"			:"store_bmo",			
+						"$container" 			: $tag,
+						"loadsTemplate"	: "matchingPriceTemplate",
+						"price"					: basePrice,
+					};
+
+					_app.calls.appProductGet.init(obj, _tag, 'immutable');
+					_app.model.dispatchThis('immutable');
+				}
+			}, //matchingBasePrice
+			
+		}, //TLCFORMATS
 
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -622,30 +615,7 @@ var store_bmo = function(_app) {
 			test : function($tag,data) {
 				_app.u.dump('--> TEST'); _app.u.dump(data.value); 
 			},
-		
-				//checks for matching piece attrib in prod list item and sets sum of prices on list item if found. 
-			matchingbaseprice : function($tag, data) {
-				var basePrice = ($tag.attr('data-iselastic')) ? data.value.base_price/100 : data.value['%attribs']['zoovy:base_price'];
-				var match = _app.u.makeSafeHTMLId(($tag.attr('data-iselastic')) ? data.value.matching_piece : data.value['%attribs']['user:matching_piece']);
-							
-				if(match) {
-					var obj = {
-						pid	: match
-					};
-				
-					var _tag = {
-						"callback"		:"rendermatchingBasePrice",		
-						"extension"		:"store_bmo",			
-						"$container" 	: $tag,
-						"loadsTemplate"	: "matchingPriceTemplate",
-						"price"			: basePrice,
-					};
 
-					_app.calls.appProductGet.init(obj, _tag, 'immutable');
-					_app.model.dispatchThis('immutable');
-				}
-			}, //matchingBasePrice
-		
 				//hides products in a product list that do not have the is_app attrib,
 				//or that have a matching_piece attrib that ends in ST (is a matching bottom).
 			hidefromlist: function($tag, data) {
@@ -668,159 +638,7 @@ var store_bmo = function(_app) {
 					}
 				}
 			}, //hideFromList
-		
-				//opens e-mail in default mail provider (new window if web-based)
-				//if info is available will populate subject and body w/ prod name, mfg, & price
-				//if only name, subject will have name, body will be empty. If no content, no subject or body
-			bindmailto : function($tag, data){
-				//_app.u.dump('data.value:'); _app.u.dump(data.value);
-				if(data.value['%attribs'] && data.value['%attribs']['zoovy:prod_name']) {
-					
-					var name = data.value['%attribs']['zoovy:prod_name'];
-					
-						//if all the info is present, add it all to the message
-					if(data.value['%attribs']['zoovy:prod_mfg'] && data.value['%attribs']['zoovy:prod_msrp']) {
-						var MFG = data.value['%attribs']['zoovy:prod_mfg'];
-						var price = data.value['%attribs']['zoovy:prod_msrp'];
-						$tag.on("click", function() {
-							var eWindow = window.open("mailto:?subject=Check%20out%20the%20"+name+"%20I%20found%20on%20bikinimo.com&body="+name+",%20by%20"+MFG+",%20for%20only%20"+price+"%20"+window.location+""); //+window.location
-						
-								//window object has an array of content if something loaded in it.
-								//the timeout was necessary to access the data to determine whether or not to close.
-								//test thoroughly to determine the reliability of this method!!
-								
-								//the window is set, check if it's filled, and kill it if not
-							setTimeout(function(){
-								//_app.u.dump('WindowObjectReference'); _app.u.dump(eWindow.WindowObjectReference); //Security issues? check for later possibility of cleaner implementation 
-								if(eWindow[0]) {//_app.u.dump('Webmail, window has content don't close');
-								}
-								else {
-									//_app.u.dump('Outlook-esq, window has no content'); 
-									eWindow.close();
-								}
-							},5000);
-						});
-					}
-	//TODO!! SET .on() FOR THE OTHER TWO WINDOW CASES AND TEST.
-					else {
-						$tag.on("click", function() {
-							var eWindow = window.open("mailto:?subject=Check%20out%20the%20"+name+"%20I%20found%20on%20bikinimo.com&body=%20"+window.location+"");
-							setTimeout(function(){if(eWindow[0]) {} else {eWindow.close();}	},5000);
-						});
-					}
-				}
-				else {
-					$tag.on("click", function() {
-						var eWindow = window.open("mailto:?body="+window.location+"");
-						setTimeout(function(){if(eWindow[0]) {} else {eWindow.close();}	},5000);
-					});
-				}
-			}, //bindMailto
-		
-				//will combine features list in tab section on prod page for top and bottom products if they are both being added to the page
-			combinefeatureslist : function($tag, data) {
-				setTimeout(function(){
-					_app.u.dump('input:'); _app.u.dump($('input[name="sku"]',$tag.parent()).val());
-					var pid = $('input[name="sku"]',$tag.parent()).val(); 
-					var $destination = $('.tabOfFeatures',$tag.parent().parent().parent().parent()); //append new content to container w/ default content
-					
-						//get the matching product's feature info
-					if(typeof _app.data['appProductGet|'+pid] == 'object') {
-						var pdata = _app.data['appProductGet|'+pid]
-						if(pdata['%attribs'] && pdata['%attribs']['zoovy:prod_features']) {
-							pdata = pdata['%attribs']['zoovy:prod_features'];
-							
-								//create DOM element for wiki parser, then add new content to page and remove temp element from DOM
-								//most of this part from "wiki :" in controller
-							var $tmp = $('<div \/>').attr('id','TEMP_'+$tag.attr('id')).hide().appendTo('body');
-							var target = document.getElementById('TEMP_'+$tag.attr('id')); //### creole parser doesn't like dealing w/ a jquery object. fix at some point.
-							myCreole.parse(target, pdata,{},data.bindData.wikiFormats);
-							$destination.append($("<div class='clear'></div>"));
-							$destination.append($tmp.html());
-							$tmp.empty().remove();
-						}
-						else {_app.u.dump('%attribs or zoovy:prod_features were not set for '+pid);}
-					}else {_app.u.dump('appProductGet for '+pid+' did not return as an object');}
-				},500);
-			}, //combinefeatureslist
-			
-				//reads prices for both top and bottom pieces and adds them for a total preliminary price
-			custombaseprice : function($tag, data) {
-				var pid = _app.u.makeSafeHTMLId(data.value.pid);
-				var displayPrice = 0;
-				setTimeout(function(){
-						//get price of each item from it's form, and add them for total
-					var $parentContainer = $('.customATCForm',$tag.parent().parent());
-					$('form',$parentContainer).each(function(){
-						displayPrice += Number($('.formPrice',$(this)).attr('data-price'));
-//						_app.u.dump('--> price'); _app.u.dump(displayPrice); 
-					});
 
-						//convert to money and replace original content w/ total value
-					displayPrice = _app.u.formatMoney(displayPrice,'$',2,true);
-					$tag.empty().text(displayPrice);
-				},250);
-			},
-			
-				//gets and adds pricing for top & bottom pieces to hidden element, which are then read onChange of form select list
-				//by changePriceDisplayed util function to alter the displayed price according to the selected pieces.
-			sethiddenprice : function($tag, data) {
-		
-				if($('input[name="sku"]',$tag.parent()).val() !== "undefined") {
-					var formDesignator = $tag.attr('data-formDesig'); //used to tell if a form has modified the displayed price
-					var $summaryContainer = $tag.parent().parent().parent().parent();
-					//var pid = _app.u.makeSafeHTMLId($('input[name="sku"]',$tag.parent()).attr('data-match')); //get pid for this form
-					var pid = _app.u.makeSafeHTMLId($('input[name="sku"]',$tag.parent()).val()); //get pid for this form
-//					setTimeout(function() {	//timeout because appProductGet was coming back undefined on inline product page. 		
-						var prod = _app.data['appProductGet|'+pid]; //get product for this form;
-						
-							//add base price value to hidden element in each form
-						//dump('kgjoasd;hgodhgvieraogoireh;oI'); dump(pid); dump(prod); dump(prod['%attribs']); dump(prod['%attribs']['zoovy:base_price']);
-						if(prod && prod['%attribs'] && prod['%attribs']['zoovy:base_price']) {
-							var displayPrice = _app.ext.store_bmo_lto.u.applyLTODiscount(pid,prod['%attribs']['zoovy:base_price']);
-							$tag.attr('data-price',displayPrice); 
-//							_app.ext.store_bmo.a.changePriceDisplayed(); //since timeout for appProductGet, this was running before the price was set, running again won't hurt.
-						}
-						else {_app.u.dump('!! _app.ext.store_bmo.renderformats.sethiddenprice() failed !!'); }
-//					},500);	
-				}
-			}, //sethiddenprice
-			
-			loadprod : function($tag, data){
-				//check for matching product. No need to run this if there is no matching product to render (like for a one peice, etc.)
-				if(data.bindData.ismatch) {
-					var obj = {									// object to hold product id for product
-						"pid" : data.value,
-						"withVariations":1,
-						"withInventory":1
-					};
-						//console.debug(obj);					// see what was returned in console
-					var _tag = {								// create holder for call back
-						"callback":"renderMatchingProduct",		// call back function (in callbacks above)
-						"extension":"store_bmo",				// extension that holds call back (this extension you're in)
-						"$container" : $tag,
-						"loadsTemplate" : data.bindData.templateid
-					};
-					_app.calls.appProductGet.init(obj, _tag, 'immutable');	// call appProductGet.init on the product id with the callback and callback location
-					
-					//execute calls
-					_app.model.dispatchThis('immutable');
-				}
-				//just to let someone know there wasn't a matching product found 'in case' there is a problem
-				else { dump('In store_bmo.renderFormats.loadprod and the matching product is undefined') }
-			},
-			
-			
-			matchatcformpid : function($tag, data) {
-				if(typeof _app.data['appProductGet|'+data.value] == 'object') {
-					var pdata = _app.data['appProductGet|'+data.value]['%attribs'];
-					if(_app.u.isSet(pdata['user:matching_piece'])){
-						var matchData = pdata['user:matching_piece'];
-					}
-				}
-				$tag.append("<input type='hidden' name='sku' value='"+matchData+"' data-match='"+matchData+"' />");
-			},
-		
 			//adds class w/ pid of matching top or bottom of suit for product page that is loaded
 			//so that anyContent can locate in product page modal
 			addMatch : function($tag, data) {
@@ -843,7 +661,7 @@ var store_bmo = function(_app) {
 			},
 					
 			addinfiniteslider : function($tag,data)	{
-				_app.u.dump("BEGIN store_bmo.renderFormats.addInfiniteSlider: "+data.value);
+//				_app.u.dump("BEGIN store_bmo.renderFormats.addInfiniteSlider: "+data.value);
 				var width = $tag.attr('data-width');
 				var height = $tag.attr('data-height');
 				
@@ -911,7 +729,44 @@ var store_bmo = function(_app) {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
-		
+			
+			//checks to see if item's LTO time falls into the current time, returns true if so.
+			isTheLTO : function(limited_time_offer) {
+				var r = false;
+				var ltoStartTime = limited_time_offer.split('.')[0];
+				var ltoEndTime = limited_time_offer.split('.')[1];
+				var d = new Date(_app.ext.store_bmo.u.makeUTCTimeMS());
+				var nowTime = _app.ext.store_bmo.u.millisecondsToYYYYMMDDHH(d);
+				
+				if(ltoStartTime && ltoEndTime && ltoStartTime < nowTime && ltoEndTime > nowTime) {
+					r = true; //the product is the limited time offer item for now.
+				}
+				else {}  //is not yet or already past it's limited time offer status.
+				
+				return r;
+			},
+			
+			//applies LTO discount to product price if it has one, and 
+			applyLTODiscount : function(pid, amount) {
+//				dump('START applyLTODiscount'); dump(pid); dump(amount);
+				if(pid) {
+					pid = _app.u.makeSafeHTMLId(pid);
+					var prod = _app.data['appProductGet|'+pid];
+					var discount = 0; //if no discount, multiply by 0 will keep price the same
+				
+						//if the product has a limited time offer and any discount the displayed price needs to be changed
+					if(prod && prod['%attribs'] && prod['%attribs']['user:limited_time_offer'] && prod['%attribs']['zoovy:prod_promoclass']) {
+						prod = prod['%attribs'];
+						if(_app.ext.store_bmo.u.isTheLTO(prod['user:limited_time_offer'])) {
+							discount = _app.ext.bmo_homepage.u.qtyOfDiscountLTO(prod) * 0.01;
+						}
+					} //end discount if
+
+					amount = amount - (amount * discount);
+				}
+				return amount;
+			},
+			
 			//checks for class anytabs. If not found, adds it and runs anytabs on the passed container element.
 			addTabs : function($container) {
 				if(!$container.hasClass('anytabs')){
@@ -928,24 +783,6 @@ var store_bmo = function(_app) {
 				$("input[name=time]",'#createaccountTemplate').val(d).attr("disabled",true);
 			},
 		
-			addRecentlyViewedItems : function() {
-			//	_app.u.dump('store_bmo recentlyViewedItems has been run');
-				
-					//get pid of product modal when it closes
-				var pid = _app.u.makeSafeHTMLId($('.popupshado','.quickVModal').attr('data-pid'));
-				
-					//add item to session var
-				if($.inArray(pid,_app.ext.quickstart.vars.session.recentlyViewedItems) < 0)	{
-					_app.ext.quickstart.vars.session.recentlyViewedItems.unshift(pid);
-					}
-				else	{
-					//the item is already in the list. move it to the front.
-					_app.ext.quickstart.vars.session.recentlyViewedItems.splice(0, 0, _app.ext.quickstart.vars.session.recentlyViewedItems.splice(_app.ext.quickstart.vars.session.recentlyViewedItems.indexOf(pid), 1)[0]);
-					}
-			//	_app.u.dump(_app.ext.quickstart.vars.session);
-			//	_app.u.dump('modal pid:'); _app.u.dump(pid);
-			}, //addRecentlyViewedItems
-
 			//replacement for bindByAnchor href to make crawlable links. (works everywhere)
 			bindOnclick : function() {
 				$('body').off('click', 'a[data-onclick]').on('click', 'a[data-onclick]', function(event){
@@ -972,7 +809,7 @@ var store_bmo = function(_app) {
 							//var formDesignator = $('.formPrice',$(this)).attr('data-formDesig');
 							//var $summaryContainer = $('.prodSummaryContainer',$context);
 							if(prod && prod['%attribs'] && prod['%attribs']['zoovy:base_price']) {
-								var hiddenPrice = _app.ext.store_bmo_lto.u.applyLTODiscount(pid,prod['%attribs']['zoovy:base_price']);
+								var hiddenPrice = _app.ext.store_bmo.u.applyLTODiscount(pid,prod['%attribs']['zoovy:base_price']);
 								$('.formPrice',$(this)).attr('data-price',hiddenPrice); 
 								displayPrice += Number(hiddenPrice);
 							}
@@ -1538,6 +1375,18 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 				if($ele.attr("data-add-tabs")) { _app.ext.store_bmo.u.addTabs($("[data-bmo-tabs='"+thisTemplate+"']")); }
 				$parent.dialog({'modal':'true', 'title':$ele.attr("data-bmo-title"),'width':$ele.attr("data-width"), 'height':$ele.attr("data-width")});
 				return false;
+			},
+			
+			//sets a require the lightbox extension, then calls quickstart.
+			quickview : function($ele,p) {
+				p.preventDefault();
+				var pid = $ele.attr('data-pid');
+				var template = $ele.attr('data-loadstemplate');
+				var require = ['tools_lightbox','bmo_product','tools_youtube','bmo_homepage','store_crm'];
+				_app.require(require,function(){
+					_app.ext.quickstart.a.quickView('product',{'templateID':template,'pid':pid});
+				});
+				return false;
 			}
 		
 		}, //e [app Events]
@@ -1550,10 +1399,10 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 			
 			//	_app.u.dump('POG -> '); _app.u.dump(pog);
 
-			//	_app.u.dump('BEGIN renderOptionSELECT for pog '+pog.id+' and safe id = '+safeid);
+//				_app.u.dump('BEGIN renderOptionSELECT for pog '+pog.id+' and safe id = '+safeid);
 				var pogid = pog.id;
 				var $parentDiv = $("<span \/>");
-				var $selectList = $("<select  class='prodOpt' onChange='myApp.ext.store_bmo.a.changePriceDisplayed($(this))'>").attr({"name":pogid});
+				var $selectList = $("<select  class='prodOpt' onChange='myApp.ext.bmo_product.a.changePriceDisplayed($(this))'>").attr({"name":pogid});
 				var i = 0;
 				var len = pog['@options'].length;
 

@@ -30,9 +30,10 @@ var tools_lightbox = function(_app) {
 				
 		//		TODO: UPDATE LIGHTBOX PLUGIN SO NEWER JQUERY CAN BE USED.
 		//		_app.u.loadResourceFile(['script',0,'extensions/tools_lightbox/lightbox/js/lightbox-2.6.min.js']);
-				_app.u.loadResourceFile(['script',0,'extensions/tools_lightbox/lightbox/js/lightbox.js']);
-				_app.u.loadResourceFile(['css',0,'extensions/tools_lightbox/lightbox/css/lightbox.css','css-lightbox']);
 				//_app.u.loadResourceFile(['css',0,'extensions/tools_lightbox/lightbox/css/screen.css','lightbox-screen']);
+				//THESE LOADED IN INDEX NOW
+		//		_app.u.loadResourceFile(['script',0,'extensions/tools_lightbox/lightbox/js/lightbox.js']);
+		//		_app.u.loadResourceFile(['css',0,'extensions/tools_lightbox/lightbox/css/lightbox.css','css-lightbox']);
 				
 				r = true;
 
