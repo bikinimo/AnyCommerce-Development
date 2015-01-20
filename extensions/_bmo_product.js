@@ -56,7 +56,7 @@ var bmo_product = function(_app) {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 			
-			//reads prices for each form set by setHiddenPrice renderFormat and changes the displayed price
+			//reads prices for each form set by sethiddenprice tlcFormat and changes the displayed price
 			//to the total for each piece selected. (price for top only if only top is selected, etc.)
 			changePriceDisplayed : function($this) {
 				_app.u.dump('start change function'); 
@@ -86,7 +86,49 @@ var bmo_product = function(_app) {
 						//otherwise nothing is selected, display the total cost for all pieces 
 					$('.customBasePrice','.prodSummaryContainer').empty().text(_app.u.formatMoney(everythingPrice,'$',2,true));
 				}
-			} //changePriceDisplayed
+			}, //changePriceDisplayed
+			
+				//populates and shows list of recently viewed items in prod page popout on link click
+			showRecentlyViewedItems : function($container) {
+				//var $container = $('#recentlyViewedItemsContainer'); //where the list goes
+
+					//you can only look at one list at a time
+				$('.accessoriesList','.quickVModal').hide();
+				$('.relatedList','.quickVModal').hide();
+				$container.show();
+				$('.comparissonsbox ul li','.quickVModal').removeClass('selectedList');
+				$('.rec','.quickVModal').addClass('selectedList');
+				
+					//if no recently viewed items, tell them the sky is blue
+				if(_app.ext.quickstart.vars.session.recentlyViewedItems.length == 0) {
+					$('.recentEmpty',$container).show();
+				}
+					//otherwise, show them what they've seen
+				else {
+					$('.recentEmpty',$container).hide();
+					$('ul',$container).empty(); //empty product list;
+					$($container.tlc({dataset:_app.ext.quickstart.vars.session.recentlyViewedItems,verb:"translate"})); //build product list
+				}
+			},
+			
+				//shows list of accessory_products in prod page popout on link click
+			showAccessories : function() {
+				//you can only look at one list at a time
+				$('.recentlyViewedItemsContainer','.quickVModal').hide();
+				$('.relatedList','.quickVModal').hide();
+				$('.accessoriesList','.quickVModal').show();
+				$('.comparissonsbox ul li','.quickVModal').removeClass('selectedList');
+				$('.acc','.quickVModal').addClass('selectedList');
+			},
+			
+			showRelated : function() {
+				//you can only look at one list at a time
+				$('.recentlyViewedItemsContainer','.quickVModal').hide();
+				$('.accessoriesList','.quickVModal').hide();
+				$('.relatedList','.quickVModal').show();
+				$('.comparissonsbox ul li','.quickVModal').removeClass('selectedList');
+				$('.comp','.quickVModal').addClass('selectedList');
+			}
 			
 		}, //Actions
 
@@ -129,13 +171,13 @@ var bmo_product = function(_app) {
 					var pid = _app.u.makeSafeHTMLId($('input[name="sku"]',$tag.parent()).val()); //get pid for this form
 //					setTimeout(function() {	//timeout because appProductGet was coming back undefined on inline product page. 		
 						var prod = _app.data['appProductGet|'+pid]; //get product for this form;
-						
+						this
 							//add base price value to hidden element in each form
 						//dump('kgjoasd;hgodhgvieraogoireh;oI'); dump(pid); dump(prod); dump(prod['%attribs']); dump(prod['%attribs']['zoovy:base_price']);
 						if(prod && prod['%attribs'] && prod['%attribs']['zoovy:base_price']) {
 							var displayPrice = _app.ext.store_bmo.u.applyLTODiscount(pid,prod['%attribs']['zoovy:base_price']);
 							$tag.attr('data-price',displayPrice); 
-//							_app.ext.store_bmo.a.changePriceDisplayed(); //since timeout for appProductGet, this was running before the price was set, running again won't hurt.
+//							_app.ext.bmo_product.a.changePriceDisplayed($tag); //since timeout for appProductGet, this was running before the price was set, running again won't hurt.
 						}
 						else {_app.u.dump('!! _app.ext.bmo_product.tlcformats.sethiddenprice() failed !!'); }
 //					},500);	
@@ -173,6 +215,7 @@ var bmo_product = function(_app) {
 			//will combine features list in tab section on prod page for top and bottom products if they are both being added to the page
 			combinefeatureslist : function(data,thisTLC) {
 				setTimeout(function(){
+					var argObj = thisTLC.args2obj(data.command.args,data.globals); //this creates an object of the args
 					var prod = data.globals.binds.var;
 					var $tag = data.globals.tags[data.globals.focusTag];
 					dump('combinefeatureslist'); dump(argObj);
@@ -230,11 +273,12 @@ var bmo_product = function(_app) {
 //any functions that are recycled should be here.
 		u : {
 			
-			addRecentlyViewedItems : function() {
-				_app.u.dump('bmo_product recentlyViewedItems has been run');
-				//get pid of product modal when it closes
-				var pid = _app.u.makeSafeHTMLId($('.popupshado','.quickVModal').attr('data-pid'));
-dump(pid);				
+			addRecentlyViewedItems : function(page) {
+				dump(page);
+				//if this is run for the modal, get the pid from an element there, for the inline page the pid is passed explicitly. 
+				var pid = page === "modal" ? _app.u.makeSafeHTMLId($('.popupshado','.quickVModal').attr('data-pid')) : page;
+ 				_app.u.dump('bmo_product recentlyViewedItems has been run');
+				dump(pid);
 				//add item to session var
 				if($.inArray(pid,_app.ext.quickstart.vars.session.recentlyViewedItems) < 0)	{
 					_app.ext.quickstart.vars.session.recentlyViewedItems.unshift(pid);
@@ -265,7 +309,7 @@ dump(pid);
 				var $product = $('.prodViewerContainer','.quickVModal');
 				var sourcePID = _app.u.makeSafeHTMLId($modal.attr('data-pid'));
 				
-				_app.ext.bmo_product.u.addRecentlyViewedItems();	//record modal item as viewed (because modal isn't actually closed)
+				_app.ext.bmo_product.u.addRecentlyViewedItems("modal");	//record modal item as viewed (because modal isn't actually closed)
 				$ele.attr('data-source-pid',sourcePID); //add data element for hideMoreOptions function to read
 				_app.ext.bmo_product.e.hideMoreOptions($ele,p); //close pop out
 

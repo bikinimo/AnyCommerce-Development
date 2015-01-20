@@ -58,6 +58,17 @@ CUSTOM CONTENT
 		_app.ext.bmo_homepage.u.runHomeCarouselTab($context,"4");	
 	});
 	
+	_app.u.bindTemplateEvent('productTemplate', 'complete.bmo_product',function(event,$context,infoObj) {
+		_app.ext.store_bmo.u.setInlineHiddenPrice(infoObj,$context);
+		_app.ext.tools_youtube.u.youtubeIframe($context);
+		_app.ext.store_bmo.u.addTabs($(".tabbedProductContentTD",$context));
+		_app.ext.bmo_product.a.showRecentlyViewedItems($(".recentlyViewedItemsContainer",$context));
+	});
+	
+	_app.u.bindTemplateEvent('productTemplate', 'depart.bmo_product',function(event,$context,infoObj) {
+		_app.ext.bmo_product.u.addRecentlyViewedItems(infoObj.pid);
+	});
+	
 //FILTERED SEARCH IS HERE:
 	_app.extend({
 		"namespace" : "store_filter",
@@ -707,16 +718,11 @@ _app.extend({
 
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "product",
-	"require" : ['store_product','store_navcats', 'store_routing', 'store_search', 'store_crm', 'templates.html'],
+	"require" : ['store_product','store_navcats', 'store_routing', 'store_search', 'store_crm', 'templates.html','tools_lightbox','tools_youtube','bmo_product'],
 	"handler" : function($container, infoObj, require){
 		infoObj.deferred = $.Deferred();
 		infoObj.defPipeline.addDeferred(infoObj.deferred);
-		if($.inArray(infoObj.pid,_app.ext.quickstart.vars.session.recentlyViewedItems) < 0)	{
-			_app.ext.quickstart.vars.session.recentlyViewedItems.unshift(infoObj.pid);
-			}
-		else	{
-			_app.ext.quickstart.vars.session.recentlyViewedItems.splice(0, 0, _app.ext.quickstart.vars.session.recentlyViewedItems.splice($.inArray(infoObj.pid, _app.ext.quickstart.vars.session.recentlyViewedItems), 1)[0]);
-			}
+		//RECENTLY VIEWED ADDED ON PROD PAGE DEPART IN NEWINIT
 		//IMPORTANT: requiring every extension needed in order to render the page, including TLC formats in the template
 		_app.require(require, function(){
 			infoObj.templateID = 'productTemplate';

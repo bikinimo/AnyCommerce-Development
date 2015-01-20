@@ -76,15 +76,6 @@ var store_bmo = function(_app) {
 					
 					_app.u.dump("START store_bmo.callbacks.init.startExtension");
 					
-					_app.templates.productTemplate.on('complete.store_bmo',function(event,$context,infoObj) {
-						_app.ext.store_bmo.u.setInlineHiddenPrice(infoObj,$context);
-						//add tabs to product data.
-						//tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
-						_app.ext.store_bmo.u.addTabs($(".tabbedProductContentTD",$context));
-						_app.ext.store_bmo.a.showRecentlyViewedItems($(".recentlyViewedItemsContainer",$context));
-						_app.ext.tools_youtube.u.youtubeIframe($context);
-					});
-					
 					//make sure minicart stays up to date. 
 					_app.ext.store_bmo.vars.mcSetInterval = setInterval(function(){
 						_app.ext.quickstart.u.handleMinicartUpdate({'datapointer':'cartDetail|'+_app.model.fetchCartID()});
@@ -153,50 +144,6 @@ var store_bmo = function(_app) {
 				$("[data-slide='toggle']",$tag.parent()).slideToggle();
 			},
 
-				//populates and shows list of recently viewed items in prod page popout on link click
-			showRecentlyViewedItems : function($container) {
-				//var $container = $('#recentlyViewedItemsContainer'); //where the list goes
-
-					//you can only look at one list at a time
-				$('.accessoriesList','.quickVModal').hide();
-				$('.relatedList','.quickVModal').hide();
-				$container.show();
-				$('.comparissonsbox ul li','.quickVModal').removeClass('selectedList');
-				$('.rec','.quickVModal').addClass('selectedList');
-				
-					//if no recently viewed items, tell them the sky is blue
-				if(_app.ext.quickstart.vars.session.recentlyViewedItems.length == 0) {
-					$('.recentEmpty',$container).show();
-				}
-					//otherwise, show them what they've seen
-				else {
-					$('.recentEmpty',$container).hide();
-					$('ul',$container).empty(); //empty product list;
-					$($container.tlc({dataset:_app.ext.quickstart.vars.session.recentlyViewedItems,verb:"translate"})); //build product list
-				}
-			},
-			
-				//shows list of accessory_products in prod page popout on link click
-			showAccessories : function() {
-			
-					//you can only look at one list at a time
-				$('.recentlyViewedItemsContainer','.quickVModal').hide();
-				$('.relatedList','.quickVModal').hide();
-				$('.accessoriesList','.quickVModal').show();
-				$('.comparissonsbox ul li','.quickVModal').removeClass('selectedList');
-				$('.acc','.quickVModal').addClass('selectedList');
-			},
-			
-			showRelated : function() {
-			
-					//you can only look at one list at a time
-				$('.recentlyViewedItemsContainer','.quickVModal').hide();
-				$('.accessoriesList','.quickVModal').hide();
-				$('.relatedList','.quickVModal').show();
-				$('.comparissonsbox ul li','.quickVModal').removeClass('selectedList');
-				$('.comp','.quickVModal').addClass('selectedList');
-			},
-		
 			justText : function() {
 				return $(this).clone().children().remove().end().text();
 			},
