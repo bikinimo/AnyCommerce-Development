@@ -1,0 +1,133 @@
+{
+	"id" 				: "separates-bottoms",
+	"title" 			: "Swimwear, Swimsuits, Bikinis, Bathing Suits, Women's Clothing",
+	"name"			: "Separates: Bottoms",
+	"desc" 			: "Bikinimo Swimwear offers more than 300 styles of USA Made women's swimwear. Shop women's swimsuits, one-piece bathing suits, cover-ups and women's clothing",
+	"hasTextSize": "true",
+	"baseFilter" 	: {
+		"or" : [
+			{
+				"and" : [
+					{
+						"term": {
+							"item_category1" : "bottom"
+						},
+						"term" : {
+							"is_square" : 1
+						}
+					}
+				]
+			},
+			{
+				"and" : [
+					{
+						"term": {
+							"item_category2" : "bottom"
+						},
+						"term" : {
+							"is_square" : 1
+						}
+					}
+				]
+			},
+			{
+				"and" : [
+					{
+						"term": {
+							"item_category3" : "bottom"
+						},
+						"term" : {
+							"is_square" : 1
+						}
+					}
+				]
+			},
+			{
+				"and" : [
+					{
+						"term": {
+							"item_category4" : "bottom"
+						},
+						"term" : {
+							"is_square" : 1
+						}
+					}
+				]
+			},
+			{
+				"and" : [
+					{
+						"term": {
+							"item_category5" : "bottom"
+						},
+						"term" : {
+							"is_square" : 1
+						}
+					}
+				]
+			},
+			{
+				"and" : [
+					{
+						"term": {
+							"item_category6" : "bottom"
+						},
+						"term" : {
+							"is_square" : 1
+						}
+					}
+				]
+			},
+			{
+				"and" : [
+					{
+						"term": {
+							"item_category7" : "bottom"
+						},
+						"term" : {
+							"is_square" : 1
+						}
+					}
+				]
+			},
+			{
+				"and" : [
+					{
+						"term": {
+							"item_category8" : "bottom"
+						},
+						"term" : {
+							"is_square" : 1
+						}
+					}
+				]
+			}
+		]
+	},
+	"options": {
+		"base_price": {
+			"min": 0,
+			"max": 400
+		}
+	},
+	"optionList": [
+		"user:app_color1",
+		"user:app_color2",
+		"user:app_color3",
+		"user:app_color4",
+		"user:app_color5",
+		"user:app_color6",
+		"user:app_color7",
+		"user:app_color8",
+		"user:app_color9",
+		"user:app_color10",
+		"user:suit_style1",
+		"user:suit_style2",
+		"user:suit_style3",
+		"user:suit_style4",
+		"user:suit_style5",
+		"user:suit_style6",
+		"user:suit_style7",
+		"user:suit_style8"
+	]
+}

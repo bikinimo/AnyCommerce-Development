@@ -800,7 +800,8 @@ createaccountArticle
 Layered search styles
 *************************************************************************************/
 
-.filterContainer {float:left; padding:40px 0 0 0;}
+.filteredSearchTemplate h1 {font-size:3em; color:#51a3dc; margin:0 0 0.5em 0.5em;}
+.filterContainer {float:left;}
 .filterBox {height:auto; width:auto; background-color:#3BB3C3; margin-top:10px; font-family:"Open Sans";}
 .productColumn {width:auto;}
 .catTitle {height:35px; width:auto; margin: 0 10px; color:#3BB3C3; font-family:"Open Sans"; font-size:24px; font-weight:bold; line-height:32px; position:absolute; top:215px; left:530px; background:none;}

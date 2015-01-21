@@ -1,49 +1,49 @@
 {
-	"id" 				: "bikini-sets",
-	"title" 			: "Bikini Sets",
-	"name"			: "Bikini Sets",
-	"desc" 			: "Find the perfect bikini set. We have the newest and hottest styles, and many holiday promotions! ",
+	"id" 				: "bikini-sets-sport",
+	"name"			: "Bikini Sets: Sport",
+	"title" 			: "Swimwear, Swimsuits, Bikinis, Bathing Suits, Women's Clothing",
+	"desc" 			: "Bikinimo Swimwear offers more than 300 styles of USA Made women's swimwear. Shop women's swimsuits, one-piece bathing suits, cover-ups and women's clothing",
 	"hasTextSize": "true",
 	"baseFilter" 	: {
 		"or" : [
 			{
 				"term": {
-					"item_category1" : "bikini+set"
+					"suit_style1" : "sport"
 				}
 			},
 			{
 				"term": {
-					"item_category2" : "bikini+set"
+					"suit_style2" : "sport"
 				}
 			},
 			{
 				"term": {
-					"item_category3" : "bikini+set"
+					"suit_style3" : "sport"
 				}
 			},
 			{
 				"term": {
-					"item_category4" : "bikini+set"
+					"suit_style4" : "sport"
 				}
 			},
 			{
 				"term": {
-					"item_category5" : "bikini+set"
+					"suit_style5" : "sport"
 				}
 			},
 			{
 				"term": {
-					"item_category6" : "bikini+set"
+					"suit_style6" : "sport"
 				}
 			},
 			{
 				"term": {
-					"item_category7" : "bikini+set"
+					"suit_style7" : "sport"
 				}
 			},
 			{
 				"term": {
-					"item_category8" : "bikini+set"
+					"suit_style8" : "sport"
 				}
 			}
 		]

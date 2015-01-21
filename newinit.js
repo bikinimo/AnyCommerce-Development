@@ -100,8 +100,13 @@ CUSTOM CONTENT
 		_app.couple('store_filter','pushCustomFilter',sizeArray[index]);
 	}
 		
-	
-	createPagesRootFilter('bikini-sets');
+	var appPages = ['bikini-sets','bikini-sets-top-shelf','bikini-sets-prints','bikini-sets-solids','bikini-sets-crochet','bikini-sets-thongs-and-strings',
+		'bikini-sets-gauze','bikini-sets-metallic','bikini-sets-sheer','bikini-sets-skirted','bikini-sets-sport','bikini-sets-underwire','separates','separates-tops',
+		'separates-bottoms','tankinis','swim-dresses','one-pieces','cover-ups','dresses','sleepwear','accessories']
+	for(dex in appPages) {
+		createPagesRootFilter(appPages[dex]);
+		dump(appPages[dex]);
+	}
 //	createPagesSubcatSubfilter('ncaa-team-apparel-merchandise');	
 	function createPagesRootFilter(root){
 		_app.router.appendHash({'type':'exact','route':'/'+root+'/','pagefilter':root,'callback':'filter'});
