@@ -10,7 +10,7 @@ _app.u.loadScript(configURI,function(){
 	_app.vars.domain = zGlobals.appSettings.sdomain; //passed in ajax requests.
 	_app.vars.jqurl = (document.location.protocol === 'file:') ? _app.vars.testURL+'jsonapi/' : '/jsonapi/';
 	
-	var startupRequires = ['quickstart','store_bmo','store_prodlist','store_product'];
+	var startupRequires = ['quickstart','store_bmo','store_prodlist','store_product','store_filter'];
 	
 	_app.require(startupRequires, function(){
 		setTimeout(function(){$('#appView').removeClass('initFooter');}, 1200);
@@ -214,6 +214,116 @@ CUSTOM CONTENT
 		}
 	});
 	
+//NEW KEYWORD/TAG/CUSTOM/PROMO SEARCH IS HERE
+_app.router.appendHash({'type':'match','route':'/search/tag/{{tag}}*','searchtype':'tag','callback':'setSearchRouteObj'});
+_app.router.appendHash({'type':'match','route':'/search/keywords/{{KEYWORDS}}*','searchtype':'keywords','callback':'setSearchRouteObj'});
+_app.router.appendHash({'type':'match','route':'/search/promo/{{PROMO}}*','searchtype':'promo','callback':'setSearchRouteObj'});
+_app.router.appendHash({'type':'match','route':'/search/{{CUSTOM}}*','searchtype':'custom','callback':'setSearchRouteObj'});
+_app.router.addAlias('setSearchRouteObj', function(routeObj) {
+	_app.require(['store_filter','store_search','store_routing','prodlist_infinite','store_prodlist', 'templates.html'], function(){	
+//		dump('----> setSearchRouteObj'); dump(routeObj);
+		
+		//set the base filter if it's a default keyword or tag search, otherwise it's a promo and the baseFilter needs to be loaded from json.
+		var isPromo = true;
+		if(routeObj.searchtype === "keywords") {
+			routeObj.params.baseFilter = {"query" : {"query_string" : {"query" : routeObj.params.KEYWORDS}}};
+			isPromo = false;
+		}
+		else if (routeObj.searchtype === "tag") {
+			routeObj.params.baseFilter = {"term":{"tags":routeObj.params.tag.toUpperCase()}};
+			isPromo = false;
+		}
+
+		//check to see if the filter options have been loaded before to avoid grabbing the json every time
+		routeObj.optionList = {};
+		if(_app.ext.store_filter.vars.searchFacets) {
+			routeObj.optionList =  _app.ext.store_filter.vars.searchFacets.optionList;
+			routeObj.params.options =  _app.ext.store_filter.vars.searchFacets.options;
+			//if this is a promo search, go get the promo json, otherwise show the search now
+			if(isPromo) { setPromoSearchObj(routeObj); }
+			else { routeObj = showbetterSearch(routeObj); }
+		}
+		//if no var, options have to be loaded
+		else {
+			$.getJSON("filters/search/searchfacets.json?_v="+(new Date()).getTime(), function(json){
+//				dump('THE SEARCH JSON IS...'); dump(json);
+				_app.ext.store_filter.vars.searchFacets = json;
+				routeObj.optionList = json.optionList;
+				routeObj.params.options = json.options;
+				if(isPromo) { setPromoSearchObj(routeObj); }
+				else { routeObj = showbetterSearch(routeObj); }
+			})
+			.fail(function() {
+				dump('FILTER DATA FOR SEARCH FACETS COULD NOT BE LOADED.');
+				_app.router.handleURIChange('/404');
+			}); 
+		}
+	});
+});
+//grab the promo baseFilter out of the json from the path passed in routeObj.params.PROMO
+function setPromoSearchObj(routeObj) {
+	var path = routeObj.path;
+	$.getJSON("filters"+path.substring(0, path.length-1)+".json?_v="+(new Date()).getTime(), function(json){
+//		dump('THE PROMO JSON IS...'); dump(json);
+		routeObj.params.baseFilter = {};
+		routeObj.params.baseFilter = json;
+		showbetterSearch(routeObj);
+	})
+	.fail(function() {
+		dump('FILTER DATA FOR SEARCH FACETS COULD NOT BE LOADED.');
+		_app.router.handleURIChange('/404');
+	}); 
+};
+//check elastic for the options data to use w/ the showContent call
+function showbetterSearch(routeObj) {
+//	dump('----> showing better Search');
+	var optStrs = routeObj.optionList; dump(routeObj);
+	routeObj.params.options = routeObj.params.options || {};
+	for(var i in optStrs){
+//		dump('----> optStrs[i]'); dump(optStrs[i]);
+		var o = optStrs[i];
+		var countage = 0;
+		if(_app.ext.store_filter.vars.elasticFields[o]){
+			routeObj.params.options[o] = $.extend(true, {}, _app.ext.store_filter.vars.elasticFields[o]);
+//			dump('routeObj.params.options[o]'); dump(routeObj.params.options[o]); 
+			if(routeObj.searchParams && routeObj.searchParams[o]){
+				var values = routeObj.searchParams[o].split('|');
+				for(var i in routeObj.params.options[o].options){
+					var option = routeObj.params.options[o].options[i];
+					if($.inArray(option.v, values) >= 0){
+						option.checked = "checked";
+					}
+				}
+			}
+		}
+		else {
+			dump("Unrecognized option "+o+" on filter page "+routeObj.params.id);
+		}
+	}
+	_app.ext.quickstart.a.showContent(routeObj.value,{
+		"pageType" : "static",
+		"require" : ['templates.html','store_search','store_filter','store_routing','prodlist_infinite'],
+		"templateID" : "betterSearchTemplate",
+		"dataset" : routeObj.params
+	});
+};
+//bind a submit of the elastic form to the page load so that the search will be performed
+_app.u.bindTemplateEvent('betterSearchTemplate','complete.execsearch',function(event, $context, infoObj){
+//	dump('triggering'); dump(infoObj.dataset.KEYWORDS);
+//	if(infoObj.dataset.KEYWORDS) { 
+//		ga('send', {
+//			'hitType'			: 'event',					// Required.
+//			'eventCategory'	: 'Search',					// Required.
+//			'eventAction'		: 'Keyword Search',	// Required.
+//			//'eventValue'	: 4,
+//			'eventLabel'		: ''+infoObj.dataset.KEYWORDS+''
+//			}
+//		);
+//	}
+	//timeout because visiting search page a second/third/etc. time was submitting before the product was loaded leaving a blank page. 
+	setTimeout(function(){$('form', $context).trigger('submit');},500); 
+});
+	
 
 //END CUSTOM CONTENT
 	
@@ -345,9 +455,9 @@ _app.router.appendHash({'type':'exact','route':'/','callback':'homepage'});
 _app.router.addAlias('category',	function(routeObj){_app.ext.quickstart.a.showContent(routeObj.value,	$.extend({'pageType':'category'}, routeObj.params));});
 _app.router.appendHash({'type':'match','route':'/category/{{navcat}}*','callback':'category'});
 
-_app.router.addAlias('search',		function(routeObj){_app.ext.quickstart.a.showContent(routeObj.value,	$.extend({'pageType':'search'}, routeObj.params));});
-_app.router.appendHash({'type':'match','route':'/search/tag/{{tag}}*','callback':'search'});
-_app.router.appendHash({'type':'match','route':'/search/keywords/{{KEYWORDS}}*','callback':'search'});
+//_app.router.addAlias('search',		function(routeObj){_app.ext.quickstart.a.showContent(routeObj.value,	$.extend({'pageType':'search'}, routeObj.params));});
+//_app.router.appendHash({'type':'match','route':'/search/tag/{{tag}}*','callback':'search'});
+//_app.router.appendHash({'type':'match','route':'/search/keywords/{{KEYWORDS}}*','callback':'search'});
 
 _app.router.addAlias('checkout',	function(routeObj){_app.ext.quickstart.a.showContent(routeObj.value,	$.extend({'pageType':'checkout', 'requireSecure':true}, routeObj.params));});
 _app.router.appendHash({'type':'exact','route':'/checkout','callback':'checkout'});

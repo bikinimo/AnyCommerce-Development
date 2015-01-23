@@ -29,7 +29,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				</div>
 				<img src="images/scroll_left.gif" class="pointer caroPrev1" alt="left" /> 
 				<img src="images/scroll_right.gif" class="pointer caroNext1" alt="right" /> 
-				<div class="clickab"><a href="#!apptag/is_newarrival/">Click Here to browse more New Releases</a></div> 
+				<div class="clickab"><a href="/search/tag/is_newarrival/">Click Here to browse more New Releases</a></div> 
 			</div>
 			<div data-anytab-content='whatshot'>
 				<div class="carouselCont2">
@@ -38,7 +38,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				</div>
 				<img src="images/scroll_left.gif" class="pointer caroPrev2" alt="left" /> 
 				<img src="images/scroll_right.gif" class="pointer caroNext2" alt="right" /> 
-				<div class="clickab"><a href="#!apptag/is_bestseller/">Click Here to browse more of What's Hot</a></div> 
+				<div class="clickab"><a href="/search/tag/is_bestseller/">Click Here to browse more of What's Hot</a></div> 
 			</div>
 			<div data-anytab-content='supersexy'>
 				<div class="carouselCont3">	
@@ -49,7 +49,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				</div>
 				<img src="images/scroll_left.gif" class="pointer caroPrev3" alt="left" /> 
 				<img src="images/scroll_right.gif" class="pointer caroNext3" alt="right" />
-				<div class="clickab"><a href="#!appattrib/super_sexy/">Click Here to browse more Super Sexy Selections</a></div> 
+				<div class="clickab"><a href="/search/super-sexy/">Click Here to browse more Super Sexy Selections</a></div> 
 			</div>
 			<div data-anytab-content='accessories'>
 				<div class="carouselCont4">
@@ -64,7 +64,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				</div>
 				<img src="images/scroll_left.gif" class="pointer caroPrev4" alt="left" /> 
 				<img src="images/scroll_right.gif" class="pointer caroNext4" alt="right" />
-				<div class="clickab"><a href="#!category/.app-categories.accessories">Click Here to browse more Accessories</a></div>
+				<div class="clickab"><a href="/accessories/">Click Here to browse more Accessories</a></div>
 			</div>
 		</div>
 		<div class="madebox">
@@ -1841,6 +1841,19 @@ if you change these, you should move them above this comment so that when you (o
 		<ul data-app-role="resultsContainer" class="listStyleNone fluidList noPadOrMargin productList"></ul>
 	</div>
 
+</div>
+
+
+
+<div id="betterSearchTemplate" data-filter="parent" class="searchResultsPage listWrapper">
+	<!--
+	<div data-tlc="store_cc#showmobilefiltercontainer;" data-filterview='0' data-top='1' class="showHideFilters hideTablet greyGradient arial">
+		FILTERS
+		<span class="sprite"></span>
+	</div>
+	-->
+	<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='filterFacetsTemplate'; apply --append;" data-parent-filter-hider=1 class="filterListTranslator floatLeft"></div>
+	<ul data-filter="resultsList" class="listStyleNone fluidList noPadOrMargin productList"></ul>
 </div>
 
 

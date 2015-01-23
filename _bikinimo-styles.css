@@ -281,6 +281,7 @@ SEARCH RESULTS PAGE
 .resultsHeader.hideInMinimalMode {margin:0 0 1em 0;}
 #categoryTemplate_appcategoriesseparates .searchResultsProduct {display:block !important;}
 #categoryTemplate_appcategoriesseparatesbottoms .searchResultsProduct {display:block !important;}
+.searchResultsPage .productList {padding:20px 0 0 0;}
 
 
 /*
