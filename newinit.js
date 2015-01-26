@@ -711,9 +711,9 @@ _app.couple('order_create','addOrderCompleteHandler',{
 
 //Generate meta information
 _app.u.bindTemplateEvent(function(){return true;}, 'complete.metainformation',function(event, $context, infoObj){
-	var defaultTitle = "Chicago Cubs Apparel & Merchandise";
+	var defaultTitle = "Bikini Bikini Bikini | Swimwear, Swimsuits, Bikinis, Bathing Suits, Women's Clothing | Bikinimo Swimwear";
 	var titlePrefix = "";
-	var titlePostfix = " | SportsWorldChicago.com";
+	var titlePostfix = " | Bikinimo.com";
 	
 	var baseTitle = $('[data-seo-title]', $context).attr('data-seo-title') || defaultTitle;
 	var desc = $('[data-seo-desc]', $context).attr('data-seo-desc') || '';
