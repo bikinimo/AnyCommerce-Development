@@ -30,24 +30,6 @@ var store_bmo = function(_app) {
 		eventdate : "9999999999" //YYYYMMDDHH format
 	},
 
-////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-
-	calls : {
-		appBuyerCreate : {
-				init : function(obj,_tag)	{
-					this.dispatch(obj,_tag);
-					return 1;
-				},
-				dispatch : function(obj,_tag){
-					obj._tag = _tag || {};
-					obj._cmd = "appBuyerCreate";
-					_app.model.addDispatchToQ(obj,'immutable');
-				}
-			}, //appBuyerCreate
-		
-	}, //calls
-
 
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -138,11 +120,6 @@ var store_bmo = function(_app) {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
-
-			//slides any element w/ data-slide, in the parent of the container passed, up and down (added mainly for account recovery on login/acct creation)
-			togglerecover : function($tag) {
-				$("[data-slide='toggle']",$tag.parent()).slideToggle();
-			},
 
 			justText : function() {
 				return $(this).clone().children().remove().end().text();
@@ -280,32 +257,6 @@ var store_bmo = function(_app) {
 				var charCode = ( evt.which ) ? evt.which : evt.keyCode
 				return (charCode == 45 || charCode == 46 || charCode == 40 || charCode == 41 || charCode <= 31 || (charCode >= 48 && charCode <= 57))
 			},
-		
-			//copied from app-quickstart.js so additional parameter could be used to assign the error location (for diff. login screens)
-			loginFrmSubmit : function(email,password,errorDiv)	{
-				var errors = '';
-				$errorDiv = errorDiv.empty(); //make sure error screen is empty. do not hide or callback errors won't show up.
-
-				if(_app.u.isValidEmail(email) == false){
-					errors += "Please provide a valid email address<br \/>";
-					}
-				if(!password)	{
-					errors += "Please provide your password<br \/>";
-					}
-				if(errors == ''){
-					_app.calls.appBuyerLogin.init({"login":email,"password":password},{'callback':'authenticateBuyer','extension':'quickstart'});
-					_app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
-//					_app.calls.buyerProductLists.init('forgetme',{'callback':'handleForgetmeList','extension':'store_prodlist'},'immutable');
-					localStorage.setItem('appPreferences','signedUp'); //set preference to bypass loading offer in case it was nuked elsewhere
-					localStorage.setItem('loadDirectly',true); //set preference to bypass loading offer in case it was nuked elsewhere
-					_app.model.dispatchThis('immutable');
-					showContent('customer',{'show':'myaccount'})
-					}
-				else {
-					$errorDiv.anymessage({'message':errors});
-					}
-				//showContent('homepage',{})
-			}, //loginFrmSubmit
 			
 				//opens tab on product modal with recent, you may like, etc. lists
 			showMoreOptions : function($this, pid) {
@@ -323,23 +274,7 @@ var store_bmo = function(_app) {
 					'left'	:'-430px',
 				},500);
 			},
-	
-			showAccountCreate : function() {
-				$('#createaccountTemplate').dialog({
-					modal	: true,
-					title	: 'Create Account',
-					width	: 980,
-					height	: 500,
-					show	: 'fade',
-					open	: function(event, ui) { //if modal is closed, set localStorage to show preview next time, no acct. present... yet.
-						$('.ui-button').off('click.closeModal').on('click.closeModal', function(){
-							localStorage.setItem('loadDirectly',false);
-						});
-					}
-				});
-				_app.ext.store_bmo.u.setTime();
-			},
-			
+
 			pauseFred : function($this) {
 				//_app.u.dump('gothere');
 				$this.trigger('stop');
@@ -727,7 +662,7 @@ var store_bmo = function(_app) {
 				var d = new Date().getTime() + 604800000; //7 days in milliseconds
 				d = d.toString().slice(0,10);
 //				_app.u.dump('--> setTime date:'); _app.u.dump(d); _app.u.dump(_app.ext.store_bmo.u.millisecondsToYYYYMMDD(new Date(d)));
-				$("input[name=time]",'#createaccountTemplate').val(d).attr("disabled",true);
+				$("input[name=time]",'#createAccountTemplate').val(d).attr("disabled",true);
 			},
 		
 			//replacement for bindByAnchor href to make crawlable links. (works everywhere)
@@ -880,41 +815,7 @@ var store_bmo = function(_app) {
 				}
 			},	
 			
-			handleAppLoginCreate : function($form)	{
-				if($form)	{
-					var formObj = $form.serializeJSON();
-		//_app.u.dump('--> Form Object'); _app.u.dump(formObj); 			
-					if(formObj.pass !== formObj.pass2) {
-						_app.u.throwMessage('Sorry, your passwords do not match! Please re-enter your password');
-						return;
-					}
-					
-					var tagObj = {
-						'callback':function(rd) {
-							if(_app.model.responseHasErrors(rd)) {
-								$form.anymessage({'message':rd});
-							}
-							else {
-								localStorage.setItem('loadDirectly',true); //acct created set local to skip preview next time
-								//localStorage.removeItem('appPreferences');
-								//localStorage.appPreferences = 'signedUp';
-								showContent('customer',{'show':'myaccount'});
-								_app.u.throwMessage(_app.u.successMsgObject("A gift card has been added to your account, look for it during checkout."));
-								//_app.u.throwMessage(_app.u.successMsgObject("Your account has been created! Check your welcome e-mail for a gift from Bikinimo."));
-							}
-						}
-					}
-					
-					formObj._vendor = "bikinimo";
-					_app.ext.store_bmo.calls.appBuyerCreate.init(formObj,tagObj,'immutable');				
-					_app.model.dispatchThis('immutable');
-				}
-				else {
-					$('#globalMessaging').anymessage({'message':'$form not passed into quickstart.u.handleBuyerAccountCreate','gMessage':true});
-				}
-			},
-			
-				//function for console testing acct. creation to debug gift card at acct. create. Can be removed once debug is complete.
+			//function for console testing acct. creation to debug gift card at acct. create. Can be removed once debug is complete.
 			testLogin : function(itteration) {
 				formObj = {
 					"address1"		: "123 Test"+itteration,
@@ -1123,7 +1024,7 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 				});
 				switch(preference) {
 					case 'login'	: setTimeout(function() { _app.ext.quickstart.u.showLoginModal(); },1000); break;
-					case 'signup' : setTimeout(function() { _app.ext.store_bmo.a.showAccountCreate(); },1000); break;
+					case 'signup' : setTimeout(function() { _app.ext.store_bmo.e.showAccountCreate($ele,p); },1000); break;
 					case 'guest' 	: /* not much to do here, load as normal */ break;
 					default 		: dump('Error in _app.ext.store_bmo.e.signUpPromt'); //There are only three option button, if we are here something is wrong.
 				}
@@ -1286,6 +1187,33 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 				return false;
 			}, //loginFrmSubmit
 			
+			//slides a hidden element open (ie: recover password in login)
+			togglerecover : function($ele, p) {
+				p.preventDefault();
+				dump('START togglerecover');
+				$("[data-slide='toggle']",$ele.parent()).slideToggle();
+				return false;
+			},
+			
+			showAccountCreate : function($ele,p) {
+				dump('START showAccountCreate');
+				p.preventDefault();
+				var require = ['bmo_acctcreate'];
+				_app.require(require,function(){
+				var $parent = $("[data-bmo-create='account']");
+				$parent.empty().tlc({verb:"transmogrify", templateid:"createAccountTemplate"});
+				$parent.dialog({modal:true,title:'Create Your Account',width:980,height:500,show:'fade',
+					open	: function(event, ui) { //if modal is closed, set localStorage to show preview next time, no acct. present... yet.
+						$('.ui-button').off('click.closeModal').on('click.closeModal', function(){
+							localStorage.setItem('loadDirectly',false);
+						});
+					}
+				});
+				_app.ext.store_bmo.u.setTime();
+				});
+				return false;
+			},
+			
 			//set data-bmo-goto with a class or id name, will scroll to that element w/in the parent of $ele
 			scrollhere : function($ele,p) {
 				p.preventDefault();
@@ -1320,11 +1248,11 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 				var $parent = $("[data-bmo-chart='"+thisTemplate+"']");
 				$parent.empty().tlc({verb:"transmogrify", templateid:thisTemplate});
 				if($ele.attr("data-add-tabs")) { _app.ext.store_bmo.u.addTabs($("[data-bmo-tabs='"+thisTemplate+"']")); }
-				$parent.dialog({'modal':'true', 'title':$ele.attr("data-bmo-title"),'width':$ele.attr("data-width"), 'height':$ele.attr("data-width")});
+				$parent.dialog({'modal':'true', 'title':$ele.attr("data-bmo-title"),'width':$ele.attr("data-width"), 'height':$ele.attr("data-width"),"show":"fade"});
 				return false;
 			},
 			
-			//sets a require the lightbox extension, then calls quickstart.
+			//sets a require for extension needed extensions, then calls quickstart's quickview.
 			quickview : function($ele,p) {
 				p.preventDefault();
 				var pid = $ele.attr('data-pid');

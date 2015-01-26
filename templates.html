@@ -1420,6 +1420,124 @@ link to from the quickview for seo purposes (to give the spider an actual page t
 			</div>
 		</div>
 	</div>
+	
+<div id='createAccountTemplate' class="textContentArea">
+	<p class='marginBottom appMessaging'></p>
+	<div class="creatAccount">
+		<div class="gotAccount gotAccountCreate"> 
+			<h1 class='smallcaps'>WELCOME BACK</h1>
+			<!-- Third parameter is id of message destination -->
+			<form action='#' data-app-submit='quickstart|accountLoginSubmit'>
+				<input type='hidden' name='loginCallback' value='' /><!-- used to save a callback action in -->
+				<fieldset>
+					<input type='email' class='zform_textbox zform_email' required='required' name='login' value='' size='39' placeholder='E-mail address' />
+					<input type='password' class='zform_textbox zform_password' required='required' name='password' value='' size='39' placeholder='Password' />
+					<input type='submit' value='SIGN IN' class='ui-button-text ui-button ui-corner-all ' />
+				</fieldset>
+			</form>
+			<div class='marginBottom recoverPasswordContainer'>
+				<div class='appMessaging recoverPasswordMessaging'></div>
+				<form action='#' data-app-submit='quickstart|accountPasswordRecoverSubmit'>
+					<fieldset>
+						<legend data-app-click="store_bmo|togglerecover">Recover Password</legend>
+						<div data-slide='toggle'>
+							<div class='marginBottom'>
+								<label>
+									<span>Enter your e-mail address:</span>
+									<input type='text' name='login' required='required' size='25'>
+								</label>
+							</div>
+							<div><input type='submit' class='applyButton' value='Email Password to Me'></div>
+						</div>
+					</fieldset>
+				</form>
+			</div><!-- /recoverPasswordContainer -->
+		</div>
+		<div class="Account" >
+			<!--<form action='#' class='inputsAsBreaks'  onSubmit="app.ext.myRIA.u.handleAppBuyerCreate($(this)); return false;">-->
+			<form action='#' class='inputsAsBreaks'  data-app-submit="bmo_acctcreate|handleapplogincreate" return false;">
+				<input type="hidden" name="_script" value="bikinimo"/>
+				<h1>First Time With Us?</h1><input type='hidden' name='form' value='wholesale' />
+				<div class="fieldM"><span class="field">First Name</span> <input name='firstname' type='text' size='30' class='textfname' placeholder='First Name' required='required' />
+				<b>Last Name</b> <input name='lastname' type='text' size='30' placeholder='Last Name' required='required' class='textflast' /></div>
+				<!--<div class="passwordInput"><b>Password</b><input name="password" size="30" placeholder="Password" required /></div>-->
+				<div class="fieldM"><span class="field">Address</span> <input name='address1' type='text' size='30' placeholder='Address' class='textfadd' required='required' /> 
+				<input name='address2' type='text' size='30' placeholder='Address (Line 2)' class='textfadd1'/></div>
+				<div class="fieldM stateFix"><span class="field">City</span> <input name='city' type='text' size='30' placeholder='City' required='required' class='textfcity' /> 	
+					<b>State</b> 
+					<div class='selectWrapperS'>
+						<select name='region' class='textfstate sprite'>
+							<option value='AL'>AL</option>
+							<option value='AK'>AK</option>
+							<option value='AZ'>AZ</option>
+							<option value='AR'>AR</option>
+							<option value='CA'>CA</option>
+							<option value='CO'>CO</option>
+							<option value='CT'>CT</option>
+							<option value='DE'>DE</option>
+							<option value='DC'>DC</option>
+							<option value='FL'>FL</option>
+							<option value='GA'>GA</option>
+							<option value='HI'>HI</option>
+							<option value='ID'>ID</option>
+							<option value='IL'>IL</option>
+							<option value='IN'>IN</option>
+							<option value='IA'>IA</option>
+							<option value='KS'>KS</option>
+							<option value='KY'>KY</option>
+							<option value='LA'>LA</option>
+							<option value='ME'>ME</option>
+							<option value='MD'>MD</option>
+							<option value='MA'>MA</option>
+							<option value='MI'>MI</option>
+							<option value='MN'>MN</option>
+							<option value='MS'>MS</option>
+							<option value='MO'>MO</option>
+							<option value='MT'>MT</option>
+							<option value='NE'>NE</option>
+							<option value='NV'>NV</option>
+							<option value='NH'>NH</option>
+							<option value='NJ'>NJ</option>
+							<option value='NM'>NM</option>
+							<option value='NY'>NY</option>
+							<option value='NC'>NC</option>
+							<option value='ND'>ND</option>
+							<option value='OH'>OH</option>
+							<option value='OK'>OK</option>
+							<option value='OR'>OR</option>
+							<option value='PA'>PA</option>
+							<option value='RI'>RI</option>
+							<option value='SC'>SC</option>
+							<option value='SD'>SD</option>
+							<option value='TN'>TN</option>
+							<option value='TX'>TX</option>
+							<option value='UT'>UT</option>
+							<option value='VT'>VT</option>
+							<option value='VA'>VA</option>
+							<option value='WA'>WA</option>
+							<option value='WV'>WV</option>
+							<option value='WI'>WI</option>
+							<option value='WY'>WY</option>
+						</select>
+					</div>
+					<b>Zip</b> <input name='postal' type='text' size='10' placeholder='00000-0000' class='textfzip'/>
+				</div>
+				<div class="fieldM">
+					<div class="field selectField">Country</div> 
+					<div class='selectWrapperC'>
+						<select name="country" class="textfcountry sprite">
+							<option value='USA'>United States of America</option>
+						</select>
+					</div>
+				</div>
+				<div class="fieldM"><span class="field">E-mail</span> <input name='email' type='email' size='30' class='textfmail' placeholder='E-mail Address' required='required' /> <b>Phone Number</b> <input name='phone' type='tel' size='12' placeholder='Phone Number' class='textfphone' required='required' /> </div>
+				<div class="fieldM"><span class="field">Password</span> <input name='pass' type='password' size='30' class='textfpass' placeholder='7-18 Characters' required='required' /> <b>Confirm Password</b> <input name='pass2' type='password' size='12' placeholder='Must be a match' class='textfphone' required='required' /> </div>
+				<input type="submit" value="Create an Account" class="createButton pointer"></input>
+				<!-- <button onclick="myApp.ext.bmo_acctcreate.e.handleAppLoginCreate($(this).parent());" class="createButton ui-button">Create an Account</button> For testing form to prevent reload-->
+			</form>
+		</div>
+	</div>
+</div>
 
 
 

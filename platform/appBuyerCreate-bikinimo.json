@@ -1,5 +1,5 @@
 {
-	"_version":201405,
+	"_version":201411,
 	"_start":"createBuyer",
 	"_inputs":[
 		{ "required":1,"var":"email","type":"text","label":"Email" },
@@ -15,8 +15,6 @@
 		{ "required":1,"var":"country","type":"text","label":"Purchasing Contact Country" },
 		{ "required":1,"var":"phone","type":"text","label":"Purchasing Contact Phone" },
 		{ "required":1,"var":"pass","type":"text","label":"Password" }
-
-		
 	],
 	
 	"createBuyer" : [

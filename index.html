@@ -119,7 +119,7 @@ $(document).ready(function(){
 	var paramStr = window.location.href.replace(window.location.hash, '').split('?')[1];
 	if(!paramStr || paramStr.indexOf('_escaped_fragment_') < 0){
 		window.myApp = new initApp({ <!-- version here -->
-			"release":"201411.201501061102",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+			"release":"201411.20150126095600",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 			"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 			"baseURL":baseURL, //used in non-local mode.
 			"checkoutAuthMode" : "active",//can be passive, active or required
@@ -468,12 +468,12 @@ ANIMATION TESTING
 			<p>If you have never made a purchase at this web site and have never subscribed to this store's mailing list,
 				please choose this option.
 			</p>
-				<!-- USE THIS BUTTON WHEN AN INLINE FORM (will need createAccount article added as well)
-			<a href="#!customer/createaccount/" class='modalCreateButton'>Create an Account</a> -->
-			<button class='modalCreateButton' onClick="myApp.ext.store_bmo.a.showAccountCreate();">Create an Account</button>
+				<!-- USE THIS BUTTON WHEN AN INLINE FORM
+			<a href="/create-account/" class='modalCreateButton'>Create an Account</a> -->
+			<button class='modalCreateButton' data-app-click="store_bmo|showAccountCreate" >Create an Account</button>
 		</div>
 
-		<div id="gotAccount" class='gotAccount'> 
+		<div class='gotAccount'> 
 			<h1 class='smallcaps'>Welcome Back</h1>
 			<!-- Third parameter is id of message destination -->
 			<!-- <form action='#' data-app-submit='store_bmo|loginFrmSubmit' id='modalLoginForm'></form> -->
@@ -490,7 +490,7 @@ ANIMATION TESTING
 				<div class='appMessaging recoverPasswordMessaging'></div>
 				<form action='#' data-app-submit='quickstart|accountPasswordRecoverSubmit'>
 					<fieldset>
-						<legend onclick="myApp.ext.store_bmo.a.togglerecover($(this));">Recover Password</legend>
+						<legend data-app-click="store_bmo|togglerecover">Recover Password</legend>
 						<div data-slide='toggle'>
 							<div class='marginBottom'>
 								<label>
@@ -518,6 +518,9 @@ ANIMATION TESTING
 
 <!-- styleGuideTemplate gets added here -->
 <div data-bmo-chart="styleGuideTemplate" class="displayNone"></div>
+
+<!-- createaccountTemplate gets added here -->
+<div data-bmo-create="account" class="displayNone"></div>
 
 <!-- emailAFriendTemplate gets added here -->
 <div data-email="friend" class="displayNone"></div>

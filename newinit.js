@@ -18,11 +18,13 @@ _app.u.loadScript(configURI,function(){
 		});
 	}); //The config.js is dynamically generated.
 	
-	/*	
-CUSTOM CONTENT
-*/	
+	
+//--------------CUSTOM CONTENT
 //lookin for something?
-// 	homepage coupler:	_app.couple('quickstart','addPageHandler',{
+// homepage coupler:	_app.couple('quickstart','addPageHandler',{
+// FILTERED SEARCH IS HERE
+// NEW KEYWORD/TAG/CUSTOM/PROMO SEARCH IS HERE
+// ACCOUNT CREATE IS HERE
 
 	setTimeout(function() {
 		$.extend(handlePogs.prototype,_app.ext.store_bmo.variations);
@@ -69,7 +71,7 @@ CUSTOM CONTENT
 		_app.ext.bmo_product.u.addRecentlyViewedItems(infoObj.pid);
 	});
 	
-//FILTERED SEARCH IS HERE:
+//--------------FILTERED SEARCH IS HERE:
 	_app.extend({
 		"namespace" : "store_filter",
 		"filename" : "extensions/_store_filter.js"
@@ -214,7 +216,7 @@ CUSTOM CONTENT
 		}
 	});
 	
-//NEW KEYWORD/TAG/CUSTOM/PROMO SEARCH IS HERE
+//--------------NEW KEYWORD/TAG/CUSTOM/PROMO SEARCH IS HERE
 _app.router.appendHash({'type':'match','route':'/search/tag/{{tag}}*','searchtype':'tag','callback':'setSearchRouteObj'});
 _app.router.appendHash({'type':'match','route':'/search/keywords/{{KEYWORDS}}*','searchtype':'keywords','callback':'setSearchRouteObj'});
 _app.router.appendHash({'type':'match','route':'/search/promo/{{PROMO}}*','searchtype':'promo','callback':'setSearchRouteObj'});
@@ -323,9 +325,26 @@ _app.u.bindTemplateEvent('betterSearchTemplate','complete.execsearch',function(e
 	//timeout because visiting search page a second/third/etc. time was submitting before the product was loaded leaving a blank page. 
 	setTimeout(function(){$('form', $context).trigger('submit');},500); 
 });
-	
 
-//END CUSTOM CONTENT
+//--------------ACCOUNT CREATE IS HERE
+_app.extend({
+	"namespace":"bmo_acctcreate",
+	"filename":"extensions/_bmo_acctcreate.js"
+});
+_app.u.bindTemplateEvent('createAccountTemplate', 'complete.bmo_acctcreate',function(event,$context,infoObj) {
+	$(".loginMessaging",$context).empty(); //be sure old success (or other) messages are not shown.
+});
+//below is for inline acct. create if ever needed (template rendered in modal for bmo).
+_app.router.appendHash({'type':'exact','route':'/create-account/','callback':function(routeObj){
+	$.extend(routeObj.params,{
+		'pageType':'static',
+		'templateID':'createAccountTemplate',
+		'require':['templates.html','store_bmo','store_routing','bmo_acctcreate']
+		});
+	_app.ext.quickstart.a.showContent(routeObj.value,routeObj.params);
+}});
+
+//--------------END CUSTOM CONTENT
 	
 _app.extend({
 	"namespace" : "quickstart",

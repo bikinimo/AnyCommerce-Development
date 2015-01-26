@@ -770,7 +770,7 @@ createaccountArticle
 .buyerLoggedIn span.hideIfLoggedOut, .buyerLoggedIn a.hideIfLoggedOut{display: inline;} /* ensures inline on span elements */
 
 #createaccountArticle .creatAccount {height:auto; width:960px; margin:20px auto;}
-.gotAccount#gotAccount1 {width:32%; float:left; padding:0 0 20px 0; margin:0;}
+.gotAccount.gotAccountCreate {width:32%; float:left; padding:0 0 20px 0; margin:0;}
 
 .Account {height:auto; width:620px; float:right; font-family:"source sans pro"; font-size:1.2em; font-weight:bold;}
 .Account h1 {font-family:Electrolize; font-weight:bold; margin:0 0 30px 0; color:#286c99;}
