@@ -345,16 +345,24 @@ _app.router.appendHash({'type':'exact','route':'/create-account/','callback':fun
 	_app.ext.quickstart.a.showContent(routeObj.value,routeObj.params);
 }});
 
+
+//--------------END CUSTOM CONTENT
+	
+_app.extend({
+	"namespace" : "quickstart",
+	"filename" : "app-quickstart.js"
+	});
+	
 //--------------ACCOUNT LOGIN IS HERE
 _app.couple('quickstart','addLoginHandler',{
 	handler : function(tagObj){
-dump('START LOGIN HANDLER');
 		$('#loginSuccessContainer').show(); //contains 'continue' button.
-/*campus: below id's changed to classes because there are two login forms*/
+		//bmo: below id's changed to classes because there are two login forms
 		$('.loginMessaging').empty().show().append("Thank you, you are now logged in."); //used for success and fail messaging.
 		$('#loginFormContainer').hide(); //contains actual form.
 		$('.recoverPasswordContainer').hide(); //contains password recovery form.
-		_app.ext.quickstart.u.handleLoginActions();
+		$('.ui-dialog-titlebar-close','.acctModal').trigger('click'); //create account template is in modal, but has login so close if loggin in from there so the continue button can be seen after login.
+		setTimeout(function() { _app.ext.quickstart.u.handleLoginActions(); },500); //timeout because username was getting set on the DOM after the call. 
 		}
 	});
 _app.couple('quickstart','addLogoutHandler',{
@@ -363,13 +371,6 @@ _app.couple('quickstart','addLogoutHandler',{
 		$('.username').empty();
 		_app.router.handleURIChange('/');
 		}
-	})
-
-//--------------END CUSTOM CONTENT
-	
-_app.extend({
-	"namespace" : "quickstart",
-	"filename" : "app-quickstart.js"
 	});
 
 _app.couple('quickstart','addPageHandler',{

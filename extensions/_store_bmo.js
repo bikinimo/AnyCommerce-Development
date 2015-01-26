@@ -1202,7 +1202,7 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 				_app.require(require,function(){
 				var $parent = $("[data-bmo-create='account']");
 				$parent.empty().tlc({verb:"transmogrify", templateid:"createAccountTemplate"});
-				$parent.dialog({modal:true,title:'Create Your Account',width:980,height:500,show:'fade',
+				$parent.dialog({modal:true,title:'Create Your Account',width:980,height:500,show:'fade',dialogClass:"acctModal",
 					open	: function(event, ui) { //if modal is closed, set localStorage to show preview next time, no acct. present... yet.
 						$('.ui-button').off('click.closeModal').on('click.closeModal', function(){
 							localStorage.setItem('loadDirectly',false);
