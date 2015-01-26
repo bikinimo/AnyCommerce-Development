@@ -25,6 +25,7 @@ _app.u.loadScript(configURI,function(){
 // FILTERED SEARCH IS HERE
 // NEW KEYWORD/TAG/CUSTOM/PROMO SEARCH IS HERE
 // ACCOUNT CREATE IS HERE
+// ACCOUNT LOGIN IS HERE
 
 	setTimeout(function() {
 		$.extend(handlePogs.prototype,_app.ext.store_bmo.variations);
@@ -343,6 +344,26 @@ _app.router.appendHash({'type':'exact','route':'/create-account/','callback':fun
 		});
 	_app.ext.quickstart.a.showContent(routeObj.value,routeObj.params);
 }});
+
+//--------------ACCOUNT LOGIN IS HERE
+_app.couple('quickstart','addLoginHandler',{
+	handler : function(tagObj){
+dump('START LOGIN HANDLER');
+		$('#loginSuccessContainer').show(); //contains 'continue' button.
+/*campus: below id's changed to classes because there are two login forms*/
+		$('.loginMessaging').empty().show().append("Thank you, you are now logged in."); //used for success and fail messaging.
+		$('#loginFormContainer').hide(); //contains actual form.
+		$('.recoverPasswordContainer').hide(); //contains password recovery form.
+		_app.ext.quickstart.u.handleLoginActions();
+		}
+	});
+_app.couple('quickstart','addLogoutHandler',{
+	handler : function(tagObj){
+		$(document.body).removeClass('buyerLoggedIn');
+		$('.username').empty();
+		_app.router.handleURIChange('/');
+		}
+	})
 
 //--------------END CUSTOM CONTENT
 	

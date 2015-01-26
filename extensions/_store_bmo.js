@@ -1262,6 +1262,24 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 					_app.ext.quickstart.a.quickView('product',{'templateID':template,'pid':pid});
 				});
 				return false;
+			},
+			
+			//will call logBuyerOut, show homepage so my account isn't accessable any longer, 
+			//scroll to top (in case already on homepage), and remove logged in class
+			logBuyerOut : function($ele,p) {
+				p.preventDefault();
+				_app.u.logBuyerOut();
+				_app.router.handleURIChange("/");
+				_app.ext.store_bmo.e.scrollToTop($ele,p);
+				$('body').removeClass('buyerLoggedIn'); 
+				return false;
+			},
+			
+			//returns view to top of page
+			scrollToTop : function($ele, p) {
+				p.preventDefault();
+				$('html,body').animate({ scrollTop: 0 }, 'slow');
+				return false;
 			}
 		
 		}, //e [app Events]

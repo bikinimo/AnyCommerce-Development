@@ -97,6 +97,8 @@ var quickstart = function(_app) {
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 				_app.ext.quickstart.pageHandlers = {};
 				_app.ext.quickstart.pageRequires = {};
+/*bmo*/		_app.ext.quickstart.loginHandlers = [];   //remove bmo mark once these show up in the framework. 
+/*bmo*/		_app.ext.quickstart.logoutHandlers = [];
 				return r;
 				},
 			onError : function()	{
@@ -465,11 +467,10 @@ document.write = function(v){
 		authenticateBuyer : {
 			onSuccess : function(tagObj)	{
 				_app.vars.cid = _app.data[tagObj.datapointer].cid; //save to a quickly referencable location.
-				$('#loginSuccessContainer').show(); //contains 'continue' button.
-				$('#loginMessaging').empty().show().append("Thank you, you are now logged in."); //used for success and fail messaging.
-				$('#loginFormContainer').hide(); //contains actual form.
-				$('#recoverPasswordContainer').hide(); //contains password recovery form.
-				_app.ext.quickstart.u.handleLoginActions();
+				dump(_app.ext.quickstart.loginHandlers);
+				for(var i in _app.ext.quickstart.loginHandlers){
+					_app.ext.quickstart.loginHandlers[i](tagObj);
+					}
 				}
 			} //authenticateBuyer
 
@@ -2283,11 +2284,21 @@ else	{
 			popup : function($ele, p){
 				//Does nothing, but allows google analytics to track this event
 				},
+			accountLogoutSubmit : function($ele, p){
+				_app.u.logBuyerOut();
+				for(var i in _app.ext.quickstart.logoutHandlers){
+					_app.ext.quickstart.logoutHandlers[i]();
+					}
+				},
 //add this as a data-app-submit to the login form.
 			accountLoginSubmit : function($ele,p)	{
+	dump('START quickstart accountLoginSubmit');
 				p.preventDefault();
 				if(_app.u.validateForm($ele))	{
+	dump('accountLoginSubmit FORM was validated');
+	dump($ele);
 					var sfo = $ele.serializeJSON();
+	dump(sfo);
 					//whether the login succeeds or not, set bill/email in the cart.
 					_app.model.addDispatchToQ({
 						"_cmd":"cartSet",
@@ -2682,6 +2693,12 @@ later, it will handle other third party plugins as well.
 				//dump('adding handler');
 				_app.ext.quickstart.pageHandlers[args.pageType] = args.handler;
 				_app.ext.quickstart.pageRequires[args.pageType] = args.require || [];
+				},
+				addLoginHandler : function(args){
+				_app.ext.quickstart.loginHandlers.push(args.handler);
+				},
+				addLogoutHandler : function(args){
+					_app.ext.quickstart.logoutHandlers.push(args.handler);
 				}
 			}
 

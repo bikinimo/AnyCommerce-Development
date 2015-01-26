@@ -220,11 +220,11 @@ ANIMATION TESTING
 								<span>|</span>
 								<a href="/my_account/">My Account</a>
 								<span>|</span>
-								<a href="#!customer/myaccount/">
+								<a href="/my_account/">
 									<span class="loginShow username"></span>
 								</a>
 								<span class="loginShow"> 
-									<a href="#!customer/logout/">Log Out</a>
+									<div class="pointer" data-app-click="store_bmo|logBuyerOut">Log Out</div>
 								</span>
 								<div class="loginHide giftCardLink pointer" data-app-click="store_bmo|showmodallogin">Login</div><br />
 								<div data-app-click="store_bmo|quickview" data-loadstemplate="productTemplateQuickView" data-pid="GC1000" class="giftCardLink pointer">Gift Cards</div>
@@ -477,12 +477,12 @@ ANIMATION TESTING
 			<h1 class='smallcaps'>Welcome Back</h1>
 			<!-- Third parameter is id of message destination -->
 			<!-- <form action='#' data-app-submit='store_bmo|loginFrmSubmit' id='modalLoginForm'></form> -->
-			<form action='#' data-app-submit='quickstart|accountLoginSubmit' id='modalLoginForm'>
+			<form action='#' data-app-submit='quickstart|accountLoginSubmit'>
 				<input type='hidden' name='method' value='unsecure'>
-				<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
+				<input type='hidden' name='loginCallback' value='' /><!-- used to save a callback action in -->
 				<fieldset>
-					<input type='email' class='zform_textbox zform_email' name='login' id='modalLoginlogin' value='' size='20' placeholder='E-mail address' />
-					<input type='password' class='zform_textbox zform_password' name='password' id='modalLoginpassword' value='' size='20' placeholder='Password' />
+					<input type='email' class='zform_textbox zform_email' name='login' value='' size='20' placeholder='E-mail address' />
+					<input type='password' class='zform_textbox zform_password' name='password' value='' size='20' placeholder='Password' />
 					<input type='submit' value='Log In' class='smallcaps ui-button-text ui-button ui-corner-all logInModalSubmit' />
 				</fieldset>
 			</form>
