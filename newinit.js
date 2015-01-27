@@ -923,8 +923,7 @@ _app.extend({
 		// _app.ext.partner_addthis.u.toolbox($toolbox, infoObj);
 		// }
 	// });
-	
-_app.rq.push(['script',0,'lightbox/js/lightbox-2.6.min.js']);
+
 
 _app.model.getGrammar("pegjs");
 
