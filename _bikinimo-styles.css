@@ -97,8 +97,9 @@ ul li{ list-style-type:none;}
 .topsecmenu{margin:0px; padding:0px; width:372px; float:left;}
 .contactsec{margin:0px; padding:0px; text-align:right; line-height:20px;}
 .contactsec a, .contactsec .giftCardLink {color:#808080; text-decoration:none; display:inline}
-.contactsec a:hover, .contactsec .giftCardLink:hover {color:#000000; text-decoration:none;}
-.contactsec span{padding:0 10px; color: #808080;}
+.contactsec a:hover, .contactsec .giftCardLink:hover, .contactsec div:hover {color:#000000; text-decoration:none;}
+.contactsec span, .contactsec div {padding:0 10px; color: #808080;}
+.contactsec div {padding:0;}
 .cartsec{margin:0px; padding:6px 0 0 0; text-align:right;}
 .cartsec img{margin:-3px 10px 0 0; padding:0;}
 .gryimgright{margin:0px; padding:0px; float:right;}
@@ -388,7 +389,7 @@ fieldset input.ui-button-text {background:#cccccc !important; color:#333 !import
 .loginShow {display:none;}
 .loginShow a {color:#808080;}
 .loginHide a{ font-size:12px; color:#F00; font-weight:bold; text-transform:uppercase; }
-.buyerLoggedIn span.loginShow {display:inline-block;}
+.buyerLoggedIn span.loginShow, .buyerLoggedIn div.loginShow {display:inline-block;}
 .buyerLoggedIn .loginHide {display:none;}
 .hideIfLoggedIn{display:block;}
 .buyerLoggedIn .hideIfLoggedIn	{display:none;}
