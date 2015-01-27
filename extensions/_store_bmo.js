@@ -469,7 +469,7 @@ var store_bmo = function(_app) {
 				var $tag = data.globals.tags[data.globals.focusTag];
 				var basePrice = ($tag.attr('data-iselastic')) ? pdata.base_price/100 : pdata['%attribs']['zoovy:base_price'];
 				var match = _app.u.makeSafeHTMLId(($tag.attr('data-iselastic')) ? pdata.matching_piece : pdata['%attribs']['user:matching_piece']);
-				if(match) {		
+				if(match) {
 					var obj = { pid : match };
 					var _tag = {
 						"callback"				:"rendermatchingBasePrice",		
@@ -478,9 +478,15 @@ var store_bmo = function(_app) {
 						"loadsTemplate"	: "matchingPriceTemplate",
 						"price"					: basePrice,
 					};
-
-					_app.calls.appProductGet.init(obj, _tag, 'immutable');
-					_app.model.dispatchThis('immutable');
+					if(_app.data["appProductGet|"+match]) {
+						_tag.datapointer = "appProductGet|"+match;
+						_app.ext.store_bmo.callbacks.rendermatchingBasePrice.onSuccess(_tag);
+					}
+					else {
+						//_app.ext.store_product.calls.appProductGet.init(obj, _tag, 'immutable'); //this call performed similarly, but has some calls in it that may be usefull
+						_app.calls.appProductGet.init(obj, _tag, 'immutable');
+						_app.model.dispatchThis('immutable');
+					}
 				}
 			}, //matchingBasePrice
 			
