@@ -77,7 +77,8 @@ for( var i in urls['@OBJECTS'] ) {
 								url = '/product/' + res.id + '/';
 								break;
 						case 'navcat':
-								url = '/category/' + res.id.substr(1) +'/';  // strip leading . in category name
+								//categories are handled by customurl.json since they are search based.
+								//url = '/category/' + res.id.substr(1) +'/';  // strip leading . in category name
 								break;
 						case 'list' :
 								// we don't index these.
