@@ -747,11 +747,16 @@ _app.u.bindTemplateEvent(function(){return true;}, 'complete.metainformation',fu
 //Scroll restore
 _app.u.bindTemplateEvent(function(){return true;}, 'complete.scrollrestore',function(event, $context, infoObj){
 	var scroll = $context.data('scroll-restore');
+dump('SCROLL RESTORE INFO OBJ:'); dump(infoObj);
 	if(scroll){
 		$('html, body').animate({scrollTop : scroll}, 300);
 		}
 	else if((infoObj.performJumpToTop === false) ? false : true) {
-		$('html, body').animate({scrollTop : 0}, 300);
+		if(infoObj.templateID === "productTemplateQuickView") { /* do nothing this is a modal */ }
+		else if (infoObj.target && infoObj.target.dataset.templateid === "cartTemplate") { /* do nothing this is a cart */ }
+		else {
+			$('html, body').animate({scrollTop : 0}, 300);
+			}
 		}
 	else {
 		//do nothing
