@@ -378,27 +378,20 @@ the loadingBG class is removed (must be that classname) when the template is tra
 remember to NOT put the button inside the href or two events will occur onclick.
 -->
 <li id="productListTemplate" class="loadingBG  " onmouseover="$('.quickView',$(this)).show();" onmouseout="$('.quickView').hide();">
-
-	<button class="floatRight pointer quickView displayNone" data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView">Quickview</button>
-	
-	<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class="blockLink">
-		<div data-tlc="bind $var '.pid'; quickstart#addpicslider  --legacy; apply --append;" class="prodThumbContainer">
-		<img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank;){{bind $var '.%attribs.zoovy:prod_image1';}}; if(is $var --notblank;){{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
-		</div>
-
-		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h5>
-
-		<h6 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{ format --currency='USD';  format --prepend='Our Price: '; apply --append;}};"></h6>
+	<div data-tlc="bind $pid '.pid'; apply --attrib='data-pid';" data-app-click="store_bmo|quickview" data-loadstemplate="productTemplateQuickView" class="pointer prominh">
+		<div data-tlc="bind $var '.'; store_bmo#hidefromlist --legacy;"></div>
+		<div data-tlc="bind $var '.'; store_bmo#addinfiniteslider --legacy" data-height="210" data-width="150" class="prodThumbContainer floatLeft"></div>
 		
-		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
-<!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
-	</a>
-	
-	<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" onsubmit="return false" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
-		<input name="qty" value="1" type="hidden">
-		<button data-tlc="quickstart#addtocartbutton  --legacy; apply --append;" data-bind="format:addtocartbutton; extension:quickstart; useParentData:true;" class='applyButton'>more details</button>
-	</form>
-
+		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{format --truncate='38'; apply --append;}};"></h5>
+		
+		<div data-tlc="bind $var '.matching_piece'; if (is $var --notblank;) {{apply --hide;}};">
+			<h6 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{ format --currency='USD';  apply --add --class='price'; apply --append;}};"></h6>
+		</div>
+		<div data-tlc="bind $var '.matching_piece'; if(is $var --notblank;) {{apply --show;}};" class="displayNone">
+			<h6 data-tlc="bind $var '.'; store_bmo#matchingbaseprice;" class="price"></h6>
+		</div>
+	</div>
+	<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';">Test link, to be removed.</a>
 </li>
 
 
@@ -488,8 +481,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 </li>
 
 <li id="productListTemplateResultsNoPreview" class="loadingBG searchResultsProduct ">
-	<a data-tlc="bind $pid '.pid'; apply --attrib='data-pid';" data-app-click="store_bmo|quickview" data-loadstemplate="productTemplateQuickView" onclick="myApp.ext.store_bmo.a.pauseFred($(this).parent().parent());" class="pointer prominh">
-	<!-- <a data-tlc="bind $var '.'; store_routing#seoanchor --type='product' --seo; apply --attrib='href';" class="pointer"> -->
+	<div data-tlc="bind $pid '.pid'; apply --attrib='data-pid';" data-app-click="store_bmo|quickview" data-loadstemplate="productTemplateQuickView" onclick="myApp.ext.store_bmo.a.pauseFred($(this).parent().parent());" class="pointer prominh">
 		<div data-tlc="bind $var '.'; store_bmo#hidefromlist --legacy;" data-iselastic='1'></div>
 		<div data-tlc="bind $var '.'; store_bmo#addinfiniteslider --legacy" data-height="210" data-width="150" data-iselastic='1' class="prodThumbContainer floatLeft"></div>
 
@@ -501,7 +493,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 		<div data-tlc="bind $var '.matching_piece'; if(is $var --notblank;) {{apply --show;}};" class="displayNone">
 			<h6 data-tlc="bind $var '.'; store_bmo#matchingbaseprice;" data-iselastic="1" class="hideInMinimalMode price"></h6>
 		</div>
-	</a>
+	</div>
 	<!-- a data-tlc="bind $seoname '.prod_name'; bind $var '.'; store_routing#seoanchor --type='product' --seo --seoname=$seoname; apply --attrib='href';">more details</a> -->
 	<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';">Test link, to be removed.</a>
 </li>
