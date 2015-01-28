@@ -11,7 +11,9 @@
 					{
 						"term": {
 							"item_category1" : "top"
-						},
+						}
+					},
+					{
 						"term" : {
 							"is_square" : 1
 						}
@@ -23,7 +25,9 @@
 					{
 						"term": {
 							"item_category2" : "top"
-						},
+						}
+					},
+					{
 						"term" : {
 							"is_square" : 1
 						}
@@ -35,7 +39,9 @@
 					{
 						"term": {
 							"item_category3" : "top"
-						},
+						}
+					},
+					{
 						"term" : {
 							"is_square" : 1
 						}
@@ -47,7 +53,9 @@
 					{
 						"term": {
 							"item_category4" : "top"
-						},
+						}
+					},
+					{
 						"term" : {
 							"is_square" : 1
 						}
@@ -59,7 +67,9 @@
 					{
 						"term": {
 							"item_category5" : "top"
-						},
+						}
+					},
+					{
 						"term" : {
 							"is_square" : 1
 						}
@@ -71,7 +81,9 @@
 					{
 						"term": {
 							"item_category6" : "top"
-						},
+						}
+					},
+					{
 						"term" : {
 							"is_square" : 1
 						}
@@ -83,7 +95,9 @@
 					{
 						"term": {
 							"item_category7" : "top"
-						},
+						}
+					},
+					{
 						"term" : {
 							"is_square" : 1
 						}
@@ -95,7 +109,9 @@
 					{
 						"term": {
 							"item_category8" : "top"
-						},
+						}
+					},
+					{
 						"term" : {
 							"is_square" : 1
 						}
