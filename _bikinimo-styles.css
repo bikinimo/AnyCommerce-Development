@@ -44,7 +44,10 @@ ul li{ list-style-type:none;}
 .quickView	{top:247px; right:48px;} /* jqui modal has zindex 1002 */
 
 .productList > li	{width:148px; min-height:285px; padding:0;}
-.productList > li > img{margin:0px; padding:0px; width:148px !important; height:208px !important;}
+/*.productList > li > a {background:none repeat scroll 0 0 #f05a24; bottom:20px; height:5px; left:0; position:absolute; width:100%;}*/
+.productList > li > a img, .productList1 > li > a img {background:none; bottom:30px; right:0; position:absolute;}
+.productList1 > li > a img {bottom:10px}
+.productList > li > img margin:0px; padding:0px; width:148px !important; height:208px !important;}
 .lineItemProdlist > li	{padding:10px !important; width:99% !important; min-height:auto !important; border-bottom:none;} /* single column product list - used in cart, checkout, etc. productList class is also defined in these cases. */
 .lineItemProdlist .prodThumb	{margin-right:12px;}
 

@@ -391,7 +391,7 @@ remember to NOT put the button inside the href or two events will occur onclick.
 			<h6 data-tlc="bind $var '.'; store_bmo#matchingbaseprice;" class="price"></h6>
 		</div>
 	</div>
-	<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';">Test link, to be removed.</a>
+	<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class="inlineLink"></a>
 </li>
 
 
@@ -495,7 +495,10 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 		</div>
 	</div>
 	<!-- a data-tlc="bind $seoname '.prod_name'; bind $var '.'; store_routing#seoanchor --type='product' --seo --seoname=$seoname; apply --attrib='href';">more details</a> -->
-	<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';">Test link, to be removed.</a>
+	<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class="inlineLink">
+		<img data-tlc="bind $var '.prod_name'; apply --attrib='alt';" src="images/bikinimo_app_logo.png" width="50" height="12" alt="" />
+		
+	</a>
 </li>
 </ul>
 
