@@ -99,7 +99,7 @@ _app.u.loadScript(configURI,function(){
 		{'id' : 'size18','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(A812).*"}}]}}}},
 		{'id' : 'size20','filter' : {"has_child":{"type":"sku","filter" : {"and" : [{"range":{"available":{"gte":1}}},{"regexp":{"sku":".+:(A813).*"}}]}}}}
 	];
-	for(index in sizeArray.length) {
+	for(index in sizeArray) {
 		_app.couple('store_filter','pushCustomFilter',sizeArray[index]);
 	}
 		

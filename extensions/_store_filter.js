@@ -277,6 +277,18 @@ var store_filter = function(_app) {
 					else {
 						}
 					});
+				$('[data-filter-type=custom]', $form).each(function(){
+					if($(this).is(':checked')){
+						var id = $(this).attr('data-filter-custom');
+						if(_app.ext.store_filter.customFilters[id]){
+							dump(_app.ext.store_filter.customFilters[id]);
+							elasticsearch.filter.and.push(_app.ext.store_filter.customFilters[id]);
+							}
+						else {
+							dump('ERROR: in _app.ext.store_filter.e.execFilteredSearch, no custom filter found for id: '+id);
+							}
+						}
+					});
 				
 				
 				var es;
@@ -422,6 +434,14 @@ var store_filter = function(_app) {
 //				dump(args);
 				if(args.id && args.jsonPath){
 					_app.ext.store_filter.vars.filterPageLoadQueue[args.id] = args;
+					}
+				},
+			pushCustomFilter  : function(args){
+				if(args.id && args.filter){
+					_app.ext.store_filter.customFilters[args.id] = args.filter;
+					}
+				else{
+					dump('ERROR: _app.ext.store_filter.couplers.pushCustomFilter REQUIRES "id" AND "filter"');
 					}
 				}
 			}
