@@ -88,7 +88,7 @@ _app.u.loadScript(configURI,function(){
 	});
 	
 	_app.u.bindTemplateEvent('homepageTemplate', 'complete.store_bmo',function(event,$context,infoObj) {
-		dump('homepage infoObj'); dump(infoObj);
+//		dump('homepage infoObj'); dump(infoObj);
 		_app.ext.store_bmo.u.addTabs($("[data-bmo-tabs='homepagetabs']",$context));
 		_app.ext.bmo_homepage.u.runHomeCarouselTab($context,"1");
 		_app.ext.bmo_homepage.u.runHomeCarouselTab($context,"2");
@@ -143,7 +143,7 @@ _app.u.loadScript(configURI,function(){
 		'separates-bottoms','tankinis','swim-dresses','one-pieces','cover-ups','dresses','sleepwear','accessories']
 	for(dex in appPages) {
 		createPagesRootFilter(appPages[dex]);
-		dump(appPages[dex]);
+//		dump(appPages[dex]);
 	}
 //	createPagesSubcatSubfilter('ncaa-team-apparel-merchandise');	
 	function createPagesRootFilter(root){
@@ -178,9 +178,6 @@ _app.u.loadScript(configURI,function(){
 	
 	function showPage(routeObj,parentID){
 //		dump('START showPage'); dump(routeObj); dump('showPage parentID'); dump(parentID); dump('showPage filterData.parentID'); dump(_app.ext.store_filter.filterData);
-	//	routeObj.params.dataset = $.extend(true, {}, $.grep(_app.ext.store_filter.filterData,function(e,i){
-	//		return e == routeObj.params.id;	//gets mid level data
-	//	})[0]);
 		routeObj.params.dataset = $.extend(true, {}, _app.ext.store_filter.filterData[parentID]);
 //		dump('routeObj.params.dataset');  dump(routeObj.params.dataset);
 		
@@ -217,8 +214,7 @@ _app.u.loadScript(configURI,function(){
 		if(pageObj){
 //			dump("GETTING JSON IN LOAD PAGE");
 			$.getJSON(pageObj.jsonPath+"?_v="+(new Date()).getTime(), function(json){
-//				dump(json);
-//				dump('and this is the page object:'); dump(pageObj);
+//				dump(json); dump('and this is the page object:'); dump(pageObj);
 				_app.ext.store_filter.filterData[pageObj.id] = json;
 //				dump("filter data after json assigned"); dump(_app.ext.store_filter.filterData);
 				if(typeof successCallback == 'function'){ successCallback(); }
@@ -244,7 +240,7 @@ _app.u.loadScript(configURI,function(){
 					$form.trigger('submit');
 				}
 				else {
-	//				 dump('gotta wait');
+//					 dump('gotta wait');
 					setTimeout(submitForm,100);
 				}
 			}
@@ -347,6 +343,7 @@ function showbetterSearch(routeObj) {
 };
 //bind a submit of the elastic form to the page load so that the search will be performed
 _app.u.bindTemplateEvent('betterSearchTemplate','complete.execsearch',function(event, $context, infoObj){
+//	custom event triggered when keyword search opens this template.
 //	dump('triggering'); dump(infoObj.dataset.KEYWORDS);
 //	if(infoObj.dataset.KEYWORDS) { 
 //		ga('send', {
@@ -388,7 +385,7 @@ _app.extend({
 	"filename" : "app-quickstart.js"
 	});
 	
-//--------------ACCOUNT LOGIN IS HERE
+//--------------ACCOUNT LOGIN IS HERE (also custom but needed to be placed after extend for quickstart)
 _app.couple('quickstart','addLoginHandler',{
 	handler : function(tagObj){
 		$('#loginSuccessContainer').show(); //contains 'continue' button.
@@ -407,6 +404,7 @@ _app.couple('quickstart','addLogoutHandler',{
 		_app.router.handleURIChange('/');
 		}
 	});
+//--------------END ACCOUNT LOGIN HANDELERS	
 
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "static",
