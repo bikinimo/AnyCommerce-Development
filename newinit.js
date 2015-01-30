@@ -15,6 +15,7 @@ _app.u.loadScript(configURI,function(){
 	_app.require(startupRequires, function(){
 		setTimeout(function(){$('#appView').removeClass('initFooter');}, 1200);
 		_app.ext.quickstart.callbacks.startMyProgram.onSuccess();
+		startMarketing();
 		});
 	}); //The config.js is dynamically generated.
 	
@@ -30,6 +31,40 @@ _app.u.loadScript(configURI,function(){
 	setTimeout(function() {
 		$.extend(handlePogs.prototype,_app.ext.store_bmo.variations);
 	},500);
+	
+	//determines whether or not the appPreview should be shown
+	//if URIparams, user is logged in, or local var is set preview will stay hidden.
+	function startMarketing() {
+		//use this to reset the var in local if needed (testing/promotion/etc.)
+		//myApp.model.dpsSet("quickstart","suppressMkt",false);
+		var showMarketing = true;
+		if(document.location.search) {
+			var uriParams = myApp.u.kvp2Array(document.location.search);
+			if(uriParams.suppressMkt)	{showMarketing = false; dump(" -> marketing suppressed due to URI param.");}
+		}
+		else if(myApp.u.buyerIsAuthenticated()) {
+			showMarketing = false;
+			dump(" -> marketing suppressed because user is authenticated.");
+		}
+		else if(myApp.model.dpsGet('quickstart','suppressMkt')) {
+			showMarketing = false;
+			dump(" -> marketing suppressed due to LS var (user has seen marketing already).");
+		}
+		else { dump(" -> marketing not suppressed (user has not seen marketing yet)."); }
+
+		if(showMarketing) {
+//			dump('--> Preview marketing should have been shown');
+			//show some marketing mumbo jumbo.
+			$("#appPreView").fadeIn(750);
+		}
+		else {
+//			dump('--> Preview marketing should NOT have been shown');
+			//preview hidden by default, load w/out showing.
+		}
+
+		//this will ensure that the marketing messaging is only shown once on this host/protocol.
+		myApp.model.dpsSet('quickstart','suppressMkt',true);
+	}	
 
 	_app.extend({
 		"namespace" : "store_bmo",
