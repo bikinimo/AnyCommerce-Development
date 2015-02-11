@@ -11,7 +11,9 @@ function commerceEngine(domain, options){
 	this._uuid = 0;
 	this._requestNumber = 0;
 	this.pipelineSize = options.pipelineSize || 20;
-	
+	this.headers = {
+		'X-VERSION' : this._version
+		}
 	this.queue = [];
 		
 	}
@@ -77,6 +79,9 @@ commerceEngine.prototype.dispatch = function(finalCallback){
 				var request = new XMLHttpRequest();
 				request.open('POST',_self._apiurl);
 				request.setRequestHeader('Content-Type','application/json');
+				for(var i in _self.headers){
+					request.setRequestHeader(i,_self.headers[i]);
+					}
 				request.onreadystatechange = function(){
 					if(request.readyState == 4 && request.status == 200 && !complete[index]){
 						var r = JSON.parse(request.responseText);
@@ -96,13 +101,17 @@ commerceEngine.prototype.dispatch = function(finalCallback){
 								}
 							}
 						if(done){
+							//console.log('finished!');
 							finalCallback(finalData);
+							}
+						else{
+							//console.dir(complete);
 							}
 						}
 					}
 				request.send(JSON.stringify(pipes[index]));
 				}
-			})(i),i*20)
+			})(i),i*200)
 		}
 	}
 
