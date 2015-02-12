@@ -1,0 +1,1 @@
+node matchingprice.js -d www.bikinimo.com

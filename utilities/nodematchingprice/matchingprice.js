@@ -93,7 +93,7 @@ function processinitArray(prods) {
 
 	console.log('Done, check ' +PATH+ ' to see the ouput.');
 	//build the CSV and spit it out
-	var outputsie = ""
+	var outputsie = "%PRODUCTID,user:matching_price\n"
 	for(var p in MATCHES) {
 		outputsie += MATCHES[p].id + "," + MATCHES[p].matchPrice + "\n";
 	}
