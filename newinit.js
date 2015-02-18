@@ -97,7 +97,7 @@ _app.u.loadScript(configURI,function(){
 	});
 	
 	_app.u.bindTemplateEvent('productTemplate', 'complete.bmo_product',function(event,$context,infoObj) {
-		_app.ext.store_bmo.u.setInlineHiddenPrice(infoObj,$context);
+		_app.ext.bmo_product.u.setHiddenPrice(infoObj,$context);	
 		_app.ext.tools_youtube.u.youtubeIframe($context);
 		_app.ext.store_bmo.u.addTabs($(".tabbedProductContentTD",$context));
 		_app.ext.bmo_product.a.showRecentlyViewedItems($(".recentlyViewedItemsContainer",$context));
@@ -107,6 +107,10 @@ _app.u.loadScript(configURI,function(){
 		_app.ext.bmo_product.u.addRecentlyViewedItems(infoObj.pid);
 	});
 	
+	_app.u.bindTemplateEvent('productTemplateQuickView', 'complete.bmo_product',function(event,$context,infoObj) {
+		_app.ext.bmo_product.u.setHiddenPrice(infoObj,$context);
+	});
+		
 //--------------FILTERED SEARCH IS HERE:
 	_app.extend({
 		"namespace" : "store_filter",

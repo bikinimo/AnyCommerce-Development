@@ -108,6 +108,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		</div>
 		<div class="displayNone" data-tlc="bind $var '.%attribs.user:matching_piece'; if (is $var --notblank) {{apply --show;}};">
 			<span class="price">Only: </span>
+			<!-- matching_price var not used here because limited time offer discount must be calculated for item -->
 			<h2 class='hideInMinimalMode' data-tlc="bind $var '.'; store_bmo#matchingbaseprice --prepend='Only: ';"></h2>  <!-- currencysign: $;  hidezero:true; classname:price; pretext: Only: -->
 		</div> 
 		<div>
@@ -384,11 +385,12 @@ remember to NOT put the button inside the href or two events will occur onclick.
 		
 		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{format --truncate='38'; apply --append;}};"></h5>
 		
-		<div data-tlc="bind $var '.matching_piece'; if (is $var --notblank;) {{apply --hide;}};">
+		<div data-tlc="bind $var '.%attribs.user:matching_piece'; if (is $var --notblank;) {{apply --hide;}};">
 			<h6 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{ format --currency='USD';  apply --add --class='price'; apply --append;}};"></h6>
 		</div>
-		<div data-tlc="bind $var '.matching_piece'; if(is $var --notblank;) {{apply --show;}};" class="displayNone">
-			<h6 data-tlc="bind $var '.'; store_bmo#matchingbaseprice;" class="price"></h6>
+		<div data-tlc="bind $var '.%attribs.user:matching_piece'; if(is $var --notblank;) {{apply --show;}};" class="displayNone">
+			<!-- <h6 data-tlc="bind $var '.'; store_bmo#matchingbaseprice;" class="price"></h6> -->
+			<h6 data-tlc="bind $var '.%attribs.user:matching_price'; if(is $var --notblank;) {{format --currency='USD'; apply --append;}};" class="hideInMinimalMode price"></h6>
 		</div>
 	</div>
 	<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class="inlineLink"></a>
@@ -491,7 +493,8 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 			<h6 data-tlc="bind $var '.base_price';  if (is $var --notblank;) {{math --div='100'; format --currency='USD'; apply --add --class='price'; apply --append;}};" class="hideInMinimalMode"></h6>
 		</div>
 		<div data-tlc="bind $var '.matching_piece'; if(is $var --notblank;) {{apply --show;}};" class="displayNone">
-			<h6 data-tlc="bind $var '.'; store_bmo#matchingbaseprice;" data-iselastic="1" class="hideInMinimalMode price"></h6>
+			<!-- <h6 data-tlc="bind $var '.'; store_bmo#matchingbaseprice;" data-iselastic="1" class="hideInMinimalMode price"></h6> -->
+			<h6 data-tlc="bind $var '.matching_price'; if(is $var --notblank;) {{format --currency='USD'; apply --append;}};" data-iselastic="1" class="hideInMinimalMode price"></h6>
 		</div>
 	</div>
 	<!-- a data-tlc="bind $seoname '.prod_name'; bind $var '.'; store_routing#seoanchor --type='product' --seo --seoname=$seoname; apply --attrib='href';">more details</a> -->
@@ -572,11 +575,7 @@ this will likely become more flexible in the future. ###
 			</div>
 			<div data-tlc="bind $var '.%attribs.user:matching_piece'; if (is $var --notblank;) {{apply --show;}};" class="displayNone">
 				<h5>Only:</h5>
-			<!-- removed the tlc to set the price here because of a timing issue w/ the set hidden price function. 
-				Now gets set w/ changePriceDisplayed() at the end of sethiddenprice()
-				<h3 data-tlc="bind $var '.'; store_bmo#custombaseprice --legacy;" data-priceA='1' data-priceB='1' class="customBasePrice marginBottom"></h3> 
-			-->
-				<h3 class="customBasePrice marginBottom" data-priceA='1' data-priceB='1'></h3>
+				<h3 data-tlc="bind $var '.%attribs.user:matching_price'; if(is $var --notblank;) {{format --currency='USD'; apply --append;}};" data-priceA='1' data-priceB='1' class="customBasePrice marginBottom"></h3>
 			</div>
 
 			<hgroup class="marginBottom">
@@ -584,17 +583,6 @@ this will likely become more flexible in the future. ###
 				<h5><a href='#' data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if(is $var --notblank;) {{apply --append; format --prepend='/search/keywords/'; apply --attrib='href';}};"></a></h5>
 				<h5 data-tlc="bind $var '.%attribs.zoovy:prod_mfgid';  if (is $var --notblank;) {{format --prepend='Mfg ID: '; apply --append;}};"></h5>
 			</hgroup>
-<!-- MARK ORIGINAL PRICING INFO FOR REFERENCE UNTIL MATCHING PRICING & ATC FORMS WORK RIGHT.		
-			<h6 data-tlc="bind $var '.pid'; if (is $var --notblank;) {{ format --prepend='Sku: ';apply --append;}};" class="ztable_row_small stid"></h6>
-			<div class="priceContainer">
-				<h4 data-tlc="bind $var '.%attribs.zoovy:base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="basePrice"></h4>
-				<h5 data-tlc="bind $var '.%attribs.zoovy:prod_msrp';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='MSRP: ';  apply --append;}};" class="prodMSRP"></h5>
-				<span class="savings">
-					<span data-tlc="bind $var '.pid'; format --prepend='You save: '; quickstart#priceretailsavingsdifference  --legacy; apply --append;" class="savingsDifference"></span>
-					<span data-tlc="bind $var '.pid'; format --prepend='('; format --append=')'; quickstart#priceretailsavingspercentage  --legacy; apply --append;" class="savingsPercentage"></span>
-				</span>
-			</div>
--->
 			<div data-tlc="bind $var '.%attribs.zoovy:prod_desc'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class="dis"></div>
 			
 			<table class='marginBottom fullWidth gridTable' data-app-role='childrenSiblingsContainer'>
@@ -619,21 +607,21 @@ this will likely become more flexible in the future. ###
 				
 					<div class='atcPogErrors'></div>
 				
-					<form data-tlc="bind $var '.pid'; store_product#atcform --legacy;" action='#' data-app-submit="store_bmo|addToCart" class="prodViewerAddToCartForm clearfix"> 
+					<form data-tlc="bind $var '.pid'; store_product#atcform --legacy;" action='#' data-app-submit="bmo_product|addToCart" class="prodViewerAddToCartForm clearfix"> 
 						<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
 						<div class="floatLeft marginRight">Quantity: </div>
 						<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput --defaultvalue='1' --legacy;" class="borderNone"></fieldset>
-						<div data-formDesig='A' class='formPrice'></div> <!-- data-tlc="bind $var '.'; bmo_product#sethiddenprice;" (see setInlineHiddenPrice) -->
+						<div data-formDesig='A' class='formPrice'></div> <!-- data-tlc="bind $var '.'; bmo_product#sethiddenprice;" (see setHiddenPrice) -->
 					</form>
 					
-					<form data-tlc="bind $var '.pid'; bmo_product#matchatcformpid;" action='#' data-app-submit="store_bmo|addToCart" class="prodViewerAddToCartForm clearfix"> 
+					<form data-tlc="bind $var '.pid'; bmo_product#matchatcformpid;" action='#' data-app-submit="bmo_product|addToCart" class="prodViewerAddToCartForm clearfix"> 
 						<span data-tlc="bind $var '.%attribs.user:matching_piece'; bmo_product#loadprod --ismatch=$var --templateid='matchingProductTemplate';"></span>
 						<div class="floatLeft marginRight">Quantity: </div>
 						<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput --defaultvalue='1' --legacy;" class='borderNone'></fieldset>
-						<div data-formDesig='B' class='formPrice'></div> <!-- data-tlc="bind $var '.'; bmo_product#sethiddenprice;" (see setInlineHiddenPrice) -->
+						<div data-formDesig='B' class='formPrice'></div> <!-- data-tlc="bind $var '.'; bmo_product#sethiddenprice;" (see setHiddenPrice) -->
 						<div data-tlc="bind $var '.'; bmo_product#combinefeatureslist;" data-bmo-combine="modalproduct"></div>
 					</form>
-					<button data-tlc="bind $var '.pid'; store_product#addtocartbutton --legacy;" data-app-click="store_bmo|addToCart" class="galladdtocarti ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone"></button> 
+					<button data-tlc="bind $var '.pid'; store_product#addtocartbutton --legacy;" data-app-click="bmo_product|addToCart" class="galladdtocarti ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone"></button> 
 				</div>
 			</div>
 	
@@ -781,7 +769,7 @@ link to from the quickview for seo purposes (to give the spider an actual page t
 			</div>
 		</td>
 
-		<td class="prodSummaryContainer marginBottom no_underline">
+		<td class="prodSummaryContainer marginBottom no_underline" data-bmo="summary-container">
 			<h1 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h1>
 			
 			<div data-tlc="bind $var '.%attribs.user:matching_piece'; if (is $var --notblank;) {{apply --hide;}};">
@@ -789,7 +777,8 @@ link to from the quickview for seo purposes (to give the spider an actual page t
 			</div>
 			<div data-tlc="bind $var '.%attribs.user:matching_piece'; if (is $var --notblank;) {{apply --show;}};" class="displayNone">
 				<h5>Only:</h5>
-				<h3 data-tlc="bind $var '.pid'; bmo_product#custombaseprice;" data-priceA='1' data-priceB='1' class="customBasePrice marginBottom"></h3> 
+				<!-- <h3 data-tlc="bind $var '.pid'; bmo_product#custombaseprice;" data-priceA='1' data-priceB='1' class="customBasePrice marginBottom"></h3> -->
+				<h3 data-tlc="bind $var '.%attribs.user:matching_price'; if(is $var --notblank;) {{format --currency='USD'; apply --append;}};" data-priceA='1' data-priceB='1' class="customBasePrice marginBottom"></h3>
 			</div>
 			
 			<hgroup class="marginBottom">
@@ -797,17 +786,6 @@ link to from the quickview for seo purposes (to give the spider an actual page t
 				<h5><a href='#' data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if(is $var --notblank;) {{apply --append; format --prepend='/search/keywords/'; apply --attrib='href';}};"></a></h5>
 				<h5 data-tlc="bind $var '.%attribs.zoovy:prod_mfgid';  if (is $var --notblank;) {{format --prepend='Mfg ID: '; apply --append;}};"></h5>
 			</hgroup>
-<!-- MARK ORIGINAL PRICING INFO FOR REFERENCE UNTIL MATCHING PRICING & ATC FORMS WORK RIGHT.		
-			<h6 data-tlc="bind $var '.pid'; if (is $var --notblank;) {{ format --prepend='Sku: ';apply --append;}};" class="ztable_row_small stid"></h6>
-			<div class="priceContainer">
-				<h4 data-tlc="bind $var '.%attribs.zoovy:base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="basePrice"></h4>
-				<h5 data-tlc="bind $var '.%attribs.zoovy:prod_msrp';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='MSRP: ';  apply --append;}};" class="prodMSRP"></h5>
-				<span class="savings">
-					<span data-tlc="bind $var '.pid'; format --prepend='You save: '; quickstart#priceretailsavingsdifference  --legacy; apply --append;" class="savingsDifference"></span>
-					<span data-tlc="bind $var '.pid'; format --prepend='('; format --append=')'; quickstart#priceretailsavingspercentage  --legacy; apply --append;" class="savingsPercentage"></span>
-				</span>
-			</div>
--->
 			<div data-tlc="bind $var '.%attribs.zoovy:prod_desc'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class="dis"></div>
 			
 			<table class='marginBottom fullWidth gridTable' data-app-role='childrenSiblingsContainer'>
@@ -832,21 +810,21 @@ link to from the quickview for seo purposes (to give the spider an actual page t
 				
 					<div class='atcPogErrors'></div>
 				
-					<form data-tlc="bind $var '.pid'; store_product#atcform --legacy;" action='#' data-app-submit="store_bmo|addToCart" class="prodViewerAddToCartForm clearfix"> 
+					<form data-tlc="bind $var '.pid'; store_product#atcform --legacy;" action='#' data-app-submit="bmo_product|addToCart" class="prodViewerAddToCartForm clearfix"> 
 						<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
 						<div class="floatLeft marginRight">Quantity: </div>
 						<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput --defaultvalue='1' --legacy;" class="borderNone"></fieldset>
-						<div data-tlc="bind $var '.'; bmo_product#sethiddenprice;" data-formDesig='A' class='formPrice'></div>
+						<div data-formDesig='A' class='formPrice'></div> <!-- data-tlc="bind $var '.'; bmo_product#sethiddenprice;" (see setHiddenPrice) -->
 					</form>
 					
-					<form data-tlc="bind $var '.pid'; bmo_product#matchatcformpid;" action='#' data-app-submit="store_bmo|addToCart" class="prodViewerAddToCartForm clearfix"> 
+					<form data-tlc="bind $var '.pid'; bmo_product#matchatcformpid;" action='#' data-app-submit="bmo_product|addToCart" class="prodViewerAddToCartForm clearfix"> 
 						<span data-tlc="bind $var '.%attribs.user:matching_piece'; bmo_product#loadprod --ismatch=$var --templateid='matchingProductTemplate';"></span>
 						<div class="floatLeft marginRight">Quantity: </div>
 						<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput --defaultvalue='1' --legacy;" class='borderNone'></fieldset>
-						<div data-tlc="bind $var '.'; bmo_product#sethiddenprice;" data-formDesig='B' class='formPrice'></div>
+						<div data-formDesig='B' class='formPrice'></div> <!-- data-tlc="bind $var '.'; bmo_product#sethiddenprice;" (see setHiddenPrice) -->
 						<div data-tlc="bind $var '.'; bmo_product#combinefeatureslist;" data-bmo-combine="modalproduct"></div>
 					</form>
-					<button data-tlc="bind $var '.pid'; store_product#addtocartbutton --legacy;" data-app-click="store_bmo|addToCart" class="galladdtocarti ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone"></button> 
+					<button data-tlc="bind $var '.pid'; store_product#addtocartbutton --legacy;" data-app-click="bmo_product|addToCart" class="galladdtocarti ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone"></button> 
 				</div>
 			</div>			
 			
@@ -947,7 +925,8 @@ link to from the quickview for seo purposes (to give the spider an actual page t
 			</div>
 			<div data-tlc="bind $var '.%attribs.user:matching_piece'; if (is $var --notblank;) {{apply --show;}};" class="displayNone">
 				<h5>Only:</h5>
-				<h6 data-tlc="bind $var '.'; store_bmo#matchingbaseprice;" data-priceA='1' data-priceB='1' class="price customBasePrice marginBottom"></h6>
+				<!-- <h6 data-tlc="bind $var '.'; store_bmo#matchingbaseprice;" data-priceA='1' data-priceB='1' class="price customBasePrice marginBottom"></h6> -->
+				<h6 data-tlc="bind $var '.%attribs.user:matching_price'; if(is $var --notblank;) {{format --currency='USD'; apply --append;}};" class="price customBasePrice marginBottom"></h6>
 			</div>
 		</div>
 	</li>
