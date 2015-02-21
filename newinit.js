@@ -16,8 +16,12 @@ _app.u.loadScript(configURI,function(){
 		setTimeout(function(){$('#appView').removeClass('initFooter');}, 1200);
 		_app.ext.quickstart.callbacks.startMyProgram.onSuccess();
 		startMarketing();
-		});
-	}); //The config.js is dynamically generated.
+		//make sure minicart stays up to date. 
+		_app.ext.store_bmo.vars.mcSetInterval = setInterval(function(){
+			_app.ext.quickstart.u.handleMinicartUpdate({'datapointer':'cartDetail|'+_app.model.fetchCartID()});
+		},4000);
+	});
+}); //The config.js is dynamically generated.
 	
 	
 //--------------CUSTOM CONTENT
