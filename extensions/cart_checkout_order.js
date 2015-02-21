@@ -589,7 +589,8 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 */
 			nukePayPalEC : function(_tag) {
 //				_app.u.dump("BEGIN cco.u.nukePayPalEC");
-				if(_app.ext.order_create){
+/*bmo: checking for _app.ext.order_create was not working. This will likely be updated in the framework so impliment that fix when you see it.
+				if(_app.ext.order_create.vars && (_app.ext.order_create.vars['payment-pt'] || _app.ext.order_create.vars['payment-pi'])){
 					//Doesn't require a _require, since if it's not loaded, it's already "nuked"
 					_app.ext.order_create.vars['payment-pt'] = null;
 					_app.ext.order_create.vars['payment-pi'] = null;
